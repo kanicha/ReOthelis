@@ -27,10 +27,10 @@ public class DS4Controller : MonoBehaviour
     /// </summary>
     // 十字キー右.左
     public string DS4Horizontal = "Horizontal D-Pad";
-    public float fDS4Horizontal = Input.GetAxisRaw("Horizontal D-Pad");
+    //public float fDS4Horizontal = Input.GetAxisRaw("Horizontal D-Pad");
     // 十字キー上.下
     public string DS4Vertical = "Vertical D-Pad";
-    public float fDS4Vertical = Input.GetAxisRaw("Vertical D-Pad");
+    //public float fDS4Vertical = Input.GetAxisRaw("Vertical D-Pad");
 
     /// <summary>
     /// スティック
