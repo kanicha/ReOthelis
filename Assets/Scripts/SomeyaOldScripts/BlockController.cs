@@ -68,7 +68,7 @@ public class BlockController : MonoBehaviour
             this.gameObject.transform.position += new Vector3(0, -1, 0);
             if (!ValidMovement())
             {
-                this.gameObject.transform.position -= new Vector3(0, -1, 0);
+                this.gameObject.transform.position -= new Vector3(0, 1, 0);
                 komaLanding = true;    // コマ着地判定変数 true
                 this.enabled = false;
                 FindObjectOfType<SpawnKoma>().KomaCreate();
