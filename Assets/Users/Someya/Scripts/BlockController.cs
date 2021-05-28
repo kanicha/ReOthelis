@@ -70,7 +70,7 @@ public class BlockController : MonoBehaviour
                 this.gameObject.transform.position -= new Vector3(0, -1, 0);
                 komaLanding = true;    // コマ着地判定変数 true
                 this.enabled = false;
-                Invoke(nameof(Create), 1.0f);
+                FindObjectOfType<SpawnKoma>().KomaCreate();
                 AddGrid();
                 Drop();
             }
@@ -156,9 +156,5 @@ public class BlockController : MonoBehaviour
             }
             nullCount = 0;
         }
-    }
-    public void Create()
-    {
-        FindObjectOfType<SpawnKoma>().KomaCreate();
     }
 }
