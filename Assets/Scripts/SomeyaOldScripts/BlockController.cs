@@ -45,7 +45,7 @@ public class BlockController : MonoBehaviour
     private void MinoMovement()
     {
         // Aキーで左に動く
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetAxisRaw("Horizontal D - Pad") < 0)
         {
             this.gameObject.transform.position += new Vector3(-1, 0, 0);
             if (!ValidMovement())
@@ -54,7 +54,7 @@ public class BlockController : MonoBehaviour
             }
         }
         // Dキーで右に動く
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetAxisRaw("Horizontal D - Pad") > 0)
         {
             this.gameObject.transform.position += new Vector3(1, 0, 0);
             if (!ValidMovement())
@@ -63,7 +63,8 @@ public class BlockController : MonoBehaviour
             }
         }
         // 自動で下に移動させつつ、Sキーでも移動する
-        else if (Input.GetKey(KeyCode.S) || Time.time - previousTime >= fallTime)
+        else if (Input.GetKey(KeyCode.S) || Input.GetAxisRaw("Vertical D-Pad") < 0 
+                || Time.time - previousTime >= fallTime)
         {
             this.gameObject.transform.position += new Vector3(0, -1, 0);
             if (!ValidMovement())
@@ -77,7 +78,7 @@ public class BlockController : MonoBehaviour
             }
             previousTime = Time.time;
         }
-        else if (Input.GetKey(KeyCode.Space))
+        else if (Input.GetKey(KeyCode.Space) || Input.GetButtonDown(ds4.DS4R1))
         {
             // ブロックの右回転
             this.gameObject.transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
@@ -94,23 +95,23 @@ public class BlockController : MonoBehaviour
                 }
             }
         }
-        //else if (Input.GetButtonDown(ds4.DS4R1))
-        //{
-        //    // ブロックの左回転
-        //    this.gameObject.transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
-        //    foreach (Transform children in transform)
-        //    {
-        //        children.transform.RotateAround(children.transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
-        //    }
-        //    if (!ValidMovement())
-        //    {
-        //        this.gameObject.transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
-        //        foreach (Transform children in transform)
-        //        {
-        //            children.transform.RotateAround(children.transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
-        //        }
-        //    }
-        //}
+        else if (Input.GetButtonDown(ds4.DS4R1))
+        {
+            // ブロックの左回転
+            this.gameObject.transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
+            foreach (Transform children in transform)
+            {
+                children.transform.RotateAround(children.transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
+            }
+            if (!ValidMovement())
+            {
+                this.gameObject.transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
+                foreach (Transform children in transform)
+                {
+                    children.transform.RotateAround(children.transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
+                }
+            }
+        }
 
         /// <summary>
         /// コマに当たり判定追加関数 (重ならず上に乗るかどうか)
