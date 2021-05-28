@@ -23,6 +23,7 @@ public class BlockControl : MonoBehaviour
     // グリッド宣言
     private static Transform[,] grid = new Transform[width, height];
 
+
     // Update is called once per frame
     void Update()
     {

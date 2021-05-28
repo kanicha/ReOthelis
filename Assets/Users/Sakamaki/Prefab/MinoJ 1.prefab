@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6308535037513375695}
   - component: {fileID: 6984868633168398523}
+  - component: {fileID: -4723966225883243519}
   - component: {fileID: 9175704541564856840}
   m_Layer: 0
   m_Name: MinoJ 1
@@ -50,6 +51,31 @@ MonoBehaviour:
   fallTime: 1
   rotationPoint: {x: 0, y: 0, z: 0}
   komaLanding: 0
+--- !u!114 &-4723966225883243519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2016786341113250684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 402b6bb1a3917f244bc15d53cf4fbc3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DS4o: Fire_2
+  DS4x: Fire_1
+  DS4sq: Fire_0
+  DS4tri: Fire_3
+  DS4L1: Fire_L1
+  DS4R1: Fire_R1
+  DS4Option: Fire_Option
+  DS4Horizontal: Horizontal D-Pad
+  DS4Vertical: Vertical D-Pad
+  DS4LStickHorizontal: Horizontal Stick-L
+  DS4LStickVertical: Vertical Stick-L
+  DS4RStickHorizontal: Horizontal Stick-R
+  DS4RStickVertical: Vertical Stick-R
 --- !u!114 &9175704541564856840
 MonoBehaviour:
   m_ObjectHideFlags: 0

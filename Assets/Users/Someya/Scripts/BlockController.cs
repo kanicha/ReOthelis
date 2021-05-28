@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BlockController : MonoBehaviour
 {
-    
+
     public float previousTime;
     // minoが落ちるタイム
     public float fallTime = 1f;
@@ -17,7 +17,7 @@ public class BlockController : MonoBehaviour
     private GridManager _gridManager;
     // コントローラー入力制御
     private DS4Controller ds4;
- 
+
     // ステージの大きさ
     private static int width = 10;
     private static int height = 18;
@@ -30,6 +30,7 @@ public class BlockController : MonoBehaviour
     private void Start()
     {
         _gridManager = GetComponent<GridManager>();
+        ds4 = GetComponent<DS4Controller>();
     }
 
     // Update is called once per frame
@@ -44,7 +45,7 @@ public class BlockController : MonoBehaviour
     private void MinoMovement()
     {
         // Aキーで左に動く
-        if (Input.GetKeyDown(KeyCode.A))
+        if (ds4.fDS4Horizontal < 0 || Input.GetKeyDown(KeyCode.A))
         {
             this.gameObject.transform.position += new Vector3(-1, 0, 0);
             if (!ValidMovement())
@@ -53,7 +54,7 @@ public class BlockController : MonoBehaviour
             }
         }
         // Dキーで右に動く
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (ds4.fDS4Horizontal > 0 || Input.GetKeyDown(KeyCode.D))
         {
             this.gameObject.transform.position += new Vector3(1, 0, 0);
             if (!ValidMovement())
@@ -62,7 +63,8 @@ public class BlockController : MonoBehaviour
             }
         }
         // 自動で下に移動させつつ、Sキーでも移動する
-        else if (Input.GetKey(KeyCode.S) || Time.time - previousTime >= fallTime)
+        else if (Input.GetKeyDown(KeyCode.S) || ds4.fDS4Vertical < 0
+                || Time.time - previousTime >= fallTime)
         {
             this.gameObject.transform.position += new Vector3(0, -1, 0);
             if (!ValidMovement())
@@ -76,9 +78,9 @@ public class BlockController : MonoBehaviour
             }
             previousTime = Time.time;
         }
-        else if (Input.GetKeyDown(KeyCode.Space))
+        else if (Input.GetButtonDown(ds4.DS4L1) || Input.GetKeyDown(KeyCode.Space))
         {
-            // ブロックの回転
+            // ブロックの右回転
             this.gameObject.transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
             foreach (Transform children in transform)
             {
@@ -93,68 +95,85 @@ public class BlockController : MonoBehaviour
                 }
             }
         }
-    }
-
-    /// <summary>
-    /// コマに当たり判定追加関数 (重ならず上に乗るかどうか)
-    /// </summary>
-    public void AddGrid()
-    {
-        foreach (Transform children in transform)
+        else if (Input.GetButtonDown(ds4.DS4R1))
         {
-            int roundX = Mathf.RoundToInt(children.transform.position.x);
-            int roundY = Mathf.RoundToInt(children.transform.position.y);
-            grid[roundX, roundY] = children;
-        }
-    }
-
-
-    /// <summary>
-    /// コマが枠外に出ないためにする関数
-    /// </summary>
-    public bool ValidMovement()
-    {
-        foreach (Transform children in transform)
-        {
-            int roundX = Mathf.RoundToInt(children.transform.position.x);
-            int roundY = Mathf.RoundToInt(children.transform.position.y);
-            // minoがステージよりはみ出さないように制御
-            if (roundX <= -1 || roundX >= width || roundY < 0)
+            // ブロックの左回転
+            this.gameObject.transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
+            foreach (Transform children in transform)
             {
-                return false;
+                children.transform.RotateAround(children.transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
             }
-            if (grid[roundX, roundY] != null)
+            if (!ValidMovement())
             {
-                return false;
+                this.gameObject.transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
+                foreach (Transform children in transform)
+                {
+                    children.transform.RotateAround(children.transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
+                }
             }
         }
 
-        return true;
-    }
-
-
-    /// <summary>
-    /// コマが空中に浮いた際地面に落ちる処理関数
-    /// </summary>
-    public void Drop()
-    {
-        int nullCount = 0;
-        for (int x = 0; x < width; x++)
+        /// <summary>
+        /// コマに当たり判定追加関数 (重ならず上に乗るかどうか)
+        /// </summary>
+        void AddGrid()
         {
-            for (int y = 0; y < height; y++)
+            foreach (Transform children in transform)
             {
-                if (grid[x, y] == null)
+                int roundX = Mathf.RoundToInt(children.transform.position.x);
+                int roundY = Mathf.RoundToInt(children.transform.position.y);
+                grid[roundX, roundY] = children;
+            }
+        }
+
+
+        /// <summary>
+        /// コマが枠外に出ないためにする関数
+        /// </summary>
+        bool ValidMovement()
+        {
+            foreach (Transform children in transform)
+            {
+                int roundX = Mathf.RoundToInt(children.transform.position.x);
+                int roundY = Mathf.RoundToInt(children.transform.position.y);
+                // minoがステージよりはみ出さないように制御
+                if (roundX <= -1 || roundX >= width || roundY < 0)
                 {
-                    nullCount++;
+                    return false;
                 }
-                else if (nullCount > 0)
+                if (grid[roundX, roundY] != null)
                 {
-                    grid[x, y].transform.position += new Vector3(0, -nullCount, 0);
-                    grid[x, y - nullCount] = grid[x, y];
-                    grid[x, y] = null;
+                    return false;
                 }
             }
-            nullCount = 0;
+
+            return true;
+        }
+
+
+        /// <summary>
+        /// コマが空中に浮いた際地面に落ちる処理関数
+        /// </summary>
+        void Drop()
+        {
+            int nullCount = 0;
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (grid[x, y] == null)
+                    {
+                        nullCount++;
+                    }
+                    else if (nullCount > 0)
+                    {
+                        grid[x, y].transform.position += new Vector3(0, -nullCount, 0);
+                        grid[x, y - nullCount] = grid[x, y];
+                        grid[x, y] = null;
+                    }
+                }
+                nullCount = 0;
+            }
         }
     }
 }
