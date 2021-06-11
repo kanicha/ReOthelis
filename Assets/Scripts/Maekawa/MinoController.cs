@@ -6,6 +6,10 @@ public class MinoController : MonoBehaviour
     Map myMap = null;
     public static GameObject[] controllPieces = new GameObject[2];
 
+    private float previousTime = 0f;
+    [SerializeField]
+    float fallTime = 1f;
+
     private int rotationNum = 0;// 左回転
     private Vector3[] rotationPos = new Vector3[]
     {
@@ -37,8 +41,12 @@ public class MinoController : MonoBehaviour
             move.x = -1;
         else if (Input.GetKeyDown(KeyCode.D))
             move.x = 1;
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.S) || Time.time - previousTime >= fallTime)
+        {
             move.y = -1;
+
+            previousTime = Time.time;
+        }
 
         Vector3 movedPos = controllPieces[0].transform.position + move;
         Vector3 rotMovedPos = movedPos + rotationPos[rotationNum];
