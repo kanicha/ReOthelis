@@ -41,11 +41,18 @@ public class MinoController : MonoBehaviour
             move.x = -1;
         else if (Input.GetKeyDown(KeyCode.D))
             move.x = 1;
-        else if (Input.GetKeyDown(KeyCode.S) || Time.time - previousTime >= fallTime)
+        // 時間落下
+        else if (Time.time - previousTime >= fallTime)
         {
             move.y = -1;
 
             previousTime = Time.time;
+
+            // S入力すると落ちるスピードアップ
+            if (Input.GetKey(KeyCode.S))
+            {
+                fallTime = (float)0.1;
+            }
         }
 
         Vector3 movedPos = controllPieces[0].transform.position + move;
@@ -55,6 +62,8 @@ public class MinoController : MonoBehaviour
 
         for (int i = 0; i < controllPieces.Length; i++)
             controllPieces[i].transform.Translate(move);
+
+        myMap.GroundStack(movedPos, rotMovedPos);
 
         // 即置きも作る?
     }

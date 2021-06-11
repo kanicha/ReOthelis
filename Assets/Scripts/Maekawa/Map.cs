@@ -69,7 +69,7 @@ public class Map : MonoBehaviour
         int rotX = (int)rotMovedPos.x;
 
 
-        if (map[x, y] == "■")
+        if (map[x, y] == "■" && map[rotX, rotY] == "■")
         {
             Debug.Log("Landing");
         }

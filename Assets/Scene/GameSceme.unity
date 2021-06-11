@@ -258,6 +258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myMap: {fileID: 326221982}
+  fallTime: 1
 --- !u!4 &326221984
 Transform:
   m_ObjectHideFlags: 0
