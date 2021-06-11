@@ -6,6 +6,8 @@ public class MinoController : MonoBehaviour
     Map myMap = null;
     public static GameObject[] controllPieces = new GameObject[2];
 
+    public bool isLanding = false;
+
     private float previousTime = 0f;
     [SerializeField]
     float fallTime = 1f;
@@ -27,10 +29,14 @@ public class MinoController : MonoBehaviour
 
     void Update()
     {
-        if (!GameDirector.isWaiting)
+        if (isLanding)
         {
             Move();
             Rotate();
+        }
+        else
+        {
+            // 落下判定処理
         }
     }
 

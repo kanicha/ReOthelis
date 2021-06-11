@@ -6,22 +6,23 @@ public class GameDirector : MonoBehaviour
     private GameObject root = null;
     [SerializeField]
     private GameObject[] piecePrefab = null;
-    public static bool isWaiting = false;
+    [SerializeField]
+    private MinoController mc = null;
+
     private byte generateCount = 0;
 
     void Start()
     {
-        // 最初に全て生成した方がいいかも
 
-        isWaiting = true;
+        // 最初に全て生成した方がいいかも
     }
 
     void Update()
     {
-        if (isWaiting)
+        if (mc.isLanding)
         {
             Generate();
-            isWaiting = false;
+            mc.isLanding = false;
         }
     }
     private void Generate()

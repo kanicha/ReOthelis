@@ -233,6 +233,7 @@ MonoBehaviour:
   piecePrefab:
   - {fileID: 1116894036274601972, guid: 6a3d68cffed1b304088fb0ed4cbe966e, type: 3}
   - {fileID: 1507695123319919103, guid: a27272dadb8657e47ab76a48f0aa4f76, type: 3}
+  mc: {fileID: 326221983}
 --- !u!114 &326221982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,6 +246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17515d32eb93c7f429e8633f0aaff978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mc: {fileID: 326221983}
 --- !u!114 &326221983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,6 +260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myMap: {fileID: 326221982}
+  isLanding: 0
   fallTime: 1
 --- !u!4 &326221984
 Transform:
