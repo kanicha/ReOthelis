@@ -6,6 +6,12 @@ public class MinoController : MonoBehaviour
     Map myMap = null;
     public static GameObject[] controllPieces = new GameObject[2];
 
+    public bool isLanding = false;
+
+    private float previousTime = 0f;
+    [SerializeField]
+    float fallTime = 1f;
+
     private int rotationNum = 0;// 左回転
     private Vector3[] rotationPos = new Vector3[]
     {
@@ -23,10 +29,14 @@ public class MinoController : MonoBehaviour
 
     void Update()
     {
-        if (!GameDirector.isWaiting)
+        if (isLanding)
         {
             Move();
             Rotate();
+        }
+        else
+        {
+            // 落下判定処理
         }
     }
 
@@ -37,8 +47,19 @@ public class MinoController : MonoBehaviour
             move.x = -1;
         else if (Input.GetKeyDown(KeyCode.D))
             move.x = 1;
-        else if (Input.GetKeyDown(KeyCode.S))
+        // 時間落下
+        else if (Time.time - previousTime >= fallTime)
+        {
             move.y = -1;
+
+            previousTime = Time.time;
+
+            // S入力すると落ちるスピードアップ
+            if (Input.GetKey(KeyCode.S))
+            {
+                fallTime = (float)0.1;
+            }
+        }
 
         Vector3 movedPos = controllPieces[0].transform.position + move;
         Vector3 rotMovedPos = movedPos + rotationPos[rotationNum];
@@ -47,6 +68,8 @@ public class MinoController : MonoBehaviour
 
         for (int i = 0; i < controllPieces.Length; i++)
             controllPieces[i].transform.Translate(move);
+
+        myMap.GroundStack(movedPos, rotMovedPos);
 
         // 即置きも作る?
     }
