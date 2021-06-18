@@ -11,12 +11,12 @@ public class MapDraw : MonoBehaviour
 		{ "Å°", "Å†", "Å†","Å†","Å†","Å†", "Å†","Å†", "Å†", "Å°" },
 		{ "Å°", "Å†", "Å†","Å†","Å†","Å†", "Å†","Å†", "Å†", "Å°" },
 		{ "Å°", "Å†", "Å†","Å†","Å†","Å†", "Å†","Å†", "Å†", "Å°" },
-		{ "Å°", "Å†", "Å†","Å†","Å†","Å†", "Å†","Å†", "Å†", "Å°" },
-		{ "Å°", "Åú", "Å†","Åú","ÅZ","Åú", "ÅZ","Å†", "ÅZ", "Å°" },
-		{ "Å°", "Åú", "ÅZ","ÅZ","ÅZ","Åú", "Åú","Åú", "Åú", "Å°" },
-		{ "Å°", "Åú", "ÅZ","Åú","ÅZ","Åú", "ÅZ","Åú", "ÅZ", "Å°" },
-		{ "Å°", "Åú", "ÅZ","ÅZ","ÅZ","Åú", "Åú","Åú", "ÅZ", "Å°" },
-		{ "Å°", "Åú", "Åú","Åú","ÅZ","Åú", "ÅZ","ÅZ", "ÅZ", "Å°" },
+		{ "Å°", "Å†", "Å†","Å†","ÅZ","ÅZ", "Å†","Å†", "Å†", "Å°" },
+		{ "Å°", "Å†", "Åú","Å†","ÅZ","ÅZ", "Å†","Å†", "Å†", "Å°" },
+		{ "Å°", "Å†", "ÅZ","ÅZ","ÅZ","Åú", "ÅZ","Å†", "Å†", "Å°" },
+		{ "Å°", "Å†", "ÅZ","Åú","Åú","Åú", "ÅZ","Å†", "Å†", "Å°" },
+		{ "Å°", "Å†", "ÅZ","ÅZ","Åú","Åú", "Åú","Å†", "ÅZ", "Å°" },
+		{ "Å°", "ÅZ", "ÅZ","Åú","Åú","Åú", "Åú","ÅZ", "Åú", "Å°" },
 		{ "Å°", "Å°", "Å°","Å°","Å°","Å°", "Å°","Å°", "Å°", "Å°" }
 	};
 
@@ -25,20 +25,25 @@ public class MapDraw : MonoBehaviour
 	const string wall = "Å°";
 	const string empty = "Å†";
 	private string color = "";
-	string memory_color = "";
+	private string memory_color = "";
 
 	// Start is called before the first frame update
 	void Start()
     {
 		MapDebug();
 		//MinoCheck(6, 6);
-		MinoCheck(3, 6);
+		//MinoCheck(3, 6);
 	}
 
     // Update is called once per frame
     void Update()
     {
-        
+		if (Input.GetMouseButtonDown(0))
+        {
+			map[7, 1] = black;
+			map[6, 1] = black;
+			Ordering(1, 7, 1, 6, 1);
+        }
     }
 
 	//Player 1 = çïÉvÉåÉCÉÑÅ[
@@ -60,7 +65,7 @@ public class MapDraw : MonoBehaviour
 				if (map[y2,x2] == memory_color)
                 {
 					MinoCheck(x2, y2);
-                }
+				}
 			}
 			else if (map[y1,x1] == white)
             {
@@ -71,13 +76,13 @@ public class MapDraw : MonoBehaviour
 					if (map[y1,x1] == memory_color)
                     {
 						MinoCheck(x1, y1);
-                    }
+					}
                 }
 				else if (map[y2,x2] == white)
                 {
 					MinoCheck(x1, y1);
 					MinoCheck(x2, y2);
-                }
+				}
             }
 		}
 
@@ -127,14 +132,14 @@ public class MapDraw : MonoBehaviour
 					continue;
                 }
 				//ï«Ç…ìñÇΩÇ¡ÇΩÅAÇ‹ÇΩÇÕí¥Ç¶ÇƒÇµÇ‹Ç§èÍçáÇÕåüçıÇµÇ»Ç¢
-				if (y + i < 0 || x + j < 0 || y + i > 9 || x + j > 9)
+				if (y + i < 0 || x + j < 0 || y + i > 9 || x + j > 10)
                 {
 					continue;
                 }
 				//åüçıÇÃãóó£Çë´ÇµÇƒÇ¢Ç≠
 				for (int s = 2; s < 9; s++)
 				{
-					if (x + j * s >= 0 && x + j * s < 9 && y + i * s >= 0 && y + i * s < 9)
+					if (x + j * s >= 0 && x + j * s < 10 && y + i * s >= 0 && y + i * s < 9)
 					{
 						//ãÛÇ´Ç…ìñÇΩÇ¡ÇΩèÍçáÅAÇªÇÃï˚å¸ÇÃåüçıÇèIóπÇ≥ÇπÇÈ
 						if (map[y + i * s,x + j * s] == empty)
@@ -162,7 +167,7 @@ public class MapDraw : MonoBehaviour
 		string printMap = "";
 		for (int i = 0; i < 9; i++)
 		{
-			for (int j = 0; j < 9; j++)
+			for (int j = 0; j < 10; j++)
 			{
 				printMap += map[i, j].ToString() + ":";
 			}
@@ -171,6 +176,4 @@ public class MapDraw : MonoBehaviour
 
 		Debug.Log(printMap);
 	}
-
-	
 }
