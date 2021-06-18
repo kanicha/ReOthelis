@@ -29,8 +29,8 @@ public class MinoController : MonoBehaviour
     {
         if (!GameDirector.isGenerate)
         {
-            Move();
             Rotate();
+            Move();
         }
     }
 
@@ -62,13 +62,19 @@ public class MinoController : MonoBehaviour
         if (!myMap.CheckWall(movedPos) || !myMap.CheckWall(rotMovedPos))
             return;
 
-        controllPieces[0].transform.Translate(move);
-        controllPieces[1].transform.Translate(move);
+        controllPieces[0].transform.position = movedPos;
+        controllPieces[1].transform.position = rotMovedPos;
 
-        if (myMap.CheckLanding(movedPos) || myMap.CheckLanding(rotMovedPos))
+        if (myMap.CheckLanding(movedPos))
         {
             myMap.FallPiece(controllPieces[0]);
             myMap.FallPiece(controllPieces[1]);
+            GameDirector.isGenerate = true;
+        }
+        else if(myMap.CheckLanding(rotMovedPos))
+        {
+            myMap.FallPiece(controllPieces[1]);
+            myMap.FallPiece(controllPieces[0]);
             GameDirector.isGenerate = true;
         }
     }

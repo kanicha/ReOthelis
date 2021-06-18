@@ -230,6 +230,7 @@ MonoBehaviour:
   root: {fileID: 1824669614}
   piecePrefab: {fileID: 4094469071948470677, guid: 46b444d8b89999f409898699d7642b8e, type: 3}
   minoController: {fileID: 939100888}
+  DEFAULT_POSITION: {x: 4, y: 0, z: -1}
 --- !u!4 &326221984
 Transform:
   m_ObjectHideFlags: 0
@@ -576,6 +577,7 @@ MonoBehaviour:
   - {fileID: 0}
   isLanding: 1
   fallTime: 1
+  rotationNum: 0
 --- !u!4 &939100889
 Transform:
   m_ObjectHideFlags: 0
