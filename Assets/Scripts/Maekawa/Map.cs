@@ -6,7 +6,7 @@ public class Map : MonoBehaviour
 {
     private const byte _WIDTH = 10;
     private const byte _HEIGHT = 10;
-    private string[,] map = new string[_HEIGHT, _WIDTH]// x, z座標で指定
+    private string[,] _map = new string[_HEIGHT, _WIDTH]// z, x座標で指定
     {
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
@@ -19,6 +19,11 @@ public class Map : MonoBehaviour
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "■", "■", "■", "■", "■", "■", "■", "■", "■" }
     };
+
+    private const string _wall = "■";
+    private const string _blank = "□";
+    private const string _white = "〇";
+    private const string _black = "●";
 
     private GameObject[,] PieceArray = new GameObject[_HEIGHT, _WIDTH];
 
@@ -45,7 +50,7 @@ public class Map : MonoBehaviour
         int x = (int)movedPos.x;
 
         // 2つの駒の移動後座標に何もなければ移動を通す
-        if (map[z, x] == "□")
+        if (_map[z, x] == _blank)
             isBlank = true;
 
         return isBlank;
@@ -54,19 +59,19 @@ public class Map : MonoBehaviour
     /// <summary>
     /// コマの１つ下のマスが空いていないかを調べる
     /// </summary>
-    /// <param name="movedPos"></param>
+    /// <param name="piecePos"></param>
     /// <returns></returns>
-    public bool CheckLanding(Vector3 movedPos)
+    public bool CheckLanding(Vector3 piecePos)
     {
         bool isGrounded = false;
 
         // ミノの移動後座標
-        int z = (int)movedPos.z * -1;
-        int x = (int)movedPos.x;
+        int z = (int)piecePos.z * -1;
+        int x = (int)piecePos.x;
 
-        if (map[z + 1, x] != "□")
+        if (_map[z + 1, x] != _blank)
             isGrounded = true;
-
+        
         return isGrounded;
     }
 
@@ -77,22 +82,33 @@ public class Map : MonoBehaviour
     public void FallPiece(GameObject piece)
     {
         // 配列指定子用のコマの座標         
-        int x = (int)piece.transform.position.z;
+        int x = (int)piece.transform.position.x;
         int z = (int)piece.transform.position.z * -1;// zはマイナス方向に進むので符号を反転させる
 
-        int i = 0;     
+        int i = 0;
+        int dz = 0;
+;
         while (true)
         {
             i++;
-            int dz = z + i;// iの分だけ下の座標を調べる
+            dz = z + i;// iの分だけ下の座標を調べる
 
             // 設置したマスからi個下のマスが空白なら下に落とす
-            if (map[dz, x] == "□")
-                piece.transform.position = new Vector3(x, dz * -1);// 反転させたyをマイナスに戻す
+            if (_map[dz, x] == _blank)
+                piece.transform.position = new Vector3(x, 0, dz * -1);// 反転させたyをマイナスに戻す
             else
+            {
+                dz--;
                 break;
-
+            }
             // これを空白以外に当たるまで繰り返す
         }
+
+        Piece p = piece.GetComponent<Piece>();
+
+        if (p.pieceType == Piece.PieceType.black)
+            _map[dz, x] = _black;
+        else if (p.pieceType == Piece.PieceType.white)
+            _map[dz, x] = _white;
     }
 }

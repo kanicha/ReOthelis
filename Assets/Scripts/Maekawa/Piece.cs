@@ -4,7 +4,17 @@ using UnityEngine;
 
 public class Piece : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public enum PieceType
+    {
+        none,
+        black,
+        white,
+        joker
+    }
+
+    public PieceType pieceType = PieceType.none;
+    public int rotationNum = 0;
+
     void Start()
     {
         

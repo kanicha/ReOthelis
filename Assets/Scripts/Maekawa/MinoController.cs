@@ -8,11 +8,10 @@ public class MinoController : MonoBehaviour
 
     public bool isLanding = true;
 
-    private float previousTime = 0f;
     [SerializeField]
     float fallTime = 1f;
 
-    private int rotationNum = 0;// 左回転
+    public int rotationNum = 0;// 左回転
     private Vector3[] rotationPos = new Vector3[]
     {
         new Vector3(0,  0, 1),
@@ -28,14 +27,10 @@ public class MinoController : MonoBehaviour
 
     void Update()
     {
-        if (!isLanding)
+        if (!GameDirector.isGenerate)
         {
             Move();
             Rotate();
-        }
-        else
-        {
-            // 落下判定処理
         }
     }
 
@@ -64,13 +59,18 @@ public class MinoController : MonoBehaviour
 
         Vector3 movedPos = controllPieces[0].transform.position + move;
         Vector3 rotMovedPos = rotationPos[rotationNum] + movedPos;
-        if (!myMap.CheckWall(movedPos) && !myMap.CheckWall(rotMovedPos))
+        if (!myMap.CheckWall(movedPos) || !myMap.CheckWall(rotMovedPos))
             return;
 
-        for (int i = 0; i < controllPieces.Length; i++)
-            controllPieces[i].transform.Translate(move);
+        controllPieces[0].transform.Translate(move);
+        controllPieces[1].transform.Translate(move);
 
-        //myMap.CheckLanding(movedPos, rotMovedPos);
+        if (myMap.CheckLanding(movedPos) || myMap.CheckLanding(rotMovedPos))
+        {
+            myMap.FallPiece(controllPieces[0]);
+            myMap.FallPiece(controllPieces[1]);
+            GameDirector.isGenerate = true;
+        }
     }
 
     private void Rotate()
