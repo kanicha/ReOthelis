@@ -4,29 +4,38 @@ public class MinoController : MonoBehaviour
 {
     [SerializeField]
     Map myMap = null;
-    public static GameObject[] controllPieces = new GameObject[2];
+    public GameObject[] controllPieces = new GameObject[2];
+
+    public bool isLanding = true;
+
+    private float previousTime = 0f;
+    [SerializeField]
+    float fallTime = 1f;
 
     private int rotationNum = 0;// 左回転
     private Vector3[] rotationPos = new Vector3[]
     {
-        new Vector3(0,1,0),
-        new Vector3(-1,0,0),
-        new Vector3(0,-1,0),
-        new Vector3(1,0,0)
+        new Vector3(0,  0, 1),
+        new Vector3(-1, 0, 0),
+        new Vector3(0,  0, -1),
+        new Vector3(1,  0, 0)
     };
 
     void Start()
     {
-        for(int i = 0; i < controllPieces.Length; i++)
-            controllPieces[i] = null;
+
     }
 
     void Update()
     {
-        if (!GameDirector.isWaiting)
+        if (!isLanding)
         {
             Move();
             Rotate();
+        }
+        else
+        {
+            // 落下判定処理
         }
     }
 
@@ -38,17 +47,30 @@ public class MinoController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.D))
             move.x = 1;
         else if (Input.GetKeyDown(KeyCode.S))
-            move.y = -1;
+            move.z = -1;
+        // 時間落下
+        //else if (Time.time - previousTime >= fallTime)
+        //{
+        //    move.y = -1;
+
+        //    previousTime = Time.time;
+
+        //    // S入力すると落ちるスピードアップ
+        //    if (Input.GetKey(KeyCode.S))
+        //    {
+        //        fallTime = (float)0.1;
+        //    }
+        //}
 
         Vector3 movedPos = controllPieces[0].transform.position + move;
-        Vector3 rotMovedPos = movedPos + rotationPos[rotationNum];
-        if (!myMap.CheckWall(movedPos, rotMovedPos))
+        Vector3 rotMovedPos = rotationPos[rotationNum] + movedPos;
+        if (!myMap.CheckWall(movedPos) && !myMap.CheckWall(rotMovedPos))
             return;
 
         for (int i = 0; i < controllPieces.Length; i++)
             controllPieces[i].transform.Translate(move);
 
-        // 即置きも作る?
+        //myMap.CheckLanding(movedPos, rotMovedPos);
     }
 
     private void Rotate()
@@ -63,14 +85,14 @@ public class MinoController : MonoBehaviour
 
         // 疑似回転(移動がややこしくなるのでRotationはいじらない)
         rotationNum %= 4;
-        Vector3 deltaRot = controllPieces[0].transform.position + rotationPos[rotationNum];
+        Vector3 rotatedPos = controllPieces[0].transform.position + rotationPos[rotationNum];
 
-        if (!myMap.CheckWall(controllPieces[0].transform.position, deltaRot))
+        if (!myMap.CheckWall(rotatedPos))
         {
             rotationNum = lastNum;
             return;
         }
 
-        controllPieces[1].transform.position = deltaRot;
+        controllPieces[1].transform.position = rotatedPos;
     }
 }
