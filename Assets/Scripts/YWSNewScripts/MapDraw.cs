@@ -24,13 +24,14 @@ public class MapDraw : MonoBehaviour
 	const string white = "〇";
 	const string wall = "■";
 	const string empty = "□";
+	private string color = "";
 
 	// Start is called before the first frame update
 	void Start()
     {
 		MapDebug();
-		//MinoCheck(6, 6, 2);
-		MinoCheck(3, 6, 1);
+		//MinoCheck(6, 6);
+		MinoCheck(3, 6);
 	}
 
     // Update is called once per frame
@@ -40,20 +41,22 @@ public class MapDraw : MonoBehaviour
     }
 
 	//駒が縦で置かれた場合、下方向から上方向の順番で検索を行う
+	//private void Vertical(bool Vertical, int )
 
 	//駒が横で置かれた場合、左方向から右方向の順番で検索を行う
-	
+
 	//駒が落ちた場合、下方向から上方向の順番で検索を行う
 
 	//Player 1 = 黒プレイヤー
 	//Player 2 = 白プレイヤー
 	//黒プレイヤーの場合、黒の駒を優先して検索を行う
-	
+
 	//白プレイヤーの場合、白の駒を優先して検索を行う
-	
+
 	//全方向を検索
-	private void MinoCheck(int x, int y, int player)
+	private void MinoCheck(int x, int y)
     {
+		color = map[y,x];
 		for (int i = -1; i < 2; i++)
         {
 			for (int j = -1; j < 2; j++)
@@ -79,22 +82,14 @@ public class MapDraw : MonoBehaviour
 							break; 
 						}
 						//同じ色の駒に当たった場合、そのマスにいたるまでのマスの駒をひっくり返す
-						if (player == 2 && map[y + i * s,x + j * s] == white)
+						if (map[y + i * s,x + j * s] == color)
 						{
 							for (int n = 1; n < s; n++)
                             {
-								map[y + i * n,x + j * n] = white;
+								map[y + i * n,x + j * n] = color;
 							}
 							break;
 						}
-						else if (player == 1 && map[y + i * s,x + j * s] == black)
-                        {
-							for (int n = 1; n < s; n++)
-                            {
-								map[y + i * n, x + j * n] = black;
-							}
-							break;
-                        }
 					}
 				}
             }
