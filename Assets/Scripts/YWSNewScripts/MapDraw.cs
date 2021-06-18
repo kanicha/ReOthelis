@@ -25,6 +25,7 @@ public class MapDraw : MonoBehaviour
 	const string wall = "■";
 	const string empty = "□";
 	private string color = "";
+	string memory_color = "";
 
 	// Start is called before the first frame update
 	void Start()
@@ -40,18 +41,77 @@ public class MapDraw : MonoBehaviour
         
     }
 
-	//駒が縦で置かれた場合、下方向から上方向の順番で検索を行う
-	//private void Vertical(bool Vertical, int )
-
-	//駒が横で置かれた場合、左方向から右方向の順番で検索を行う
-
-	//駒が落ちた場合、下方向から上方向の順番で検索を行う
-
 	//Player 1 = 黒プレイヤー
 	//Player 2 = 白プレイヤー
-	//黒プレイヤーの場合、黒の駒を優先して検索を行う
+	//駒が縦で置かれた場合、下方向から上方向の順番で検索を行う
+	//駒が横で置かれた場合、左方向から右方向の順番で検索を行う
+	//駒が落ちた場合、下方向から上方向の順番で検索を行う
+	public void Ordering(int x1, int y1, int x2, int y2, int player)
+    {
+		//黒プレイヤーの場合、黒の駒を優先して検索を行う
+		if (player == 1)
+		{
+			if (map[y1,x1] == black)
+            {
+				//二番目の駒の色を記憶
+				//二番目の駒が一番目の駒によってひっくり返されたら、その駒のひっくり返り処理を行わない
+				memory_color = map[y2, x2];
+				MinoCheck(x1, y1);
+				if (map[y2,x2] == memory_color)
+                {
+					MinoCheck(x2, y2);
+                }
+			}
+			else if (map[y1,x1] == white)
+            {
+				if (map[y2,x2] == black)
+                {
+					memory_color = map[y1, x1];
+					MinoCheck(x2, y2);
+					if (map[y1,x1] == memory_color)
+                    {
+						MinoCheck(x1, y1);
+                    }
+                }
+				else if (map[y2,x2] == white)
+                {
+					MinoCheck(x1, y1);
+					MinoCheck(x2, y2);
+                }
+            }
+		}
 
-	//白プレイヤーの場合、白の駒を優先して検索を行う
+		//白プレイヤーの場合、白の駒を優先して検索を行う
+		else if (player == 2)
+		{
+			if (map[y1, x1] == white)
+			{
+				memory_color = map[y2, x2];
+				MinoCheck(x1, y1);
+				if (map[y2, x2] == memory_color)
+				{
+					MinoCheck(x2, y2);
+				}
+			}
+			else if (map[y1, x1] == black)
+			{
+				if (map[y2, x2] == white)
+				{
+					memory_color = map[y1, x1];
+					MinoCheck(x2, y2);
+					if (map[y1, x1] == memory_color)
+					{
+						MinoCheck(x1, y1);
+					}
+				}
+				else if (map[y2, x2] == white)
+				{
+					MinoCheck(x1, y1);
+					MinoCheck(x2, y2);
+				}
+			}
+		}
+    }
 
 	//全方向を検索
 	private void MinoCheck(int x, int y)
@@ -95,7 +155,6 @@ public class MapDraw : MonoBehaviour
             }
         }
 		MapDebug();
-		
     }
 
 	private void MapDebug()
