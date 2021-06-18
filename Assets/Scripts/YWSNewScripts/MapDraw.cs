@@ -24,8 +24,11 @@ public class MapDraw : MonoBehaviour
 	const string white = "〇";
 	const string wall = "■";
 	const string empty = "□";
-	private string color = "";
+	private string color = ""; //操作プレイヤーの色
+	private string Opponent = ""; //相手プレイヤーの色
 	private string memory_color = "";
+	private int blackScore = 0;
+	private int whiteScore = 0;
 
 	// Start is called before the first frame update
 	void Start()
@@ -40,9 +43,9 @@ public class MapDraw : MonoBehaviour
     {
 		if (Input.GetMouseButtonDown(0))
         {
-			map[7, 1] = black;
-			map[6, 1] = black;
-			Ordering(1, 7, 1, 6, 1);
+			map[2, 5] = black;
+			map[4, 6] = black;
+			Ordering(6, 4, 5, 2, 1);
         }
     }
 
@@ -121,37 +124,60 @@ public class MapDraw : MonoBehaviour
 	//全方向を検索
 	private void MinoCheck(int x, int y)
     {
+		int scoreCounter = 0;
+		//操作プレイヤーと相手プレイヤーの色を取得
 		color = map[y,x];
+		if (color == black)
+		{
+			Opponent = white;
+		}
+		else if (color == white)
+        {
+			Opponent = black;
+        }
+
 		for (int i = -1; i < 2; i++)
         {
 			for (int j = -1; j < 2; j++)
             {
+				//検索方向変数
+				int Direction_X = x + j;
+				int Direction_Y = y + i;
+
 				//置かれた駒のマスは検索しない
 				if (i == 0 && j == 0)
                 {
 					continue;
                 }
-				//壁に当たった、または超えてしまう場合は検索しない
-				if (y + i < 0 || x + j < 0 || y + i > 9 || x + j > 10)
+				//検索方向に相手プレイヤーの駒が存在しない場合、その方向の検索を終了させる
+				if (map[Direction_Y,Direction_X] != Opponent)
                 {
 					continue;
                 }
 				//検索の距離を足していく
 				for (int s = 2; s < 9; s++)
 				{
-					if (x + j * s >= 0 && x + j * s < 10 && y + i * s >= 0 && y + i * s < 9)
+					//探索距離関数
+					int Range_X = x + j * s;
+					int Range_Y = y + i * s;
+
+					if (Range_X >= 0 && Range_X < 10 && Range_Y >= 0 && Range_Y < 9)
 					{
-						//空きに当たった場合、その方向の検索を終了させる
-						if (map[y + i * s,x + j * s] == empty)
+						//相手の駒を発見したあとに空きに当たった場合、その方向の検索を終了させる
+						if (map[Range_Y, Range_X] == empty)
 						{
 							break; 
 						}
-						//同じ色の駒に当たった場合、そのマスにいたるまでのマスの駒をひっくり返す
-						if (map[y + i * s,x + j * s] == color)
+						//相手の駒を発見したあとに同じ色の駒に当たった場合、そのマスにいたるまでのマスの駒をひっくり返す
+						if (map[Range_Y, Range_X] == color)
 						{
 							for (int n = 1; n < s; n++)
                             {
-								map[y + i * n,x + j * n] = color;
+								int Change_X = x + j * n;
+								int Change_Y = y + i * n;
+								map[Change_Y, Change_X] = color;
+								scoreCounter++;
+								Debug.Log(scoreCounter);
 							}
 							break;
 						}
@@ -160,6 +186,7 @@ public class MapDraw : MonoBehaviour
             }
         }
 		MapDebug();
+		ScoreCount(scoreCounter, color);
     }
 
 	private void MapDebug()
@@ -176,4 +203,38 @@ public class MapDraw : MonoBehaviour
 
 		Debug.Log(printMap);
 	}
+
+	private void ScoreCount(int ChangeAmount, string playerColor)
+    {
+		if (playerColor == black)
+        {
+			if (ChangeAmount >= 4)
+            {
+				blackScore = 150 * ChangeAmount + blackScore;
+				Debug.Log("Player1 Score:");
+				Debug.Log(blackScore);
+            }
+			else
+            {
+				blackScore = 100 * ChangeAmount + blackScore;
+				Debug.Log("Player1 Score:");
+				Debug.Log(blackScore);
+			}
+        }
+		else if (playerColor == white)
+        {
+			if (ChangeAmount >= 4)
+            {
+				whiteScore = 150 * ChangeAmount + whiteScore;
+				Debug.Log("Player2 Score:");
+				Debug.Log(whiteScore);
+			}
+			else
+            {
+				whiteScore = 100 * ChangeAmount + whiteScore;
+				Debug.Log("Player2 Score:");
+				Debug.Log(whiteScore);
+			}
+        }
+    }
 }
