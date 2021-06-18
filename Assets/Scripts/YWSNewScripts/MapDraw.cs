@@ -12,24 +12,25 @@ public class MapDraw : MonoBehaviour
 		{ "¡", " ", " "," "," "," ", " "," ", " ", "¡" },
 		{ "¡", " ", " "," "," "," ", " "," ", " ", "¡" },
 		{ "¡", " ", " "," "," "," ", " "," ", " ", "¡" },
-		{ "¡", " ", " "," "," ","Z", " "," ", "Z", "¡" },
-		{ "¡", " ", " "," "," ","Z", " ","œ", "œ", "¡" },
-		{ "¡", " ", " "," ","Z","œ", "Z","œ", "Z", "¡" },
-		{ "¡", " ", " "," ","Z","œ", "œ","Z", "Z", "¡" },
-		{ "¡", " ", " "," ","Z","Z", "Z","Z", "Z", "¡" },
+		{ "¡", "œ", " ","œ","Z","œ", "Z"," ", "Z", "¡" },
+		{ "¡", "œ", "Z","Z","Z","œ", "œ","œ", "œ", "¡" },
+		{ "¡", "œ", "Z","œ","Z","œ", "Z","œ", "Z", "¡" },
+		{ "¡", "œ", "Z","Z","Z","œ", "œ","œ", "Z", "¡" },
+		{ "¡", "œ", "œ","œ","Z","œ", "Z","Z", "Z", "¡" },
 		{ "¡", "¡", "¡","¡","¡","¡", "¡","¡", "¡", "¡" }
 	};
 
-	const char black = 'œ';
-	const char white = 'Z';
-	const char wall = '¡';
-	const char empty = ' ';
+	const string black = "œ";
+	const string white = "Z";
+	const string wall = "¡";
+	const string empty = " ";
 
 	// Start is called before the first frame update
 	void Start()
     {
 		MapDebug();
-		MinoCheck(6, 6);
+		//MinoCheck(6, 6, 2);
+		MinoCheck(3, 6, 1);
 	}
 
     // Update is called once per frame
@@ -51,7 +52,7 @@ public class MapDraw : MonoBehaviour
 	//”’ƒvƒŒƒCƒ„[‚Ìê‡A”’‚Ì‹î‚ğ—Dæ‚µ‚ÄŒŸõ‚ğs‚¤
 	
 	//‘S•ûŒü‚ğŒŸõ
-	private void MinoCheck(int x, int y)
+	private void MinoCheck(int x, int y, int player)
     {
 		for (int i = -1; i < 2; i++)
         {
@@ -73,18 +74,27 @@ public class MapDraw : MonoBehaviour
 					if (x + j * s >= 0 && x + j * s < 9 && y + i * s >= 0 && y + i * s < 9)
 					{
 						//‹ó‚«‚É“–‚½‚Á‚½ê‡A‚»‚Ì•ûŒü‚ÌŒŸõ‚ğI—¹‚³‚¹‚é
-						if (map[y + i * s,x + j * s] == " ")
+						if (map[y + i * s,x + j * s] == empty)
 						{
 							break; 
 						}
 						//“¯‚¶F‚Ì‹î‚É“–‚½‚Á‚½ê‡A‚»‚Ìƒ}ƒX‚É‚¢‚½‚é‚Ü‚Å‚Ìƒ}ƒX‚Ì‹î‚ğ‚Ğ‚Á‚­‚è•Ô‚·
-						if (map[y + i * s,x + j * s] == "Z")
+						if (player == 2 && map[y + i * s,x + j * s] == white)
 						{
 							for (int n = 1; n < s; n++)
                             {
-								map[y + i * n,x + j * n] = "Z";
+								map[y + i * n,x + j * n] = white;
 							}
+							break;
 						}
+						else if (player == 1 && map[y + i * s,x + j * s] == black)
+                        {
+							for (int n = 1; n < s; n++)
+                            {
+								map[y + i * n, x + j * n] = black;
+							}
+							break;
+                        }
 					}
 				}
             }
