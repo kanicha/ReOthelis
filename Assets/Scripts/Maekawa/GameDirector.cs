@@ -12,8 +12,10 @@ public class GameDirector : MonoBehaviour
     Vector3 DEFAULT_POSITION = Vector3.zero;
     public static bool isGenerate = true;
     //private byte generateCount = 0;
-    private const int _DEFAULT_RANGE = 30;
-    private int _range = 30;
+    
+    // Jokerコマを含めると(黒15 白15 Joker + 1 ) * 2(2セット)なので 31で宣言
+    private const int _DEFAULT_RANGE = 31;
+    private int _range = 31;
     private int _whiteCount, _blackCount, _jokerCount = 0;
     private const int _WHITE_COUNT_MAX = 15;
     private const int _BLACK_COUNT_MAX = 15;
@@ -29,39 +31,55 @@ public class GameDirector : MonoBehaviour
     {
         if (isGenerate)
         {
+            // コマタイプ
             int[] type = new int[2];
+            // for文で回し2つ分生成
             for (int i = 0; i < 2; i++)
             {
-                int num = Random.Range(0, _range);
+                // Randomし0 ~ 31の抽選
+                int num = Random.Range(0, _range + 1);
+                // 0 ~ 99を使い黒と白抽選区分
                 int num2 = Random.Range(0, 100);
+                
+                // Jokerコマ生成
                 if (num == _range && _jokerCount < _JOKER_COUNT_MAX)
                 {
                     type[i] = 3;
                     _jokerCount++;
                 }
-                else if (num2 % 2 == 0 && _blackCount <= _BLACK_COUNT_MAX)
+                // 黒コマ生成 (1)
+                else if (num2 % 2 == 0 && (_blackCount < _BLACK_COUNT_MAX
+                    || _whiteCount > _WHITE_COUNT_MAX))
                 {
                     type[i] = 1;
                     _blackCount++;
                 }
-                else /*if (num % 2 == 1 && _whiteCount < _WHITE_COUNT_MAX)*/
+                // 白コマ生成 (2)
+                else 
                 {
                     type[i] = 2;
                     _whiteCount++;
                 }
+                // 一回抽選したら範囲を狭める
                 _range--;
-
+                
+                // 範囲が0になった時にリセット処理
                 if (_range <= 0)
                 {
+                    // 各コマ生成数Debug.Log
+                    Debug.Log("Joker: " + _jokerCount + "\n");
+                    Debug.Log("Black: " + _blackCount + "\n");
+                    Debug.Log("White: " + _whiteCount + "\n");
+                    
                     _range = _DEFAULT_RANGE;
                     _jokerCount = _JOKER_COUNT_MAX;
                     _blackCount = _BLACK_COUNT_MAX;
                     _whiteCount = _WHITE_COUNT_MAX;
 
-                    Debug.Log("aaaa");
+                    Debug.Log("Reset");
                 }
             }
-
+            
             GameObject piece1 = Generate(type[0]);
             GameObject piece2 = Generate(type[1]);
 
