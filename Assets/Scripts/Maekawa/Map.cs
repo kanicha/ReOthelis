@@ -25,13 +25,6 @@ public class Map : MonoBehaviour
     private const string _white = "〇";
     private const string _black = "●";
 
-    private void Update()
-    {
-        for (int i = 0; i < _HEIGHT; i++)
-            for (int j = 0; j < _WIDTH; j++)
-                isReversed[i, j] = false;
-    }
-
     /// <summary>
     /// 移動後のコマが障害物に当たるかを調べる
     /// </summary>
@@ -81,7 +74,7 @@ public class Map : MonoBehaviour
 
         int i = 0;
         int dz = 0;
-        
+
         while (true)
         {
             i++;
@@ -104,87 +97,129 @@ public class Map : MonoBehaviour
             _map[dz, x] = _black;
         else if (p.pieceType == Piece.PieceType.white)
             _map[dz, x] = _white;
+
+        _pieceMap[dz, x] = piece;
     }
 
     // ひっくり返す処理
 
-    // ひっくり返すやつコマを集める
-    List<GameObject> ReversePiece = null;
-    private bool[,] isReversed = new bool[_HEIGHT, _WIDTH];
+    private List<GameObject> _reversePiece = new List<GameObject>();// ひっくり返すコマを格納
+    private GameObject[,] _pieceMap = new GameObject[_HEIGHT, _WIDTH];
+    private const string _REVERSED_TAG = "Reversed";
+    private int _setPosX = 0;
+    private int _setPosZ = 0;
+    private string _myColor = string.Empty;
+    private string _enemyColor = string.Empty;
 
-    public void ListClear()
+    /// <summary>
+    /// 実際にオブジェクトをひっくり返す関数
+    /// </summary>
+    public void PieceReverse()
     {
-        ReversePiece.Clear();
-        for (int i = 0; i < _HEIGHT; i++)
-            for (int j = 0; j < _WIDTH; j++)
-                isReversed[i, j] = false;
+        foreach (GameObject piece in _reversePiece)
+        {
+            piece.GetComponent<Piece>().Reverse();
+            piece.tag = "Untagged";
+        }
+        _reversePiece.Clear();
     }
 
-    private void CheckReverse(GameObject piece, int player)
+    /// <summary>
+    /// 探索の準備と各方向に探索する関数を呼ぶ関数
+    /// </summary>
+    /// <param name="piece">今置いたコマ</param>
+    public void CheckReverse(GameObject piece)
     {
-        string myColor;
-        string enemyColor;
-
-        if (player == 0)// 黒プレイヤーなら対象は白
+        // 自分の色と相手の色を決定
+        if (Piece.PieceType.black == piece.GetComponent<Piece>().pieceType)
         {
-            myColor = _black;
-            enemyColor = _white;
+            _myColor = _black;
+            _enemyColor = _white;
         }
         else
         {
-            myColor = _white;
-            enemyColor = _black;
+            _myColor = _white;
+            _enemyColor = _black;
         }
 
-        // 検索での配列指定に使用
-        int setPosX = (int)piece.transform.position.x;
-        int setPosZ = (int)piece.transform.position.z * -1;
+        // 置いたマスの座標を取得
+        _setPosX = (int)piece.transform.position.x;
+        _setPosZ = (int)piece.transform.position.z * -1;
 
-        int checkPosX = setPosX;
-        
-        // ←方向に探索
-        while (true)
+        // 7方向にチェック(zは符号が逆転する)
+        CheckInTheDirection(new Vector3(-1, 0, 0));   // ←
+        CheckInTheDirection(new Vector3(1, 0, 0));    // →
+        CheckInTheDirection(new Vector3(0, 0, 1));   // ↓
+        //CheckInTheDirection(new Vector3(0, 0, -1));  // ↑
+        CheckInTheDirection(new Vector3(-1, 0, 1));  // ↙
+        CheckInTheDirection(new Vector3(1, 0, 1));   // ↘
+        CheckInTheDirection(new Vector3(-1, 0, -1));   // ↖
+        CheckInTheDirection(new Vector3(1, 0, -1));    // ↗
+    }
+
+    /// <summary>
+    /// dirの方向に探索
+    /// </summary>
+    /// <param name="dir">x, 0, -z</param>
+    private void CheckInTheDirection(Vector3 dir)
+    {
+        // 調べる座標
+        int checkPosX = _setPosX;
+        int checkPosZ = _setPosZ;
+        // 調べたい方向
+        int dirX = (int)dir.x;
+        int dirZ = (int)dir.z;
+
+        List<GameObject> pieceBetween = new List<GameObject>();// 相手色のコマを追加していく
+
+        bool isReverse = false;
+        int moveCount = 0;
+
+        // dirの方向に「ひっくり返せるか」探索
+        while(true)
         {
-            checkPosX--;
-            // 壁か空白に当たったら終了
-            if (_map[setPosZ, checkPosX] == _wall || _map[setPosZ, checkPosX] == _blank)
-                break;
-            // 相手色 かつ このターンに裏返ってなければリバース
-            else if (_map[setPosZ, checkPosX] == enemyColor && !isReversed[setPosZ, checkPosX])
+            // 調べたい方向に進んでいく
+            checkPosX += dirX;
+            checkPosZ += dirZ;
+            // 壁 or 空白 or このターン中に裏返ったコマなら終了
+            if (_map[checkPosZ, checkPosX] == _wall || _map[checkPosZ, checkPosX] == _blank || _pieceMap[checkPosZ, checkPosX].CompareTag(_REVERSED_TAG))
             {
-                isReversed[setPosZ, checkPosX] = true;
-                _map[setPosZ, checkPosX] = myColor;
-                ReversePiece.Add(piece);
+                break;
             }
-            // そのほかのコマはスルー
-        }
-        // →方向に検索
-        checkPosX = setPosX;
-        while (true)
-        {
-            checkPosX++;
-            if (_map[setPosZ, checkPosX] == _wall || _map[setPosZ, checkPosX] == _blank)
-                break;
-            else if (_map[setPosZ, checkPosX] == enemyColor && !isReversed[setPosZ, checkPosX])
+            else if (_map[checkPosZ, checkPosX] == _myColor)
             {
-                isReversed[setPosZ, checkPosX] = true;
-                _map[setPosZ, checkPosX] = myColor;
-                ReversePiece.Add(piece);
+                // 進んだ先に自分の色があれば終了して裏返せる
+                isReverse = true;
+                break;
             }
+            moveCount++;
         }
-        // ↓方向に検索
-        int checkPosZ = setPosZ;
-        while (true)
+
+        // 裏返しが発生するなら処理(厳密にはmoveCountが0でも処理)
+        if (isReverse)
         {
-            checkPosX++;
-            if (_map[setPosZ, checkPosX] == _wall || _map[setPosZ, checkPosX] == _blank)
-                break;
-            else if (_map[setPosZ, checkPosX] == enemyColor && !isReversed[setPosZ, checkPosX])
+            checkPosX = _setPosX;
+            checkPosZ = _setPosZ;
+
+            // ひっくり返せることが確定しているので色の判定はしない
+            for(int i = 0; i < moveCount; i++)
             {
-                isReversed[setPosZ, checkPosX] = true;
-                _map[setPosZ, checkPosX] = myColor;
-                ReversePiece.Add(piece);
+                checkPosX += dirX;
+                checkPosZ += dirZ;
+                _pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
+                _map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
+                _reversePiece.Add(_pieceMap[checkPosZ, checkPosX]);
             }
         }
     }
 }
+// map確認用
+//for(int i = 0; i < _HEIGHT; i++)
+//{
+//    string s = "";
+//    for(int j = 0; j < _WIDTH; j++)
+//    {
+//        s += _map[i, j];
+//    }
+//    Debug.Log(s);
+//}
