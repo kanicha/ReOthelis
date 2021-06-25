@@ -230,6 +230,7 @@ MonoBehaviour:
   root: {fileID: 1824669614}
   piecePrefab: {fileID: 4094469071948470677, guid: 46b444d8b89999f409898699d7642b8e, type: 3}
   minoController: {fileID: 939100888}
+  DEFAULT_POSITION: {x: 4, y: 0, z: -1}
 --- !u!4 &326221984
 Transform:
   m_ObjectHideFlags: 0
@@ -366,6 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17515d32eb93c7f429e8633f0aaff978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ReversePiece: []
 --- !u!4 &576250715
 Transform:
   m_ObjectHideFlags: 0
@@ -570,12 +572,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d242883f8d1bd45aba76ca8b48ef24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myMap: {fileID: 576250714}
+  _map: {fileID: 576250714}
   controllPieces:
   - {fileID: 0}
   - {fileID: 0}
   isLanding: 1
   fallTime: 1
+  rotationNum: 0
 --- !u!4 &939100889
 Transform:
   m_ObjectHideFlags: 0
