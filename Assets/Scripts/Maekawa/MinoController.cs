@@ -83,10 +83,12 @@ public class MinoController : MonoBehaviour
     {
         int lastNum = rotationNum;
         // 左回転
-        if ((p1._ds4L1 && _isBlack) || (p2._ds4L1 && !_isBlack))
+        if (((p1._ds4L1 || p1._ds4cross) && _isBlack) || 
+            ((p2._ds4L1 || p2._ds4cross) && !_isBlack))
             rotationNum++;
         // 右回転(=左に3回転)
-        else if ((p1._ds4R1 && _isBlack) || (p2._ds4R1 && !_isBlack))
+        else if (((p1._ds4R1 || p1._ds4circle) && _isBlack) ||
+                ((p2._ds4R1  || p2._ds4circle) && !_isBlack))
             rotationNum += 3;
 
         // 疑似回転(移動がややこしくなるのでRotationはいじらない)

@@ -11,6 +11,8 @@ public class Player2 : MonoBehaviour
     public float _stickVertical = 0.0f;
     public bool _ds4L1;
     public bool _ds4R1;
+    public bool _ds4circle;
+    public bool _ds4cross;
 
     // Start is called before the first frame update
     void Start()
@@ -27,5 +29,7 @@ public class Player2 : MonoBehaviour
         _stickVertical = Input.GetAxis(DS4ControllerP2.DS4L_STICK_VERTICAL);
         _ds4L1 = Input.GetButtonDown(DS4ControllerP2.DS4_L1);
         _ds4R1 = Input.GetButtonDown(DS4ControllerP2.DS4_R1);
+        _ds4circle = Input.GetButtonDown(DS4ControllerP2.DS4_O);
+        _ds4cross = Input.GetButtonDown(DS4ControllerP2.DS4_X);
     }
 }
