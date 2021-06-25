@@ -51,19 +51,19 @@ public class MinoController : MonoBehaviour
         {
             move.x = 1;
         }
+        // S入力すると一段下がる
+        else if ((p1._vertical < 0 && _isBlack) || (p2._vertical < 0 && !_isBlack))
+        {
+            move.z = -1;
+        }
         // 時間落下
         else if (Time.time - previousTime >= fallTime)
         {
             move.z = -1;
 
             previousTime = Time.time;
-
-            // S入力すると落ちるスピードアップ
-            if ((p1._vertical < 0 && _isBlack) || (p2._vertical < 0 && !_isBlack))
-            {
-                fallTime = 0.1f;
-            }
         }
+
 
         Vector3 movedPos = controllPieces[0].transform.position + move;
         Vector3 rotMovedPos = rotationPos[rotationNum] + movedPos;
