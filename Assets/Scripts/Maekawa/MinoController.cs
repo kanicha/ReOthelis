@@ -17,10 +17,11 @@ public class MinoController : MonoBehaviour
     private Piece.PieceType playersType = Piece.PieceType.black;// 仮で常に黒プレイヤ
     private bool _isInput = false;
     private bool _isFalled = false;
-    private bool _isBlack = false;
+    private bool _isBlack = true;
     protected float _vertical = 0.0f;
     protected float _horizontal = 0.0f;
     private int _frameCount = 0;
+    private float previousTime = 0.0f;
     public int rotationNum = 0;// 左回転
 
     private Vector3[] rotationPos = new Vector3[]
@@ -51,31 +52,33 @@ public class MinoController : MonoBehaviour
     {
         Vector3 move = Vector3.zero;
 
-        if (p1._horizontal < 0 || p2._horizontal < 0)
+        // 左移動
+        if ((p1._horizontal < 0 && _isBlack) || (p2._horizontal < 0 && !_isBlack))
         {
             move.x = -1;
         }
-        else if (p1._horizontal > 0 || p2._horizontal > 0)
+        // 右移動
+        else if ((p1._horizontal > 0 && _isBlack) || (p2._horizontal > 0 && !_isBlack))
         {
             move.x = 1;
         }
-        else if (p1._vertical < 0 || p2._vertical < 0)
+/*        else if ((p1._vertical < 0  && _isBlack) || (p2._vertical < 0 && !_isBlack))
         {
             move.z = -1;
-        }
+        }*/
         // 時間落下
-        //else if (Time.time - previousTime >= fallTime)
-        //{
-        //    move.y = -1;
+        else if (Time.time - previousTime >= fallTime)
+        {
+            move.z = -1;
 
-        //    previousTime = Time.time;
+            previousTime = Time.time;
 
-        //    // S入力すると落ちるスピードアップ
-        //    if (Input.GetKey(KeyCode.S))
-        //    {
-        //        fallTime = (float)0.1;
-        //    }
-        //}
+            // S入力すると落ちるスピードアップ
+            if ((p1._vertical < 0 && _isBlack) || (p2._vertical < 0 && !_isBlack))
+            {
+                fallTime = 0.1f;
+            }
+        }
 
         Vector3 movedPos = controllPieces[0].transform.position + move;
         Vector3 rotMovedPos = rotationPos[rotationNum] + movedPos;
@@ -92,10 +95,10 @@ public class MinoController : MonoBehaviour
     {
         int lastNum = rotationNum;
         // 左回転
-        if (p1._ds4L1 || p2._ds4L1)
+        if ((p1._ds4L1 && _isBlack) || (p2._ds4L1 && !_isBlack))
             rotationNum++;
         // 右回転(=左に3回転)
-        else if (p1._ds4R1 || p2._ds4R1)
+        else if ((p1._ds4R1 && _isBlack) || (p2._ds4R1 && !_isBlack))
             rotationNum += 3;
 
         // 疑似回転(移動がややこしくなるのでRotationはいじらない)
@@ -196,9 +199,36 @@ public class MinoController : MonoBehaviour
 
                         GameDirector.isGenerate = true;
                         _isFalled = false;
+
+
+                        PlayerTurn();
                     }
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// プレイヤーターン処理関数
+    /// </summary>
+    private void PlayerTurn()
+    {
+        // 黒 -> 白プレイヤー
+        if (_isBlack)
+        {
+            _isBlack = false;
+            playersType = Piece.PieceType.white;
+            Debug.Log("白プレイヤー(2P)");
+        }
+        // 白 -> 黒プレイヤー
+        else if (!_isBlack)
+        {
+            _isBlack = true;
+            playersType = Piece.PieceType.black;
+
+            Debug.Log("黒プレイヤー(1P)");
+        }
+        // 自由落下初期化
+        fallTime = 1.0f;
     }
 }
