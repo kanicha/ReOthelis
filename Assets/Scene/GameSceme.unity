@@ -573,7 +573,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d242883f8d1bd45aba76ca8b48ef24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 35
+  moveSpeed: 40
   fallTime: 1
   _map: {fileID: 576250714}
   p1: {fileID: 939100890}
@@ -614,6 +614,8 @@ MonoBehaviour:
   _stickVertical: 0
   _ds4L1: 0
   _ds4R1: 0
+  _ds4circle: 0
+  _ds4cross: 0
 --- !u!114 &939100891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -632,6 +634,8 @@ MonoBehaviour:
   _stickVertical: 0
   _ds4L1: 0
   _ds4R1: 0
+  _ds4circle: 0
+  _ds4cross: 0
 --- !u!1 &942241796
 GameObject:
   m_ObjectHideFlags: 0
