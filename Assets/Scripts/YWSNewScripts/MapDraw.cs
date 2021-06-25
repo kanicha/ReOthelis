@@ -43,9 +43,9 @@ public class MapDraw : MonoBehaviour
     {
 		if (Input.GetMouseButtonDown(0))
         {
-			map[2, 5] = black;
-			map[4, 6] = black;
-			Ordering(6, 4, 5, 2, 1);
+			map[7, 7] = white;
+			map[4, 6] = white;
+			Ordering(7, 7, 6, 4, 2);
         }
     }
 
@@ -140,6 +140,8 @@ public class MapDraw : MonoBehaviour
         {
 			for (int j = -1; j < 2; j++)
             {
+				Debug.Log("x方向 = " + j);
+				Debug.Log("y方向 = " + i);
 				//検索方向変数
 				int Direction_X = x + j;
 				int Direction_Y = y + i;
@@ -157,14 +159,15 @@ public class MapDraw : MonoBehaviour
 				//検索の距離を足していく
 				for (int s = 2; s < 9; s++)
 				{
-					//探索距離関数
+					Debug.Log("距離 = " + s);
+					//検索マス関数
 					int Range_X = x + j * s;
 					int Range_Y = y + i * s;
 
 					if (Range_X >= 0 && Range_X < 10 && Range_Y >= 0 && Range_Y < 9)
 					{
 						//相手の駒を発見したあとに空きに当たった場合、その方向の検索を終了させる
-						if (map[Range_Y, Range_X] == empty)
+						if (map[Range_Y, Range_X] == empty || map[Range_Y, Range_X] == wall)
 						{
 							break; 
 						}
@@ -177,7 +180,7 @@ public class MapDraw : MonoBehaviour
 								int Change_Y = y + i * n;
 								map[Change_Y, Change_X] = color;
 								scoreCounter++;
-								Debug.Log(scoreCounter);
+								Debug.Log("count = " + scoreCounter);
 							}
 							break;
 						}
@@ -211,14 +214,12 @@ public class MapDraw : MonoBehaviour
 			if (ChangeAmount >= 4)
             {
 				blackScore = 150 * ChangeAmount + blackScore;
-				Debug.Log("Player1 Score:");
-				Debug.Log(blackScore);
+				Debug.Log("Player1 Score:" + blackScore);
             }
 			else
             {
 				blackScore = 100 * ChangeAmount + blackScore;
-				Debug.Log("Player1 Score:");
-				Debug.Log(blackScore);
+				Debug.Log("Player1 Score:" + blackScore);
 			}
         }
 		else if (playerColor == white)
@@ -226,14 +227,12 @@ public class MapDraw : MonoBehaviour
 			if (ChangeAmount >= 4)
             {
 				whiteScore = 150 * ChangeAmount + whiteScore;
-				Debug.Log("Player2 Score:");
-				Debug.Log(whiteScore);
+				Debug.Log("Player2 Score:" + whiteScore);
 			}
 			else
             {
 				whiteScore = 100 * ChangeAmount + whiteScore;
-				Debug.Log("Player2 Score:");
-				Debug.Log(whiteScore);
+				Debug.Log("Player2 Score:" + whiteScore);
 			}
         }
     }
