@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player2 : MonoBehaviour
 {
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +14,9 @@ public class Player2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetButton(DS4ControllerP2.DS4_O))
+        {
+            Debug.Log("P2Pushed !");
+        }
     }
 }
