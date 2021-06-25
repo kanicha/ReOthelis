@@ -367,7 +367,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17515d32eb93c7f429e8633f0aaff978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ReversePiece: []
 --- !u!4 &576250715
 Transform:
   m_ObjectHideFlags: 0
@@ -572,12 +571,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d242883f8d1bd45aba76ca8b48ef24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fallTime: 1
   _map: {fileID: 576250714}
   controllPieces:
   - {fileID: 0}
   - {fileID: 0}
-  isLanding: 1
-  fallTime: 1
   rotationNum: 0
 --- !u!4 &939100889
 Transform:

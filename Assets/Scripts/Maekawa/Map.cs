@@ -16,7 +16,7 @@ public class Map : MonoBehaviour
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
-        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
+        { "■", "〇", "□", "□", "□", "□", "□", "□", "●", "■" },
         { "■", "■", "■", "■", "■", "■", "■", "■", "■", "■" }
     };
 
@@ -102,10 +102,8 @@ public class Map : MonoBehaviour
     }
 
     // ひっくり返す処理
-
     private List<GameObject> _reversePiece = new List<GameObject>();// ひっくり返すコマを格納
     private GameObject[,] _pieceMap = new GameObject[_HEIGHT, _WIDTH];
-    private const string _REVERSED_TAG = "Reversed";
     private int _setPosX = 0;
     private int _setPosZ = 0;
     private string _myColor = string.Empty;
@@ -114,12 +112,12 @@ public class Map : MonoBehaviour
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
     /// </summary>
-    public void PieceReverse()
+    private IEnumerator PieceReverse()
     {
         foreach (GameObject piece in _reversePiece)
         {
             piece.GetComponent<Piece>().Reverse();
-            piece.tag = "Untagged";
+            yield return new WaitForSeconds(.1f);
         }
         _reversePiece.Clear();
     }
@@ -147,14 +145,15 @@ public class Map : MonoBehaviour
         _setPosZ = (int)piece.transform.position.z * -1;
 
         // 7方向にチェック(zは符号が逆転する)
-        CheckInTheDirection(new Vector3(-1, 0, 0));   // ←
-        CheckInTheDirection(new Vector3(1, 0, 0));    // →
+        CheckInTheDirection(new Vector3(-1, 0, 0));  // ←
+        CheckInTheDirection(new Vector3(1, 0, 0));   // →
         CheckInTheDirection(new Vector3(0, 0, 1));   // ↓
-        //CheckInTheDirection(new Vector3(0, 0, -1));  // ↑
+        //CheckInTheDirection(new Vector3(0, 0, -1));// ↑
         CheckInTheDirection(new Vector3(-1, 0, 1));  // ↙
         CheckInTheDirection(new Vector3(1, 0, 1));   // ↘
-        CheckInTheDirection(new Vector3(-1, 0, -1));   // ↖
-        CheckInTheDirection(new Vector3(1, 0, -1));    // ↗
+        CheckInTheDirection(new Vector3(-1, 0, -1)); // ↖
+        CheckInTheDirection(new Vector3(1, 0, -1));  // ↗
+        StartCoroutine("PieceReverse");
     }
 
     /// <summary>
@@ -170,8 +169,6 @@ public class Map : MonoBehaviour
         int dirX = (int)dir.x;
         int dirZ = (int)dir.z;
 
-        List<GameObject> pieceBetween = new List<GameObject>();// 相手色のコマを追加していく
-
         bool isReverse = false;
         int moveCount = 0;
 
@@ -181,8 +178,8 @@ public class Map : MonoBehaviour
             // 調べたい方向に進んでいく
             checkPosX += dirX;
             checkPosZ += dirZ;
-            // 壁 or 空白 or このターン中に裏返ったコマなら終了
-            if (_map[checkPosZ, checkPosX] == _wall || _map[checkPosZ, checkPosX] == _blank || _pieceMap[checkPosZ, checkPosX].CompareTag(_REVERSED_TAG))
+            // 壁 or 空白 or なら終了
+            if (_map[checkPosZ, checkPosX] == _wall || _map[checkPosZ, checkPosX] == _blank)
             {
                 break;
             }
@@ -206,13 +203,13 @@ public class Map : MonoBehaviour
             {
                 checkPosX += dirX;
                 checkPosZ += dirZ;
-                _pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
                 _map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
                 _reversePiece.Add(_pieceMap[checkPosZ, checkPosX]);
             }
         }
     }
 }
+
 // map確認用
 //for(int i = 0; i < _HEIGHT; i++)
 //{
