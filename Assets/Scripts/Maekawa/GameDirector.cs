@@ -21,6 +21,9 @@ public class GameDirector : MonoBehaviour
     private const int _BLACK_COUNT_MAX = 15;
     private const int _JOKER_COUNT_MAX = 1;
 
+    private int turnCount = 0;
+    private bool isTurn = false;
+
     void Start()
     {
         isGenerate = true;
@@ -29,6 +32,16 @@ public class GameDirector : MonoBehaviour
 
     void Update()
     {
+        
+        if (turnCount % 2 == 1)
+        {
+            Player1.isMyTurn = true;
+        }
+        else
+        {
+            Player2.isMyTurn = true;
+        }
+
         if (isGenerate)
         {
             // コマタイプ
@@ -77,6 +90,11 @@ public class GameDirector : MonoBehaviour
                     _whiteCount = _WHITE_COUNT_MAX;
 
                     Debug.Log("Reset");
+                    
+                    turnCount++;
+                    Player1.isMyTurn = false;
+                    Player2.isMyTurn = false;
+
                 }
             }
             

@@ -27,10 +27,10 @@ public class DS4ControllerP1
     /// </summary>
     // 十字キー右.左
     public static readonly string DS4_HORIZONTAL = "Horizontal D-Pad";
-    //public float fDS4Horizontal = Input.GetAxisRaw("Horizontal D-Pad");
+    //public static float FLOAT_DS4_HORIZONTAL = Input.GetAxisRaw("Horizontal D-Pad");
     // 十字キー上.下
     public static readonly string DS4_VERTICAL = "Vertical D-Pad";
-    //public float fDS4Vertical = Input.GetAxisRaw("Vertical D-Pad");
+    //public static float FLOAT_DS4_VERTICAL = Input.GetAxisRaw("Vertical D-Pad");
 
     /// <summary>
     /// スティック
