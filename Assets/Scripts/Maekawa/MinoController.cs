@@ -42,17 +42,20 @@ public class MinoController : MonoBehaviour
         Vector3 move = Vector3.zero;
 
         // 左移動
-        if ((p1._horizontal < 0 && _isBlack) || (p2._horizontal < 0 && !_isBlack))
+        if (((p1._horizontal < 0 || p1._stickHorizontal < 0) && _isBlack) || 
+            ((p2._horizontal < 0 || p2._stickHorizontal < 0) && !_isBlack))
         {
             move.x = -1;
         }
         // 右移動
-        else if ((p1._horizontal > 0 && _isBlack) || (p2._horizontal > 0 && !_isBlack))
+        else if (((p1._horizontal > 0 || p1._stickHorizontal > 0) && _isBlack) || 
+                ((p2._horizontal > 0  || p2._stickHorizontal > 0) && !_isBlack))
         {
             move.x = 1;
         }
         // S入力すると一段下がる
-        else if ((p1._vertical < 0 && _isBlack) || (p2._vertical < 0 && !_isBlack))
+        else if (((p1._vertical < 0  || p1._stickVertical > 0) && _isBlack) || 
+                ((p2._vertical < 0   || p2._stickVertical > 0) && !_isBlack))
         {
             move.z = -1;
         }
