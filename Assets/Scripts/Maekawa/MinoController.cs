@@ -14,15 +14,15 @@ public class MinoController : MonoBehaviour
     private Player2 p2 = null;
 
     public GameObject[] controllPieces = new GameObject[2];
-    private Piece.PieceType playersType = Piece.PieceType.black;// 仮で常に黒プレイヤ
+    private Piece.PieceType playersType = Piece.PieceType.black;// 初期値黒プレイヤー(1P)
     private bool _isInput = false;
     private bool _isFalled = false;
-    private bool _isBlack = true;
+    private bool _isBlack = true; // ターン処理変数
     protected float _vertical = 0.0f;
     protected float _horizontal = 0.0f;
     private int _frameCount = 0;
     private float previousTime = 0.0f;
-    public int rotationNum = 0;// 左回転
+    public int rotationNum = 0; //回転数
 
     private Vector3[] rotationPos = new Vector3[]
     {
@@ -31,17 +31,6 @@ public class MinoController : MonoBehaviour
         new Vector3(0,  0, -1),
         new Vector3(1,  0, 0)
     };
-
-    enum ButonType
-    {
-        none,        // 0
-        circle,     // マル
-        cross,      // バツ
-        triangle,   // 三角
-        square,      // 四角
-        R1,         // R1
-        L1          // L1
-    }
 
     void Update()
     {
@@ -62,10 +51,6 @@ public class MinoController : MonoBehaviour
         {
             move.x = 1;
         }
-/*        else if ((p1._vertical < 0  && _isBlack) || (p2._vertical < 0 && !_isBlack))
-        {
-            move.z = -1;
-        }*/
         // 時間落下
         else if (Time.time - previousTime >= fallTime)
         {
@@ -228,7 +213,7 @@ public class MinoController : MonoBehaviour
 
             Debug.Log("黒プレイヤー(1P)");
         }
-        // 自由落下初期化
+        // 自由落下速度初期化
         fallTime = 1.0f;
     }
 }
