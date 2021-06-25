@@ -23,6 +23,4 @@ public class TextureChanger : MonoBehaviour
         black.GetComponent<Renderer>().sharedMaterial = _material[0];
         white.GetComponent<Renderer>().sharedMaterial = _material[1];
     }
-
-
 }
