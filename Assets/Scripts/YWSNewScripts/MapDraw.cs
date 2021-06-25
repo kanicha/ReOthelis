@@ -34,19 +34,19 @@ public class MapDraw : MonoBehaviour
 	void Start()
     {
 		MapDebug();
-		MinoCheck(3, 7);
+		MinoCheck(1, 8, 1);
 		//MinoCheck(3, 6);
 	}
 
     // Update is called once per frame
     void Update()
     {
-		//if (Input.GetMouseButtonDown(0))
-  //      {
-		//	map[7, 7] = white;
-		//	map[4, 6] = white;
-		//	Ordering(7, 7, 6, 4, 2);
-  //      }
+        if (Input.GetMouseButtonDown(0))
+        {
+            map[8, 1] = black;
+            map[8, 8] = black;
+            Ordering(8, 8, 1, 1, 1);
+        }
     }
 
 	//Player 1 = 黒プレイヤー
@@ -64,10 +64,10 @@ public class MapDraw : MonoBehaviour
 				//二番目の駒の色を記憶
 				//二番目の駒が一番目の駒によってひっくり返されたら、その駒のひっくり返り処理を行わない
 				memory_color = map[y2, x2];
-				MinoCheck(x1, y1);
+				MinoCheck(x1, y1, 1);
 				if (map[y2,x2] == memory_color)
                 {
-					MinoCheck(x2, y2);
+					MinoCheck(x2, y2, 1);
 				}
 			}
 			else if (map[y1,x1] == white)
@@ -75,16 +75,16 @@ public class MapDraw : MonoBehaviour
 				if (map[y2,x2] == black)
                 {
 					memory_color = map[y1, x1];
-					MinoCheck(x2, y2);
+					MinoCheck(x2, y2, 1);
 					if (map[y1,x1] == memory_color)
                     {
-						MinoCheck(x1, y1);
+						MinoCheck(x1, y1, 1);
 					}
                 }
 				else if (map[y2,x2] == white)
                 {
-					MinoCheck(x1, y1);
-					MinoCheck(x2, y2);
+					MinoCheck(x1, y1, 1);
+					MinoCheck(x2, y2, 1);
 				}
             }
 		}
@@ -95,10 +95,10 @@ public class MapDraw : MonoBehaviour
 			if (map[y1, x1] == white)
 			{
 				memory_color = map[y2, x2];
-				MinoCheck(x1, y1);
+				MinoCheck(x1, y1, 2);
 				if (map[y2, x2] == memory_color)
 				{
-					MinoCheck(x2, y2);
+					MinoCheck(x2, y2, 2);
 				}
 			}
 			else if (map[y1, x1] == black)
@@ -106,23 +106,23 @@ public class MapDraw : MonoBehaviour
 				if (map[y2, x2] == white)
 				{
 					memory_color = map[y1, x1];
-					MinoCheck(x2, y2);
+					MinoCheck(x2, y2, 2);
 					if (map[y1, x1] == memory_color)
 					{
-						MinoCheck(x1, y1);
+						MinoCheck(x1, y1, 2);
 					}
 				}
 				else if (map[y2, x2] == white)
 				{
-					MinoCheck(x1, y1);
-					MinoCheck(x2, y2);
+					MinoCheck(x1, y1, 2);
+					MinoCheck(x2, y2, 2);
 				}
 			}
 		}
     }
 
 	//全方向を検索
-	private void MinoCheck(int x, int y)
+	private void MinoCheck(int x, int y, int player)
     {
 		int scoreCounter = 0;
 		//操作プレイヤーと相手プレイヤーの色を取得
@@ -189,7 +189,7 @@ public class MapDraw : MonoBehaviour
             }
         }
 		MapDebug();
-		ScoreCount(scoreCounter, color);
+		ScoreCount(scoreCounter, player);
     }
 
 	private void MapDebug()
@@ -207,9 +207,9 @@ public class MapDraw : MonoBehaviour
 		Debug.Log(printMap);
 	}
 
-	private void ScoreCount(int ChangeAmount, string playerColor)
+	private void ScoreCount(int ChangeAmount, int player)
     {
-		if (playerColor == black)
+		if (player == 1)
         {
 			if (ChangeAmount >= 4)
             {
@@ -222,7 +222,7 @@ public class MapDraw : MonoBehaviour
 				Debug.Log("Player1 Score:" + blackScore);
 			}
         }
-		else if (playerColor == white)
+		else if (player == 2)
         {
 			if (ChangeAmount >= 4)
             {
@@ -235,5 +235,37 @@ public class MapDraw : MonoBehaviour
 				Debug.Log("Player2 Score:" + whiteScore);
 			}
         }
+
+		CheckFinish();
+    }
+
+	private void CheckFinish()
+    {
+		int blackNum = 0;
+		int whiteNum = 0;
+
+		//ゲーム終了判定
+		for (int i = 0; i < 9; i++)
+        {
+			for (int j = 0; j < 10; j++)
+            {
+				//空きマスが存在する場合は検索を終了させる
+				if (map[j,i] == empty)
+                {
+					break;
+                }
+				else if (map[j,i] == black)
+                {
+					blackNum++;
+                }
+				else if (map[j,i] == white)
+                {
+					whiteNum++;
+                }
+            }
+        }
+
+		blackScore = blackScore + blackNum * 100;
+		whiteScore = whiteScore + whiteNum * 100;
     }
 }
