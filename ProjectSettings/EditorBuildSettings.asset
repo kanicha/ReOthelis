@@ -20,9 +20,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scene/YWSOldScene/CharacterEpisode.unity
     guid: 26c713ad79a590344b61fa1b1dc2a2a0
-  - enabled: 1
-    path: Assets/Scene/Game.unity
+  - enabled: 0
+    path: Assets/Scene/YWSOldScene/Game.unity
     guid: 7cee0da24911c3d429e6b93871531afc
+  - enabled: 1
+    path: Assets/Scene/GameSceme.unity
+    guid: 2e296a7b54548a44ab5d6597282b5777
   - enabled: 1
     path: Assets/Scene/Result.unity
     guid: c2dd73e0721626140892a2c39464156d
