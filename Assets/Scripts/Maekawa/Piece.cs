@@ -35,7 +35,6 @@ public class Piece : MonoBehaviour
             this.name = "black";
             //this.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
-
         _anim.SetTrigger("Reverse");
     }
 }

@@ -108,6 +108,7 @@ public class Map : MonoBehaviour
     private int _setPosZ = 0;
     private string _myColor = string.Empty;
     private string _enemyColor = string.Empty;
+    private bool isChecking = false;
 
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
@@ -117,17 +118,23 @@ public class Map : MonoBehaviour
         foreach (GameObject piece in _reversePiece)
         {
             piece.GetComponent<Piece>().Reverse();
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(.3f);
         }
         _reversePiece.Clear();
+        isChecking = false;
     }
 
     /// <summary>
     /// 探索の準備と各方向に探索する関数を呼ぶ関数
     /// </summary>
     /// <param name="piece">今置いたコマ</param>
-    public void CheckReverse(GameObject piece)
+    public IEnumerator CheckReverse(GameObject piece)
     {
+        while(isChecking)
+            yield return null;
+
+        isChecking = true;
+
         // 自分の色と相手の色を決定
         if (Piece.PieceType.black == piece.GetComponent<Piece>().pieceType)
         {
@@ -153,7 +160,7 @@ public class Map : MonoBehaviour
         CheckInTheDirection(new Vector3(1, 0, 1));   // ↘
         CheckInTheDirection(new Vector3(-1, 0, -1)); // ↖
         CheckInTheDirection(new Vector3(1, 0, -1));  // ↗
-        StartCoroutine("PieceReverse");
+        StartCoroutine(PieceReverse());
     }
 
     /// <summary>

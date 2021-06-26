@@ -92,8 +92,8 @@ public class MinoController : MonoBehaviour
                         nonPriorityPiece = controllPieces[0];
                     }
 
-                    _map.CheckReverse(priorityPiece);
-                    _map.CheckReverse(nonPriorityPiece);
+                    StartCoroutine(_map.CheckReverse(priorityPiece));
+                    StartCoroutine(_map.CheckReverse(nonPriorityPiece));
 
                     GameDirector.isGenerate = true;
                     _isFalled = false;
