@@ -5,9 +5,10 @@ using UnityEngine;
 public class Map : MonoBehaviour
 {
     private const byte _WIDTH = 10;
-    private const byte _HEIGHT = 10;
+    private const byte _HEIGHT = 11;
     private string[,] _map = new string[_HEIGHT, _WIDTH]// z, x座標で指定
     {
+        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
@@ -213,6 +214,36 @@ public class Map : MonoBehaviour
                 _map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
                 _reversePiece.Add(_pieceMap[checkPosZ, checkPosX]);
             }
+        }
+    }
+
+    public bool CheckGameSet()
+    {
+        int i = 0;
+        int j = 0;
+        bool isEnd = true;
+        while(i < _HEIGHT)
+        {
+            while(j < _WIDTH)
+            {
+                if (_map[i, j] == _blank)
+                {
+                    isEnd = false;
+                    break;
+                }
+                j++;
+            }
+            i++;
+        }
+
+        return isEnd;
+    }
+
+    public void CheckHeightOver(GameObject piece)
+    {
+        if ((int)piece.transform.position.z * -1 >= 0)
+        {
+            Destroy(piece);
         }
     }
 }

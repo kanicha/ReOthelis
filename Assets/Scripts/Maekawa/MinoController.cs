@@ -29,6 +29,9 @@ public class MinoController : MonoBehaviour
 
             if(_isInput)
             {
+                //_map.CheckHeightOver(controllPieces[0]);
+                //_map.CheckHeightOver(controllPieces[1]);
+
                 if (_map.CheckLanding(controllPieces[0].transform.position))
                 {
                     _map.FallPiece(controllPieces[0]);
@@ -95,8 +98,15 @@ public class MinoController : MonoBehaviour
                     StartCoroutine(_map.CheckReverse(priorityPiece));
                     StartCoroutine(_map.CheckReverse(nonPriorityPiece));
 
-                    GameDirector.isGenerate = true;
-                    _isFalled = false;
+                    if(_map.CheckGameSet())
+                    {
+                        Debug.Log("end");
+                    }
+                    else
+                    {
+                        GameDirector.isGenerate = true;
+                        _isFalled = false;
+                    }
                 }
             }
         }
