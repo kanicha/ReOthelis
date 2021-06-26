@@ -836,7 +836,7 @@ InputManager:
     invert: 0
     type: 2
     axis: 7
-    joyNum: 1
+    joyNum: 2
   - serializedVersion: 3
     m_Name: Trigger_L2
     descriptiveName: 

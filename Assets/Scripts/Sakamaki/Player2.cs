@@ -4,19 +4,32 @@ using UnityEngine;
 
 public class Player2 : MonoBehaviour
 {
+    public static bool isMyTurn = false;
+    public float _horizontal = 0.0f;
+    public float _vertical = 0.0f;
+    public float _stickHorizontal = 0.0f;
+    public float _stickVertical = 0.0f;
+    public bool _ds4L1;
+    public bool _ds4R1;
+    public bool _ds4circle;
+    public bool _ds4cross;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        isMyTurn = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButton(DS4ControllerP2.DS4_O))
-        {
-            Debug.Log("P2Pushed !");
-        }
+        _horizontal = Input.GetAxis(DS4ControllerP2.DS4_HORIZONTAL);
+        _vertical = Input.GetAxis(DS4ControllerP2.DS4_VERTICAL);
+        _stickHorizontal = Input.GetAxis(DS4ControllerP2.DS4L_STICK_HORIZONTAL);
+        _stickVertical = Input.GetAxis(DS4ControllerP2.DS4L_STICK_VERTICAL);
+        _ds4L1 = Input.GetButtonDown(DS4ControllerP2.DS4_L1);
+        _ds4R1 = Input.GetButtonDown(DS4ControllerP2.DS4_R1);
+        _ds4circle = Input.GetButtonDown(DS4ControllerP2.DS4_O);
+        _ds4cross = Input.GetButtonDown(DS4ControllerP2.DS4_X);
     }
 }
