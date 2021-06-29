@@ -5,7 +5,8 @@ using UnityEngine;
 public class Map : MonoBehaviour
 {
     private const byte _WIDTH = 10;
-    private const byte _HEIGHT = 10;
+    private const byte _HEIGHT = 11;
+    private const byte _EMPTY_AREAS_HEIGHT = 2;// 上２ラインに置かれたコマは消滅する
     private string[,] _map = new string[_HEIGHT, _WIDTH]// z, x座標で指定
     {
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
@@ -17,11 +18,12 @@ public class Map : MonoBehaviour
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
+        { "■", "〇", "□", "□", "□", "□", "□", "□", "●", "■" },
         { "■", "■", "■", "■", "■", "■", "■", "■", "■", "■" }
     };
 
     private const string _wall = "■";
-    private const string _blank = "□";
+    private const string _empty = "□";
     private const string _white = "〇";
     private const string _black = "●";
 
@@ -38,7 +40,7 @@ public class Map : MonoBehaviour
         int x = (int)movedPos.x;
 
         // 2つの駒の移動後座標に何もなければ移動を通す
-        if (_map[z, x] == _blank)
+        if (_map[z, x] == _empty)
             isBlank = true;
 
         return isBlank;
@@ -57,7 +59,7 @@ public class Map : MonoBehaviour
         int z = (int)piecePos.z * -1;
         int x = (int)piecePos.x;
 
-        if (_map[z + 1, x] != _blank)
+        if (_map[z + 1, x] != _empty)
             isGrounded = true;
 
         return isGrounded;
@@ -81,7 +83,7 @@ public class Map : MonoBehaviour
             dz = z + i;// iの分だけ下の座標を調べる
 
             // 設置したマスからi個下のマスが空白なら下に落とす
-            if (_map[dz, x] == _blank)
+            if (_map[dz, x] == _empty)
                 piece.transform.position = new Vector3(x, 0, dz * -1);// 反転させたyをマイナスに戻す
             else
             {
@@ -102,59 +104,58 @@ public class Map : MonoBehaviour
     }
 
     // ひっくり返す処理
-
     private List<GameObject> _reversePiece = new List<GameObject>();// ひっくり返すコマを格納
     private GameObject[,] _pieceMap = new GameObject[_HEIGHT, _WIDTH];
-    private const string _REVERSED_TAG = "Reversed";
     private int _setPosX = 0;
     private int _setPosZ = 0;
     private string _myColor = string.Empty;
-    private string _enemyColor = string.Empty;
+    private bool isChecking = false;
 
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
     /// </summary>
-    public void PieceReverse()
+    private IEnumerator PieceReverse()
     {
         foreach (GameObject piece in _reversePiece)
         {
             piece.GetComponent<Piece>().Reverse();
-            piece.tag = "Untagged";
+            yield return new WaitForSeconds(.3f);
         }
         _reversePiece.Clear();
+        isChecking = false;
     }
 
     /// <summary>
     /// 探索の準備と各方向に探索する関数を呼ぶ関数
     /// </summary>
     /// <param name="piece">今置いたコマ</param>
-    public void CheckReverse(GameObject piece)
+    public IEnumerator CheckReverse(GameObject piece)
     {
+        while(isChecking)
+            yield return null;
+
+        isChecking = true;
+
         // 自分の色と相手の色を決定
         if (Piece.PieceType.black == piece.GetComponent<Piece>().pieceType)
-        {
             _myColor = _black;
-            _enemyColor = _white;
-        }
         else
-        {
             _myColor = _white;
-            _enemyColor = _black;
-        }
 
         // 置いたマスの座標を取得
         _setPosX = (int)piece.transform.position.x;
         _setPosZ = (int)piece.transform.position.z * -1;
 
         // 7方向にチェック(zは符号が逆転する)
-        CheckInTheDirection(new Vector3(-1, 0, 0));   // ←
-        CheckInTheDirection(new Vector3(1, 0, 0));    // →
+        CheckInTheDirection(new Vector3(-1, 0, 0));  // ←
+        CheckInTheDirection(new Vector3(1, 0, 0));   // →
         CheckInTheDirection(new Vector3(0, 0, 1));   // ↓
-        //CheckInTheDirection(new Vector3(0, 0, -1));  // ↑
+        //CheckInTheDirection(new Vector3(0, 0, -1));// ↑
         CheckInTheDirection(new Vector3(-1, 0, 1));  // ↙
         CheckInTheDirection(new Vector3(1, 0, 1));   // ↘
-        CheckInTheDirection(new Vector3(-1, 0, -1));   // ↖
-        CheckInTheDirection(new Vector3(1, 0, -1));    // ↗
+        CheckInTheDirection(new Vector3(-1, 0, -1)); // ↖
+        CheckInTheDirection(new Vector3(1, 0, -1));  // ↗
+        StartCoroutine(PieceReverse());
     }
 
     /// <summary>
@@ -170,8 +171,6 @@ public class Map : MonoBehaviour
         int dirX = (int)dir.x;
         int dirZ = (int)dir.z;
 
-        List<GameObject> pieceBetween = new List<GameObject>();// 相手色のコマを追加していく
-
         bool isReverse = false;
         int moveCount = 0;
 
@@ -181,8 +180,8 @@ public class Map : MonoBehaviour
             // 調べたい方向に進んでいく
             checkPosX += dirX;
             checkPosZ += dirZ;
-            // 壁 or 空白 or このターン中に裏返ったコマなら終了
-            if (_map[checkPosZ, checkPosX] == _wall || _map[checkPosZ, checkPosX] == _blank || _pieceMap[checkPosZ, checkPosX].CompareTag(_REVERSED_TAG))
+            // 壁 or 空白 or なら終了
+            if (_map[checkPosZ, checkPosX] == _wall || _map[checkPosZ, checkPosX] == _empty)
             {
                 break;
             }
@@ -206,11 +205,63 @@ public class Map : MonoBehaviour
             {
                 checkPosX += dirX;
                 checkPosZ += dirZ;
-                _pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
                 _map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
                 _reversePiece.Add(_pieceMap[checkPosZ, checkPosX]);
             }
         }
+    }
+
+    /// <summary>
+    /// マップに空いてるマスがなければ終了
+    /// </summary>
+    /// <returns>ゲーム終了かどうか</returns>
+    public bool CheckGameSet()
+    {
+        for (int a = _EMPTY_AREAS_HEIGHT; a < _HEIGHT; a++)
+        {
+            string s = "";
+            for (int b = 0; b < _WIDTH; b++)
+            {
+                s += _map[a, b];
+            }
+            Debug.Log(s);
+        }
+
+        int i = _EMPTY_AREAS_HEIGHT;
+        int j = 0;
+        bool isEnd = true;
+        while(i < _HEIGHT)
+        {
+            while(j < _WIDTH)
+            {
+                if (_map[i, j] == _empty)
+                {
+                    isEnd = false;
+                    break;
+                }
+                j++;
+            }
+            i++;
+        }
+
+        return isEnd;
+    }
+
+    /// <summary>
+    /// 上2ラインに置かれたコマを無効にする
+    /// </summary>
+    /// <param name="piece"></param>
+    /// <returns>有効なコマか</returns>
+    public bool CheckHeightOver(GameObject piece)
+    {
+        bool isSafeLine = true;
+        if ((int)piece.transform.position.z * -1 < _EMPTY_AREAS_HEIGHT)
+        {
+            _map[(int)piece.transform.position.z * -1, (int)piece.transform.position.x] = _empty;
+            piece.transform.position = new Vector3(999, 999, 999);
+            isSafeLine = false;
+        }
+        return isSafeLine;
     }
 }
 
