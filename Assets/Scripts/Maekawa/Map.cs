@@ -6,6 +6,7 @@ public class Map : MonoBehaviour
 {
     private const byte _WIDTH = 10;
     private const byte _HEIGHT = 11;
+    private const byte _EMPTY_AREAS_HEIGHT = 2;// 上２ラインに置かれたコマは消滅する
     private string[,] _map = new string[_HEIGHT, _WIDTH]// z, x座標で指定
     {
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
@@ -22,7 +23,7 @@ public class Map : MonoBehaviour
     };
 
     private const string _wall = "■";
-    private const string _blank = "□";
+    private const string _empty = "□";
     private const string _white = "〇";
     private const string _black = "●";
 
@@ -39,7 +40,7 @@ public class Map : MonoBehaviour
         int x = (int)movedPos.x;
 
         // 2つの駒の移動後座標に何もなければ移動を通す
-        if (_map[z, x] == _blank)
+        if (_map[z, x] == _empty)
             isBlank = true;
 
         return isBlank;
@@ -58,7 +59,7 @@ public class Map : MonoBehaviour
         int z = (int)piecePos.z * -1;
         int x = (int)piecePos.x;
 
-        if (_map[z + 1, x] != _blank)
+        if (_map[z + 1, x] != _empty)
             isGrounded = true;
 
         return isGrounded;
@@ -82,7 +83,7 @@ public class Map : MonoBehaviour
             dz = z + i;// iの分だけ下の座標を調べる
 
             // 設置したマスからi個下のマスが空白なら下に落とす
-            if (_map[dz, x] == _blank)
+            if (_map[dz, x] == _empty)
                 piece.transform.position = new Vector3(x, 0, dz * -1);// 反転させたyをマイナスに戻す
             else
             {
@@ -108,7 +109,6 @@ public class Map : MonoBehaviour
     private int _setPosX = 0;
     private int _setPosZ = 0;
     private string _myColor = string.Empty;
-    private string _enemyColor = string.Empty;
     private bool isChecking = false;
 
     /// <summary>
@@ -138,15 +138,9 @@ public class Map : MonoBehaviour
 
         // 自分の色と相手の色を決定
         if (Piece.PieceType.black == piece.GetComponent<Piece>().pieceType)
-        {
             _myColor = _black;
-            _enemyColor = _white;
-        }
         else
-        {
             _myColor = _white;
-            _enemyColor = _black;
-        }
 
         // 置いたマスの座標を取得
         _setPosX = (int)piece.transform.position.x;
@@ -187,7 +181,7 @@ public class Map : MonoBehaviour
             checkPosX += dirX;
             checkPosZ += dirZ;
             // 壁 or 空白 or なら終了
-            if (_map[checkPosZ, checkPosX] == _wall || _map[checkPosZ, checkPosX] == _blank)
+            if (_map[checkPosZ, checkPosX] == _wall || _map[checkPosZ, checkPosX] == _empty)
             {
                 break;
             }
@@ -217,16 +211,30 @@ public class Map : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// マップに空いてるマスがなければ終了
+    /// </summary>
+    /// <returns>ゲーム終了かどうか</returns>
     public bool CheckGameSet()
     {
-        int i = 0;
+        for (int a = _EMPTY_AREAS_HEIGHT; a < _HEIGHT; a++)
+        {
+            string s = "";
+            for (int b = 0; b < _WIDTH; b++)
+            {
+                s += _map[a, b];
+            }
+            Debug.Log(s);
+        }
+
+        int i = _EMPTY_AREAS_HEIGHT;
         int j = 0;
         bool isEnd = true;
         while(i < _HEIGHT)
         {
             while(j < _WIDTH)
             {
-                if (_map[i, j] == _blank)
+                if (_map[i, j] == _empty)
                 {
                     isEnd = false;
                     break;
@@ -239,12 +247,21 @@ public class Map : MonoBehaviour
         return isEnd;
     }
 
-    public void CheckHeightOver(GameObject piece)
+    /// <summary>
+    /// 上2ラインに置かれたコマを無効にする
+    /// </summary>
+    /// <param name="piece"></param>
+    /// <returns>有効なコマか</returns>
+    public bool CheckHeightOver(GameObject piece)
     {
-        if ((int)piece.transform.position.z * -1 >= 0)
+        bool isSafeLine = true;
+        if ((int)piece.transform.position.z * -1 < _EMPTY_AREAS_HEIGHT)
         {
-            Destroy(piece);
+            _map[(int)piece.transform.position.z * -1, (int)piece.transform.position.x] = _empty;
+            piece.transform.position = new Vector3(999, 999, 999);
+            isSafeLine = false;
         }
+        return isSafeLine;
     }
 }
 

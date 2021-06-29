@@ -95,12 +95,18 @@ public class MinoController : MonoBehaviour
                         nonPriorityPiece = controllPieces[0];
                     }
 
-                    StartCoroutine(_map.CheckReverse(priorityPiece));
-                    StartCoroutine(_map.CheckReverse(nonPriorityPiece));
 
+                    // リバース・アニメーション処理
+                    if (_map.CheckHeightOver(priorityPiece))
+                        StartCoroutine(_map.CheckReverse(priorityPiece));
+                    if (_map.CheckHeightOver(nonPriorityPiece))
+                        StartCoroutine(_map.CheckReverse(nonPriorityPiece));
+
+                    // ゲーム終了判定
                     if(_map.CheckGameSet())
                     {
-                        Debug.Log("end");
+                        Debug.LogError("end");
+                        // ここに終了処理を書く
                     }
                     else
                     {
