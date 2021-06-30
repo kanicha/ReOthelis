@@ -110,14 +110,23 @@ public class Map : MonoBehaviour
     private int _setPosZ = 0;
     private string _myColor = string.Empty;
     private bool isChecking = false;
-
+    private int numOfReversed = 0;
+    [SerializeField]
+    private GameDirector gameDirector = null;
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
     /// </summary>
     private IEnumerator PieceReverse()
     {
+        int score = 0;
         foreach (GameObject piece in _reversePiece)
         {
+            score += 100;
+            if (MinoController.isBlack)
+                gameDirector.score1 += score;
+            else
+                gameDirector.score2 += score;
+
             piece.GetComponent<Piece>().Reverse();
             yield return new WaitForSeconds(.3f);
         }
@@ -212,36 +221,28 @@ public class Map : MonoBehaviour
     }
 
     /// <summary>
-    /// マップに空いてるマスがなければ終了
+    /// マップの各コマの数をチェック、ゲーム終了判定も行う
     /// </summary>
     /// <returns>ゲーム終了かどうか</returns>
-    public bool CheckGameSet()
+    public bool CheckMap()
     {
-        for (int a = _EMPTY_AREAS_HEIGHT; a < _HEIGHT; a++)
-        {
-            string s = "";
-            for (int b = 0; b < _WIDTH; b++)
-            {
-                s += _map[a, b];
-            }
-            Debug.Log(s);
-        }
-
-        int i = _EMPTY_AREAS_HEIGHT;
-        int j = 0;
         bool isEnd = true;
-        while(i < _HEIGHT)
+        int black = 0;
+        int white = 0;
+
+        for (int i = _EMPTY_AREAS_HEIGHT; i < _HEIGHT; i++)
         {
-            while(j < _WIDTH)
+            for (int j = 0; j < _WIDTH; j++)
             {
-                if (_map[i, j] == _empty)
-                {
+                string cell = _map[i, j];
+
+                if (cell == _empty)
                     isEnd = false;
-                    break;
-                }
-                j++;
+                else if (cell == _black)
+                    black++;
+                else if (cell == _white)
+                    white++;
             }
-            i++;
         }
 
         return isEnd;
@@ -266,12 +267,12 @@ public class Map : MonoBehaviour
 }
 
 // map確認用
-//for(int i = 0; i < _HEIGHT; i++)
+//for (int a = _EMPTY_AREAS_HEIGHT; a<_HEIGHT; a++)
 //{
 //    string s = "";
-//    for(int j = 0; j < _WIDTH; j++)
+//    for (int b = 0; b<_WIDTH; b++)
 //    {
-//        s += _map[i, j];
+//        s += _map[a, b];
 //    }
 //    Debug.Log(s);
 //}

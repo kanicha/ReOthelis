@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameDirector : MonoBehaviour
 {
@@ -24,6 +25,14 @@ public class GameDirector : MonoBehaviour
     private int turnCount = 0;
     private bool isTurn = false;
 
+    // 後で移動
+    [SerializeField]
+    private Text scoreText1 = null;
+    [SerializeField]
+    private Text scoreText2 = null;
+    public int score1 = 0;
+    public int score2 = 0;
+
     void Start()
     {
         isGenerate = true;
@@ -32,7 +41,9 @@ public class GameDirector : MonoBehaviour
 
     void Update()
     {
-        
+        scoreText1.text = string.Format("{0:00000}", score1);
+        scoreText2.text = string.Format("{0:00000}", score2);
+
         if (turnCount % 2 == 1)
         {
             Player1.isMyTurn = true;

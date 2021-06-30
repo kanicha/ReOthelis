@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MinoController : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class MinoController : MonoBehaviour
     private Piece.PieceType playersType = Piece.PieceType.black;// 初期値黒プレイヤー(1P)
     private bool _isInput = false;
     private bool _isFalled = false;
-    private bool _isBlack = true; // ターン処理変数
+    public static bool isBlack = true; // ターン処理変数
     protected float _vertical = 0.0f;
     protected float _horizontal = 0.0f;
     private int _frameCount = 0;
@@ -42,20 +43,20 @@ public class MinoController : MonoBehaviour
         Vector3 move = Vector3.zero;
 
         // 左移動
-        if (((p1._horizontal < 0 || p1._stickHorizontal < 0 || p1._keyBoardHorizontal < 0) && _isBlack) || 
-            ((p2._horizontal < 0 || p2._stickHorizontal < 0 || p2._keyBoardHorizontal < 0) && !_isBlack))
+        if (((p1._horizontal < 0 || p1._stickHorizontal < 0 || p1._keyBoardHorizontal < 0) && isBlack) || 
+            ((p2._horizontal < 0 || p2._stickHorizontal < 0 || p2._keyBoardHorizontal < 0) && !isBlack))
         {
             move.x = -1;
         }
         // 右移動
-        else if (((p1._horizontal > 0 || p1._stickHorizontal > 0 || p1._keyBoardHorizontal > 0) && _isBlack) || 
-                ((p2._horizontal > 0  || p2._stickHorizontal > 0 || p2._keyBoardHorizontal > 0) && !_isBlack))
+        else if (((p1._horizontal > 0 || p1._stickHorizontal > 0 || p1._keyBoardHorizontal > 0) && isBlack) || 
+                ((p2._horizontal > 0  || p2._stickHorizontal > 0 || p2._keyBoardHorizontal > 0) && !isBlack))
         {
             move.x = 1;
         }
         // S入力すると一段下がる
-        else if (((p1._vertical < 0  || p1._stickVertical > 0 || p1._keyBoardVertical > 0) && _isBlack) || 
-                ((p2._vertical < 0   || p2._stickVertical > 0 || p2._keyBoardVertical > 0) && !_isBlack))
+        else if (((p1._vertical < 0  || p1._stickVertical > 0 || p1._keyBoardVertical > 0) && isBlack) || 
+                ((p2._vertical < 0   || p2._stickVertical > 0 || p2._keyBoardVertical > 0) && !isBlack))
         {
             move.z = -1;
         }
@@ -82,12 +83,12 @@ public class MinoController : MonoBehaviour
     {
         int lastNum = rotationNum;
         // 左回転
-        if (((p1._ds4L1 || p1._ds4cross || p1._keyBoardLeft) && _isBlack) || 
-            ((p2._ds4L1 || p2._ds4cross || p2._keyBoardLeft) && !_isBlack))
+        if (((p1._ds4L1 || p1._ds4cross || p1._keyBoardLeft) && isBlack) || 
+            ((p2._ds4L1 || p2._ds4cross || p2._keyBoardLeft) && !isBlack))
             rotationNum++;
         // 右回転(=左に3回転)
-        else if (((p1._ds4R1 || p1._ds4circle || p1._keyBoardRight) && _isBlack) ||
-                ((p2._ds4R1  || p2._ds4circle || p2._keyBoardRight) && !_isBlack))
+        else if (((p1._ds4R1 || p1._ds4circle || p1._keyBoardRight) && isBlack) ||
+                ((p2._ds4R1  || p2._ds4circle || p2._keyBoardRight) && !isBlack))
             rotationNum += 3;
 
         // 疑似回転(移動がややこしくなるのでRotationはいじらない)
@@ -190,7 +191,7 @@ public class MinoController : MonoBehaviour
                             StartCoroutine(_map.CheckReverse(nonPriorityPiece));
 
                         // ゲーム終了判定
-                        if (_map.CheckGameSet())
+                        if (_map.CheckMap())
                         {
                             Debug.LogError("end");
                             // ここに終了処理を書く
@@ -215,16 +216,16 @@ public class MinoController : MonoBehaviour
     private void PlayerTurn()
     {
         // 黒 -> 白プレイヤー
-        if (_isBlack)
+        if (isBlack)
         {
-            _isBlack = false;
+            isBlack = false;
             playersType = Piece.PieceType.white;
             Debug.Log("白プレイヤー(2P)");
         }
         // 白 -> 黒プレイヤー
-        else if (!_isBlack)
+        else if (!isBlack)
         {
-            _isBlack = true;
+            isBlack = true;
             playersType = Piece.PieceType.black;
 
             Debug.Log("黒プレイヤー(1P)");
