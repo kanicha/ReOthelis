@@ -298,7 +298,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   root: {fileID: 1824669614}
-  piecePrefab: {fileID: 4094469071948470677, guid: 46b444d8b89999f409898699d7642b8e, type: 3}
+  piecePrefab: {fileID: 2386452990182717790, guid: 9bcc26cce6217d641bfa3ab17886eca4, type: 3}
   minoController: {fileID: 939100888}
   DEFAULT_POSITION: {x: 4, y: 0, z: -1}
   scoreText1: {fileID: 1952223755}
