@@ -618,6 +618,8 @@ GameObject:
   m_Component:
   - component: {fileID: 939100889}
   - component: {fileID: 939100888}
+  - component: {fileID: 939100891}
+  - component: {fileID: 939100890}
   m_Layer: 0
   m_Name: MinoController
   m_TagString: Untagged
@@ -637,8 +639,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d242883f8d1bd45aba76ca8b48ef24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 40
   fallTime: 1
   _map: {fileID: 576250714}
+  p1: {fileID: 939100891}
+  p2: {fileID: 939100890}
   controllPieces:
   - {fileID: 0}
   - {fileID: 0}
@@ -657,6 +662,46 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &939100890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939100887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbc0dced5dadf8847839e82d4ab58653, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _horizontal: 0
+  _vertical: 0
+  _stickHorizontal: 0
+  _stickVertical: 0
+  _ds4L1: 0
+  _ds4R1: 0
+  _ds4circle: 0
+  _ds4cross: 0
+--- !u!114 &939100891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939100887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d444025ac072e87499a7ba36b07625c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _horizontal: 0
+  _vertical: 0
+  _stickHorizontal: 0
+  _stickVertical: 0
+  _ds4L1: 0
+  _ds4R1: 0
+  _ds4circle: 0
+  _ds4cross: 0
 --- !u!1 &942241796
 GameObject:
   m_ObjectHideFlags: 0

@@ -42,20 +42,20 @@ public class MinoController : MonoBehaviour
         Vector3 move = Vector3.zero;
 
         // 左移動
-        if (((p1._horizontal < 0 || p1._stickHorizontal < 0) && _isBlack) || 
-            ((p2._horizontal < 0 || p2._stickHorizontal < 0) && !_isBlack))
+        if (((p1._horizontal < 0 || p1._stickHorizontal < 0 || p1._keyBoardHorizontal < 0) && _isBlack) || 
+            ((p2._horizontal < 0 || p2._stickHorizontal < 0 || p2._keyBoardHorizontal < 0) && !_isBlack))
         {
             move.x = -1;
         }
         // 右移動
-        else if (((p1._horizontal > 0 || p1._stickHorizontal > 0) && _isBlack) || 
-                ((p2._horizontal > 0  || p2._stickHorizontal > 0) && !_isBlack))
+        else if (((p1._horizontal > 0 || p1._stickHorizontal > 0 || p1._keyBoardHorizontal > 0) && _isBlack) || 
+                ((p2._horizontal > 0  || p2._stickHorizontal > 0 || p2._keyBoardHorizontal > 0) && !_isBlack))
         {
             move.x = 1;
         }
         // S入力すると一段下がる
-        else if (((p1._vertical < 0  || p1._stickVertical > 0) && _isBlack) || 
-                ((p2._vertical < 0   || p2._stickVertical > 0) && !_isBlack))
+        else if (((p1._vertical < 0  || p1._stickVertical > 0 || p1._keyBoardVertical > 0) && _isBlack) || 
+                ((p2._vertical < 0   || p2._stickVertical > 0 || p2._keyBoardVertical > 0) && !_isBlack))
         {
             move.z = -1;
         }
@@ -66,7 +66,6 @@ public class MinoController : MonoBehaviour
 
             previousTime = Time.time;
         }
-
 
         Vector3 movedPos = controllPieces[0].transform.position + move;
         Vector3 rotMovedPos = rotationPos[rotationNum] + movedPos;
@@ -83,12 +82,12 @@ public class MinoController : MonoBehaviour
     {
         int lastNum = rotationNum;
         // 左回転
-        if (((p1._ds4L1 || p1._ds4cross) && _isBlack) || 
-            ((p2._ds4L1 || p2._ds4cross) && !_isBlack))
+        if (((p1._ds4L1 || p1._ds4cross || p1._keyBoardLeft) && _isBlack) || 
+            ((p2._ds4L1 || p2._ds4cross || p2._keyBoardLeft) && !_isBlack))
             rotationNum++;
         // 右回転(=左に3回転)
-        else if (((p1._ds4R1 || p1._ds4circle) && _isBlack) ||
-                ((p2._ds4R1  || p2._ds4circle) && !_isBlack))
+        else if (((p1._ds4R1 || p1._ds4circle || p1._keyBoardRight) && _isBlack) ||
+                ((p2._ds4R1  || p2._ds4circle || p2._keyBoardRight) && !_isBlack))
             rotationNum += 3;
 
         // 疑似回転(移動がややこしくなるのでRotationはいじらない)
@@ -230,6 +229,7 @@ public class MinoController : MonoBehaviour
 
             Debug.Log("黒プレイヤー(1P)");
         }
+        
         // 自由落下速度初期化
         fallTime = 1.0f;
     }

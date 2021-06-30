@@ -5,42 +5,42 @@ using UnityEngine;
 public class DS4ControllerP1
 {
     /// <summary>
-    /// •¨—ƒ{ƒ^ƒ“Šeí
+    /// ç‰©ç†ãƒœã‚¿ãƒ³å„ç¨®
     /// </summary>
-    // ŠÛƒ{ƒ^ƒ“
+    // ä¸¸ãƒœã‚¿ãƒ³
     public static readonly string DS4_O = "Fire_2";
-    // ƒoƒcƒ{ƒ^ƒ“
+    // ãƒãƒ„ãƒœã‚¿ãƒ³
     public static readonly string DS4_X = "Fire_1";
-    // lŠpƒ{ƒ^ƒ“
+    // å››è§’ãƒœã‚¿ãƒ³
     public static readonly string DS4_SQ = "Fire_0";
-    // OŠpƒ{ƒ^ƒ“
+    // ä¸‰è§’ãƒœã‚¿ãƒ³
     public static readonly string DS4_TRI = "Fire_3";
-    // L1ƒ{ƒ^ƒ“
+    // L1ãƒœã‚¿ãƒ³
     public static readonly string DS4_L1 = "Fire_L1";
-    // R1ƒ{ƒ^ƒ“
+    // R1ãƒœã‚¿ãƒ³
     public static readonly string DS4_R1 = "Fire_R1";
-    // Optionƒ{ƒ^ƒ“
+    // Optionãƒœã‚¿ãƒ³
     public static readonly string DS4_OPTION = "Fire_Option";
 
     /// <summary>
-    /// \šƒL[
+    /// åå­—ã‚­ãƒ¼
     /// </summary>
-    // \šƒL[‰E.¶
+    // åå­—ã‚­ãƒ¼å³.å·¦
     public static readonly string DS4_HORIZONTAL = "Horizontal D-Pad";
     //public static float FLOAT_DS4_HORIZONTAL = Input.GetAxisRaw("Horizontal D-Pad");
-    // \šƒL[ã.‰º
+    // åå­—ã‚­ãƒ¼ä¸Š.ä¸‹
     public static readonly string DS4_VERTICAL = "Vertical D-Pad";
     //public static float FLOAT_DS4_VERTICAL = Input.GetAxisRaw("Vertical D-Pad");
 
     /// <summary>
-    /// ƒXƒeƒBƒbƒN
+    /// ã‚¹ãƒ†ã‚£ãƒƒã‚¯
     /// </summary>
-    // ¶ƒXƒeƒBƒbƒN‰E.¶
+    // å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯å³.å·¦
     public static readonly string DS4L_STICK_HORIZONTAL = "Horizontal Stick-L";
-    // ¶ƒXƒeƒBƒbƒNã.‰º
+    // å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ä¸Š.ä¸‹
     public static readonly string DS4L_STICK_VERTICAL = "Vertical Stick-L";
-    // ‰EƒXƒeƒBƒbƒN‰E.¶
+    // å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯å³.å·¦
     public static readonly string DS4R_STICK_HORIZONTAL = "Horizontal Stick-R";
-    // ‰EƒXƒeƒBƒbƒNã,‰º
+    // å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ä¸Š,ä¸‹
     public static readonly string DS4R_STICK_VERTICAL = "Vertical Stick-R";
 }
