@@ -11,9 +11,15 @@ public class ModeSelect : MonoBehaviour
     private GameSceneManager _gameSceneManager;
     UnityEvent Approval = new UnityEvent();
 
+    private float _vertical = 0.0f;
+    private bool _ds4circle;
+    
     // Start is called before the first frame update
     void Start()
     {
+        _vertical = Input.GetAxis("Vertical D-Pad");
+        _ds4circle = Input.GetButtonDown("Fire_2");
+
         cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-210, 0, 0);
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
         Approval.AddListener(() => SceneChange(_gameSceneManager));
@@ -22,8 +28,8 @@ public class ModeSelect : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //‰ºƒL[“ü—Í‚É‡‚í‚¹‚ÄƒJ[ƒ\ƒ‹‚ğ‰º‚ÉˆÚ“®‚³‚¹‚é
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        //ï¿½ï¿½ï¿½Lï¿½[ï¿½ï¿½ï¿½Í‚Éï¿½ï¿½í‚¹ï¿½ÄƒJï¿½[ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÉˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        if (_vertical > 0)
         {
             if (selectCount == 0)
             {
@@ -37,17 +43,17 @@ public class ModeSelect : MonoBehaviour
             }
             else if (selectCount == 2)
             {
-                //ˆê”Ô‰º‚ÌONLINE‚É‡‚í‚¹‚Ä‚éê‡‚Íˆê”Ôã‚É–ß‚·
+                //ï¿½ï¿½Ô‰ï¿½ï¿½ï¿½ONLINEï¿½Éï¿½ï¿½í‚¹ï¿½Ä‚ï¿½ê‡ï¿½Íˆï¿½Ôï¿½É–ß‚ï¿½
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-210, 0, 0);
                 selectCount = 0;
             }
         }
-        //ãƒL[“ü—Í‚É‡‚í‚¹‚ÄƒJ[ƒ\ƒ‹‚ğã‚ÉˆÚ“®‚³‚¹‚é
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        //ï¿½ï¿½Lï¿½[ï¿½ï¿½ï¿½Í‚Éï¿½ï¿½í‚¹ï¿½ÄƒJï¿½[ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ÉˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        else if (_vertical < 0)
         {
             if (selectCount == 0)
             {
-                //ˆê”Ôã‚ÌSTORY‚É‡‚í‚¹‚Ä‚éê‡‚Íˆê”Ô‰º‚ÉˆÚ‚·
+                //ï¿½ï¿½Ôï¿½ï¿½STORYï¿½Éï¿½ï¿½í‚¹ï¿½Ä‚ï¿½ê‡ï¿½Íˆï¿½Ô‰ï¿½ï¿½ÉˆÚ‚ï¿½
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-210, -202, 0);
                 selectCount = 2;
             }
@@ -62,14 +68,14 @@ public class ModeSelect : MonoBehaviour
                 selectCount--;
             }
         }
-        //ƒJ[ƒ\ƒ‹‚ªOFFLINE‚É‡‚í‚¹‚Ä‚¢‚éA‚©‚Â‘I‘ğƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½ê‡‚ÉƒV[ƒ“‘JˆÚ‚ğs‚¤
-        else if (Input.GetKeyDown(KeyCode.Space) && selectCount == 1)
+        //ï¿½Jï¿½[ï¿½\ï¿½ï¿½ï¿½ï¿½OFFLINEï¿½Éï¿½ï¿½í‚¹ï¿½Ä‚ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Â‘Iï¿½ï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ê‡ï¿½ÉƒVï¿½[ï¿½ï¿½ï¿½Jï¿½Ú‚ï¿½sï¿½ï¿½
+        else if (_ds4circle && selectCount == 1)
         {
             Approval.Invoke();
         }
     }
 
-    //Ÿ‚ÌƒV[ƒ“‚Éi‚Ş
+    //ï¿½ï¿½ï¿½ÌƒVï¿½[ï¿½ï¿½ï¿½Éiï¿½ï¿½
     public void SceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("CharacterSelect");

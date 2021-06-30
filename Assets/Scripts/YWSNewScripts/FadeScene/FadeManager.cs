@@ -6,21 +6,21 @@ using UnityEngine.UI;
 
 public class FadeManager : MonoBehaviour
 {
-    //ƒLƒƒƒ“ƒoƒXƒOƒ‹[ƒv‚Ìæ“¾
+    //ã‚­ãƒ£ãƒ³ãƒã‚¹ã‚°ãƒ«ãƒ¼ãƒ—ã®å–å¾—
     [SerializeField] private CanvasGroup _canvasGroup;
     public CanvasGroup FadeCanvasGroup
     {
         get { return _canvasGroup; }
     }
 
-    //ƒCƒ[ƒW‚Ìæ“¾
+    //ã‚¤ãƒ¡ãƒ¼ã‚¸ã®å–å¾—
     [SerializeField] private Image _fadeImage;
     public Image FadeImage
     {
         get { return _fadeImage; }
     }
 
-    //ƒtƒF[ƒhƒCƒ“
+    //ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³
     public IEnumerator FadeIn(CanvasGroup canvasGroup, Image image)
     {
         canvasGroup.alpha = 1.0f;
@@ -36,7 +36,7 @@ public class FadeManager : MonoBehaviour
         image.raycastTarget = false;
     }
 
-    //ƒtƒF[ƒhƒAƒEƒg
+    //ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆ
     public IEnumerator FadeOut(CanvasGroup canvasGroup, Image image)
     {
         image.raycastTarget = true;
