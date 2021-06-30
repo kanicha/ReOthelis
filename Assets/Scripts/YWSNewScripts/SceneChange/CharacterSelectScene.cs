@@ -8,7 +8,8 @@ public class CharacterSelectScene : MonoBehaviour
 {
     private GameSceneManager _gameSceneManager;
     UnityEvent Approval = new UnityEvent();
-
+    
+    private bool _ds4circle;
     void Start()
     {
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
@@ -18,13 +19,15 @@ public class CharacterSelectScene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        _ds4circle = Input.GetButtonDown("Fire_2");
+        
+        if (Input.GetKeyDown(KeyCode.Space) || _ds4circle)
         {
             Approval.Invoke();
         }
     }
 
-    //éüÇÃÉVÅ[ÉìÇ…êiÇﬁ
+    //Ê¨°„ÅÆ„Ç∑„Éº„É≥„Å´ÈÄ≤„ÇÄ
     public void SceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("GameSceme");
