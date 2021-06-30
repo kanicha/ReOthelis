@@ -8,7 +8,8 @@ public class CharacterSelectScene : MonoBehaviour
 {
     private GameSceneManager _gameSceneManager;
     UnityEvent Approval = new UnityEvent();
-    
+
+    private bool _repeatHit = false;
     private bool _ds4circle;
     void Start()
     {
@@ -21,8 +22,11 @@ public class CharacterSelectScene : MonoBehaviour
     {
         _ds4circle = Input.GetButtonDown("Fire_2");
         
-        if (Input.GetKeyDown(KeyCode.Space) || _ds4circle)
+        if (_repeatHit)
+            return;
+        else if (_ds4circle || Input.GetKeyDown(KeyCode.Space))
         {
+            _repeatHit = true;
             Approval.Invoke();
         }
     }

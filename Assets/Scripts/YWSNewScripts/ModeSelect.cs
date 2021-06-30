@@ -10,6 +10,7 @@ public class ModeSelect : MonoBehaviour
     int selectCount = 0;
     private int _frameCount = 0;
     private int _moveSpeed = 10;
+    private bool _repeatHit = false;
     private GameSceneManager _gameSceneManager;
     UnityEvent Approval = new UnityEvent();
 
@@ -35,15 +36,19 @@ public class ModeSelect : MonoBehaviour
 
 
         //�J�[�\����OFFLINE�ɍ��킹�Ă���A���I��{�^���������ꂽ�ꍇ�ɃV�[���J�ڂ�s��
-        if (_ds4circle && selectCount == 1 || Input.GetKeyDown(KeyCode.Space))
+        if (_repeatHit)
+            return;
+        else if (_ds4circle && selectCount == 1 || Input.GetKeyDown(KeyCode.Space))
         {
+            _repeatHit = true;
             Approval.Invoke();
         }
+
 
         if (_frameCount == 0)
         {
             //���L�[���͂ɍ��킹�ăJ�[�\������Ɉړ�������
-             if (_vertical < 0 || Input.GetKeyDown(KeyCode.S))
+            if (_vertical < 0 || Input.GetKeyDown(KeyCode.S))
             {
                 if (selectCount == 0)
                 {
