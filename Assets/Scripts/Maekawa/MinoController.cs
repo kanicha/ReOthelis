@@ -183,14 +183,26 @@ public class MinoController : MonoBehaviour
                             nonPriorityPiece = controllPieces[0];
                         }
 
-                        _map.CheckReverse(priorityPiece);
-                        _map.CheckReverse(nonPriorityPiece);
-                        _map.PieceReverse();
 
-                        GameDirector.isGenerate = true;
-                        _isFalled = false;
+                        // リバース・アニメーション処理
+                        if (_map.CheckHeightOver(priorityPiece))
+                            StartCoroutine(_map.CheckReverse(priorityPiece));
+                        if (_map.CheckHeightOver(nonPriorityPiece))
+                            StartCoroutine(_map.CheckReverse(nonPriorityPiece));
 
-
+                        // ゲーム終了判定
+                        if (_map.CheckGameSet())
+                        {
+                            Debug.LogError("end");
+                            // ここに終了処理を書く
+                        }
+                        else
+                        {
+                            GameDirector.isGenerate = true;
+                            _isFalled = false;
+                        }
+                        
+                        // ターン変更
                         PlayerTurn();
                     }
                 }
