@@ -6,16 +6,15 @@ using UnityEngine.Events;
 
 public class ModeSelect : MonoBehaviour
 {
-    public RectTransform cursor;
+    [SerializeField] private RectTransform cursor;
+    [SerializeField] private Player1 p1;
+    
     int selectCount = 0;
     private int _frameCount = 0;
     private int _moveSpeed = 10;
     private bool _repeatHit = false;
     private GameSceneManager _gameSceneManager;
     UnityEvent Approval = new UnityEvent();
-
-    private float _vertical = 0.0f;
-    private bool _ds4circle;
 
     // Start is called before the first frame update
     void Start()
@@ -31,14 +30,10 @@ public class ModeSelect : MonoBehaviour
         _frameCount++;
         _frameCount %= _moveSpeed;
 
-        _vertical = Input.GetAxis("Vertical D-Pad");
-        _ds4circle = Input.GetButtonDown("Fire_2");
-
-
         //�J�[�\����OFFLINE�ɍ��킹�Ă���A���I��{�^���������ꂽ�ꍇ�ɃV�[���J�ڂ�s��
         if (_repeatHit)
             return;
-        else if (_ds4circle && selectCount == 1 || Input.GetKeyDown(KeyCode.Space))
+        else if (p1._ds4circle && selectCount == 1 || Input.GetKeyDown(KeyCode.Space))
         {
             _repeatHit = true;
             Approval.Invoke();
@@ -48,7 +43,7 @@ public class ModeSelect : MonoBehaviour
         if (_frameCount == 0)
         {
             //���L�[���͂ɍ��킹�ăJ�[�\������Ɉړ�������
-            if (_vertical < 0 || Input.GetKeyDown(KeyCode.S))
+            if (p1._vertical < 0 || Input.GetKeyDown(KeyCode.S))
             {
                 if (selectCount == 0)
                 {
@@ -68,7 +63,7 @@ public class ModeSelect : MonoBehaviour
                 }
             }
             //��L�[���͂ɍ��킹�ăJ�[�\�����Ɉړ�������
-            else if (_vertical > 0 || Input.GetKeyDown(KeyCode.W))
+            else if (p1._vertical > 0 || Input.GetKeyDown(KeyCode.W))
             {
                 if (selectCount == 0)
                 {

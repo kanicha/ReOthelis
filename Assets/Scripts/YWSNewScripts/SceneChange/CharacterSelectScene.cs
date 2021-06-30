@@ -6,11 +6,13 @@ using UnityEngine.Events;
 
 public class CharacterSelectScene : MonoBehaviour
 {
+    [SerializeField] private Player1 p1;
+    
     private GameSceneManager _gameSceneManager;
     UnityEvent Approval = new UnityEvent();
-
+    
     private bool _repeatHit = false;
-    private bool _ds4circle;
+
     void Start()
     {
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
@@ -20,11 +22,9 @@ public class CharacterSelectScene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _ds4circle = Input.GetButtonDown("Fire_2");
-        
         if (_repeatHit)
             return;
-        else if (_ds4circle || Input.GetKeyDown(KeyCode.Space))
+        else if (p1._ds4circle || Input.GetKeyDown(KeyCode.Space))
         {
             _repeatHit = true;
             Approval.Invoke();
