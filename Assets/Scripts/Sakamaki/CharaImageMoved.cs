@@ -1,56 +1,111 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
+
+// 正直クソ実装なので修正しなきゃなと思っている
 public class CharaImageMoved : MonoBehaviour
 {
-    [SerializeField] private Image charactorImage;
-    [SerializeField] private Sprite[] CharactorImageArray;
+    [SerializeField] private Image charactorImage1P;
+    [SerializeField] private Image charactorImage2P;
+    [SerializeField] private Sprite[] CharactorImageArray1P;
+    [SerializeField] private Sprite[] CharactorImageArray2P;
     [SerializeField] private Player1 p1;
+    [SerializeField] private Player2 p2;
 
-    private int _frameCount = 0;
-    private int _moveSpeed = 10;
-    private int _next = 0;
-    private int _prev = 0;
+    private int _frameCount1P = 0;
+    private int _frameCount2P = 0;
+    private int _moveSpeed1P = 10;
+    private int _moveSpeed2P = 10;
+    private int _next1P = 0;
+    private int _next2P = 0;
+    private int _prev1P = 0;
+    private int _prev2P = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         // 初期化処理
-        charactorImage.sprite = CharactorImageArray[0];
+        charactorImage1P.sprite = CharactorImageArray1P[0];
+        charactorImage2P.sprite = CharactorImageArray2P[0];
     }
 
     // Update is called once per frame
     void Update()
     {
-        _frameCount++;
-        _frameCount %= _moveSpeed;
+        Player1CharaMoved();
+        Player2CharaMoved();
+    }
 
-        if (_frameCount == 0)
+    /// <summary>
+    /// 1P 画像処理関数
+    /// </summary>
+    void Player1CharaMoved()
+    {
+        _frameCount1P++;
+        _frameCount1P %= _moveSpeed1P;
+
+        if (_frameCount1P == 0)
         {
             // 入力部分
             if (p1._horizontal < 0 || Input.GetKeyDown(KeyCode.A))
-                _next--;
+                _next1P--;
             else if (p1._horizontal > 0 || Input.GetKeyDown(KeyCode.D))
-                _next++;
+                _next1P++;
         }
 
         // prev と result 変数の中身(int型)が違った場合描画処理
-        if (_prev != _next)
+        if (_prev1P != _next1P)
         {
-            _prev = _next;
+            _prev1P = _next1P;
 
-            if (_next < 0)
+            if (_next1P < 0)
             {
-                _next = CharactorImageArray.Length - 1;
+                _next1P = CharactorImageArray1P.Length - 1;
             }
-            else if (_next >= CharactorImageArray.Length)
+            else if (_next1P >= CharactorImageArray1P.Length)
             {
-                _next = 0;
+                _next1P = 0;
             }
 
-            charactorImage.sprite = CharactorImageArray[_next];
+            charactorImage1P.sprite = CharactorImageArray1P[_next1P];
+        }
+    }
+
+    /// <summary>
+    /// 2P画像処理関数
+    /// </summary>
+    void Player2CharaMoved()
+    {
+        _frameCount2P++;
+        _frameCount2P %= _moveSpeed2P;
+
+        if (_frameCount2P == 0)
+        {
+            // 入力部分
+            if (p2._horizontal < 0 || Input.GetKeyDown(KeyCode.J))
+                _next2P--;
+            else if (p2._horizontal > 0 || Input.GetKeyDown(KeyCode.L))
+                _next2P++;
+        }
+
+        // prev と result 変数の中身(int型)が違った場合描画処理
+        if (_prev2P != _next2P)
+        {
+            _prev2P = _next2P;
+
+            if (_next2P < 0)
+            {
+                _next2P = CharactorImageArray1P.Length - 1;
+            }
+            else if (_next2P >= CharactorImageArray1P.Length)
+            {
+                _next2P = 0;
+            }
+
+            charactorImage2P.sprite = CharactorImageArray2P[_next2P];
         }
     }
 }
