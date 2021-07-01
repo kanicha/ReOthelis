@@ -164,6 +164,16 @@ public class Map : MonoBehaviour
         CheckInTheDirection(new Vector3(1, 0, 1));   // ↘
         CheckInTheDirection(new Vector3(-1, 0, -1)); // ↖
         CheckInTheDirection(new Vector3(1, 0, -1));  // ↗
+
+        for (int a = _EMPTY_AREAS_HEIGHT; a < _HEIGHT; a++)
+        {
+            string s = "";
+            for (int b = 0; b < _WIDTH; b++)
+            {
+                s += _map[a, b];
+            }
+            Debug.Log(s);
+        }
         StartCoroutine(PieceReverse());
     }
 

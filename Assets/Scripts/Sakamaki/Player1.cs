@@ -42,6 +42,5 @@ public class Player1 : MonoBehaviour
         _keyBoardVertical = Input.GetAxis("Vertical");
         _keyBoardLeft = Input.GetKeyDown(KeyCode.Q);
         _keyBoardRight = Input.GetKeyDown(KeyCode.E);
-
     }
 }

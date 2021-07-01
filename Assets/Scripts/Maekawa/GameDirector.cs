@@ -3,24 +3,20 @@ using UnityEngine.UI;
 
 public class GameDirector : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject root = null;
-    [SerializeField]
-    private GameObject piecePrefab = null;
-    [SerializeField]
-    private MinoController minoController = null;
     [SerializeField, Header("ミノの初期位置")]
-    Vector3 DEFAULT_POSITION = Vector3.zero;
-    public static bool isGenerate = true;
-    
-    // Jokerコマを含めると(黒15 白15 Joker + 1 ) * 2(2セット)なので 31で宣言
-    private int _range = 0;
-    private int _whiteCount, _blackCount, _jokerCount = 0;
-    private const int _WHITE_COUNT_MAX = 15;
-    private const int _BLACK_COUNT_MAX = 15;
-    private const int _JOKER_COUNT_MAX = 0;// jokerなし
+    private Vector3 _DEFAULT_POSITION = Vector3.zero;
+    [SerializeField]
+    PieceGenerator _generator = null;
+    [SerializeField]
+    private Map _map = null;
+    [SerializeField]
+    private Player_1 _player1 = null;
+    [SerializeField]
+    private Player_2 _player2 = null;
 
-    private int turnCount = 0;
+    private int _turnCount = 0;
+    private GameObject[] _activePieces = new GameObject[2];
+    private GameObject[] _disActivePieces = new GameObject[2];
 
     // 後で移動
     [SerializeField]
@@ -29,13 +25,15 @@ public class GameDirector : MonoBehaviour
     private Text scoreText2 = null;
     public int score1 = 0;
     public int score2 = 0;
+    public static bool isLanding = false;
 
     void Start()
     {
-        // 最初に全て生成した方がいいかも
-        isGenerate = true;
         SoundManager.Instance.PlayBGM(0);
-        _range = _WHITE_COUNT_MAX + _BLACK_COUNT_MAX;//+ _JOKER_COUNT_MAX;
+        isLanding = false;
+        _player1.isMyTurn = false;
+        _player2.isMyTurn = false;
+        ChangeTurn();
     }
 
     void Update()
@@ -43,106 +41,92 @@ public class GameDirector : MonoBehaviour
         scoreText1.text = string.Format("{0:00000}", score1);
         scoreText2.text = string.Format("{0:00000}", score2);
 
-        if (isGenerate)
+        if(isLanding)
         {
-            turnCount++;
-            Player1.isMyTurn = false;
-            Player2.isMyTurn = false;
-            // コマタイプ
-            int[] type = new int[2];
-            // for文で回し2つ分生成
-            for (int i = 0; i < 2; i++)
+            SoundManager.Instance.PlaySE(3);
+
+            CheckPriority();
+
+            // リバース・アニメーション処理
+            for(int i = 0; i < _activePieces.Length; i++)
             {
-                // Randomし0 ~ 31の抽選
-                int num = Random.Range(0, _range);
-                // 0 ~ 99を使い黒と白抽選区分
-                int num2 = Random.Range(0, 100);
-                
-                // 生成ごとに減少する_renge変数が0 & 生成上限に達していなければジョーカー
-                if (num == 0 && _jokerCount < _JOKER_COUNT_MAX)
-                {
-                    type[i] = 3;
-                    _jokerCount++;
-                }
-                // 余りが0 & 黒の生成数が上限に達していない　or 白の生成数が上限に達しているなら黒
-                else if ((num2 % 2 == 0 && _blackCount < _BLACK_COUNT_MAX) || _whiteCount >= _WHITE_COUNT_MAX)
-                {
-                    type[i] = 1;
-                    _blackCount++;
-                }
-                // 上記に該当しなければ白
-                else 
-                {
-                    type[i] = 2;
-                    _whiteCount++;
-                }
-
-                // 一回抽選したら範囲を狭める
-                _range--;
-
-                // 範囲が0になった時にリセット処理
-                if (_range == 0)
-                {
-                    // 各コマ生成数Debug.Log
-                    Debug.Log("Joker: " + _jokerCount + "\n");
-                    Debug.Log("Black: " + _blackCount + "\n");
-                    Debug.Log("White: " + _whiteCount + "\n");
-                    
-                    _range = _WHITE_COUNT_MAX + _BLACK_COUNT_MAX;//+ _JOKER_COUNT_MAX;
-                    _jokerCount = _JOKER_COUNT_MAX;
-                    _blackCount = _BLACK_COUNT_MAX;
-                    _whiteCount = _WHITE_COUNT_MAX;                
-                }
+                if (_map.CheckHeightOver(_activePieces[i]))
+                    StartCoroutine(_map.CheckReverse(_activePieces[i]));
             }
-            
-            GameObject piece1 = Generate(type[0]);
-            GameObject piece2 = Generate(type[1]);
 
-            piece1.transform.position = DEFAULT_POSITION;
-            piece2.transform.position = DEFAULT_POSITION + new Vector3(0, 0, 1);
+            isLanding = false;
+            _player1.isMyTurn = false;
+            _player1.rotationNum = 0;
+            _player2.isMyTurn = false;
+            _player2.rotationNum = 0;
 
-            minoController.controllPieces[0] = piece1;
-            minoController.controllPieces[1] = piece2;
-            isGenerate = false;
-        }
-
-        if (turnCount % 2 == 1)
-        {
-            Player1.isMyTurn = true;
-        }
-        else
-        {
-            Player2.isMyTurn = true;
+            // ゲーム終了判定
+            if (_map.CheckMap())
+            {
+                Debug.LogError("end");
+                // ここに終了処理を書く
+            }
+            else
+            {
+                ChangeTurn();
+            }
         }
     }
 
-    private GameObject Generate(int color)
+    private void CheckPriority()
     {
-        GameObject piece = Instantiate(piecePrefab);
-        piece.transform.parent = root.transform;
-        Piece p = piece.GetComponent<Piece>();
-        minoController.rotationNum = 0;
+        // ターンプレイヤーの色を判定
+        Piece.PieceType playersType;
+        if (_player1.isMyTurn)
+            playersType = Piece.PieceType.black;
+        else
+            playersType = Piece.PieceType.white;
 
-        switch (color)
+        // どちらのコマからひっくり返すか判定
+        GameObject tempPiece = _activePieces[0];
+        Piece piece1 = _activePieces[0].GetComponent<Piece>();
+        Piece piece2 = _activePieces[1].GetComponent<Piece>();
+
+        // [色を比較]  どちらも自分の色 or どちらも相手の色ならポジションで判断する
+        if ((piece1.pieceType == playersType && piece2.pieceType == playersType) || (piece1.pieceType != playersType && piece2.pieceType != playersType))
         {
-            case 1:
-                piece.name = "black";
-                p.pieceType = Piece.PieceType.black;
-                // pieceスクリプトに色々書きこむ
-                break;
-            case 2:
-                piece.name = "white";
-                p.pieceType = Piece.PieceType.white;
-                piece.transform.rotation = Quaternion.Euler(0, 0, 180);
-                break;
-            case 3:
-                piece.name = "joker";
-                p.pieceType = Piece.PieceType.joker;
-                break;
-            default:
-                break;
+            // [0]が上ならソート
+            if ((int)_activePieces[0].transform.position.z > (int)_activePieces[1].transform.position.z)
+            {
+                _activePieces[0] = _activePieces[1];
+                _activePieces[1] = tempPiece;
+            }
+            // [0]が右ならソート
+            else if (_activePieces[0].transform.position.x > _activePieces[1].transform.position.x)
+            {
+                _activePieces[0] = _activePieces[1];
+                _activePieces[1] = tempPiece;
+            }
         }
+        else if (piece2.pieceType == playersType)
+        {
+            _activePieces[0] = _activePieces[1];
+            _activePieces[1] = tempPiece;
+        }
+    }
 
-        return piece;
+    private void ChangeTurn()
+    {
+        _turnCount++;
+        _activePieces[0] = _generator.Generate(_DEFAULT_POSITION);
+        _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + new Vector3(0, 0, 1));
+
+        if (_turnCount % 2 == 1)
+        {
+            _player1.controllPiece1 = _activePieces[0];
+            _player1.controllPiece2 = _activePieces[1];
+            _player1.isMyTurn = true;
+        }
+        else
+        {
+            _player2.controllPiece1 = _activePieces[0];
+            _player2.controllPiece2 = _activePieces[1];
+            _player2.isMyTurn = true;
+        }
     }
 }

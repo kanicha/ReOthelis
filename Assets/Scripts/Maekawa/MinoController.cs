@@ -33,30 +33,30 @@ public class MinoController : MonoBehaviour
         new Vector3(1,  0, 0)
     };
 
-    void Update()
-    {
-        PlayerInput();
-    }
+    //void Update()
+    //{
+    //    PlayerInput();
+    //}
 
     private void Move()
     {
         Vector3 move = Vector3.zero;
 
         // 左移動
-        if (((p1._horizontal < 0 || p1._stickHorizontal < 0 || p1._keyBoardHorizontal < 0) && isBlack) || 
+        if (((p1._horizontal < 0 || p1._stickHorizontal < 0 || p1._keyBoardHorizontal < 0) && isBlack) ||
             ((p2._horizontal < 0 || p2._stickHorizontal < 0 || p1._keyBoardHorizontal < 0) && !isBlack))
         {
             move.x = -1;
         }
         // 右移動
-        else if (((p1._horizontal > 0 || p1._stickHorizontal > 0 || p1._keyBoardHorizontal > 0) && isBlack) || 
-                ((p2._horizontal > 0  || p2._stickHorizontal > 0 || p1._keyBoardHorizontal > 0) && !isBlack))
+        else if (((p1._horizontal > 0 || p1._stickHorizontal > 0 || p1._keyBoardHorizontal > 0) && isBlack) ||
+                ((p2._horizontal > 0 || p2._stickHorizontal > 0 || p1._keyBoardHorizontal > 0) && !isBlack))
         {
             move.x = 1;
         }
         // S入力すると一段下がる
-        else if (((p1._vertical < 0  || p1._stickVertical > 0 || p1._keyBoardVertical > 0) && isBlack) || 
-                ((p2._vertical < 0   || p2._stickVertical > 0 || p1._keyBoardVertical > 0) && !isBlack))
+        else if (((p1._vertical < 0 || p1._stickVertical > 0 || p1._keyBoardVertical > 0) && isBlack) ||
+                ((p2._vertical < 0 || p2._stickVertical > 0 || p1._keyBoardVertical > 0) && !isBlack))
         {
             move.z = -1;
         }
@@ -83,7 +83,7 @@ public class MinoController : MonoBehaviour
     {
         int lastNum = rotationNum;
         // 左回転
-        if (((p1._ds4L1 || p1._ds4cross || p1._keyBoardLeft) && isBlack) || 
+        if (((p1._ds4L1 || p1._ds4cross || p1._keyBoardLeft) && isBlack) ||
             ((p2._ds4L1 || p2._ds4cross || p1._keyBoardLeft) && !isBlack))
         {
             rotationNum++;
@@ -91,7 +91,7 @@ public class MinoController : MonoBehaviour
         }
         // 右回転(=左に3回転)
         else if (((p1._ds4R1 || p1._ds4circle || p1._keyBoardRight) && isBlack) ||
-                ((p2._ds4R1  || p2._ds4circle || p1._keyBoardRight) && !isBlack))
+                ((p2._ds4R1 || p2._ds4circle || p1._keyBoardRight) && !isBlack))
         {
             rotationNum += 3;
             SoundManager.Instance.PlaySE(2);
@@ -107,137 +107,139 @@ public class MinoController : MonoBehaviour
         }
         else
             rotationNum = lastNum;
-    }
 
-    protected void PlayerInput()
-    {
-        _frameCount++;
-        _frameCount %= moveSpeed;
-
-        if (!GameDirector.isGenerate)
-        {
-            _isInput = false;
-            Rotate();
-
-            if (_frameCount == 0)
-            {
-                Move();
-
-                if (_isInput)
-                {
-                    if (_map.CheckLanding(controllPieces[0].transform.position))
-                    {
-                        _map.FallPiece(controllPieces[0]);
-                        _map.FallPiece(controllPieces[1]);
-                        _isFalled = true;
-                    }
-                    else if (_map.CheckLanding(controllPieces[1].transform.position))
-                    {
-                        // 回転側が接地したら回転側から落とす
-                        _map.FallPiece(controllPieces[1]);
-                        _map.FallPiece(controllPieces[0]);
-                        _isFalled = true;
-                    }
-
-                    if (_isFalled)
-                    {
-                        SoundManager.Instance.PlaySE(3);
-                        // どちらのコマから関数を呼ぶか判定
-                        GameObject priorityPiece;
-                        GameObject nonPriorityPiece;
-                        Piece piece1 = controllPieces[0].GetComponent<Piece>();
-                        Piece piece2 = controllPieces[1].GetComponent<Piece>();
-
-                        // [色を比較]  どちらも自分の色、どちらも相手の色ならポジションで判断する
-                        if (piece1.pieceType == playersType && piece2.pieceType == playersType || piece1.pieceType != playersType && piece2.pieceType != playersType)
-                        {
-                            // 高さが同じなら
-                            if ((int)controllPieces[0].transform.position.z == (int)controllPieces[1].transform.position.z)
-                            {
-                                // 左側のコマから処理
-                                if (controllPieces[0].transform.position.x < controllPieces[1].transform.position.x)
-                                {
-                                    priorityPiece = controllPieces[0];
-                                    nonPriorityPiece = controllPieces[1];
-                                }
-                                else
-                                {
-                                    priorityPiece = controllPieces[1];
-                                    nonPriorityPiece = controllPieces[0];
-                                }
-                            }
-                            // 下側のコマから処理
-                            else if (controllPieces[0].transform.position.z < controllPieces[1].transform.position.z)
-                            {
-                                priorityPiece = controllPieces[0];
-                                nonPriorityPiece = controllPieces[1];
-                            }
-                            else
-                            {
-                                priorityPiece = controllPieces[1];
-                                nonPriorityPiece = controllPieces[0];
-                            }
-                        }
-                        else if (piece1.pieceType == playersType)
-                        {
-                            priorityPiece = controllPieces[0];
-                            nonPriorityPiece = controllPieces[1];
-                        }
-                        else
-                        {
-                            priorityPiece = controllPieces[1];
-                            nonPriorityPiece = controllPieces[0];
-                        }
-
-
-                        // リバース・アニメーション処理
-                        if (_map.CheckHeightOver(priorityPiece))
-                            StartCoroutine(_map.CheckReverse(priorityPiece));
-                        if (_map.CheckHeightOver(nonPriorityPiece))
-                            StartCoroutine(_map.CheckReverse(nonPriorityPiece));
-
-                        // ゲーム終了判定
-                        if (_map.CheckMap())
-                        {
-                            Debug.LogError("end");
-                            // ここに終了処理を書く
-                        }
-                        else
-                        {
-                            GameDirector.isGenerate = true;
-                            _isFalled = false;
-                        }
-                        
-                        // ターン変更
-                        PlayerTurn();
-                    }
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// プレイヤーターン処理関数
-    /// </summary>
-    private void PlayerTurn()
-    {
-        // 黒 -> 白プレイヤー
-        if (isBlack)
-        {
-            isBlack = false;
-            playersType = Piece.PieceType.white;
-            Debug.Log("白プレイヤー(2P)");
-        }
-        // 白 -> 黒プレイヤー
-        else if (!isBlack)
-        {
-            isBlack = true;
-            playersType = Piece.PieceType.black;
-
-            Debug.Log("黒プレイヤー(1P)");
-        }
-        
-        // 自由落下速度初期化
-        fallTime = 1.0f;
     }
 }
+
+    //protected void PlayerInput()
+    //{
+    //    _frameCount++;
+    //    _frameCount %= moveSpeed;
+
+//        if (!GameDirector.isGenerate)
+//        {
+//            _isInput = false;
+//            Rotate();
+
+//            if (_frameCount == 0)
+//            {
+//                Move();
+
+//                if (_isInput)
+//                {
+//                    if (_map.CheckLanding(controllPieces[0].transform.position))
+//                    {
+//                        _map.FallPiece(controllPieces[0]);
+//                        _map.FallPiece(controllPieces[1]);
+//                        _isFalled = true;
+//                    }
+//                    else if (_map.CheckLanding(controllPieces[1].transform.position))
+//                    {
+//                        // 回転側が接地したら回転側から落とす
+//                        _map.FallPiece(controllPieces[1]);
+//                        _map.FallPiece(controllPieces[0]);
+//                        _isFalled = true;
+//                    }
+
+//                    if (_isFalled)
+//                    {
+//                        SoundManager.Instance.PlaySE(3);
+//                        // どちらのコマから関数を呼ぶか判定
+//                        GameObject priorityPiece;
+//                        GameObject nonPriorityPiece;
+//                        Piece piece1 = controllPieces[0].GetComponent<Piece>();
+//                        Piece piece2 = controllPieces[1].GetComponent<Piece>();
+
+//                        // [色を比較]  どちらも自分の色、どちらも相手の色ならポジションで判断する
+//                        if ((piece1.pieceType == playersType && piece2.pieceType == playersType) || (piece1.pieceType != playersType && piece2.pieceType != playersType))
+//                        {
+//                            // 高さが同じなら
+//                            if ((int)controllPieces[0].transform.position.z == (int)controllPieces[1].transform.position.z)
+//                            {
+//                                // 左側のコマから処理
+//                                if (controllPieces[0].transform.position.x < controllPieces[1].transform.position.x)
+//                                {
+//                                    priorityPiece = controllPieces[0];
+//                                    nonPriorityPiece = controllPieces[1];
+//                                }
+//                                else
+//                                {
+//                                    priorityPiece = controllPieces[1];
+//                                    nonPriorityPiece = controllPieces[0];
+//                                }
+//                            }
+//                            // 下側のコマから処理
+//                            else if (controllPieces[0].transform.position.z < controllPieces[1].transform.position.z)
+//                            {
+//                                priorityPiece = controllPieces[0];
+//                                nonPriorityPiece = controllPieces[1];
+//                            }
+//                            else
+//                            {
+//                                priorityPiece = controllPieces[1];
+//                                nonPriorityPiece = controllPieces[0];
+//                            }
+//                        }
+//                        else if (piece1.pieceType == playersType)
+//                        {
+//                            priorityPiece = controllPieces[0];
+//                            nonPriorityPiece = controllPieces[1];
+//                        }
+//                        else
+//                        {
+//                            priorityPiece = controllPieces[1];
+//                            nonPriorityPiece = controllPieces[0];
+//                        }
+
+
+//                        // リバース・アニメーション処理
+//                        if (_map.CheckHeightOver(priorityPiece))
+//                            StartCoroutine(_map.CheckReverse(priorityPiece));
+//                        if (_map.CheckHeightOver(nonPriorityPiece))
+//                            StartCoroutine(_map.CheckReverse(nonPriorityPiece));
+
+//                        // ゲーム終了判定
+//                        if (_map.CheckMap())
+//                        {
+//                            Debug.LogError("end");
+//                            // ここに終了処理を書く
+//                        }
+//                        else
+//                        {
+//                            GameDirector.isGenerate = true;
+//                            _isFalled = false;
+//                        }
+                        
+//                        // ターン変更
+//                        PlayerTurn();
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+//    /// <summary>
+//    /// プレイヤーターン処理関数
+//    /// </summary>
+//    private void PlayerTurn()
+//    {
+//        // 黒 -> 白プレイヤー
+//        if (isBlack)
+//        {
+//            isBlack = false;
+//            playersType = Piece.PieceType.white;
+//            Debug.Log("白プレイヤー(2P)");
+//        }
+//        // 白 -> 黒プレイヤー
+//        else if (!isBlack)
+//        {
+//            isBlack = true;
+//            playersType = Piece.PieceType.black;
+
+//            Debug.Log("黒プレイヤー(1P)");
+//        }
+        
+//        // 自由落下速度初期化
+//        fallTime = 1.0f;
+//    }
+//}
