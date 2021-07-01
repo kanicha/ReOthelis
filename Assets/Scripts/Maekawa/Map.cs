@@ -111,21 +111,21 @@ public class Map : MonoBehaviour
     private string _myColor = string.Empty;
     private bool isChecking = false;
     private int numOfReversed = 0;
+
     [SerializeField]
-    private GameDirector gameDirector = null;
+    private GameDirector director = null;
+    public Piece.PieceType turnPlayerColor = Piece.PieceType.none;
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
     /// </summary>
     private IEnumerator PieceReverse()
     {
-        int score = 0;
         foreach (GameObject piece in _reversePiece)
         {
-            score += 100;
-            if (MinoController.isBlack)
-                gameDirector.score1 += score;
+            if (turnPlayerColor == Piece.PieceType.black)
+                Player_1.score += director.point;
             else
-                gameDirector.score2 += score;
+                Player_2.score += director.point;
 
             piece.GetComponent<Piece>().Reverse();
             yield return new WaitForSeconds(.3f);

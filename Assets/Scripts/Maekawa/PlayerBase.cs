@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerBase : MonoBehaviour
 {
@@ -45,16 +46,20 @@ public class PlayerBase : MonoBehaviour
     private bool _keyBoardLeft = false;
     private bool _keyBoardRight = false;
 
-    // コマ操作
+    //
     [SerializeField, Header("1マス落下する時間")]
     private float _fallTime = 0.0f;
     [SerializeField]
     protected Map map = null;
+    [SerializeField]
+    protected Text scoreText = null;
+    [SerializeField]
+    public Image charactorImage = null;
     private float _deltaTime = 0.0f;
     public bool isMyTurn = false;
     public GameObject controllPiece1 = null;
     public GameObject controllPiece2 = null;
-    public int rotationNum = 0; //回転数
+    public int rotationNum = 0;
 
     protected readonly Vector3[] rotationPos = new Vector3[]
     {

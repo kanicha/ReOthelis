@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class GameDirector : MonoBehaviour
 {
+    [SerializeField, Header("基本スコア")]
+    public int point = 0;
     [SerializeField, Header("ミノの初期位置")]
     private Vector3 _DEFAULT_POSITION = Vector3.zero;
     [SerializeField]
@@ -17,14 +19,6 @@ public class GameDirector : MonoBehaviour
     private int _turnCount = 0;
     private GameObject[] _activePieces = new GameObject[2];
     private GameObject[] _disActivePieces = new GameObject[2];
-
-    // 後で移動
-    [SerializeField]
-    private Text scoreText1 = null;
-    [SerializeField]
-    private Text scoreText2 = null;
-    public int score1 = 0;
-    public int score2 = 0;
     public static bool isLanding = false;
 
     void Start()
@@ -32,15 +26,14 @@ public class GameDirector : MonoBehaviour
         SoundManager.Instance.PlayBGM(0);
         isLanding = false;
         _player1.isMyTurn = false;
+        Player_1.score = 0;
+        Player_2.score = 0;
         _player2.isMyTurn = false;
         ChangeTurn();
     }
 
     void Update()
     {
-        scoreText1.text = string.Format("{0:00000}", score1);
-        scoreText2.text = string.Format("{0:00000}", score2);
-
         if(isLanding)
         {
             SoundManager.Instance.PlaySE(3);
@@ -77,10 +70,13 @@ public class GameDirector : MonoBehaviour
     {
         // ターンプレイヤーの色を判定
         Piece.PieceType playersType;
+
         if (_player1.isMyTurn)
             playersType = Piece.PieceType.black;
         else
             playersType = Piece.PieceType.white;
+
+        _map.turnPlayerColor = playersType;
 
         // どちらのコマからひっくり返すか判定
         GameObject tempPiece = _activePieces[0];
@@ -116,17 +112,21 @@ public class GameDirector : MonoBehaviour
         _activePieces[0] = _generator.Generate(_DEFAULT_POSITION);
         _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + new Vector3(0, 0, 1));
 
+        _player1.charactorImage.color = new Color(1, 1, 1);
+        _player2.charactorImage.color = new Color(1, 1, 1);
         if (_turnCount % 2 == 1)
         {
             _player1.controllPiece1 = _activePieces[0];
             _player1.controllPiece2 = _activePieces[1];
             _player1.isMyTurn = true;
+            _player2.charactorImage.color = new Color(0.5f, 0.5f, 0.5f);
         }
         else
         {
             _player2.controllPiece1 = _activePieces[0];
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
+            _player1.charactorImage.color = new Color(0.5f, 0.5f, 0.5f);
         }
     }
 }

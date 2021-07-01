@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class Player_2 : PlayerBase
 {
     private const string _PLAYER2_CIRCLE_NAME = "Fire_2_2";
@@ -17,6 +13,8 @@ public class Player_2 : PlayerBase
     private const string _PLAYER2_LSTICK_VERTICAL_NAME = "Vertical Stick-L_2";
     private const string _PLAYER2_RSTICK_HORIZONTAL_NAME = "Horizontal Stick-R_2";
     private const string _PLAYER2_RSTICK_VERTICAL_NAME = "Vertical Stick-R_2";
+
+    public static int score = 0;
 
     void Start()
     {
@@ -37,8 +35,10 @@ public class Player_2 : PlayerBase
 
     void Update()
     {
-        base.KeyInput();
+        base.scoreText.text = string.Format("{0:00000}", score);
+
         base.SaveKeyValue();
+        base.KeyInput();
 
         if (base.isMyTurn)
         {
