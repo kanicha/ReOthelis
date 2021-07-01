@@ -40,11 +40,14 @@ public class Player_2 : PlayerBase
         base.SaveKeyValue();
         base.KeyInput();
 
+        if (GameDirector.isGameEnd)
+            return;
+
+        base.PieceMove();
+        base.PieceRotate();
+
         if (base.isMyTurn)
         {
-            base.PieceMove();
-            base.PieceRotate();
-
             if (base.map.CheckLanding(base.controllPiece1.transform.position))
             {
                 base.map.FallPiece(controllPiece1);
@@ -58,10 +61,6 @@ public class Player_2 : PlayerBase
                 base.map.FallPiece(controllPiece1);
                 GameDirector.isLanding = true;
             }
-        }
-        else
-        {
-
         }
     }
 }

@@ -36,7 +36,7 @@ public class Map : MonoBehaviour
     {
         bool isBlank = false;
         // ミノの移動後x, y座標
-        int z = (int)movedPos.z * -1;// yは基本0以下になるので符号を反転させ配列を指定する
+        int z = (int)movedPos.z * -1;// zは基本0以下になるので符号を反転させ配列を指定する
         int x = (int)movedPos.x;
 
         // 2つの駒の移動後座標に何もなければ移動を通す

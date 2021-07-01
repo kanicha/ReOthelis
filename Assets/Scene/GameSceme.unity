@@ -201,7 +201,7 @@ GameObject:
   - component: {fileID: 318023283}
   - component: {fileID: 318023282}
   m_Layer: 5
-  m_Name: Player1Image (1)
+  m_Name: Player2Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -219,7 +219,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1136020466}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -378,7 +378,6 @@ MonoBehaviour:
   _map: {fileID: 576250714}
   _player1: {fileID: 1435816371}
   _player2: {fileID: 533350509}
-  turnPlayerColor: 0
 --- !u!4 &326221984
 Transform:
   m_ObjectHideFlags: 0
@@ -518,6 +517,7 @@ MonoBehaviour:
   _fallTime: 3
   map: {fileID: 576250714}
   scoreText: {fileID: 2065639105}
+  charactorImage: {fileID: 318023282}
   isMyTurn: 0
   controllPiece1: {fileID: 0}
   controllPiece2: {fileID: 0}
@@ -566,6 +566,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   director: {fileID: 326221981}
+  turnPlayerColor: 0
 --- !u!4 &576250715
 Transform:
   m_ObjectHideFlags: 0
@@ -611,7 +612,7 @@ RectTransform:
   m_Children:
   - {fileID: 1033825789}
   m_Father: {fileID: 1136020466}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -971,8 +972,8 @@ RectTransform:
   m_Children:
   - {fileID: 2015791214}
   - {fileID: 1873248608}
-  - {fileID: 846068068}
   - {fileID: 318023281}
+  - {fileID: 846068068}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1079,6 +1080,7 @@ MonoBehaviour:
   _fallTime: 3
   map: {fileID: 576250714}
   scoreText: {fileID: 1952223755}
+  charactorImage: {fileID: 1873248609}
   isMyTurn: 0
   controllPiece1: {fileID: 0}
   controllPiece2: {fileID: 0}

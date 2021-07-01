@@ -106,7 +106,6 @@ public class PlayerBase : MonoBehaviour
 
     protected void PieceMove()
     {
-        _deltaTime += Time.deltaTime;
         Vector3 move = Vector3.zero;
 
         // ¶‰EˆÚ“®
@@ -115,16 +114,20 @@ public class PlayerBase : MonoBehaviour
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0) || Input.GetKeyDown(KeyCode.D))
             move.x = 1;
 
-        // ‰ºˆÚ“®
-        if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0) || Input.GetKeyDown(KeyCode.S))
+        if(isMyTurn)
         {
-            _deltaTime = 0;
-            move.z = -1;
-        }
-        else if (_deltaTime >= _fallTime)// ŠÔ—‰º
-        {
-            _deltaTime = 0;
-            move.z = -1;
+            _deltaTime += Time.deltaTime;
+            // ‰ºˆÚ“®
+            if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0) || Input.GetKeyDown(KeyCode.S))
+            {
+                _deltaTime = 0;
+                move.z = -1;
+            }
+            else if (_deltaTime >= _fallTime)// ŠÔ—‰º
+            {
+                _deltaTime = 0;
+                move.z = -1;
+            }
         }
 
         // ˆÚ“®Œã‚ÌÀ•W‚ğŒvZ
