@@ -65,7 +65,7 @@ public class GameDirector : MonoBehaviour
                     _jokerCount++;
                 }
                 // 余りが0 & 黒の生成数が上限に達していない　or 白の生成数が上限に達しているなら黒
-                else if ((num2 % 2 == 0 && _blackCount < _BLACK_COUNT_MAX) || _whiteCount > _WHITE_COUNT_MAX)
+                else if ((num2 % 2 == 0 && _blackCount < _BLACK_COUNT_MAX) || _whiteCount >= _WHITE_COUNT_MAX)
                 {
                     type[i] = 1;
                     _blackCount++;
@@ -79,7 +79,7 @@ public class GameDirector : MonoBehaviour
 
                 // 一回抽選したら範囲を狭める
                 _range--;
-                Debug.Log(_range);
+
                 // 範囲が0になった時にリセット処理
                 if (_range == 0)
                 {
