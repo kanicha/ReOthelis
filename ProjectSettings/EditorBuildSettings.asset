@@ -11,28 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scene/Title.unity
     guid: a8bc64e60d5e4554d9314aad0ecbcd83
-  - enabled: 0
-    path: Assets/Scene/YWSOldScene/Scenario.unity
-    guid: ba3010a537a14fc458d5c2ceeea7b8cc
   - enabled: 1
     path: Assets/Scene/CharacterSelect.unity
     guid: c18c6375bed0f9c4d8cac091a1f17956
-  - enabled: 0
-    path: Assets/Scene/YWSOldScene/CharacterEpisode.unity
-    guid: 26c713ad79a590344b61fa1b1dc2a2a0
-  - enabled: 0
-    path: Assets/Scene/YWSOldScene/Game.unity
-    guid: 7cee0da24911c3d429e6b93871531afc
   - enabled: 1
     path: Assets/Scene/GameSceme.unity
-    guid: 2e296a7b54548a44ab5d6597282b5777
-  - enabled: 1
-    path: Assets/Scene/Result.unity
-    guid: c2dd73e0721626140892a2c39464156d
-  - enabled: 0
-    path: Assets/Scene/YWSOldScene/OpponentSelect.unity
-    guid: 874b2bae8ff354c4aa5362ee1ba07948
-  - enabled: 0
-    path: Assets/Scene/YWSOldScene/GameEnd.unity
-    guid: 923d0034c40c6a84d96169a1c455b5fd
+    guid: 276f8fffe2fad024384e08f6621a04b7
   m_configObjects: {}
