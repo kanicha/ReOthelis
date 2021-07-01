@@ -8,8 +8,8 @@ public class ModeSelect : MonoBehaviour
 {
     [SerializeField] private RectTransform cursor;
     [SerializeField] private Player1 p1;
-    
-    int selectCount = 0;
+
+    int _selectCount = 0;
     private int _frameCount = 0;
     private int _moveSpeed = 10;
     private bool _repeatHit = false;
@@ -19,7 +19,9 @@ public class ModeSelect : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-210, 0, 0);
+        cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -171, 0);
+        _selectCount = 0;
+        
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
         Approval.AddListener(() => SceneChange(_gameSceneManager));
     }
@@ -33,7 +35,7 @@ public class ModeSelect : MonoBehaviour
         //�J�[�\����OFFLINE�ɍ��킹�Ă���A���I��{�^���������ꂽ�ꍇ�ɃV�[���J�ڂ�s��
         if (_repeatHit)
             return;
-        else if (p1._ds4circle && selectCount == 1 || Input.GetKeyDown(KeyCode.Space))
+        else if (p1._ds4circle && _selectCount == 1 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
         {
             _repeatHit = true;
             Approval.Invoke();
@@ -45,41 +47,41 @@ public class ModeSelect : MonoBehaviour
             //���L�[���͂ɍ��킹�ăJ�[�\������Ɉړ�������
             if (p1._vertical < 0 || Input.GetKeyDown(KeyCode.S))
             {
-                if (selectCount == 0)
+                if (_selectCount == 0)
                 {
-                    cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-210, -101, 0);
-                    selectCount++;
+                    cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196,-272, 0);
+                    _selectCount++;
                 }
-                else if (selectCount == 1)
+                else if (_selectCount == 1)
                 {
-                    cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-210, -202, 0);
-                    selectCount++;
+                    cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -373, 0);
+                    _selectCount++;
                 }
-                else if (selectCount == 2)
+                else if (_selectCount == 2)
                 {
                     //��ԉ���ONLINE�ɍ��킹�Ă�ꍇ�͈�ԏ�ɖ߂�
-                    cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-210, 0, 0);
-                    selectCount = 0;
+                    cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -171, 0);
+                    _selectCount = 0;
                 }
             }
             //��L�[���͂ɍ��킹�ăJ�[�\�����Ɉړ�������
             else if (p1._vertical > 0 || Input.GetKeyDown(KeyCode.W))
             {
-                if (selectCount == 0)
+                if (_selectCount == 0)
                 {
                     //��ԏ��STORY�ɍ��킹�Ă�ꍇ�͈�ԉ��Ɉڂ�
-                    cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-210, -202, 0);
-                    selectCount = 2;
+                    cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -373, 0);
+                    _selectCount = 2;
                 }
-                else if (selectCount == 1)
+                else if (_selectCount == 1)
                 {
-                    cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-210, 0, 0);
-                    selectCount--;
+                    cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -171, 0);
+                    _selectCount--;
                 }
-                else if (selectCount == 2)
+                else if (_selectCount == 2)
                 {
-                    cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-210, -101, 0);
-                    selectCount--;
+                    cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -272, 0);
+                    _selectCount--;
                 }
             }
         }
