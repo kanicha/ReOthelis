@@ -34,7 +34,7 @@ public class GameDirector : MonoBehaviour
     {
         // 最初に全て生成した方がいいかも
         isGenerate = true;
-
+        SoundManager.Instance.PlayBGM(0);
         _range = _WHITE_COUNT_MAX + _BLACK_COUNT_MAX;//+ _JOKER_COUNT_MAX;
     }
 

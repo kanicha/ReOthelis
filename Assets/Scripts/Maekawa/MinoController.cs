@@ -85,12 +85,17 @@ public class MinoController : MonoBehaviour
         // 左回転
         if (((p1._ds4L1 || p1._ds4cross || p1._keyBoardLeft) && isBlack) || 
             ((p2._ds4L1 || p2._ds4cross || p1._keyBoardLeft) && !isBlack))
+        {
             rotationNum++;
+            SoundManager.Instance.PlaySE(2);
+        }
         // 右回転(=左に3回転)
         else if (((p1._ds4R1 || p1._ds4circle || p1._keyBoardRight) && isBlack) ||
                 ((p2._ds4R1  || p2._ds4circle || p1._keyBoardRight) && !isBlack))
+        {
             rotationNum += 3;
-
+            SoundManager.Instance.PlaySE(2);
+        }
         // 疑似回転(移動がややこしくなるのでRotationはいじらない)
         rotationNum %= 4;
         Vector3 rotatedPos = controllPieces[0].transform.position + rotationPos[rotationNum];
@@ -136,6 +141,7 @@ public class MinoController : MonoBehaviour
 
                     if (_isFalled)
                     {
+                        SoundManager.Instance.PlaySE(3);
                         // どちらのコマから関数を呼ぶか判定
                         GameObject priorityPiece;
                         GameObject nonPriorityPiece;
