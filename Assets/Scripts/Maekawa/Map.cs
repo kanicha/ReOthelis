@@ -255,6 +255,12 @@ public class Map : MonoBehaviour
             }
         }
 
+        if (isEnd)
+        {
+            Player_1.score += director.point * black;
+            Player_2.score += director.point * white;
+        }
+
         return isEnd;
     }
 
