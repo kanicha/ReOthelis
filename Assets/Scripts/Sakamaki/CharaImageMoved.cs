@@ -10,16 +10,22 @@ public class CharaImageMoved : MonoBehaviour
 {
     [SerializeField] private Image charactorImage1P;
     [SerializeField] private Image charactorImage2P;
-    [SerializeField] private Sprite[] CharactorImageArray1P;
-    [SerializeField] private Sprite[] CharactorImageArray2P;
+    [SerializeField] private Sprite[] charactorImageArray1P;
+    [SerializeField] private Sprite[] charactorImageArray2P;
     [SerializeField] private Player1 p1;
     [SerializeField] private Player2 p2;
+
+    [SerializeField] private GameObject[] charactorButtonWhite1P;
+    [SerializeField] private GameObject[] charactorButtonWhite2P;
+
 
     private int _frameCount1P = 0;
     private int _frameCount2P = 0;
     private int _moveSpeed1P = 10;
     private int _moveSpeed2P = 10;
     private int _next1P = 0;
+    private int _back1P = 0;
+    private int _back2P = 0;
     private int _next2P = 0;
     private int _prev1P = 0;
     private int _prev2P = 0;
@@ -28,8 +34,11 @@ public class CharaImageMoved : MonoBehaviour
     void Start()
     {
         // 初期化処理
-        charactorImage1P.sprite = CharactorImageArray1P[0];
-        charactorImage2P.sprite = CharactorImageArray2P[0];
+        charactorImage1P.sprite = charactorImageArray1P[0];
+        charactorImage2P.sprite = charactorImageArray2P[0];
+        
+        charactorButtonWhite1P[0].SetActive(true);
+        charactorButtonWhite2P[0].SetActive(true);
     }
 
     // Update is called once per frame
@@ -63,14 +72,32 @@ public class CharaImageMoved : MonoBehaviour
 
             if (_next1P < 0)
             {
-                _next1P = CharactorImageArray1P.Length - 1;
+                _next1P = charactorImageArray1P.Length - 1;
             }
-            else if (_next1P >= CharactorImageArray1P.Length)
+            else if (_next1P >= charactorImageArray1P.Length)
             {
                 _next1P = 0;
             }
 
-            charactorImage1P.sprite = CharactorImageArray1P[_next1P];
+            charactorImage1P.sprite = charactorImageArray1P[_next1P];
+            charactorButtonWhite1P[_next1P].SetActive(true);
+
+            _back1P = _next1P;
+        }
+
+        // Activeしたボタンfalseにする処理
+        if (_back1P >= 1)
+        {
+            _back1P--;
+            charactorButtonWhite1P[_back1P].SetActive(false);
+        }
+        else if (_next1P <= _back1P)
+        {
+            charactorButtonWhite1P[3].SetActive(false);
+        }
+        else if (_next1P >= _back1P)
+        {
+            charactorButtonWhite1P[0].SetActive(false);
         }
     }
 
@@ -98,14 +125,32 @@ public class CharaImageMoved : MonoBehaviour
 
             if (_next2P < 0)
             {
-                _next2P = CharactorImageArray1P.Length - 1;
+                _next2P = charactorImageArray1P.Length - 1;
             }
-            else if (_next2P >= CharactorImageArray1P.Length)
+            else if (_next2P >= charactorImageArray1P.Length)
             {
                 _next2P = 0;
             }
 
-            charactorImage2P.sprite = CharactorImageArray2P[_next2P];
+            charactorImage2P.sprite = charactorImageArray2P[_next2P];
+            charactorButtonWhite2P[_next2P].SetActive(true);
+
+            _back2P = _next2P;
+        }
+
+        // Activeしたボタンfalseにする処理
+        if (_back2P >= 1)
+        {
+            _back2P--;
+            charactorButtonWhite2P[_back2P].SetActive(false);
+        }
+        else if (_next2P <= _back2P)
+        {
+            charactorButtonWhite2P[3].SetActive(false);
+        }
+        else if (_next2P >= _back2P)
+        {
+            charactorButtonWhite2P[0].SetActive(false);
         }
     }
 }
