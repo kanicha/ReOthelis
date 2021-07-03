@@ -51,19 +51,19 @@ public class Player_2 : PlayerBase
 
         if (base.isMyTurn)
         {
-            if (base.map.CheckLanding(base.controllPiece1.transform.position))
-            {
-                base.map.FallPiece(controllPiece1);
-                base.map.FallPiece(controllPiece2);
-                GameDirector.isLanding = true;
-            }
-            else if (base.map.CheckLanding(base.controllPiece2.transform.position))
-            {
-                // ‰ñ“]‘¤‚ªÚ’n‚µ‚½‚ç‰ñ“]‘¤‚©‚ç—‚Æ‚·
-                base.map.FallPiece(controllPiece2);
-                base.map.FallPiece(controllPiece1);
-                GameDirector.isLanding = true;
-            }
+            //if (base.map.CheckLanding(base.controllPiece1.transform.position))
+            //{
+            //    base.map.FallPiece(controllPiece1);
+            //    base.map.FallPiece(controllPiece2);
+            //    GameDirector.isLanding = true;
+            //}
+            //else if (base.map.CheckLanding(base.controllPiece2.transform.position))
+            //{
+            //    // ‰ñ“]‘¤‚ªÚ’n‚µ‚½‚ç‰ñ“]‘¤‚©‚ç—‚Æ‚·
+            //    base.map.FallPiece(controllPiece2);
+            //    base.map.FallPiece(controllPiece1);
+            //    GameDirector.isLanding = true;
+            //}
         }
     }
 }
