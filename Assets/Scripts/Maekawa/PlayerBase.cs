@@ -19,6 +19,9 @@ public class PlayerBase : MonoBehaviour
     protected string DS4_Lstick_vertical_name = "";
     protected string DS4_Rstick_horizontal_name = "";
     protected string DS4_Rstick_vertical_name = "";
+    // キーボード操作用キーネーム
+    protected string key_board_horizontal_name = "";
+    protected string key_board_vertical_name = "";
     // キーバリュー
     private bool _DS4_circle_value = false;
     private bool _DS4_cross_value = false;
@@ -41,8 +44,8 @@ public class PlayerBase : MonoBehaviour
     private float last_Rstick_horizontal_value = 0.0f;
     private float last_Rstick_vertical_value = 0.0f;
     // キーボード用
-    private float _keyBoardHorizontal = 0.0f;
-    private float _keyBoardVertical = 0.0f;
+    //private float _keyBoardHorizontal = 0.0f;
+    //private float _keyBoardVertical = 0.0f;
     private bool _keyBoardLeft = false;
     private bool _keyBoardRight = false;
 
@@ -85,8 +88,8 @@ public class PlayerBase : MonoBehaviour
         _DS4_Rstick_horizontal_value = Input.GetAxis(DS4_Rstick_horizontal_name);
         _DS4_Rstick_vertical_value = Input.GetAxis(DS4_Rstick_vertical_name);
 
-        _keyBoardHorizontal = Input.GetAxis("Horizontal");
-        _keyBoardVertical = Input.GetAxis("Vertical");
+        _DS4_horizontal_value = Input.GetAxis(key_board_horizontal_name);
+        _DS4_vertical_value = Input.GetAxis(key_board_vertical_name);
         _keyBoardLeft = Input.GetKeyDown(KeyCode.Q);
         _keyBoardRight = Input.GetKeyDown(KeyCode.E);
     }
@@ -109,16 +112,16 @@ public class PlayerBase : MonoBehaviour
         Vector3 move = Vector3.zero;
 
         // 左右移動
-        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0) || Input.GetKeyDown(KeyCode.A))
+        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
             move.x = -1;
-        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0) || Input.GetKeyDown(KeyCode.D))
+        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
             move.x = 1;
 
         if(isMyTurn)
         {
             _deltaTime += Time.deltaTime;
             // 下移動
-            if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0) || Input.GetKeyDown(KeyCode.S))
+            if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
             {
                 _deltaTime = 0;
                 move.z = -1;

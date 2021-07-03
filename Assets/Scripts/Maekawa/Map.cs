@@ -259,6 +259,13 @@ public class Map : MonoBehaviour
         {
             Player_1.score += director.point * black;
             Player_2.score += director.point * white;
+
+            if (Player_1.score > Player_2.score)
+                Debug.Log("<color=red>1Pの勝ち</color>");
+            else if (Player_1.score == Player_2.score)
+                Debug.Log("<color=orange>引き分け</color>");
+            else
+                Debug.Log("<color=blue>2Pの勝ち</color>");
         }
 
         return isEnd;

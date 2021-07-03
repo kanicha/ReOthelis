@@ -31,6 +31,9 @@ public class Player_1 : PlayerBase
         base.DS4_Lstick_vertical_name = _PLAYER1_LSTICK_VERTICAL_NAME;
         base.DS4_Rstick_horizontal_name = _PLAYER1_RSTICK_HORIZONTAL_NAME;
         base.DS4_Rstick_vertical_name = _PLAYER1_RSTICK_VERTICAL_NAME;
+        //
+        base.key_board_horizontal_name = "Horizontal";
+        base.key_board_vertical_name = "Vertical";
     }
 
     void Update()
