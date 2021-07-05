@@ -7,7 +7,7 @@ public class Map : MonoBehaviour
     private const byte _WIDTH = 10;
     private const byte _HEIGHT = 11;
     private const byte _EMPTY_AREAS_HEIGHT = 2;// 上２ラインに置かれたコマは消滅する
-    public string[,] _map = new string[_HEIGHT, _WIDTH]// z, x座標で指定
+    private string[,] _map = new string[_HEIGHT, _WIDTH]// z, x座標で指定
     {
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
@@ -22,27 +22,11 @@ public class Map : MonoBehaviour
         { "■", "■", "■", "■", "■", "■", "■", "■", "■", "■" }
     };
 
-    public static readonly string wall = "■";
-    public static readonly string empty = "□";
-    public static readonly string white = "〇";
-    public static readonly string black = "●";
-    private static Map instance = null;
-    public static Map Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = (Map)FindObjectOfType(typeof(Map));
+    private const string _wall = "■";
+    private const string _empty = "□";
+    private const string _white = "〇";
+    private const string _black = "●";
 
-                if (instance == null)
-                {
-                    Debug.LogError("Not Found Instance");
-                }
-            }
-            return instance;
-        }
-    }
     /// <summary>
     /// 移動後のコマが障害物に当たるかを調べる
     /// </summary>
@@ -56,19 +40,67 @@ public class Map : MonoBehaviour
         int x = (int)movedPos.x;
 
         // 2つの駒の移動後座標に何もなければ移動を通す
-        if (_map[z, x] == empty)
+        if (_map[z, x] == _empty)
             isBlank = true;
 
         return isBlank;
     }
 
-    public void InputMap(GameObject piece, string Type)
+    /// <summary>
+    /// コマの１つ下のマスが空いていないかを調べる
+    /// </summary>
+    /// <param name="piecePos"></param>
+    /// <returns></returns>
+    public bool CheckLanding(Vector3 piecePos)
     {
-        int z = (int)piece.transform.position.z * -1;
-        int x = (int)piece.transform.position.x;
+        bool isGrounded = false;
 
-        _map[z, x] = Type;
-        _pieceMap[z, x] = piece;
+        // ミノの移動後座標
+        int z = (int)piecePos.z * -1;
+        int x = (int)piecePos.x;
+
+        if (_map[z + 1, x] != _empty)
+            isGrounded = true;
+
+        return isGrounded;
+    }
+
+    /// <summary>
+    /// 着地後判定処理関数
+    /// </summary>
+    public void FallPiece(GameObject piece)
+    {
+        // 配列指定子用のコマの座標         
+        int x = (int)piece.transform.position.x;
+        int z = (int)piece.transform.position.z * -1;// zはマイナス方向に進むので符号を反転させる
+
+        int i = 0;
+        int dz = 0;
+
+        while (true)
+        {
+            i++;
+            dz = z + i;// iの分だけ下の座標を調べる
+
+            // 設置したマスからi個下のマスが空白なら下に落とす
+            if (_map[dz, x] == _empty)
+                piece.transform.position = new Vector3(x, 0, dz * -1);// 反転させたyをマイナスに戻す
+            else
+            {
+                dz--;
+                break;
+            }
+            // これを空白以外に当たるまで繰り返す
+        }
+
+        Piece p = piece.GetComponent<Piece>();
+
+        if (p.pieceType == Piece.PieceType.black)
+            _map[dz, x] = _black;
+        else if (p.pieceType == Piece.PieceType.white)
+            _map[dz, x] = _white;
+
+        _pieceMap[dz, x] = piece;
     }
 
     // ひっくり返す処理
@@ -115,9 +147,9 @@ public class Map : MonoBehaviour
 
         // 自分の色と相手の色を決定
         if (Piece.PieceType.black == piece.GetComponent<Piece>().pieceType)
-            _myColor = black;
+            _myColor = _black;
         else
-            _myColor = white;
+            _myColor = _white;
 
         // 置いたマスの座標を取得
         _setPosX = (int)piece.transform.position.x;
@@ -168,7 +200,7 @@ public class Map : MonoBehaviour
             checkPosX += dirX;
             checkPosZ += dirZ;
             // 壁 or 空白 or なら終了
-            if (_map[checkPosZ, checkPosX] == wall || _map[checkPosZ, checkPosX] == empty)
+            if (_map[checkPosZ, checkPosX] == _wall || _map[checkPosZ, checkPosX] == _empty)
             {
                 break;
             }
@@ -214,11 +246,11 @@ public class Map : MonoBehaviour
             {
                 string cell = _map[i, j];
 
-                if (cell == empty)
+                if (cell == _empty)
                     isEnd = false;
-                else if (cell == Map.black)
+                else if (cell == _black)
                     black++;
-                else if (cell == Map.white)
+                else if (cell == _white)
                     white++;
             }
         }
@@ -249,7 +281,7 @@ public class Map : MonoBehaviour
         bool isSafeLine = true;
         if ((int)piece.transform.position.z * -1 < _EMPTY_AREAS_HEIGHT)
         {
-            _map[(int)piece.transform.position.z * -1, (int)piece.transform.position.x] = empty;
+            _map[(int)piece.transform.position.z * -1, (int)piece.transform.position.x] = _empty;
             piece.transform.position = new Vector3(999, 999, 999);
             isSafeLine = false;
         }
