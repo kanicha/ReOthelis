@@ -5,6 +5,8 @@ public class GameDirector : MonoBehaviour
 {
     [SerializeField, Header("基本スコア")]
     public int point = 0;
+    [SerializeField, Header("接地中に配置を確定するまでの時間")]
+    private float _marginTime = 0;
     [SerializeField, Header("ミノの初期位置")]
     private Vector3 _DEFAULT_POSITION = Vector3.zero;
     [SerializeField]
@@ -17,16 +19,18 @@ public class GameDirector : MonoBehaviour
     private Player_2 _player2 = null;
 
     private int _turnCount = 0;
+    private float _timeCount = 0;
     private GameObject[] _activePieces = new GameObject[2];
     private GameObject[] _disActivePieces = new GameObject[2];
-    public static bool isLanding = false;
+    public static bool isConfirmed = false;
+    private bool isFalled = false;
     public static bool isGameEnd = false;
 
     void Start()
     {
         SoundManager.Instance.PlayBGM(0);
-        isLanding = false;
         isGameEnd = false;
+        isConfirmed = false;
         _player1.isMyTurn = false;
         _player2.isMyTurn = false;
         Player_1.score = 0;
@@ -42,27 +46,55 @@ public class GameDirector : MonoBehaviour
 
     void Update()
     {
-        if(isLanding)
+        // 接地時にカウント
+        if (_map.CheckLanding(_activePieces[0].transform.position) || _map.CheckLanding(_activePieces[1].transform.position))
+        {
+            _timeCount += Time.deltaTime;
+            if (_timeCount > _marginTime)
+                isConfirmed = true;
+        }
+        else
+            _timeCount = 0;
+
+        // プレイヤーの操作が確定したら
+        if(isConfirmed)
+        {
+            if (_map.CheckLanding(_activePieces[0].transform.position))
+            {
+                _map.FallPiece(_activePieces[0]);
+                _map.FallPiece(_activePieces[1]);
+            }
+            else
+            {
+                // 回転側が接地したら回転側から落とす
+                _map.FallPiece(_activePieces[1]);
+                _map.FallPiece(_activePieces[0]);
+            }
+            isFalled = true;
+        }
+
+        if (isFalled)
         {
             SoundManager.Instance.PlaySE(3);
 
             CheckPriority();
 
             // リバース・アニメーション処理
-            for(int i = 0; i < _activePieces.Length; i++)
+            for (int i = 0; i < _activePieces.Length; i++)
             {
                 if (_map.CheckHeightOver(_activePieces[i]))
                     StartCoroutine(_map.CheckReverse(_activePieces[i]));
             }
 
-            isLanding = false;
+            isConfirmed = false;
+            isFalled = false;
             _player1.isMyTurn = false;
             _player2.isMyTurn = false;
 
             // ゲーム終了判定
             if (_map.CheckMap())
             {
-                for(int i = 0; i < _activePieces.Length; i ++)
+                for (int i = 0; i < _activePieces.Length; i++)
                 {
                     isGameEnd = true;
                     Destroy(_disActivePieces[i]);

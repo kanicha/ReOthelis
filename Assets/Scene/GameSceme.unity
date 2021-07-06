@@ -373,6 +373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   point: 100
+  _marginTime: 1
   _DEFAULT_POSITION: {x: 4, y: 0, z: -1}
   _generator: {fileID: 1559426142}
   _map: {fileID: 576250714}

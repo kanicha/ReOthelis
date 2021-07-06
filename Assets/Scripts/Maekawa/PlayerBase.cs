@@ -110,6 +110,7 @@ public class PlayerBase : MonoBehaviour
     protected void PieceMove()
     {
         Vector3 move = Vector3.zero;
+        bool isDown = false;
 
         // ç∂âEà⁄ìÆ
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
@@ -123,6 +124,7 @@ public class PlayerBase : MonoBehaviour
             // â∫à⁄ìÆ
             if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
             {
+                isDown = true;
                 _deltaTime = 0;
                 move.z = -1;
             }
@@ -143,6 +145,8 @@ public class PlayerBase : MonoBehaviour
             controllPiece1.transform.position = movedPos;
             controllPiece2.transform.position = rotMovedPos;
         }
+        else if (isDown)
+            GameDirector.isConfirmed = true;// â∫ì¸óÕÇÇµÅAè·äQï®Ç™Ç†ÇÈÇ»ÇÁämíË
     }
 
     protected void PieceRotate()
