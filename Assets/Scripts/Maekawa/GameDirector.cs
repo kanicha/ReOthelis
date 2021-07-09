@@ -78,6 +78,7 @@ public class GameDirector : MonoBehaviour
             SoundManager.Instance.PlaySE(3);
 
             CheckPriority();
+            _map.TagClear();
 
             // リバース・アニメーション処理
             for (int i = 0; i < _activePieces.Length; i++)

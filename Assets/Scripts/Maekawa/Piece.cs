@@ -6,6 +6,7 @@ public class Piece : MonoBehaviour
 {
     [SerializeField]
     private Renderer[] _renderer = new Renderer[2];
+    public Material[] _material;
     private Animator _anim = null;
 
     public enum PieceType
@@ -22,6 +23,13 @@ public class Piece : MonoBehaviour
     private void Start()
     {
         _anim = GetComponent<Animator>();
+        Init((int)CharaImageMoved.charaType1P, (int)CharaImageMoved2P.charaType2P);
+    }
+
+    public void Init(int P1, int P2)
+    {
+        _renderer[0].GetComponent<Renderer>().sharedMaterial = _material[P1];
+        _renderer[1].GetComponent<Renderer>().sharedMaterial = _material[P2 + 4];
     }
 
     public void Reverse()
