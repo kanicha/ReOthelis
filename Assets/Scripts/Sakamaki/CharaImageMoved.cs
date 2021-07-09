@@ -26,7 +26,7 @@ public class CharaImageMoved : Player1Base
         Rabbit,
         Tiger
     }
-    public CharaType1P charaType1P = CharaType1P.Cow;
+    public static CharaType1P charaType1P = CharaType1P.Cow;
 
     // Start is called before the first frame update
     void Start()
