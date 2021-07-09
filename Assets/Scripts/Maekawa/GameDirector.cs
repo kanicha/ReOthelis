@@ -21,7 +21,7 @@ public class GameDirector : MonoBehaviour
     private int _turnCount = 0;
     private float _timeCount = 0;
     private GameObject[] _activePieces = new GameObject[2];
-    private GameObject[] _disActivePieces = new GameObject[2];
+    //private GameObject[] _disActivePieces = new GameObject[2];
     public static bool isConfirmed = false;
     private bool isFalled = false;
     public static bool isGameEnd = false;
@@ -39,8 +39,7 @@ public class GameDirector : MonoBehaviour
         // 最初は2セット生成
         _activePieces[0] = _generator.Generate(_DEFAULT_POSITION);
         _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + new Vector3(0, 0, 1));
-        _disActivePieces[0] = _generator.Generate(_DEFAULT_POSITION);
-        _disActivePieces[1] = _generator.Generate(_DEFAULT_POSITION + new Vector3(0, 0, 1));
+        Debug.Log(_activePieces[0]);
         ChangeTurn();
     }
 
@@ -95,19 +94,12 @@ public class GameDirector : MonoBehaviour
             // ゲーム終了判定
             if (_map.CheckMap())
             {
-                for (int i = 0; i < _activePieces.Length; i++)
-                {
-                    isGameEnd = true;
-                    Destroy(_disActivePieces[i]);
-                    _disActivePieces[i] = null;
-                }
+                isGameEnd = true;
             }
             else
             {
-                _activePieces[0] = _disActivePieces[0];
-                _activePieces[1] = _disActivePieces[1];
-                _disActivePieces[0] = _generator.Generate(_DEFAULT_POSITION);
-                _disActivePieces[1] = _generator.Generate(_DEFAULT_POSITION + new Vector3(0, 0, 1));
+                _activePieces[0] = _generator.Generate(_DEFAULT_POSITION);
+                _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + new Vector3(0, 0, 1));
                 ChangeTurn();
             }
         }
@@ -160,31 +152,18 @@ public class GameDirector : MonoBehaviour
         _player1.charactorImage.color = new Color(1, 1, 1);
         _player2.charactorImage.color = new Color(1, 1, 1);
 
-        //
-        for (int i = 0; i < _activePieces.Length; i++)
-        {
-            Piece piece = _activePieces[i].GetComponent<Piece>();
-            piece.ChangeColor(true);
-            Piece pieces = _disActivePieces[i].GetComponent<Piece>();
-            pieces.ChangeColor(false);
-        }
-
         // 黒ターン
         if (_turnCount % 2 == 1)
         {
-            _player2.rotationNum = 0;
+            _player1.rotationNum = 0;
             _player1.controllPiece1 = _activePieces[0];
             _player1.controllPiece2 = _activePieces[1];
-            _player2.controllPiece1 = _disActivePieces[0];
-            _player2.controllPiece2 = _disActivePieces[1];
             _player1.isMyTurn = true;
             _player2.charactorImage.color = new Color(0.5f, 0.5f, 0.5f);
         }
         else// 白ターン
         {
-            _player1.rotationNum = 0;
-            _player1.controllPiece1 = _disActivePieces[0];
-            _player1.controllPiece2 = _disActivePieces[1];
+            _player2.rotationNum = 0;
             _player2.controllPiece1 = _activePieces[0];
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;

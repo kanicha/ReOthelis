@@ -46,7 +46,10 @@ public class Player_1 : PlayerBase
         if (GameDirector.isGameEnd)
             return;
 
-        base.PieceMove();
-        base.PieceRotate();
+        if(isMyTurn)
+        {
+            base.PieceMove();
+            base.PieceRotate();
+        }
     }
 }
