@@ -4,7 +4,6 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-<<<<<<< HEAD
   m_Scenes:
   - enabled: 1
     path: Assets/Scene/FadeScene.unity
@@ -24,7 +23,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scene/ManagerScene.unity
     guid: 3f6440fd0c2a6234da8e99d84b3627bd
-=======
-  m_Scenes: []
->>>>>>> origin/maekawa
   m_configObjects: {}
