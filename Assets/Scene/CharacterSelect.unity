@@ -2630,7 +2630,6 @@ GameObject:
   - component: {fileID: 1540159295}
   - component: {fileID: 1540159298}
   - component: {fileID: 1540159297}
-  - component: {fileID: 1540159299}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -2650,7 +2649,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f95703b499287054e8a66efc490a98b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  p1: {fileID: 1540159297}
+  _fallTime: 0
+  map: {fileID: 0}
+  scoreText: {fileID: 0}
+  charactorImage: {fileID: 0}
+  isMyTurn: 0
+  controllPiece1: {fileID: 0}
+  controllPiece2: {fileID: 0}
+  rotationNum: 0
+  p1: {fileID: 0}
 --- !u!4 &1540159296
 Transform:
   m_ObjectHideFlags: 0
@@ -2674,21 +2681,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 1540159294}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d444025ac072e87499a7ba36b07625c9, type: 3}
+  m_Script: {fileID: 11500000, guid: a7c4449434b153c48adbc523f7bcb914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _horizontal: 0
-  _vertical: 0
-  _stickHorizontal: 0
-  _stickVertical: 0
-  _ds4L1: 0
-  _ds4R1: 0
-  _ds4circle: 0
-  _ds4cross: 0
-  _keyBoardHorizontal: 0
-  _keyBoardVertical: 0
-  _keyBoardLeft: 0
-  _keyBoardRight: 0
+  _fallTime: 0
+  map: {fileID: 0}
+  scoreText: {fileID: 0}
+  charactorImage: {fileID: 0}
+  isMyTurn: 0
+  controllPiece1: {fileID: 0}
+  controllPiece2: {fileID: 0}
+  rotationNum: 0
+  charactorImage2P: {fileID: 319906584}
+  charactorImageArray2P:
+  - {fileID: 21300000, guid: c5ebae29cee1acb41b4797d241786269, type: 3}
+  - {fileID: 21300000, guid: 1836561d7a2a3944daf9c0955289e4e2, type: 3}
+  - {fileID: 21300000, guid: c1245d6b558131a4ab4fb32f65ee43fe, type: 3}
+  - {fileID: 21300000, guid: cc7fd23eafe61854f9b0bf6365b39271, type: 3}
+  charactorButtonWhite2P:
+  - {fileID: 1160449642}
+  - {fileID: 552870439}
+  - {fileID: 1707835091}
+  - {fileID: 1025653478}
 --- !u!114 &1540159298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2701,54 +2715,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0807df234e3ccd947b5a0636d8e3b7d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _fallTime: 0
+  map: {fileID: 0}
+  scoreText: {fileID: 0}
+  charactorImage: {fileID: 0}
+  isMyTurn: 0
+  controllPiece1: {fileID: 0}
+  controllPiece2: {fileID: 0}
+  rotationNum: 0
   charactorImage1P: {fileID: 1475498087}
-  charactorImage2P: {fileID: 319906584}
   charactorImageArray1P:
   - {fileID: 21300000, guid: 4402e1b01b1d109439a94bb88880b4e8, type: 3}
   - {fileID: 21300000, guid: 9ef0d56875f522d49b970bc057abfc1c, type: 3}
   - {fileID: 21300000, guid: 282821c3572458c4182c2efa74af0f44, type: 3}
   - {fileID: 21300000, guid: 3ad8c52d02675d445ba3760b66376b5f, type: 3}
-  charactorImageArray2P:
-  - {fileID: 21300000, guid: c5ebae29cee1acb41b4797d241786269, type: 3}
-  - {fileID: 21300000, guid: 1836561d7a2a3944daf9c0955289e4e2, type: 3}
-  - {fileID: 21300000, guid: c1245d6b558131a4ab4fb32f65ee43fe, type: 3}
-  - {fileID: 21300000, guid: cc7fd23eafe61854f9b0bf6365b39271, type: 3}
-  p1: {fileID: 1540159297}
-  p2: {fileID: 1540159299}
   charactorButtonWhite1P:
   - {fileID: 1122414367}
   - {fileID: 994401607}
   - {fileID: 354756808}
   - {fileID: 545212309}
-  charactorButtonWhite2P:
-  - {fileID: 1160449642}
-  - {fileID: 552870439}
-  - {fileID: 1707835091}
-  - {fileID: 1025653478}
---- !u!114 &1540159299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1540159294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbc0dced5dadf8847839e82d4ab58653, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _horizontal: 0
-  _vertical: 0
-  _stickHorizontal: 0
-  _stickVertical: 0
-  _ds4L1: 0
-  _ds4R1: 0
-  _ds4circle: 0
-  _ds4cross: 0
-  _keyBoardHorizontal: 0
-  _keyBoardVertical: 0
-  _keyBoardLeft: 0
-  _keyBoardRight: 0
 --- !u!1 &1663421677
 GameObject:
   m_ObjectHideFlags: 0

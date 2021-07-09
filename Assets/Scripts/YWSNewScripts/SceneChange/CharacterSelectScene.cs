@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class CharacterSelectScene : MonoBehaviour
+public class CharacterSelectScene : Player1Base
 {
-    [SerializeField] private Player1 p1;
-    
     private GameSceneManager _gameSceneManager;
     UnityEvent Approval = new UnityEvent();
     
@@ -21,9 +19,12 @@ public class CharacterSelectScene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        base.SaveKeyValue();
+        base.KeyInput();
+
         if (_repeatHit)
             return;
-        else if (p1._ds4circle || Input.GetKeyDown(KeyCode.Space))
+        else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space))
         {
             _repeatHit = true;
             Approval.Invoke();

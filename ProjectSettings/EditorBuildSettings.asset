@@ -17,10 +17,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scene/GameSceme.unity
     guid: 276f8fffe2fad024384e08f6621a04b7
+<<<<<<< HEAD
   - enabled: 0
     path: Assets/Scene/YWSOldScene/Test.unity
     guid: c489aa1c18d41f74bab0c68a2682f5d8
   - enabled: 0
     path: Assets/Scene/Result.unity
     guid: c2dd73e0721626140892a2c39464156d
+=======
+  - enabled: 1
+    path: Assets/Scene/testscene.unity
+    guid: 414ffdf9cc44632428fdd2094e3f16c8
+  - enabled: 1
+    path: Assets/Scene/ManagerScene.unity
+    guid: 3f6440fd0c2a6234da8e99d84b3627bd
+>>>>>>> origin/maekawa
   m_configObjects: {}
