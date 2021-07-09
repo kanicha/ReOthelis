@@ -88,8 +88,10 @@ public class PlayerBase : MonoBehaviour
         _DS4_Rstick_horizontal_value = Input.GetAxis(DS4_Rstick_horizontal_name);
         _DS4_Rstick_vertical_value = Input.GetAxis(DS4_Rstick_vertical_name);
 
-        _DS4_horizontal_value = Input.GetAxis(key_board_horizontal_name);
-        _DS4_vertical_value = Input.GetAxis(key_board_vertical_name);
+        if(0 != Input.GetAxis(key_board_horizontal_name))
+            _DS4_horizontal_value = Input.GetAxis(key_board_horizontal_name);
+        if(0 != Input.GetAxis(key_board_vertical_name))
+            _DS4_vertical_value = Input.GetAxis(key_board_vertical_name);
         _keyBoardLeft = Input.GetKeyDown(KeyCode.Q);
         _keyBoardRight = Input.GetKeyDown(KeyCode.E);
     }
