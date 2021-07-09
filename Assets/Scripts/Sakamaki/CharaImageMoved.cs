@@ -11,10 +11,7 @@ public class CharaImageMoved : Player1Base
     [SerializeField] private Image charactorImage1P;
     [SerializeField] private Sprite[] charactorImageArray1P;
     [SerializeField] private GameObject[] charactorButtonWhite1P;
-    [SerializeField] Player1 p1;
 
-    private int _frameCount1P = 0;
-    private int _moveSpeed1P = 10;
     private int _back1P = 0;
     private int _prev1P = 0;
 
@@ -26,7 +23,7 @@ public class CharaImageMoved : Player1Base
         Rabbit,
         Tiger
     }
-    public CharaType1P charaType1P = CharaType1P.Cow;
+    public static CharaType1P charaType1P = CharaType1P.Cow;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +36,18 @@ public class CharaImageMoved : Player1Base
     // Update is called once per frame
     void Update()
     {
+        base.SaveKeyValue();
+        base.KeyInput();
+
+        if (_DS4_horizontal_value < 0)
+        {
+            Debug.Log("a");
+        }
+        if (_DS4_circle_value)
+        {
+            Debug.Log("maru");
+        }
+
         Player1CharaMoved();
     }
 
@@ -47,17 +56,12 @@ public class CharaImageMoved : Player1Base
     /// </summary>
     void Player1CharaMoved()
     {
-        _frameCount1P++;
-        _frameCount1P %= _moveSpeed1P;
+        // 入力部分
+        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0))
+            charaType1P--;
+        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0))
+            charaType1P++;
 
-        if (_frameCount1P == 0)
-        {
-            // 入力部分
-            if (p1._horizontal < 0 || Input.GetKeyDown(KeyCode.A))
-                charaType1P--;
-            else if (p1._horizontal > 0 || Input.GetKeyDown(KeyCode.D))
-                charaType1P++;
-        }
 
         // prev と result 変数の中身(int型)が違った場合描画処理
         if (_prev1P != (int)charaType1P)
