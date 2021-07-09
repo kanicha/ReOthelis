@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 
 // 音量管理クラス
@@ -18,10 +19,10 @@ public class SoundVolume
         Mute = false;
     }
 }
+
 // 音管理クラス
 public class SoundManager : MonoBehaviour
 {
-
     protected static SoundManager instance;
 
     public static SoundManager Instance
@@ -61,19 +62,18 @@ public class SoundManager : MonoBehaviour
     // 音声
     public AudioClip[] Voice;
 
-    void Awake()
+    // 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void OnBoot()
     {
-        GameObject[] obj = GameObject.FindGameObjectsWithTag("SoundManager");
-        if (obj.Length > 1)
-        {
-            // 既に存在しているなら削除
-            Destroy(gameObject);
-        }
-        else
-        {
-            // 音管理はシーン遷移では破棄させない
-            DontDestroyOnLoad(gameObject);
-        }
+        Debug.Log("<color=red>サウンドマネージャー運転中</color>");
+        SceneManager.LoadScene("ManagerScene", LoadSceneMode.Additive);
+    }
+
+    private void Awake()
+    {
+        // 音管理はシーン遷移では破棄させない
+        DontDestroyOnLoad(gameObject);
 
         // 全てのAudioSourceコンポーネントを追加する
 
@@ -95,7 +95,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
         // ミュート設定
         BGMsource.mute = volume.Mute;
