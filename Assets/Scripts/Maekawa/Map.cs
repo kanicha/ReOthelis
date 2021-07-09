@@ -129,7 +129,6 @@ public class Map : MonoBehaviour
                 Player_2.score += director.point;
 
             piece.GetComponent<Piece>().Reverse();
-            piece.tag = _REVERSED_TAG;
             yield return new WaitForSeconds(.3f);
         }
 
@@ -146,7 +145,8 @@ public class Map : MonoBehaviour
         while(isChecking)
             yield return null;
 
-        // このターンに置いたコマかつ
+        Debug.Log(piece.tag);
+        // このターンに置いたコマ
         if (piece.CompareTag(_REVERSED_TAG))
             yield break;
 
@@ -172,7 +172,7 @@ public class Map : MonoBehaviour
         CheckInTheDirection(new Vector3(-1, 0, -1)); // ↖
         CheckInTheDirection(new Vector3(1, 0, -1));  // ↗
 
-        for (int a = _EMPTY_AREAS_HEIGHT; a < _HEIGHT; a++)
+        for (int a = _EMPTY_AREAS_HEIGHT;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          a < _HEIGHT; a++)
         {
             string s = "";
             for (int b = 0; b < _WIDTH; b++)
@@ -233,6 +233,7 @@ public class Map : MonoBehaviour
                 checkPosZ += dirZ;
                 _map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
                 _reversePiece.Add(_pieceMap[checkPosZ, checkPosX]);
+                _pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
             }
         }
     }
@@ -317,4 +318,4 @@ public class Map : MonoBehaviour
 //        s += _map[a, b];
 //    }
 //    Debug.Log(s);
-//}
+//
