@@ -18,7 +18,7 @@ public class Map : MonoBehaviour
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
-        { "■", "〇", "□", "□", "□", "□", "□", "□", "●", "■" },
+        { "■", "〇", "●", "〇", "●", "〇", "●", "〇", "●", "■" },
         { "■", "■", "■", "■", "■", "■", "■", "■", "■", "■" }
     };
 
@@ -111,6 +111,7 @@ public class Map : MonoBehaviour
     private string _myColor = string.Empty;
     private bool isChecking = false;
     private int numOfReversed = 0;
+    private const string _REVERSED_TAG = "Reversed";
 
     [SerializeField]
     private GameDirector director = null;
@@ -128,8 +129,10 @@ public class Map : MonoBehaviour
                 Player_2.score += director.point;
 
             piece.GetComponent<Piece>().Reverse();
+            piece.tag = _REVERSED_TAG;
             yield return new WaitForSeconds(.3f);
         }
+
         _reversePiece.Clear();
         isChecking = false;
     }
@@ -142,6 +145,10 @@ public class Map : MonoBehaviour
     {
         while(isChecking)
             yield return null;
+
+        // このターンに置いたコマかつ
+        if (piece.CompareTag(_REVERSED_TAG))
+            yield break;
 
         isChecking = true;
 
@@ -267,7 +274,7 @@ public class Map : MonoBehaviour
             else
                 Debug.Log("<color=blue>2Pの勝ち</color>");
         }
-
+        
         return isEnd;
     }
 
@@ -287,10 +294,22 @@ public class Map : MonoBehaviour
         }
         return isSafeLine;
     }
+
+    public void TagClear()
+    {
+        for (int i = 0; i < _HEIGHT; i++)
+        {
+            for (int j = 0; j < _WIDTH; j++)
+            {
+                if (_pieceMap[i,j] != null)
+                    _pieceMap[i, j].tag = "Untagged";
+            }
+        }
+    }
 }
 
 // map確認用
-//for (int a = _EMPTY_AREAS_HEIGHT; a<_HEIGHT; a++)
+//for (int a = _EMPTY_AREAS_HEIGHT; a < _HEIGHT; a++)
 //{
 //    string s = "";
 //    for (int b = 0; b<_WIDTH; b++)
