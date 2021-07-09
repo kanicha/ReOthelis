@@ -23,7 +23,7 @@ public class Piece : MonoBehaviour
     private void Start()
     {
         _anim = GetComponent<Animator>();
-        Init((int)CharaImageMoved.charaType1P, 2);
+        Init((int)CharaImageMoved.charaType1P, (int)CharaImageMoved2P.charaType2P);
     }
 
     public void Init(int P1, int P2)
