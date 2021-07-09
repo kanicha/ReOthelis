@@ -23,26 +23,26 @@ public class PlayerBase : MonoBehaviour
     protected string key_board_horizontal_name = "";
     protected string key_board_vertical_name = "";
     // キーバリュー
-    private bool _DS4_circle_value = false;
-    private bool _DS4_cross_value = false;
-    private bool _DS4_square_value = false;
-    private bool _DS4_triangle_value = false;
-    private bool _DS4_L1_value = false;
-    private bool _DS4_R1_value = false;
-    private bool _DS4_option_value = false;
-    private float _DS4_horizontal_value = 0.0f;
-    private float _DS4_vertical_value = 0.0f;
-    private float _DS4_Lstick_horizontal_value = 0.0f;
-    private float _DS4_Lstick_vertical_value = 0.0f;
-    private float _DS4_Rstick_horizontal_value = 0.0f;
-    private float _DS4_Rstick_vertical_value = 0.0f;
+    protected bool _DS4_circle_value = false;
+    protected bool _DS4_cross_value = false;
+    protected bool _DS4_square_value = false;
+    protected bool _DS4_triangle_value = false;
+    protected bool _DS4_L1_value = false;
+    protected bool _DS4_R1_value = false;
+    protected bool _DS4_option_value = false;
+    protected float _DS4_horizontal_value = 0.0f;
+    protected float _DS4_vertical_value = 0.0f;
+    protected float _DS4_Lstick_horizontal_value = 0.0f;
+    protected float _DS4_Lstick_vertical_value = 0.0f;
+    protected float _DS4_Rstick_horizontal_value = 0.0f;
+    protected float _DS4_Rstick_vertical_value = 0.0f;
     // 前フレームのキーバリュー
-    private float last_horizontal_value = 0.0f;
-    private float last_vertical_value = 0.0f;
-    private float lastLstick_horizontal_value = 0.0f;
-    private float last_Lstick_vertical_value = 0.0f;
-    private float last_Rstick_horizontal_value = 0.0f;
-    private float last_Rstick_vertical_value = 0.0f;
+    protected float last_horizontal_value = 0.0f;
+    protected float last_vertical_value = 0.0f;
+    protected float lastLstick_horizontal_value = 0.0f;
+    protected float last_Lstick_vertical_value = 0.0f;
+    protected float last_Rstick_horizontal_value = 0.0f;
+    protected float last_Rstick_vertical_value = 0.0f;
     // キーボード用
     //private float _keyBoardHorizontal = 0.0f;
     //private float _keyBoardVertical = 0.0f;
@@ -88,10 +88,8 @@ public class PlayerBase : MonoBehaviour
         _DS4_Rstick_horizontal_value = Input.GetAxis(DS4_Rstick_horizontal_name);
         _DS4_Rstick_vertical_value = Input.GetAxis(DS4_Rstick_vertical_name);
 
-        if(0 != Input.GetAxis(key_board_horizontal_name))
-            _DS4_horizontal_value = Input.GetAxis(key_board_horizontal_name);
-        if(0 != Input.GetAxis(key_board_vertical_name))
-            _DS4_vertical_value = Input.GetAxis(key_board_vertical_name);
+        _DS4_horizontal_value = Input.GetAxis(key_board_horizontal_name);
+        _DS4_vertical_value = Input.GetAxis(key_board_vertical_name);
         _keyBoardLeft = Input.GetKeyDown(KeyCode.Q);
         _keyBoardRight = Input.GetKeyDown(KeyCode.E);
     }
