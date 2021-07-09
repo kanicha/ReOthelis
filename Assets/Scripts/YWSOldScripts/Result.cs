@@ -1,42 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class Result : MonoBehaviour
 {
-    //上ボタンの取得
-    [SerializeField] private Button _retry;
-    public Button Retry
-    {
-        get { return _retry; }
-    }
-
-    //下ボタンの取得
-    [SerializeField] private Button _moveOn;
-    public Button MoveOn
-    {
-        get { return _moveOn; }
-    }
+    [SerializeField] private Player1 p1;
 
     private GameSceneManager _gameSceneManager;
+    UnityEvent Approval = new UnityEvent();
 
-    //次のシーンに進む
-    public void RetryPush(GameSceneManager gameSceneManager)
-    {
-        gameSceneManager.SceneNextCall("Game");
-    }
-
-    //前のシーンに戻る
-    public void MoveOnPush(GameSceneManager gameSceneManager)
-    {
-        gameSceneManager.SceneNextCall("CharacterEpisode");
-    }
+    private bool _repeatHit = false;
 
     void Start()
     {
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
-        Retry.onClick.AddListener(() => RetryPush(_gameSceneManager));
-        MoveOn.onClick.AddListener(() => MoveOnPush(_gameSceneManager));
+        Approval.AddListener(() => SceneChange(_gameSceneManager));
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (_repeatHit)
+            return;
+        else if (p1._ds4circle || Input.GetKeyDown(KeyCode.Space))
+        {
+            _repeatHit = true;
+            Approval.Invoke();
+        }
+    }
+
+    //次のシーンに進む
+    public void SceneChange(GameSceneManager gameSceneManager)
+    {
+        gameSceneManager.SceneNextCall("GameEnd");
     }
 }
