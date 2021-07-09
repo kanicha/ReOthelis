@@ -4,5 +4,20 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scene/FadeScene.unity
+    guid: 3252d5d4db5382d45a07b5ab684cc02c
+  - enabled: 1
+    path: Assets/Scene/Title.unity
+    guid: a8bc64e60d5e4554d9314aad0ecbcd83
+  - enabled: 1
+    path: Assets/Scene/CharacterSelect.unity
+    guid: c18c6375bed0f9c4d8cac091a1f17956
+  - enabled: 1
+    path: Assets/Scene/GameSceme.unity
+    guid: 276f8fffe2fad024384e08f6621a04b7
+  - enabled: 1
+    path: Assets/Scene/ManagerScene.unity
+    guid: 3f6440fd0c2a6234da8e99d84b3627bd
   m_configObjects: {}
