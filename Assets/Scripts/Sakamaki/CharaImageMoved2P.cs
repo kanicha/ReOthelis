@@ -9,8 +9,6 @@ public class CharaImageMoved2P : Player2Base
     [SerializeField] private Image charactorImage2P;
     [SerializeField] private Sprite[] charactorImageArray2P;
     [SerializeField] private GameObject[] charactorButtonWhite2P;
-
-    private int _back2P = 0;
     private int _prev2P = 0;
 
     // キャラクタータイプ
@@ -47,10 +45,24 @@ public class CharaImageMoved2P : Player2Base
     {
         // 入力部分
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0))
+        {
             charaType2P--;
+
+            // Activeしたボタンfalseにする処理
+            for (int i = 0; i < charactorButtonWhite2P.Length; i++)
+            {
+                charactorButtonWhite2P[i].SetActive(false);
+            }
+        } 
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0))
+        {
             charaType2P++;
 
+            for (int i = 0; i < charactorButtonWhite2P.Length; i++)
+            {
+                charactorButtonWhite2P[i].SetActive(false);
+            }
+        }
 
         // prev と result 変数の中身(int型)が違った場合描画処理
         if (_prev2P != (int)charaType2P)
@@ -68,23 +80,6 @@ public class CharaImageMoved2P : Player2Base
 
             charactorImage2P.sprite = charactorImageArray2P[(int)charaType2P];
             charactorButtonWhite2P[(int)charaType2P].SetActive(true);
-
-            _back2P = (int)charaType2P;
-        }
-
-        // Activeしたボタンfalseにする処理
-        if (_back2P >= 1)
-        {
-            _back2P--;
-            charactorButtonWhite2P[_back2P].SetActive(false);
-        }
-        else if ((int)charaType2P <= _back2P)
-        {
-            charactorButtonWhite2P[3].SetActive(false);
-        }
-        else if ((int)charaType2P >= _back2P)
-        {
-            charactorButtonWhite2P[0].SetActive(false);
         }
     }
 }
