@@ -43,7 +43,7 @@ public class Player_2 : PlayerBase
         base.SaveKeyValue();
         base.KeyInput();
 
-        if (GameDirector.isGameEnd)
+        if (GameDirector.gameState != GameDirector.GameState.active)
             return;
 
         if (isMyTurn)

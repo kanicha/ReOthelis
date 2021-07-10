@@ -43,10 +43,10 @@ public class Player_1 : PlayerBase
         base.SaveKeyValue();
         base.KeyInput();
 
-        if (GameDirector.isGameEnd)
+        if (GameDirector.gameState != GameDirector.GameState.active)
             return;
 
-        if(isMyTurn)
+        if (isMyTurn)
         {
             base.PieceMove();
             base.PieceRotate();

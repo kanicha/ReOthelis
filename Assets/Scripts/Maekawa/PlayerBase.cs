@@ -60,6 +60,7 @@ public class PlayerBase : MonoBehaviour
     public Image charactorImage = null;
     private float _deltaTime = 0.0f;
     public bool isMyTurn = false;
+    public bool isPreurn = false;
     public GameObject controllPiece1 = null;
     public GameObject controllPiece2 = null;
     public int rotationNum = 0;
@@ -148,7 +149,7 @@ public class PlayerBase : MonoBehaviour
             controllPiece2.transform.position = rotMovedPos;
         }
         else if (isDown)
-            GameDirector.isConfirmed = true;// 下入力をし、障害物があるなら確定
+            GameDirector.gameState = GameDirector.GameState.confirmed;// 下入力をし、障害物があるなら確定
     }
 
     protected void PieceRotate()

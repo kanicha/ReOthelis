@@ -7,6 +7,8 @@ public class GameDirector : MonoBehaviour
     public int point = 0;
     [SerializeField, Header("接地中に配置を確定するまでの時間")]
     private float _marginTime = 0;
+    [SerializeField, Header("事前に操作できる時間")]
+    private float _preActiveTime = 0;
     [SerializeField, Header("ミノの初期位置")]
     private Vector3 _DEFAULT_POSITION = Vector3.zero;
     [SerializeField]
@@ -21,16 +23,21 @@ public class GameDirector : MonoBehaviour
     private int _turnCount = 0;
     private float _timeCount = 0;
     private GameObject[] _activePieces = new GameObject[2];
-    //private GameObject[] _disActivePieces = new GameObject[2];
-    public static bool isConfirmed = false;
-    private bool isFalled = false;
-    public static bool isGameEnd = false;
+    public static GameState gameState = GameState.none;
+    public enum GameState
+    {
+        none,
+        preActive,
+        active,
+        confirmed,
+        falled,
+        idle,
+        end,
+    }
 
     void Start()
     {
         SoundManager.Instance.PlayBGM(0);
-        isGameEnd = false;
-        isConfirmed = false;
         _player1.isMyTurn = false;
         _player2.isMyTurn = false;
         Player_1.score = 0;
@@ -39,69 +46,83 @@ public class GameDirector : MonoBehaviour
         // 最初は2セット生成
         _activePieces[0] = _generator.Generate(_DEFAULT_POSITION);
         _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + new Vector3(0, 0, 1));
-        Debug.Log(_activePieces[0]);
         ChangeTurn();
     }
 
     void Update()
     {
-        // 接地時にカウント
-        if (_map.CheckLanding(_activePieces[0].transform.position) || _map.CheckLanding(_activePieces[1].transform.position))
+        switch(gameState)
         {
-            _timeCount += Time.deltaTime;
-            if (_timeCount > _marginTime)
-                isConfirmed = true;
-        }
-        else
-            _timeCount = 0;
+            case GameState.preActive:
+                _timeCount += Time.deltaTime;
+                if (_timeCount > _preActiveTime)
+                    gameState = GameState.active;
+                break;
 
-        // プレイヤーの操作が確定したら
-        if(isConfirmed)
-        {
-            if (_map.CheckLanding(_activePieces[0].transform.position))
-            {
+            case GameState.active:
+                if (_map.CheckLanding(_activePieces[0].transform.position) || _map.CheckLanding(_activePieces[1].transform.position))
+                {
+                    // 接地時にカウント
+                    _timeCount += Time.deltaTime;
+                    if (_timeCount > _marginTime)
+                    {
+                        _timeCount = 0;
+                        gameState = GameState.confirmed;
+                    }
+                }
+                else
+                    _timeCount = 0;
+                break;
+
+            case GameState.confirmed:
+                if (_activePieces[0].transform.position.z > _activePieces[1].transform.position.z)
+                {
+                    // 下側のコマがインデックス0になるようソート
+                    GameObject tempPiece = _activePieces[0];
+                    _activePieces[0] = _activePieces[1];
+                    _activePieces[1] = tempPiece;
+                }
+
                 _map.FallPiece(_activePieces[0]);
                 _map.FallPiece(_activePieces[1]);
-            }
-            else
-            {
-                // 回転側が接地したら回転側から落とす
-                _map.FallPiece(_activePieces[1]);
-                _map.FallPiece(_activePieces[0]);
-            }
-            isFalled = true;
-        }
 
-        if (isFalled)
-        {
-            SoundManager.Instance.PlaySE(3);
+                gameState = GameState.falled;
+                break;
 
-            CheckPriority();
-            _map.TagClear();
+            case GameState.falled:
+                SoundManager.Instance.PlaySE(3);
 
-            // リバース・アニメーション処理
-            for (int i = 0; i < _activePieces.Length; i++)
-            {
-                if (_map.CheckHeightOver(_activePieces[i]))
-                    StartCoroutine(_map.CheckReverse(_activePieces[i]));
-            }
+                CheckPriority();
+                _map.TagClear();
 
-            isConfirmed = false;
-            isFalled = false;
-            _player1.isMyTurn = false;
-            _player2.isMyTurn = false;
+                // リバース・アニメーション処理
+                for (int i = 0; i < _activePieces.Length; i++)
+                {
+                    if (_map.CheckHeightOver(_activePieces[i]))
+                        StartCoroutine(_map.CheckReverse(_activePieces[i]));
+                }
 
-            // ゲーム終了判定
-            if (_map.CheckMap())
-            {
-                isGameEnd = true;
-            }
-            else
-            {
-                _activePieces[0] = _generator.Generate(_DEFAULT_POSITION);
-                _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + new Vector3(0, 0, 1));
-                ChangeTurn();
-            }
+                _player1.isMyTurn = false;
+                _player2.isMyTurn = false;
+
+                // ゲーム終了判定
+                if (_map.CheckMap())
+                {
+                    gameState = GameState.end;
+                }
+                else
+                {
+                    _activePieces[0] = _generator.Generate(_DEFAULT_POSITION);
+                    _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + new Vector3(0, 0, 1));
+                    ChangeTurn();
+                }
+                break;
+
+            case GameState.end:
+                // 終了処理
+
+            default:
+                break;
         }
     }
 
@@ -169,5 +190,6 @@ public class GameDirector : MonoBehaviour
             _player2.isMyTurn = true;
             _player1.charactorImage.color = new Color(0.5f, 0.5f, 0.5f);
         }
+        gameState = GameState.preActive;
     }
 }
