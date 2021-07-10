@@ -43,13 +43,18 @@ public class Player_2 : PlayerBase
         base.SaveKeyValue();
         base.KeyInput();
 
-        if (GameDirector.gameState != GameDirector.GameState.active)
-            return;
-
         if (isMyTurn)
         {
-            base.PieceMove();
-            base.PieceRotate();
+            if (GameDirector.gameState == GameDirector.GameState.active)
+            {
+                base.PieceMove();
+                base.PieceRotate();
+            }
+            else if (GameDirector.gameState == GameDirector.GameState.preActive)
+            {
+                base.PrePieceMove();
+                base.PieceRotate();
+            }
         }
     }
 }

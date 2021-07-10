@@ -58,7 +58,7 @@ public class PlayerBase : MonoBehaviour
     protected Text scoreText = null;
     [SerializeField]
     public Image charactorImage = null;
-    private float _deltaTime = 0.0f;
+    private float _timeCount = 0.0f;
     public bool isMyTurn = false;
     public bool isPreurn = false;
     public GameObject controllPiece1 = null;
@@ -115,27 +115,24 @@ public class PlayerBase : MonoBehaviour
         Vector3 move = Vector3.zero;
         bool isDown = false;
 
+        _timeCount += Time.deltaTime;
+
         // 左右移動
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
             move.x = -1;
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
             move.x = 1;
 
-        if(isMyTurn)
+        // 下移動
+        if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
-            _deltaTime += Time.deltaTime;
-            // 下移動
-            if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
-            {
-                isDown = true;
-                _deltaTime = 0;
-                move.z = -1;
-            }
-            else if (_deltaTime >= _fallTime)// 時間落下
-            {
-                _deltaTime = 0;
-                move.z = -1;
-            }
+            isDown = true;
+            move.z = -1;
+        }
+        else if (_timeCount >= _fallTime)// 時間落下
+        {
+            _timeCount = 0;
+            move.z = -1;
         }
 
         // 移動後の座標を計算
@@ -176,5 +173,42 @@ public class PlayerBase : MonoBehaviour
             controllPiece2.transform.position = rotatedPos;
         else
             rotationNum = lastNum;
+    }
+
+    protected void PrePieceMove()
+    {
+        Vector3 move = Vector3.zero;
+
+        // 左右移動
+        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
+            move.x = -1;
+        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
+            move.x = 1;
+
+        // 左右に入力したなら移動
+        if (move != Vector3.zero)
+        {
+            while (true)
+            {
+                Vector3 movedPos = controllPiece1.transform.position += move;
+                Vector3 movedUnderPos = movedPos + Vector3.back;
+
+                if ((int)movedPos.x < 2 || (int)movedPos.x > 8)
+                    break;
+
+                // 移動後の座標の1つ下に障害物がなければ
+                if (map.CheckWall(movedUnderPos))
+                {
+                    Debug.Log("moved");
+                    controllPiece1.transform.position = movedPos;
+                    controllPiece2.transform.position = movedPos + rotationPos[rotationNum];
+                    break;
+                }
+            }
+        }
+
+        // ↓入力したら本操作開始
+        if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+            GameDirector.gameState = GameDirector.GameState.active;
     }
 }
