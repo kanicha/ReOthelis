@@ -44,6 +44,7 @@ public class Player_2 : PlayerBase
 
         if (isMyTurn)
         {
+            base.charactorImage.color = new UnityEngine.Color(1, 1, 1);
             if (GameDirector.Instance.gameState == GameDirector.GameState.active)
             {
                 base.PieceMove();
@@ -55,5 +56,7 @@ public class Player_2 : PlayerBase
                 base.PieceRotate();
             }
         }
+        else
+            base.charactorImage.color = new UnityEngine.Color(0.5f, 0.5f, 0.5f);
     }
 }

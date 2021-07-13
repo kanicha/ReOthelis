@@ -59,7 +59,7 @@ public class PlayerBase : MonoBehaviour
     [SerializeField]
     protected Text myPieceCountText = null;
     [SerializeField]
-    public Image charactorImage = null;
+    protected Image charactorImage = null;
     private float _timeCount = 0.0f;
     public bool isMyTurn = false;
     public bool isPreurn = false;

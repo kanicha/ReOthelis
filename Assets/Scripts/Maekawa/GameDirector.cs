@@ -187,8 +187,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
         _player1.isMyTurn = false;
         _player2.isMyTurn = false;
-        _player1.charactorImage.color = new Color(1, 1, 1);
-        _player2.charactorImage.color = new Color(1, 1, 1);
 
         // 黒ターン
         if (_turnCount % 2 == 1)
@@ -197,7 +195,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             _player1.controllPiece1 = _activePieces[0];
             _player1.controllPiece2 = _activePieces[1];
             _player1.isMyTurn = true;
-            _player2.charactorImage.color = new Color(0.5f, 0.5f, 0.5f);
         }
         else// 白ターン
         {
@@ -205,7 +202,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             _player2.controllPiece1 = _activePieces[0];
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
-            _player1.charactorImage.color = new Color(0.5f, 0.5f, 0.5f);
         }
         gameState = GameState.preActive;
     }
