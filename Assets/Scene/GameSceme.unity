@@ -726,6 +726,7 @@ MonoBehaviour:
   _fallTime: 2
   scoreText: {fileID: 2065639105}
   reversedCountText: {fileID: 1411853657}
+  myPieceCountText: {fileID: 1010746272}
   charactorImage: {fileID: 318023282}
   isMyTurn: 0
   isPreurn: 0
@@ -1648,6 +1649,7 @@ MonoBehaviour:
   _fallTime: 2
   scoreText: {fileID: 1952223755}
   reversedCountText: {fileID: 864864667}
+  myPieceCountText: {fileID: 1121333118}
   charactorImage: {fileID: 1873248609}
   isMyTurn: 0
   isPreurn: 0

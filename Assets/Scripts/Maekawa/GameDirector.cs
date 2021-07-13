@@ -34,7 +34,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         falled,
         reversed,
         idle,
-        end,
+        ended,
     }
 
     void Start()
@@ -50,7 +50,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     void Update()
     {
-        Map.Instance.CheckMap();
+        if(gameState != GameState.none)
+            Map.Instance.CheckMap();
 
         switch (gameState)
         {
@@ -117,7 +118,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             case GameState.reversed:
                 // ゲーム終了判定
                 if (_map.CheckMap())
-                    gameState = GameState.end;
+                    gameState = GameState.ended;
                 else
                 {
                     PieceSet();
@@ -125,7 +126,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 }
                 break;
 
-            case GameState.end:
+            case GameState.ended:
                 if (_player1.score > _player2.score)
                     Debug.Log("<color=red>1Pの勝ち</color>");
                 else if (_player1.score == _player2.score)
