@@ -188,18 +188,19 @@ public class PlayerBase : MonoBehaviour
         // 左右に入力したなら移動
         if (move != Vector3.zero)
         {
+            Vector3 movedPos = controllPiece1.transform.position;
             while (true)
             {
-                Vector3 movedPos = controllPiece1.transform.position += move;
+                movedPos += move;
                 Vector3 movedUnderPos = movedPos + Vector3.back;
 
-                if ((int)movedPos.x < 2 || (int)movedPos.x > 8)
+                // 壁まで行ったらスルー
+                if ((int)movedPos.x < 1 || (int)movedPos.x > 8)
                     break;
 
                 // 移動後の座標の1つ下に障害物がなければ
                 if (map.CheckWall(movedUnderPos))
                 {
-                    Debug.Log("moved");
                     controllPiece1.transform.position = movedPos;
                     controllPiece2.transform.position = movedPos + rotationPos[rotationNum];
                     break;

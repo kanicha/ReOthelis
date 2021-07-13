@@ -22,6 +22,7 @@ public class GameDirector : MonoBehaviour
 
     private int _turnCount = 0;
     private float _timeCount = 0;
+    private bool _isDown = true;
     private GameObject[] _activePieces = new GameObject[2];
     public static GameState gameState = GameState.none;
     public enum GameState
@@ -54,12 +55,21 @@ public class GameDirector : MonoBehaviour
         switch(gameState)
         {
             case GameState.preActive:
+                _isDown = true;
                 _timeCount += Time.deltaTime;
                 if (_timeCount > _preActiveTime)
                     gameState = GameState.active;
                 break;
 
             case GameState.active:
+                if(_isDown)
+                {
+                    // 本操作開始時点で1マス下げる
+                    _activePieces[0].transform.position += Vector3.back;
+                    _activePieces[1].transform.position += Vector3.back;
+                    _isDown = false;
+                }
+
                 if (_map.CheckLanding(_activePieces[0].transform.position) || _map.CheckLanding(_activePieces[1].transform.position))
                 {
                     // 接地時にカウント
