@@ -727,6 +727,7 @@ MonoBehaviour:
   scoreText: {fileID: 2065639105}
   charactorImage: {fileID: 318023282}
   isMyTurn: 0
+  isPreurn: 0
   controllPiece1: {fileID: 0}
   controllPiece2: {fileID: 0}
   rotationNum: 0
@@ -1326,6 +1327,7 @@ MonoBehaviour:
   scoreText: {fileID: 1952223755}
   charactorImage: {fileID: 1873248609}
   isMyTurn: 0
+  isPreurn: 0
   controllPiece1: {fileID: 0}
   controllPiece2: {fileID: 0}
   rotationNum: 0

@@ -193,13 +193,14 @@ public class PlayerBase : MonoBehaviour
             {
                 movedPos += move;
                 Vector3 movedUnderPos = movedPos + Vector3.back;
+                Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
 
                 // 壁まで行ったらスルー
                 if ((int)movedPos.x < 1 || (int)movedPos.x > 8)
                     break;
 
                 // 移動後の座標の1つ下に障害物がなければ
-                if (map.CheckWall(movedUnderPos))
+                if (map.CheckWall(movedUnderPos) && map.CheckWall(rotMovedPos))
                 {
                     controllPiece1.transform.position = movedPos;
                     controllPiece2.transform.position = movedPos + rotationPos[rotationNum];

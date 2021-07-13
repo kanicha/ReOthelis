@@ -32,6 +32,7 @@ public class GameDirector : MonoBehaviour
         active,
         confirmed,
         falled,
+        reversed,
         idle,
         end,
     }
@@ -51,7 +52,7 @@ public class GameDirector : MonoBehaviour
 
     void Update()
     {
-        switch(gameState)
+        switch (gameState)
         {
             case GameState.preActive:
                 _isDown = true;
@@ -105,20 +106,19 @@ public class GameDirector : MonoBehaviour
                 _map.TagClear();
 
                 // リバース・アニメーション処理
-                for (int i = 0; i < _activePieces.Length; i++)
+                gameState = GameState.idle;
+                for(int i = 0; i < _activePieces.Length; i++)
                 {
-                    if (_map.CheckHeightOver(_activePieces[i]))
+                    if(Map.Instance.CheckHeightOver(_activePieces[i]))
                         StartCoroutine(_map.CheckReverse(_activePieces[i]));
                 }
 
-                _player1.isMyTurn = false;
-                _player2.isMyTurn = false;
+                break;
 
+            case GameState.reversed:
                 // ゲーム終了判定
                 if (_map.CheckMap())
-                {
                     gameState = GameState.end;
-                }
                 else
                 {
                     PieceSet();
@@ -178,6 +178,8 @@ public class GameDirector : MonoBehaviour
     {
         _turnCount++;
 
+        _player1.isMyTurn = false;
+        _player2.isMyTurn = false;
         _player1.charactorImage.color = new Color(1, 1, 1);
         _player2.charactorImage.color = new Color(1, 1, 1);
 

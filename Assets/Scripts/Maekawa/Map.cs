@@ -109,9 +109,10 @@ public class Map : SingletonMonoBehaviour<Map>
     private int _setPosX = 0;
     private int _setPosZ = 0;
     private string _myColor = string.Empty;
-    private bool isChecking = false;
-    private int numOfReversed = 0;
+    private bool _isChecking = false;
+    private int _numOfReversed = 0;
     private const string _REVERSED_TAG = "Reversed";
+    private bool _isSecondCheck = false;
 
     [SerializeField]
     private GameDirector director = null;
@@ -133,7 +134,17 @@ public class Map : SingletonMonoBehaviour<Map>
         }
 
         _reversePiece.Clear();
-        isChecking = false;
+
+        // 2回目のチェックならステートを進める
+        if(_isSecondCheck)
+        {
+            GameDirector.gameState = GameDirector.GameState.reversed;
+            _isSecondCheck = false;
+        }
+        else
+            _isSecondCheck = true;// 2回目のチェックに入る
+
+        _isChecking = false;
     }
 
     /// <summary>
@@ -142,15 +153,19 @@ public class Map : SingletonMonoBehaviour<Map>
     /// <param name="piece">今置いたコマ</param>
     public IEnumerator CheckReverse(GameObject piece)
     {
-        while(isChecking)
-            yield return null;
+        while(_isChecking)
+            yield return null;// 2つのコルーチンは片方づつ処理する
 
-        Debug.Log(piece.tag);
-        // このターンに置いたコマ
+        // このターンに置いたコマがリバースしている or このコマが盤面外に置かれているなら
         if (piece.CompareTag(_REVERSED_TAG))
+        {
+            // 2回目のチェックであることが確定しているのでStateを進める
+            GameDirector.gameState = GameDirector.GameState.reversed;
+            _isSecondCheck = false;
             yield break;
+        }       
 
-        isChecking = true;
+        _isChecking = true;
 
         // 自分の色と相手の色を決定
         if (Piece.PieceType.black == piece.GetComponent<Piece>().pieceType)
@@ -172,15 +187,15 @@ public class Map : SingletonMonoBehaviour<Map>
         CheckInTheDirection(new Vector3(-1, 0, -1)); // ↖
         CheckInTheDirection(new Vector3(1, 0, -1));  // ↗
 
-        for (int a = _EMPTY_AREAS_HEIGHT;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          a < _HEIGHT; a++)
-        {
-            string s = "";
-            for (int b = 0; b < _WIDTH; b++)
-            {
-                s += _map[a, b];
-            }
-            Debug.Log(s);
-        }
+        //for (int a = _EMPTY_AREAS_HEIGHT;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          a < _HEIGHT; a++)
+        //{
+        //    string s = "";
+        //    for (int b = 0; b < _WIDTH; b++)
+        //    {
+        //        s += _map[a, b];
+        //    }
+        //    Debug.Log(s);
+        //}
         StartCoroutine(PieceReverse());
     }
 
@@ -292,6 +307,15 @@ public class Map : SingletonMonoBehaviour<Map>
             _map[(int)piece.transform.position.z * -1, (int)piece.transform.position.x] = _empty;
             piece.transform.position = new Vector3(999, 999, 999);
             isSafeLine = false;
+
+            // 2回目のチェックならステートを進める
+            if (_isSecondCheck)
+            {
+                GameDirector.gameState = GameDirector.GameState.reversed;
+                _isSecondCheck = false;
+            }
+            else
+                _isSecondCheck = true;// 2回目のチェックに入る
         }
         return isSafeLine;
     }
