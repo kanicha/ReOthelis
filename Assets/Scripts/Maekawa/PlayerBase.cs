@@ -53,14 +53,19 @@ public class PlayerBase : MonoBehaviour
     [SerializeField, Header("1マス落下する時間")]
     private float _fallTime = 0.0f;
     [SerializeField]
-    protected Map map = null;
-    [SerializeField]
     protected Text scoreText = null;
+    [SerializeField]
+    protected Text reversedCountText = null;
+    [SerializeField]
+    protected Text myPieceCountText = null;
     [SerializeField]
     public Image charactorImage = null;
     private float _timeCount = 0.0f;
     public bool isMyTurn = false;
     public bool isPreurn = false;
+    public int score = 0;
+    public int reversedCount = 0;
+    public int myPieceCount = 0;
     public GameObject controllPiece1 = null;
     public GameObject controllPiece2 = null;
     public int rotationNum = 0;
@@ -140,13 +145,13 @@ public class PlayerBase : MonoBehaviour
         Vector3 rotMovedPos = movedPos + rotationPos[rotationNum];
 
         // 移動後の座標に障害物がなければ
-        if (map.CheckWall(movedPos) && map.CheckWall(rotMovedPos))
+        if (Map.Instance.CheckWall(movedPos) && Map.Instance.CheckWall(rotMovedPos))
         {
             controllPiece1.transform.position = movedPos;
             controllPiece2.transform.position = rotMovedPos;
         }
         else if (isDown)
-            GameDirector.gameState = GameDirector.GameState.confirmed;// 下入力をし、障害物があるなら確定
+            GameDirector.Instance.gameState = GameDirector.GameState.confirmed;// 下入力をし、障害物があるなら確定
     }
 
     protected void PieceRotate()
@@ -169,7 +174,7 @@ public class PlayerBase : MonoBehaviour
         rotationNum %= 4;
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
 
-        if (map.CheckWall(rotatedPos))
+        if (Map.Instance.CheckWall(rotatedPos))
             controllPiece2.transform.position = rotatedPos;
         else
             rotationNum = lastNum;
@@ -200,7 +205,7 @@ public class PlayerBase : MonoBehaviour
                     break;
 
                 // 移動後の座標の1つ下に障害物がなければ
-                if (map.CheckWall(movedUnderPos) && map.CheckWall(rotMovedPos))
+                if (Map.Instance.CheckWall(movedUnderPos) && Map.Instance.CheckWall(rotMovedPos))
                 {
                     controllPiece1.transform.position = movedPos;
                     controllPiece2.transform.position = movedPos + rotationPos[rotationNum];
@@ -211,6 +216,6 @@ public class PlayerBase : MonoBehaviour
 
         // ↓入力したら本操作開始
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
-            GameDirector.gameState = GameDirector.GameState.active;
+            GameDirector.Instance.gameState = GameDirector.GameState.active;
     }
 }

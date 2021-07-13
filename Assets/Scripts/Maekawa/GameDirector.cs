@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameDirector : MonoBehaviour
+public class GameDirector : SingletonMonoBehaviour<GameDirector>
 {
     [SerializeField, Header("基本スコア")]
     public int point = 0;
@@ -24,7 +24,7 @@ public class GameDirector : MonoBehaviour
     private float _timeCount = 0;
     private bool _isDown = true;
     private GameObject[] _activePieces = new GameObject[2];
-    public static GameState gameState = GameState.none;
+    public GameState gameState = GameState.none;
     public enum GameState
     {
         none,
@@ -42,8 +42,6 @@ public class GameDirector : MonoBehaviour
         SoundManager.Instance.PlayBGM(0);
         _player1.isMyTurn = false;
         _player2.isMyTurn = false;
-        Player_1.score = 0;
-        Player_2.score = 0;
 
         // 最初は2セット生成
         PieceSet();
@@ -52,6 +50,8 @@ public class GameDirector : MonoBehaviour
 
     void Update()
     {
+        Map.Instance.CheckMap();
+
         switch (gameState)
         {
             case GameState.preActive:
@@ -112,7 +112,6 @@ public class GameDirector : MonoBehaviour
                     if(Map.Instance.CheckHeightOver(_activePieces[i]))
                         StartCoroutine(_map.CheckReverse(_activePieces[i]));
                 }
-
                 break;
 
             case GameState.reversed:
@@ -127,7 +126,14 @@ public class GameDirector : MonoBehaviour
                 break;
 
             case GameState.end:
-                // 終了処理
+                if (_player1.score > _player2.score)
+                    Debug.Log("<color=red>1Pの勝ち</color>");
+                else if (_player1.score == _player2.score)
+                        Debug.Log("<color=orange>引き分け</color>");
+                else
+                    Debug.Log("<color=blue>2Pの勝ち</color>");
+                gameState = GameState.none;
+                break;
 
             default:
                 break;
@@ -231,5 +237,31 @@ public class GameDirector : MonoBehaviour
             if (x > 4)
                 Debug.LogError("生成できるマスがありません");
         }
+    }
+
+    public void AddScore(bool isBlack, int point)
+    {
+        if(isBlack)
+        {
+            _player1.score += point;
+        }
+        else
+        {
+            _player2.score += point;
+        }
+    }
+
+    public void AddReversedCount(bool isBlack)
+    {
+        if(isBlack)
+            _player1.reversedCount++;
+        else
+            _player2.reversedCount++;
+    }
+
+    public void AddPieceCount(int blackCount, int whiteCount)
+    {
+        _player1.myPieceCount = blackCount;
+        _player2.myPieceCount = whiteCount;
     }
 }

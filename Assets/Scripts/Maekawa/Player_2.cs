@@ -14,8 +14,6 @@ public class Player_2 : PlayerBase
     private const string _PLAYER2_RSTICK_HORIZONTAL_NAME = "Horizontal Stick-R_2";
     private const string _PLAYER2_RSTICK_VERTICAL_NAME = "Vertical Stick-R_2";
 
-    public static int score = 0;
-
     void Start()
     {
         base.DS4_circle_name = _PLAYER2_CIRCLE_NAME;
@@ -38,19 +36,20 @@ public class Player_2 : PlayerBase
 
     void Update()
     {
-        base.scoreText.text = string.Format("{0:00000}", score);
-
+        base.scoreText.text = string.Format("{0:00000}", base.score);
+        base.reversedCountText.text = base.reversedCount.ToString();
+        base.myPieceCountText.text = "ãÓêî" + base.myPieceCount.ToString();
         base.SaveKeyValue();
         base.KeyInput();
 
         if (isMyTurn)
         {
-            if (GameDirector.gameState == GameDirector.GameState.active)
+            if (GameDirector.Instance.gameState == GameDirector.GameState.active)
             {
                 base.PieceMove();
                 base.PieceRotate();
             }
-            else if (GameDirector.gameState == GameDirector.GameState.preActive)
+            else if (GameDirector.Instance.gameState == GameDirector.GameState.preActive)
             {
                 base.PrePieceMove();
                 base.PieceRotate();

@@ -110,13 +110,10 @@ public class Map : SingletonMonoBehaviour<Map>
     private int _setPosZ = 0;
     private string _myColor = string.Empty;
     private bool _isChecking = false;
-    private int _numOfReversed = 0;
     private const string _REVERSED_TAG = "Reversed";
     private bool _isSecondCheck = false;
-
-    [SerializeField]
-    private GameDirector director = null;
     public Piece.PieceType turnPlayerColor = Piece.PieceType.none;
+
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
     /// </summary>
@@ -125,9 +122,15 @@ public class Map : SingletonMonoBehaviour<Map>
         foreach (GameObject piece in _reversePiece)
         {
             if (turnPlayerColor == Piece.PieceType.black)
-                Player_1.score += director.point;
+            {
+                GameDirector.Instance.AddScore(true, GameDirector.Instance.point);
+                GameDirector.Instance.AddReversedCount(true);
+            }
             else
-                Player_2.score += director.point;
+            {
+                GameDirector.Instance.AddScore(false, GameDirector.Instance.point);
+                GameDirector.Instance.AddReversedCount(false);
+            }
 
             piece.GetComponent<Piece>().Reverse();
             yield return new WaitForSeconds(.3f);
@@ -138,7 +141,7 @@ public class Map : SingletonMonoBehaviour<Map>
         // 2回目のチェックならステートを進める
         if(_isSecondCheck)
         {
-            GameDirector.gameState = GameDirector.GameState.reversed;
+            GameDirector.Instance.gameState = GameDirector.GameState.reversed;
             _isSecondCheck = false;
         }
         else
@@ -160,7 +163,7 @@ public class Map : SingletonMonoBehaviour<Map>
         if (piece.CompareTag(_REVERSED_TAG))
         {
             // 2回目のチェックであることが確定しているのでStateを進める
-            GameDirector.gameState = GameDirector.GameState.reversed;
+            GameDirector.Instance.gameState = GameDirector.GameState.reversed;
             _isSecondCheck = false;
             yield break;
         }       
@@ -260,8 +263,8 @@ public class Map : SingletonMonoBehaviour<Map>
     public bool CheckMap()
     {
         bool isEnd = true;
-        int black = 0;
-        int white = 0;
+        int blackCount = 0;
+        int whiteCount = 0;
 
         for (int i = _EMPTY_AREAS_HEIGHT; i < _HEIGHT; i++)
         {
@@ -272,23 +275,18 @@ public class Map : SingletonMonoBehaviour<Map>
                 if (cell == _empty)
                     isEnd = false;
                 else if (cell == _black)
-                    black++;
+                    blackCount++;
                 else if (cell == _white)
-                    white++;
+                    whiteCount++;
             }
         }
 
+        GameDirector.Instance.AddPieceCount(blackCount, whiteCount);
+
         if (isEnd)
         {
-            Player_1.score += director.point * black;
-            Player_2.score += director.point * white;
-
-            if (Player_1.score > Player_2.score)
-                Debug.Log("<color=red>1Pの勝ち</color>");
-            else if (Player_1.score == Player_2.score)
-                Debug.Log("<color=orange>引き分け</color>");
-            else
-                Debug.Log("<color=blue>2Pの勝ち</color>");
+            GameDirector.Instance.AddScore(true, GameDirector.Instance.point * blackCount);
+            GameDirector.Instance.AddScore(false, GameDirector.Instance.point * whiteCount);
         }
         
         return isEnd;
@@ -311,7 +309,7 @@ public class Map : SingletonMonoBehaviour<Map>
             // 2回目のチェックならステートを進める
             if (_isSecondCheck)
             {
-                GameDirector.gameState = GameDirector.GameState.reversed;
+                GameDirector.Instance.gameState = GameDirector.GameState.reversed;
                 _isSecondCheck = false;
             }
             else
