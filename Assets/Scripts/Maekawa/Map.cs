@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Map : MonoBehaviour
+public class Map : SingletonMonoBehaviour<Map>
 {
     private const byte _WIDTH = 10;
     private const byte _HEIGHT = 11;

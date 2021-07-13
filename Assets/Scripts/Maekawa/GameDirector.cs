@@ -45,8 +45,7 @@ public class GameDirector : MonoBehaviour
         Player_2.score = 0;
 
         // 最初は2セット生成
-        _activePieces[0] = _generator.Generate(_DEFAULT_POSITION);
-        _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + new Vector3(0, 0, 1));
+        PieceSet();
         ChangeTurn();
     }
 
@@ -122,8 +121,7 @@ public class GameDirector : MonoBehaviour
                 }
                 else
                 {
-                    _activePieces[0] = _generator.Generate(_DEFAULT_POSITION);
-                    _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + new Vector3(0, 0, 1));
+                    PieceSet();
                     ChangeTurn();
                 }
                 break;
@@ -201,5 +199,35 @@ public class GameDirector : MonoBehaviour
             _player1.charactorImage.color = new Color(0.5f, 0.5f, 0.5f);
         }
         gameState = GameState.preActive;
+    }
+
+    private void PieceSet()
+    {
+        // 生成位置の1マス下が空いていれば生成
+        Vector3 generatePos = _DEFAULT_POSITION + Vector3.back;
+        int x = 0;
+        while(true)
+        {
+            Vector3 checkPos = generatePos + new Vector3(x, 0);
+            if (Map.Instance.CheckWall(checkPos))
+            {
+                _activePieces[0] = _generator.Generate(checkPos + Vector3.forward);
+                _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));
+                break;
+            }
+            else
+            {
+                checkPos = generatePos + new Vector3(x * -1, 0);
+                if (Map.Instance.CheckWall(checkPos))
+                {
+                    _activePieces[0] = _generator.Generate(checkPos + Vector3.forward);
+                    _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));
+                    break;
+                }
+            }
+            x++;
+            if (x > 4)
+                Debug.LogError("生成できるマスがありません");
+        }
     }
 }
