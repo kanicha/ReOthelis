@@ -25,7 +25,7 @@ public class PieceGenerator : MonoBehaviour
         // 母数が減るボックスガチャ形式でジョーカーを抽選
         int num = Random.Range(0, _range);
         // 0 ~ 99で黒と白抽選区分
-        int num2 = Random.Range(0, 100);
+        int num2 = Random.Range(0, 1000);
 
         // 生成ごとに減少する_renge変数が0 & 生成上限に達していなければジョーカー
         if (num == 0 && _jokerCount < _JOKER_COUNT_MAX)
@@ -75,10 +75,10 @@ public class PieceGenerator : MonoBehaviour
                 p.pieceType = Piece.PieceType.white;
                 piece.transform.rotation = Quaternion.Euler(0, 0, 180);
                 break;
-            case 3:
-                piece.name = "joker";
-                p.pieceType = Piece.PieceType.joker;
-                break;
+            //case 3:
+            //    piece.name = "joker";
+            //    p.pieceType = Piece.PieceType.joker;
+                //break;
             default:
                 break;
         }

@@ -70,6 +70,14 @@ public class PlayerBase : MonoBehaviour
     public GameObject controllPiece1 = null;
     public GameObject controllPiece2 = null;
     public int rotationNum = 0;
+    protected string myColor = "";
+
+    protected delegate void Skill_1();
+    protected delegate void Skill_2();
+    protected delegate void Skill_3();
+    protected Skill_1 skill_1;
+    protected Skill_2 skill_2;
+    protected Skill_3 skill_3;
 
     protected readonly Vector3[] rotationPos = new Vector3[]
     {
@@ -81,7 +89,6 @@ public class PlayerBase : MonoBehaviour
 
     protected void KeyInput()
     {
-        // test
         _DS4_circle_value = Input.GetButtonDown(DS4_circle_name);
         _DS4_cross_value = Input.GetButtonDown(DS4_cross_name);
         _DS4_square_value = Input.GetButtonDown(DS4_square_name);
@@ -115,6 +122,26 @@ public class PlayerBase : MonoBehaviour
         last_Lstick_vertical_value = _DS4_Lstick_vertical_value;
         last_Rstick_horizontal_value = _DS4_Rstick_horizontal_value;
         last_Rstick_vertical_value = _DS4_Rstick_vertical_value;
+    }
+
+    protected void SkillActivate()
+    {
+        // スキル1...× スキル2...△ スキル3...□
+        if(Input.GetKeyDown(KeyCode.Z) || _DS4_cross_value)
+        {
+            Debug.Log("skill_1");
+            skill_1();
+        }
+        else if(Input.GetKeyDown(KeyCode.X) || _DS4_triangle_value)
+        {
+            Debug.Log("skill_2");
+            skill_2();
+        }
+        else if(Input.GetKeyDown(KeyCode.C) || _DS4_square_value)
+        {
+            Debug.Log("skill_3");
+            skill_3();
+        }
     }
 
     protected void PieceMove()
@@ -219,5 +246,75 @@ public class PlayerBase : MonoBehaviour
         // ↓入力したら本操作開始
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
             GameDirector.Instance.gameState = GameDirector.GameState.active;
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private bool CheckColor(bool isMycolor)
+    {
+        string targetColor;
+        if (isMycolor)
+            targetColor = myColor;
+        else
+        {
+            if (myColor == Map.Instance.black)
+                targetColor = Map.Instance.white;
+            else
+                targetColor = Map.Instance.black;
+        }
+
+        bool isThere = false;
+        // 下一行を除いたコマが置かれる可能性のあるマスを探索
+        for (int i = 2; i < 9; i++)
+            for (int j = 1; j < 9; j++)
+            {
+                if (Map.Instance.map[i, j] == myColor)
+                {
+                    isThere = true;
+                }
+            }
+
+        return isThere;
+    }
+
+    public void Lock()
+    {
+        // 範囲に自分の色がなければリターン
+        if(!CheckColor(true))
+            return;
+
+        GameDirector.Instance.gameState = GameDirector.GameState.idle;
+        while (true)
+        {
+            // 適当にランダムな座標をとり、それが自分の色なら変換
+            int z = Random.Range(2, 9);
+            int x = Random.Range(1, 9);
+            if (Map.Instance.map[z, x] == myColor)
+            {
+                Map.Instance.pieceMap[z, x].GetComponent<Piece>().pieceType = Piece.PieceType.fixity;
+                if (myColor == Map.Instance.black)
+                    Map.Instance.map[z, x] = Map.Instance.fixed_black;
+                else
+                    Map.Instance.map[z, x] = Map.Instance.fixed_black;
+                break;
+            }
+        }
+
+        GameDirector.Instance.gameState = GameDirector.GameState.active;
+    }
+
+    public void BeLeftShadow()
+    {
+        Piece.PieceType playerType;
+        if (myColor == Map.Instance.black)
+            playerType = Piece.PieceType.black;
+        else
+            playerType = Piece.PieceType.white;
+
+        // 自分の色があれば固定コマに
+        if(controllPiece1.GetComponent<Piece>().pieceType == playerType)
+            controllPiece1.GetComponent<Piece>().pieceType = Piece.PieceType.fixity;
+        if (controllPiece2.GetComponent<Piece>().pieceType == playerType)
+            controllPiece2.GetComponent<Piece>().pieceType = Piece.PieceType.fixity;
     }
 }

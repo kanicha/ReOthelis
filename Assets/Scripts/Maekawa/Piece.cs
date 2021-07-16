@@ -6,6 +6,8 @@ public class Piece : MonoBehaviour
 {
     [SerializeField]
     private Renderer[] _renderer = new Renderer[2];
+    [SerializeField]
+    private Material[] _fixedMaterial = new Material[2];
     public Material[] _material;
     private Animator _anim = null;
 
@@ -14,7 +16,7 @@ public class Piece : MonoBehaviour
         none,
         black,
         white,
-        joker
+        fixity
     }
 
     public PieceType pieceType = PieceType.none;
@@ -23,13 +25,27 @@ public class Piece : MonoBehaviour
     private void Start()
     {
         _anim = GetComponent<Animator>();
-        Init((int)CharaImageMoved.charaType1P, (int)CharaImageMoved2P.charaType2P);
+        Init();
     }
 
-    public void Init(int P1, int P2)
+    private void Update()
     {
-        _renderer[0].GetComponent<Renderer>().sharedMaterial = _material[P1];
-        _renderer[1].GetComponent<Renderer>().sharedMaterial = _material[P2 + 4];
+        if (pieceType == PieceType.fixity)
+        {
+            _renderer[0].sharedMaterial = _fixedMaterial[0];
+            _renderer[1].sharedMaterial = _fixedMaterial[1];
+        }
+        else
+        {
+            _renderer[0].sharedMaterial = _material[(int)CharaImageMoved.charaType1P];
+            _renderer[1].sharedMaterial = _material[(int)CharaImageMoved2P.charaType2P + 4];
+        }            
+    }
+
+    public void Init()
+    {
+        _renderer[0].GetComponent<Renderer>().sharedMaterial = _material[(int)CharaImageMoved.charaType1P];
+        _renderer[1].GetComponent<Renderer>().sharedMaterial = _material[(int)CharaImageMoved2P.charaType2P + 4];
     }
 
     public void Reverse()

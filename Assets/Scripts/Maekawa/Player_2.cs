@@ -32,6 +32,12 @@ public class Player_2 : PlayerBase
         //
         base.key_board_horizontal_name = "Horizontal_2";
         base.key_board_vertical_name = "Vertical_2";
+
+        // キャラクターに応じてスキルをセット
+        base.myColor = Map.Instance.white;
+        base.skill_1 = base.Lock;
+        //base.skill_2 = base.Lock;
+        //base.skill_3 =
     }
 
     void Update()
@@ -47,6 +53,8 @@ public class Player_2 : PlayerBase
 
         if (isMyTurn)
         {
+            base.SkillActivate();
+
             base.charactorImage.color = new UnityEngine.Color(1, 1, 1);
             if (GameDirector.Instance.gameState == GameDirector.GameState.active)
             {

@@ -7,7 +7,7 @@ public class Map : SingletonMonoBehaviour<Map>
     private const byte _WIDTH = 10;
     private const byte _HEIGHT = 11;
     private const byte _EMPTY_AREAS_HEIGHT = 2;// 上２ラインに置かれたコマは消滅する
-    private string[,] _map = new string[_HEIGHT, _WIDTH]// z, x座標で指定
+    public string[,] map = new string[_HEIGHT, _WIDTH]// z, x座標で指定
     {
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
@@ -22,10 +22,12 @@ public class Map : SingletonMonoBehaviour<Map>
         { "■", "■", "■", "■", "■", "■", "■", "■", "■", "■" }
     };
 
-    private const string _wall = "■";
-    private const string _empty = "□";
-    private const string _white = "〇";
-    private const string _black = "●";
+    public readonly string wall = "■";
+    public readonly string empty = "□";
+    public readonly string black = "●";
+    public readonly string white = "〇";
+    public readonly string fixed_black = "★";
+    public readonly string fixed_white = "☆";
 
     /// <summary>
     /// 移動後のコマが障害物に当たるかを調べる
@@ -40,7 +42,7 @@ public class Map : SingletonMonoBehaviour<Map>
         int x = (int)movedPos.x;
 
         // 2つの駒の移動後座標に何もなければ移動を通す
-        if (_map[z, x] == _empty)
+        if (map[z, x] == empty)
             isBlank = true;
 
         return isBlank;
@@ -59,7 +61,7 @@ public class Map : SingletonMonoBehaviour<Map>
         int z = (int)piecePos.z * -1;
         int x = (int)piecePos.x;
 
-        if (_map[z + 1, x] != _empty)
+        if (map[z + 1, x] != empty)
             isGrounded = true;
 
         return isGrounded;
@@ -83,7 +85,7 @@ public class Map : SingletonMonoBehaviour<Map>
             dz = z + i;// iの分だけ下の座標を調べる
 
             // 設置したマスからi個下のマスが空白なら下に落とす
-            if (_map[dz, x] == _empty)
+            if (map[dz, x] == empty)
                 piece.transform.position = new Vector3(x, 0, dz * -1);// 反転させたyをマイナスに戻す
             else
             {
@@ -96,16 +98,16 @@ public class Map : SingletonMonoBehaviour<Map>
         Piece p = piece.GetComponent<Piece>();
 
         if (p.pieceType == Piece.PieceType.black)
-            _map[dz, x] = _black;
+            map[dz, x] = black;
         else if (p.pieceType == Piece.PieceType.white)
-            _map[dz, x] = _white;
+            map[dz, x] = white;
 
-        _pieceMap[dz, x] = piece;
+        pieceMap[dz, x] = piece;
     }
 
     // ひっくり返す処理
     private List<GameObject> _reversePiece = new List<GameObject>();// ひっくり返すコマを格納
-    private GameObject[,] _pieceMap = new GameObject[_HEIGHT, _WIDTH];
+    public  GameObject[,] pieceMap = new GameObject[_HEIGHT, _WIDTH];
     private int _setPosX = 0;
     private int _setPosZ = 0;
     private string _myColor = string.Empty;
@@ -172,9 +174,9 @@ public class Map : SingletonMonoBehaviour<Map>
 
         // 自分の色と相手の色を決定
         if (Piece.PieceType.black == piece.GetComponent<Piece>().pieceType)
-            _myColor = _black;
+            _myColor = black;
         else
-            _myColor = _white;
+            _myColor = white;
 
         // 置いたマスの座標を取得
         _setPosX = (int)piece.transform.position.x;
@@ -190,12 +192,12 @@ public class Map : SingletonMonoBehaviour<Map>
         CheckInTheDirection(new Vector3(-1, 0, -1)); // ↖
         CheckInTheDirection(new Vector3(1, 0, -1));  // ↗
 
-        //for (int a = _EMPTY_AREAS_HEIGHT;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          a < _HEIGHT; a++)
+        //for (int a = _EMPTY_AREAS_HEIGHT; a < _HEIGHT; a++)
         //{
         //    string s = "";
         //    for (int b = 0; b < _WIDTH; b++)
         //    {
-        //        s += _map[a, b];
+        //        s += map[a, b];
         //    }
         //    Debug.Log(s);
         //}
@@ -225,11 +227,11 @@ public class Map : SingletonMonoBehaviour<Map>
             checkPosX += dirX;
             checkPosZ += dirZ;
             // 壁 or 空白 or なら終了
-            if (_map[checkPosZ, checkPosX] == _wall || _map[checkPosZ, checkPosX] == _empty)
+            if (map[checkPosZ, checkPosX] == wall || map[checkPosZ, checkPosX] == empty)
             {
                 break;
             }
-            else if (_map[checkPosZ, checkPosX] == _myColor)
+            else if (map[checkPosZ, checkPosX] == _myColor)
             {
                 // 進んだ先に自分の色があれば終了して裏返せる
                 isReverse = true;
@@ -249,9 +251,9 @@ public class Map : SingletonMonoBehaviour<Map>
             {
                 checkPosX += dirX;
                 checkPosZ += dirZ;
-                _map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
-                _reversePiece.Add(_pieceMap[checkPosZ, checkPosX]);
-                _pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
+                map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
+                _reversePiece.Add(pieceMap[checkPosZ, checkPosX]);
+                pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
             }
         }
     }
@@ -270,13 +272,13 @@ public class Map : SingletonMonoBehaviour<Map>
         {
             for (int j = 0; j < _WIDTH; j++)
             {
-                string cell = _map[i, j];
+                string cell = map[i, j];
 
-                if (cell == _empty)
+                if (cell == empty)
                     isEnd = false;
-                else if (cell == _black)
+                else if (cell == black)
                     blackCount++;
-                else if (cell == _white)
+                else if (cell == white)
                     whiteCount++;
             }
         }
@@ -302,7 +304,7 @@ public class Map : SingletonMonoBehaviour<Map>
         bool isSafeLine = true;
         if ((int)piece.transform.position.z * -1 < _EMPTY_AREAS_HEIGHT)
         {
-            _map[(int)piece.transform.position.z * -1, (int)piece.transform.position.x] = _empty;
+            map[(int)piece.transform.position.z * -1, (int)piece.transform.position.x] = empty;
             piece.transform.position = new Vector3(999, 999, 999);
             isSafeLine = false;
 
@@ -324,8 +326,8 @@ public class Map : SingletonMonoBehaviour<Map>
         {
             for (int j = 0; j < _WIDTH; j++)
             {
-                if (_pieceMap[i,j] != null)
-                    _pieceMap[i, j].tag = "Untagged";
+                if (pieceMap[i,j] != null)
+                    pieceMap[i, j].tag = "Untagged";
             }
         }
     }
