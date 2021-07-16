@@ -14,8 +14,6 @@ public class Player_1 : PlayerBase
     private const string _PLAYER1_RSTICK_HORIZONTAL_NAME = "Horizontal Stick-R";
     private const string _PLAYER1_RSTICK_VERTICAL_NAME = "Vertical Stick-R";
 
-    public static int score = 0;
-
     void Start()
     {
         base.DS4_circle_name = _PLAYER1_CIRCLE_NAME;
@@ -38,15 +36,27 @@ public class Player_1 : PlayerBase
 
     void Update()
     {
-        base.scoreText.text = string.Format("{0:00000}", score);
-
+        base.scoreText.text = string.Format("{0:00000}", base.score);
+        base.reversedCountText.text = base.reversedCount.ToString();
+        base.myPieceCountText.text = "ãÓêî" + base.myPieceCount.ToString();
         base.SaveKeyValue();
         base.KeyInput();
 
-        if (GameDirector.isGameEnd)
-            return;
-
-        base.PieceMove();
-        base.PieceRotate();
+        if (isMyTurn)
+        {
+            base.charactorImage.color = new UnityEngine.Color(1, 1, 1);
+            if (GameDirector.Instance.gameState == GameDirector.GameState.active)
+            {
+                base.PieceMove();
+                base.PieceRotate();
+            }
+            else if (GameDirector.Instance.gameState == GameDirector.GameState.preActive)
+            {
+                base.PrePieceMove();
+                base.PieceRotate();
+            }
+        }
+        else
+            base.charactorImage.color = new UnityEngine.Color(0.5f, 0.5f, 0.5f);
     }
 }

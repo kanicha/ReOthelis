@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Map : MonoBehaviour
+public class Map : SingletonMonoBehaviour<Map>
 {
     private const byte _WIDTH = 10;
     private const byte _HEIGHT = 11;
@@ -109,13 +109,11 @@ public class Map : MonoBehaviour
     private int _setPosX = 0;
     private int _setPosZ = 0;
     private string _myColor = string.Empty;
-    private bool isChecking = false;
-    private int numOfReversed = 0;
+    private bool _isChecking = false;
     private const string _REVERSED_TAG = "Reversed";
-
-    [SerializeField]
-    private GameDirector director = null;
+    private bool _isSecondCheck = false;
     public Piece.PieceType turnPlayerColor = Piece.PieceType.none;
+
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
     /// </summary>
@@ -124,17 +122,32 @@ public class Map : MonoBehaviour
         foreach (GameObject piece in _reversePiece)
         {
             if (turnPlayerColor == Piece.PieceType.black)
-                Player_1.score += director.point;
+            {
+                GameDirector.Instance.AddScore(true, GameDirector.Instance.point);
+                GameDirector.Instance.AddReversedCount(true);
+            }
             else
-                Player_2.score += director.point;
+            {
+                GameDirector.Instance.AddScore(false, GameDirector.Instance.point);
+                GameDirector.Instance.AddReversedCount(false);
+            }
 
             piece.GetComponent<Piece>().Reverse();
-            piece.tag = _REVERSED_TAG;
             yield return new WaitForSeconds(.3f);
         }
 
         _reversePiece.Clear();
-        isChecking = false;
+
+        // 2回目のチェックならステートを進める
+        if(_isSecondCheck)
+        {
+            GameDirector.Instance.gameState = GameDirector.GameState.reversed;
+            _isSecondCheck = false;
+        }
+        else
+            _isSecondCheck = true;// 2回目のチェックに入る
+
+        _isChecking = false;
     }
 
     /// <summary>
@@ -143,14 +156,19 @@ public class Map : MonoBehaviour
     /// <param name="piece">今置いたコマ</param>
     public IEnumerator CheckReverse(GameObject piece)
     {
-        while(isChecking)
-            yield return null;
+        while(_isChecking)
+            yield return null;// 2つのコルーチンは片方づつ処理する
 
-        // このターンに置いたコマかつ
+        // このターンに置いたコマがリバースしている or このコマが盤面外に置かれているなら
         if (piece.CompareTag(_REVERSED_TAG))
+        {
+            // 2回目のチェックであることが確定しているのでStateを進める
+            GameDirector.Instance.gameState = GameDirector.GameState.reversed;
+            _isSecondCheck = false;
             yield break;
+        }       
 
-        isChecking = true;
+        _isChecking = true;
 
         // 自分の色と相手の色を決定
         if (Piece.PieceType.black == piece.GetComponent<Piece>().pieceType)
@@ -172,15 +190,15 @@ public class Map : MonoBehaviour
         CheckInTheDirection(new Vector3(-1, 0, -1)); // ↖
         CheckInTheDirection(new Vector3(1, 0, -1));  // ↗
 
-        for (int a = _EMPTY_AREAS_HEIGHT; a < _HEIGHT; a++)
-        {
-            string s = "";
-            for (int b = 0; b < _WIDTH; b++)
-            {
-                s += _map[a, b];
-            }
-            Debug.Log(s);
-        }
+        //for (int a = _EMPTY_AREAS_HEIGHT;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          a < _HEIGHT; a++)
+        //{
+        //    string s = "";
+        //    for (int b = 0; b < _WIDTH; b++)
+        //    {
+        //        s += _map[a, b];
+        //    }
+        //    Debug.Log(s);
+        //}
         StartCoroutine(PieceReverse());
     }
 
@@ -233,6 +251,7 @@ public class Map : MonoBehaviour
                 checkPosZ += dirZ;
                 _map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
                 _reversePiece.Add(_pieceMap[checkPosZ, checkPosX]);
+                _pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
             }
         }
     }
@@ -244,8 +263,8 @@ public class Map : MonoBehaviour
     public bool CheckMap()
     {
         bool isEnd = true;
-        int black = 0;
-        int white = 0;
+        int blackCount = 0;
+        int whiteCount = 0;
 
         for (int i = _EMPTY_AREAS_HEIGHT; i < _HEIGHT; i++)
         {
@@ -256,23 +275,18 @@ public class Map : MonoBehaviour
                 if (cell == _empty)
                     isEnd = false;
                 else if (cell == _black)
-                    black++;
+                    blackCount++;
                 else if (cell == _white)
-                    white++;
+                    whiteCount++;
             }
         }
 
+        GameDirector.Instance.AddPieceCount(blackCount, whiteCount);
+
         if (isEnd)
         {
-            Player_1.score += director.point * black;
-            Player_2.score += director.point * white;
-
-            if (Player_1.score > Player_2.score)
-                Debug.Log("<color=red>1Pの勝ち</color>");
-            else if (Player_1.score == Player_2.score)
-                Debug.Log("<color=orange>引き分け</color>");
-            else
-                Debug.Log("<color=blue>2Pの勝ち</color>");
+            GameDirector.Instance.AddScore(true, GameDirector.Instance.point * blackCount);
+            GameDirector.Instance.AddScore(false, GameDirector.Instance.point * whiteCount);
         }
         
         return isEnd;
@@ -291,6 +305,15 @@ public class Map : MonoBehaviour
             _map[(int)piece.transform.position.z * -1, (int)piece.transform.position.x] = _empty;
             piece.transform.position = new Vector3(999, 999, 999);
             isSafeLine = false;
+
+            // 2回目のチェックならステートを進める
+            if (_isSecondCheck)
+            {
+                GameDirector.Instance.gameState = GameDirector.GameState.reversed;
+                _isSecondCheck = false;
+            }
+            else
+                _isSecondCheck = true;// 2回目のチェックに入る
         }
         return isSafeLine;
     }
@@ -317,4 +340,4 @@ public class Map : MonoBehaviour
 //        s += _map[a, b];
 //    }
 //    Debug.Log(s);
-//}
+//
