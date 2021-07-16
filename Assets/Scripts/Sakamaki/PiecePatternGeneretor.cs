@@ -27,26 +27,26 @@ public class PiecePatternGeneretor : MonoBehaviour
         int type = 0;
         // ランダム
         num = Random.Range(0, SHUFFLE_NUM);
-  
-        // 25% で同色(黒) かつ 前回に黒が生成されていなければ
-        if ((num < 25 && num > 0) && !blackChecker)
-        {
-            type = 1;
-            blackChecker = true;
-        }
-        // 25% で同色 (白) かつ 前回に白が生成されていなければ
-        else if ((num < 50 && num > 25) && !whiteChecker)
-        {
-            type = 2;
-            whiteChecker = true;
-        }
-        // 余りの50%　(別色) 前回と前々回に同色が生成されていなければ
-        else
+
+        // 50% で別色
+        if (num < 50 || (blackChecker && whiteChecker))
         {
             type = 3;
 
             blackChecker = false;
             whiteChecker = false;
+        }
+        // 25% で同色 (白)
+        else if ((num < 75 && !whiteChecker) || blackChecker)
+        {
+            type = 2;
+            whiteChecker = true;
+        }
+        // 余りの25%　(黒)
+        else
+        {
+            type = 1;
+            blackChecker = true;
         }
 
         GameObject piece = Instantiate(piecePrefab);
