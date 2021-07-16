@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Result : MonoBehaviour
+public class ResultSceneChange : MonoBehaviour
 {
     [SerializeField] private Player1 p1;
 
