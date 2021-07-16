@@ -36,9 +36,12 @@ public class Player_2 : PlayerBase
 
     void Update()
     {
-        base.scoreText.text = string.Format("{0:00000}", base.score);
+        if (base.reversedCount > MAX_REVERSE_COUNT)
+            base.reversedCount = MAX_REVERSE_COUNT;
         base.reversedCountText.text = base.reversedCount.ToString();
+        base.scoreText.text = string.Format("{0:00000}", base.score);
         base.myPieceCountText.text = "ãÓêî" + base.myPieceCount.ToString();
+
         base.SaveKeyValue();
         base.KeyInput();
 

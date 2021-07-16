@@ -65,6 +65,7 @@ public class PlayerBase : MonoBehaviour
     public bool isPreurn = false;
     public int score = 0;
     public int reversedCount = 0;
+    protected const int MAX_REVERSE_COUNT = 20;
     public int myPieceCount = 0;
     public GameObject controllPiece1 = null;
     public GameObject controllPiece2 = null;
