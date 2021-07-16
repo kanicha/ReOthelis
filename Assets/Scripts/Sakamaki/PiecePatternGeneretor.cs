@@ -12,6 +12,10 @@ public class PiecePatternGeneretor : MonoBehaviour
     // シャッフルされた数値格納する変数
     int num = 0;
 
+    bool whiteChecker = false;
+    bool blackChecker = false;
+
+
     private void Start()
     {
 
@@ -23,20 +27,26 @@ public class PiecePatternGeneretor : MonoBehaviour
         int type = 0;
         // ランダム
         num = Random.Range(0, SHUFFLE_NUM);
-
-        // 50& で別色
-        if (num < 50)
-        {
-            type = 3;
-        }
-        // 25% で同色
-        else if (num < 75)
-        {
-            type = 2;
-        }
-        else
+  
+        // 25% で同色(黒) かつ 前回に黒が生成されていなければ
+        if ((num < 25 && num > 0) && !blackChecker)
         {
             type = 1;
+            blackChecker = true;
+        }
+        // 25% で同色 (白) かつ 前回に白が生成されていなければ
+        else if ((num < 50 && num > 25) && !whiteChecker)
+        {
+            type = 2;
+            whiteChecker = true;
+        }
+        // 余りの50%　(別色) 前回と前々回に同色が生成されていなければ
+        else
+        {
+            type = 3;
+
+            blackChecker = false;
+            whiteChecker = false;
         }
 
         GameObject piece = Instantiate(piecePrefab);
@@ -66,7 +76,7 @@ public class PiecePatternGeneretor : MonoBehaviour
                 piece.transform.rotation = Quaternion.Euler(0, 0, 180);
                 piece2.transform.rotation = Quaternion.Euler(0, 0, 180);
                 break;
-            // 白黒
+            // 黒白
             case 3:
                 piece.name = "black";
                 piece2.name = "white";
