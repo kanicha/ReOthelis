@@ -546,10 +546,13 @@ MonoBehaviour:
   _marginTime: 0.5
   _preActiveTime: 3
   _DEFAULT_POSITION: {x: 4, y: 0, z: -1}
-  _generator: {fileID: 1559426142}
+  _generator: {fileID: 1559426143}
   _map: {fileID: 576250714}
   _player1: {fileID: 1435816371}
   _player2: {fileID: 533350509}
+  _activePieces:
+  - {fileID: 0}
+  - {fileID: 0}
   gameState: 0
 --- !u!114 &326221982
 MonoBehaviour:
@@ -1748,7 +1751,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1559426141}
-  - component: {fileID: 1559426142}
+  - component: {fileID: 1559426143}
   m_Layer: 0
   m_Name: PieceGenerator
   m_TagString: Untagged
@@ -1770,7 +1773,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1559426142
+--- !u!114 &1559426143
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1779,7 +1782,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1559426140}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4aed16de702647042ba03d09523a2e08, type: 3}
+  m_Script: {fileID: 11500000, guid: c7a6f5739635e1347a74986f9d5866eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   root: {fileID: 1824669614}

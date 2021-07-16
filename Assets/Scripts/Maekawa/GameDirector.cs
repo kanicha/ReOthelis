@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameDirector : SingletonMonoBehaviour<GameDirector>
+public class GameDirector : SingletonMonoBehaviour<GameDirector>    
 {
     [SerializeField, Header("基本スコア")]
     public int point = 0;
@@ -12,7 +12,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     [SerializeField, Header("ミノの初期位置")]
     private Vector3 _DEFAULT_POSITION = Vector3.zero;
     [SerializeField]
-    PieceGenerator _generator = null;
+    PiecePatternGeneretor _generator = null;
     [SerializeField]
     private Map _map = null;
     [SerializeField]
@@ -23,7 +23,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     private int _turnCount = 0;
     private float _timeCount = 0;
     private bool _isDown = true;
-    private GameObject[] _activePieces = new GameObject[2];
+    public GameObject[] _activePieces = new GameObject[2];
     public GameState gameState = GameState.none;
     public enum GameState
     {
@@ -216,8 +216,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             Vector3 checkPos = generatePos + new Vector3(x, 0);
             if (Map.Instance.CheckWall(checkPos))
             {
-                _activePieces[0] = _generator.Generate(checkPos + Vector3.forward);
-                _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));
+                _generator.Generate(checkPos + Vector3.forward);
+                /*_activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));*/
                 break;
             }
             else
@@ -225,8 +225,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 checkPos = generatePos + new Vector3(x * -1, 0);
                 if (Map.Instance.CheckWall(checkPos))
                 {
-                    _activePieces[0] = _generator.Generate(checkPos + Vector3.forward);
-                    _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));
+                    _generator.Generate(checkPos + Vector3.forward);
+                    /*_activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));*/
                     break;
                 }
             }
