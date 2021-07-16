@@ -81,6 +81,7 @@ public class PlayerBase : MonoBehaviour
 
     protected void KeyInput()
     {
+        // test
         _DS4_circle_value = Input.GetButtonDown(DS4_circle_name);
         _DS4_cross_value = Input.GetButtonDown(DS4_cross_name);
         _DS4_square_value = Input.GetButtonDown(DS4_square_name);
