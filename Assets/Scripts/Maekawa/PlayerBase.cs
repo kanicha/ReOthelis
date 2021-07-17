@@ -250,27 +250,42 @@ public class PlayerBase : MonoBehaviour
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private bool CheckColor(bool isMycolor)
+    protected void SetSkills(int charaType)
     {
-        string targetColor;
-        
-        // 自分の色
-        if (isMycolor)
-            targetColor = myColor;
-        else// 相手の色
-        {
-            if (myColor == Map.Instance.black)
-                targetColor = Map.Instance.white;
-            else
-                targetColor = Map.Instance.black;
-        }
+        // 同じ意味のenumが1Pと2Pで2つ分あるのでenum→int→enumにキャスト 
+        CharaImageMoved.CharaType1P type = (CharaImageMoved.CharaType1P)charaType;
 
+        switch (type)
+        {
+            case CharaImageMoved.CharaType1P.Cow:
+                skill_1 = Cancellation;
+                skill_2 = MyPieceLock;
+                break;
+            case CharaImageMoved.CharaType1P.Mouse:
+                skill_1 = RandomLock;
+                skill_2 = Cancellation;
+                break;
+            case CharaImageMoved.CharaType1P.Rabbit:
+                skill_1 = TakeAway;
+                skill_2 = RandomLock;
+                break;
+            case CharaImageMoved.CharaType1P.Tiger:
+                skill_1 = MyPieceLock;
+                skill_2 = TakeAway;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private bool CheckColor(string type)
+    { 
         bool isThere = false;
         // 下一行を除いたコマが置かれる可能性のあるマスを探索
         for (int i = 2; i < 9; i++)
             for (int j = 1; j < 9; j++)
             {
-                if (Map.Instance.map[i, j] == targetColor)
+                if (Map.Instance.map[i, j] == type)
                     isThere = true;
             }
 
@@ -278,12 +293,19 @@ public class PlayerBase : MonoBehaviour
     }
 
     //  強引
-    public void Forcibly()
+    public void TakeAway()
     {
+        // 相手の色を探す
+        string targetColor;
+        if (myColor == Map.Instance.black)
+            targetColor = Map.Instance.white;
+        else
+            targetColor = Map.Instance.black;
+
         // 最下段を除くマップに相手の色がなければリターン(固定コマは対象外)
-        if (!CheckColor(false))
+        if (!CheckColor(targetColor))
         {
-            Debug.Log("相手の色がありません");
+            Debug.Log("相手の色のコマがありません");
             return;
         }
 
@@ -318,11 +340,14 @@ public class PlayerBase : MonoBehaviour
     }
 
     // 固定
-    public void Lock()
+    public void RandomLock()
     {
         // 最下段を除くマップに自分の色がなければリターン(固定コマは対象外)
-        if (!CheckColor(true))
+        if (!CheckColor(myColor))
+        {
+            Debug.Log("自分の色のコマがありません");
             return;
+        }
 
         GameDirector.Instance.gameState = GameDirector.GameState.idle;
         while (true)
@@ -345,7 +370,7 @@ public class PlayerBase : MonoBehaviour
     }
 
     // 残影
-    public void BeLeftShadow()
+    public void MyPieceLock()
     {
         Piece.PieceType playerType;
         if (myColor == Map.Instance.black)
@@ -353,10 +378,36 @@ public class PlayerBase : MonoBehaviour
         else
             playerType = Piece.PieceType.white;
 
-        // 自分の色があれば固定コマに
-        if (controllPiece1.GetComponent<Piece>().pieceType == playerType)
-            controllPiece1.GetComponent<Piece>().pieceType = Piece.PieceType.fixity;
-        if (controllPiece2.GetComponent<Piece>().pieceType == playerType)
-            controllPiece2.GetComponent<Piece>().pieceType = Piece.PieceType.fixity;
+        Piece piece1 = controllPiece1.GetComponent<Piece>();
+        Piece piece2 = controllPiece2.GetComponent<Piece>();
+
+        // 自分の色がなければリターン
+        if (piece1.pieceType != playerType || piece2.pieceType != playerType)
+        {
+            Debug.Log("自分の色のコマを操作していません");
+            return;
+        }
+
+        if (piece1.pieceType == playerType)
+            piece1.pieceType = Piece.PieceType.fixity;
+        if (piece2.pieceType == playerType)
+            piece2.pieceType = Piece.PieceType.fixity;
+    }
+
+    public void Cancellation()
+    {
+        // 相手色の固定コマを探す
+        string searchColor;
+        if (myColor == Map.Instance.black)
+            searchColor = Map.Instance.fixed_white;
+        else
+            searchColor = Map.Instance.fixed_black;
+        if (!CheckColor(searchColor))
+        {
+            Debug.Log("相手色の固定コマがありません");
+            return;
+        }
+
+        Map.Instance.isIgnoreFixedPiece = true;
     }
 }

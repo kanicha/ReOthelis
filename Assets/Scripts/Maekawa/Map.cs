@@ -116,6 +116,7 @@ public class Map : SingletonMonoBehaviour<Map>
     private bool _isSecondCheck = false;
     public Piece.PieceType turnPlayerColor = Piece.PieceType.none;
     public bool isSkillActivate = false;
+    public bool isIgnoreFixedPiece = false;
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
     /// </summary>
