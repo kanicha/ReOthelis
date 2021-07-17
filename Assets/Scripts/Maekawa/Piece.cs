@@ -66,6 +66,23 @@ public class Piece : MonoBehaviour
         SoundManager.Instance.PlaySE(4);
     }
 
+    public void SkillReverse()
+    {
+        if (pieceType == PieceType.black)
+        {
+            pieceType = PieceType.white;
+            this.name = "white";
+            this.transform.rotation = Quaternion.Euler(0, 0, 180);
+        }
+        else
+        {
+            pieceType = PieceType.black;
+            this.name = "black";
+            this.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        SoundManager.Instance.PlaySE(4);
+    }
+
     public void ChangeColor(bool isActive)
     {
         Color setColor;

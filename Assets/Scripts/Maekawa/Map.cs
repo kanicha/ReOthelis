@@ -115,7 +115,7 @@ public class Map : SingletonMonoBehaviour<Map>
     private const string _REVERSED_TAG = "Reversed";
     private bool _isSecondCheck = false;
     public Piece.PieceType turnPlayerColor = Piece.PieceType.none;
-
+    public bool isSkillActivate = false;
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
     /// </summary>
@@ -140,8 +140,14 @@ public class Map : SingletonMonoBehaviour<Map>
 
         _reversePiece.Clear();
 
-        // 2回目のチェックならステートを進める
-        if(_isSecondCheck)
+        // スキル効果なら準備時間に戻る
+        if (isSkillActivate)
+        {
+            GameDirector.Instance.gameState = GameDirector.GameState.preActive;
+            isSkillActivate = false;
+            _isSecondCheck = false;
+        }
+        if(_isSecondCheck)// 2回目のチェックならステートを進める
         {
             GameDirector.Instance.gameState = GameDirector.GameState.reversed;
             _isSecondCheck = false;
@@ -158,7 +164,7 @@ public class Map : SingletonMonoBehaviour<Map>
     /// <param name="piece">今置いたコマ</param>
     public IEnumerator CheckReverse(GameObject piece)
     {
-        while(_isChecking)
+        while (_isChecking)
             yield return null;// 2つのコルーチンは片方づつ処理する
 
         // このターンに置いたコマがリバースしている or このコマが盤面外に置かれているなら
@@ -168,7 +174,7 @@ public class Map : SingletonMonoBehaviour<Map>
             GameDirector.Instance.gameState = GameDirector.GameState.reversed;
             _isSecondCheck = false;
             yield break;
-        }       
+        }
 
         _isChecking = true;
 

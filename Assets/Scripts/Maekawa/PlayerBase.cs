@@ -253,9 +253,11 @@ public class PlayerBase : MonoBehaviour
     private bool CheckColor(bool isMycolor)
     {
         string targetColor;
+        
+        // 自分の色
         if (isMycolor)
             targetColor = myColor;
-        else
+        else// 相手の色
         {
             if (myColor == Map.Instance.black)
                 targetColor = Map.Instance.white;
@@ -268,19 +270,58 @@ public class PlayerBase : MonoBehaviour
         for (int i = 2; i < 9; i++)
             for (int j = 1; j < 9; j++)
             {
-                if (Map.Instance.map[i, j] == myColor)
-                {
+                if (Map.Instance.map[i, j] == targetColor)
                     isThere = true;
-                }
             }
 
         return isThere;
     }
 
+    //  強引
+    public void Forcibly()
+    {
+        // 最下段を除くマップに相手の色がなければリターン(固定コマは対象外)
+        if (!CheckColor(false))
+        {
+            Debug.Log("相手の色がありません");
+            return;
+        }
+
+        if (GameDirector.Instance.gameState == GameDirector.GameState.preActive)
+            GameDirector.Instance.gameState = GameDirector.GameState.idle;
+        else
+            return;
+
+        // 相手の色を決定
+        string enemyColor;
+        if (myColor == Map.Instance.black)
+            enemyColor = Map.Instance.white;
+        else
+            enemyColor = Map.Instance.black;
+
+        while (true)
+        {
+            // 適当にランダムな座標をとり、それが自分の色なら変換
+            int z = Random.Range(2, 9);
+            int x = Random.Range(1, 9);
+            if (Map.Instance.map[z, x] == enemyColor)
+            {
+                Map.Instance.map[z, x] = myColor;
+                Map.Instance.pieceMap[z, x].GetComponent<Piece>().SkillReverse();
+                Map.Instance.isSkillActivate = true;
+                // 検索、リバース処理を行う
+                Map.Instance.TagClear();
+                StartCoroutine(Map.Instance.CheckReverse(Map.Instance.pieceMap[z, x]));
+                break;
+            }
+        }
+    }
+
+    // 固定
     public void Lock()
     {
-        // 範囲に自分の色がなければリターン
-        if(!CheckColor(true))
+        // 最下段を除くマップに自分の色がなければリターン(固定コマは対象外)
+        if (!CheckColor(true))
             return;
 
         GameDirector.Instance.gameState = GameDirector.GameState.idle;
@@ -303,6 +344,7 @@ public class PlayerBase : MonoBehaviour
         GameDirector.Instance.gameState = GameDirector.GameState.active;
     }
 
+    // 残影
     public void BeLeftShadow()
     {
         Piece.PieceType playerType;
@@ -312,7 +354,7 @@ public class PlayerBase : MonoBehaviour
             playerType = Piece.PieceType.white;
 
         // 自分の色があれば固定コマに
-        if(controllPiece1.GetComponent<Piece>().pieceType == playerType)
+        if (controllPiece1.GetComponent<Piece>().pieceType == playerType)
             controllPiece1.GetComponent<Piece>().pieceType = Piece.PieceType.fixity;
         if (controllPiece2.GetComponent<Piece>().pieceType == playerType)
             controllPiece2.GetComponent<Piece>().pieceType = Piece.PieceType.fixity;

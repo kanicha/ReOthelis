@@ -35,7 +35,7 @@ public class Player_2 : PlayerBase
 
         // キャラクターに応じてスキルをセット
         base.myColor = Map.Instance.white;
-        base.skill_1 = base.Lock;
+        base.skill_1 = base.Forcibly;
         //base.skill_2 = base.Lock;
         //base.skill_3 =
     }

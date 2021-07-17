@@ -14,8 +14,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     [SerializeField]
     PieceGenerator _generator = null;
     [SerializeField]
-    private Map _map = null;
-    [SerializeField]
     private Player_1 _player1 = null;
     [SerializeField]
     private Player_2 _player2 = null;
@@ -71,7 +69,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     _isDown = false;
                 }
 
-                if (_map.CheckLanding(_activePieces[0].transform.position) || _map.CheckLanding(_activePieces[1].transform.position))
+                if (Map.Instance.CheckLanding(_activePieces[0].transform.position) || Map.Instance.CheckLanding(_activePieces[1].transform.position))
                 {
                     // 接地時にカウント
                     _timeCount += Time.deltaTime;
@@ -94,8 +92,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     _activePieces[1] = tempPiece;
                 }
 
-                _map.FallPiece(_activePieces[0]);
-                _map.FallPiece(_activePieces[1]);
+                Map.Instance.FallPiece(_activePieces[0]);
+                Map.Instance.FallPiece(_activePieces[1]);
 
                 gameState = GameState.falled;
                 break;
@@ -104,20 +102,20 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 SoundManager.Instance.PlaySE(3);
 
                 CheckPriority();
-                _map.TagClear();
+                Map.Instance.TagClear();
 
-                // リバース・アニメーション処理
                 gameState = GameState.idle;
-                for(int i = 0; i < _activePieces.Length; i++)
+                // リバース・アニメーション処理
+                for (int i = 0; i < _activePieces.Length; i++)
                 {
                     if(Map.Instance.CheckHeightOver(_activePieces[i]))
-                        StartCoroutine(_map.CheckReverse(_activePieces[i]));
+                        StartCoroutine(Map.Instance.CheckReverse(_activePieces[i]));
                 }
                 break;
 
             case GameState.reversed:
                 // ゲーム終了判定
-                if (_map.CheckMap())
+                if (Map.Instance.CheckMap())
                     gameState = GameState.ended;
                 else
                 {
@@ -151,7 +149,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         else
             playersType = Piece.PieceType.white;
 
-        _map.turnPlayerColor = playersType;
+        Map.Instance.turnPlayerColor = playersType;
 
         // どちらのコマからひっくり返すか判定
         GameObject tempPiece = _activePieces[0];
