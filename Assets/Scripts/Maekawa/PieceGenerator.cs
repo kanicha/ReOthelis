@@ -26,7 +26,7 @@ public class PieceGenerator : MonoBehaviour
         int num = Random.Range(0, _range);
         // 0 ~ 99で黒と白抽選区分
         int num2 = Random.Range(0, 100);
-
+        
         // 生成ごとに減少する_renge変数が0 & 生成上限に達していなければジョーカー
         if (num == 0 && _jokerCount < _JOKER_COUNT_MAX)
         {
@@ -86,3 +86,4 @@ public class PieceGenerator : MonoBehaviour
         return piece;
     }
 }
+

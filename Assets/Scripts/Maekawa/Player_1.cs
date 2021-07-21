@@ -14,8 +14,6 @@ public class Player_1 : PlayerBase
     private const string _PLAYER1_RSTICK_HORIZONTAL_NAME = "Horizontal Stick-R";
     private const string _PLAYER1_RSTICK_VERTICAL_NAME = "Vertical Stick-R";
 
-    public static int score = 0;
-
     void Start()
     {
         base.DS4_circle_name = _PLAYER1_CIRCLE_NAME;
@@ -31,36 +29,34 @@ public class Player_1 : PlayerBase
         base.DS4_Lstick_vertical_name = _PLAYER1_LSTICK_VERTICAL_NAME;
         base.DS4_Rstick_horizontal_name = _PLAYER1_RSTICK_HORIZONTAL_NAME;
         base.DS4_Rstick_vertical_name = _PLAYER1_RSTICK_VERTICAL_NAME;
+        //
+        base.key_board_horizontal_name = "Horizontal";
+        base.key_board_vertical_name = "Vertical";
     }
 
     void Update()
     {
-        base.scoreText.text = string.Format("{0:00000}", score);
-
+        base.scoreText.text = string.Format("{0:00000}", base.score);
+        base.reversedCountText.text = base.reversedCount.ToString();
+        base.myPieceCountText.text = "ãÓêî" + base.myPieceCount.ToString();
         base.SaveKeyValue();
         base.KeyInput();
 
-        if (GameDirector.isGameEnd)
-            return;
-
-        base.PieceMove();
-        base.PieceRotate();
-
-        if (base.isMyTurn)
+        if (isMyTurn)
         {
-            if (base.map.CheckLanding(base.controllPiece1.transform.position))
+            base.charactorImage.color = new UnityEngine.Color(1, 1, 1);
+            if (GameDirector.Instance.gameState == GameDirector.GameState.active)
             {
-                base.map.FallPiece(controllPiece1);
-                base.map.FallPiece(controllPiece2);
-                GameDirector.isLanding = true;
+                base.PieceMove();
+                base.PieceRotate();
             }
-            else if (base.map.CheckLanding(base.controllPiece2.transform.position))
+            else if (GameDirector.Instance.gameState == GameDirector.GameState.preActive)
             {
-                // âÒì]ë§Ç™ê⁄ínÇµÇΩÇÁâÒì]ë§Ç©ÇÁóéÇ∆Ç∑
-                base.map.FallPiece(controllPiece2);
-                base.map.FallPiece(controllPiece1);
-                GameDirector.isLanding = true;
+                base.PrePieceMove();
+                base.PieceRotate();
             }
         }
+        else
+            base.charactorImage.color = new UnityEngine.Color(0.5f, 0.5f, 0.5f);
     }
 }

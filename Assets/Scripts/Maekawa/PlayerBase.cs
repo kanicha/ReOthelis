@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerBase : MonoBehaviour
 {
-    // ã‚­ãƒ¼ãƒãƒ¼ãƒ 
+    // ƒL[ƒl[ƒ€
     protected string DS4_circle_name = "";
     protected string DS4_cross_name = "";
     protected string DS4_square_name = "";
@@ -19,44 +19,53 @@ public class PlayerBase : MonoBehaviour
     protected string DS4_Lstick_vertical_name = "";
     protected string DS4_Rstick_horizontal_name = "";
     protected string DS4_Rstick_vertical_name = "";
-    // ã‚­ãƒ¼ãƒãƒªãƒ¥ãƒ¼
-    private bool _DS4_circle_value = false;
-    private bool _DS4_cross_value = false;
-    private bool _DS4_square_value = false;
-    private bool _DS4_triangle_value = false;
-    private bool _DS4_L1_value = false;
-    private bool _DS4_R1_value = false;
-    private bool _DS4_option_value = false;
-    private float _DS4_horizontal_value = 0.0f;
-    private float _DS4_vertical_value = 0.0f;
-    private float _DS4_Lstick_horizontal_value = 0.0f;
-    private float _DS4_Lstick_vertical_value = 0.0f;
-    private float _DS4_Rstick_horizontal_value = 0.0f;
-    private float _DS4_Rstick_vertical_value = 0.0f;
-    // å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®ã‚­ãƒ¼ãƒãƒªãƒ¥ãƒ¼
-    private float last_horizontal_value = 0.0f;
-    private float last_vertical_value = 0.0f;
-    private float lastLstick_horizontal_value = 0.0f;
-    private float last_Lstick_vertical_value = 0.0f;
-    private float last_Rstick_horizontal_value = 0.0f;
-    private float last_Rstick_vertical_value = 0.0f;
-    // ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ç”¨
-    private float _keyBoardHorizontal = 0.0f;
-    private float _keyBoardVertical = 0.0f;
+    // ƒL[ƒ{[ƒh‘€ì—pƒL[ƒl[ƒ€
+    protected string key_board_horizontal_name = "";
+    protected string key_board_vertical_name = "";
+    // ƒL[ƒoƒŠƒ…[
+    protected bool _DS4_circle_value = false;
+    protected bool _DS4_cross_value = false;
+    protected bool _DS4_square_value = false;
+    protected bool _DS4_triangle_value = false;
+    protected bool _DS4_L1_value = false;
+    protected bool _DS4_R1_value = false;
+    protected bool _DS4_option_value = false;
+    protected float _DS4_horizontal_value = 0.0f;
+    protected float _DS4_vertical_value = 0.0f;
+    protected float _DS4_Lstick_horizontal_value = 0.0f;
+    protected float _DS4_Lstick_vertical_value = 0.0f;
+    protected float _DS4_Rstick_horizontal_value = 0.0f;
+    protected float _DS4_Rstick_vertical_value = 0.0f;
+    // ‘OƒtƒŒ[ƒ€‚ÌƒL[ƒoƒŠƒ…[
+    protected float last_horizontal_value = 0.0f;
+    protected float last_vertical_value = 0.0f;
+    protected float lastLstick_horizontal_value = 0.0f;
+    protected float last_Lstick_vertical_value = 0.0f;
+    protected float last_Rstick_horizontal_value = 0.0f;
+    protected float last_Rstick_vertical_value = 0.0f;
+    // ƒL[ƒ{[ƒh—p
+    //private float _keyBoardHorizontal = 0.0f;
+    //private float _keyBoardVertical = 0.0f;
     private bool _keyBoardLeft = false;
     private bool _keyBoardRight = false;
 
     //
-    [SerializeField, Header("1ãƒã‚¹è½ä¸‹ã™ã‚‹æ™‚é–“")]
+    [SerializeField, Header("1ƒ}ƒX—‰º‚·‚éŠÔ")]
     private float _fallTime = 0.0f;
-    [SerializeField]
-    protected Map map = null;
     [SerializeField]
     protected Text scoreText = null;
     [SerializeField]
-    public Image charactorImage = null;
-    private float _deltaTime = 0.0f;
+    protected Text reversedCountText = null;
+    [SerializeField]
+    protected Text myPieceCountText = null;
+    [SerializeField]
+    protected Image charactorImage = null;
+    private float _timeCount = 0.0f;
     public bool isMyTurn = false;
+    public bool isPreurn = false;
+    public int score = 0;
+    public int reversedCount = 0;
+    public int myPieceCount = 0;
     public GameObject controllPiece1 = null;
     public GameObject controllPiece2 = null;
     public int rotationNum = 0;
@@ -85,14 +94,16 @@ public class PlayerBase : MonoBehaviour
         _DS4_Rstick_horizontal_value = Input.GetAxis(DS4_Rstick_horizontal_name);
         _DS4_Rstick_vertical_value = Input.GetAxis(DS4_Rstick_vertical_name);
 
-        _keyBoardHorizontal = Input.GetAxis("Horizontal");
-        _keyBoardVertical = Input.GetAxis("Vertical");
+        if (0 != Input.GetAxis(key_board_horizontal_name))
+            _DS4_horizontal_value = Input.GetAxis(key_board_horizontal_name);
+        if (0 != Input.GetAxis(key_board_vertical_name))
+            _DS4_vertical_value = Input.GetAxis(key_board_vertical_name);
         _keyBoardLeft = Input.GetKeyDown(KeyCode.Q);
         _keyBoardRight = Input.GetKeyDown(KeyCode.E);
     }
 
     /// <summary>
-    /// å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®å…¥åŠ›ã‚’ä¿å­˜
+    /// ‘OƒtƒŒ[ƒ€‚Ì“ü—Í‚ğ•Û‘¶
     /// </summary>
     protected void SaveKeyValue()
     {
@@ -107,64 +118,104 @@ public class PlayerBase : MonoBehaviour
     protected void PieceMove()
     {
         Vector3 move = Vector3.zero;
+        bool isDown = false;
 
-        // å·¦å³ç§»å‹•
-        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0) || Input.GetKeyDown(KeyCode.A))
+        _timeCount += Time.deltaTime;
+
+        // ¶‰EˆÚ“®
+        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
             move.x = -1;
-        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0) || Input.GetKeyDown(KeyCode.D))
+        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
             move.x = 1;
 
-        if(isMyTurn)
+        // ‰ºˆÚ“®
+        if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
-            _deltaTime += Time.deltaTime;
-            // ä¸‹ç§»å‹•
-            if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0) || Input.GetKeyDown(KeyCode.S))
-            {
-                _deltaTime = 0;
-                move.z = -1;
-            }
-            else if (_deltaTime >= _fallTime)// æ™‚é–“è½ä¸‹
-            {
-                _deltaTime = 0;
-                move.z = -1;
-            }
+            isDown = true;
+            move.z = -1;
+        }
+        else if (_timeCount >= _fallTime)// ŠÔ—‰º
+        {
+            _timeCount = 0;
+            move.z = -1;
         }
 
-        // ç§»å‹•å¾Œã®åº§æ¨™ã‚’è¨ˆç®—
+        // ˆÚ“®Œã‚ÌÀ•W‚ğŒvZ
         Vector3 movedPos = controllPiece1.transform.position + move;
         Vector3 rotMovedPos = movedPos + rotationPos[rotationNum];
 
-        // ç§»å‹•å¾Œã®åº§æ¨™ã«éšœå®³ç‰©ãŒãªã‘ã‚Œã°
-        if (map.CheckWall(movedPos) && map.CheckWall(rotMovedPos))
+        // ˆÚ“®Œã‚ÌÀ•W‚ÉáŠQ•¨‚ª‚È‚¯‚ê‚Î
+        if (Map.Instance.CheckWall(movedPos) && Map.Instance.CheckWall(rotMovedPos))
         {
             controllPiece1.transform.position = movedPos;
             controllPiece2.transform.position = rotMovedPos;
         }
+        else if (isDown)
+            GameDirector.Instance.gameState = GameDirector.GameState.confirmed;// ‰º“ü—Í‚ğ‚µAáŠQ•¨‚ª‚ ‚é‚È‚çŠm’è
     }
 
     protected void PieceRotate()
     {
         int lastNum = rotationNum;
-        // å·¦å›è»¢
+        // ¶‰ñ“]
         if (_DS4_L1_value || _keyBoardLeft)
         {
             rotationNum++;
             SoundManager.Instance.PlaySE(2);
         }
-        // å³å›è»¢(=å·¦ã«3å›è»¢)
+        // ‰E‰ñ“](=¶‚É3‰ñ“])
         else if (_DS4_R1_value || _keyBoardRight)
         {
             rotationNum += 3;
             SoundManager.Instance.PlaySE(2);
         }
 
-        // ç–‘ä¼¼å›è»¢(ç§»å‹•ãŒã‚„ã‚„ã“ã—ããªã‚‹ã®ã§Rotationã¯ã„ã˜ã‚‰ãªã„)
+        // ‹^—‰ñ“](ˆÚ“®‚ª‚â‚â‚±‚µ‚­‚È‚é‚Ì‚ÅRotation‚Í‚¢‚¶‚ç‚È‚¢)
         rotationNum %= 4;
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
 
-        if (map.CheckWall(rotatedPos))
+        if (Map.Instance.CheckWall(rotatedPos))
             controllPiece2.transform.position = rotatedPos;
         else
             rotationNum = lastNum;
+    }
+
+    protected void PrePieceMove()
+    {
+        Vector3 move = Vector3.zero;
+
+        // ¶‰EˆÚ“®
+        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
+            move.x = -1;
+        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
+            move.x = 1;
+
+        // ¶‰E‚É“ü—Í‚µ‚½‚È‚çˆÚ“®
+        if (move != Vector3.zero)
+        {
+            Vector3 movedPos = controllPiece1.transform.position;
+            while (true)
+            {
+                movedPos += move;
+                Vector3 movedUnderPos = movedPos + Vector3.back;
+                Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
+
+                // •Ç‚Ü‚Ås‚Á‚½‚çƒXƒ‹[
+                if ((int)movedPos.x < 1 || (int)movedPos.x > 8)
+                    break;
+
+                // ˆÚ“®Œã‚ÌÀ•W‚Ì1‚Â‰º‚ÉáŠQ•¨‚ª‚È‚¯‚ê‚Î
+                if (Map.Instance.CheckWall(movedUnderPos) && Map.Instance.CheckWall(rotMovedPos))
+                {
+                    controllPiece1.transform.position = movedPos;
+                    controllPiece2.transform.position = movedPos + rotationPos[rotationNum];
+                    break;
+                }
+            }
+        }
+
+        // «“ü—Í‚µ‚½‚ç–{‘€ìŠJn
+        if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+            GameDirector.Instance.gameState = GameDirector.GameState.active;
     }
 }
