@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerBase : MonoBehaviour
 {
-    // ƒL[ƒl[ƒ€
+    // ã‚­ãƒ¼ãƒãƒ¼ãƒ 
     protected string DS4_circle_name = "";
     protected string DS4_cross_name = "";
     protected string DS4_square_name = "";
@@ -19,7 +19,7 @@ public class PlayerBase : MonoBehaviour
     protected string DS4_Lstick_vertical_name = "";
     protected string DS4_Rstick_horizontal_name = "";
     protected string DS4_Rstick_vertical_name = "";
-    // ƒL[ƒoƒŠƒ…[
+    // ã‚­ãƒ¼ãƒãƒªãƒ¥ãƒ¼
     private bool _DS4_circle_value = false;
     private bool _DS4_cross_value = false;
     private bool _DS4_square_value = false;
@@ -33,21 +33,21 @@ public class PlayerBase : MonoBehaviour
     private float _DS4_Lstick_vertical_value = 0.0f;
     private float _DS4_Rstick_horizontal_value = 0.0f;
     private float _DS4_Rstick_vertical_value = 0.0f;
-    // ‘OƒtƒŒ[ƒ€‚ÌƒL[ƒoƒŠƒ…[
+    // å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®ã‚­ãƒ¼ãƒãƒªãƒ¥ãƒ¼
     private float last_horizontal_value = 0.0f;
     private float last_vertical_value = 0.0f;
     private float lastLstick_horizontal_value = 0.0f;
     private float last_Lstick_vertical_value = 0.0f;
     private float last_Rstick_horizontal_value = 0.0f;
     private float last_Rstick_vertical_value = 0.0f;
-    // ƒL[ƒ{[ƒh—p
+    // ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ç”¨
     private float _keyBoardHorizontal = 0.0f;
     private float _keyBoardVertical = 0.0f;
     private bool _keyBoardLeft = false;
     private bool _keyBoardRight = false;
 
     //
-    [SerializeField, Header("1ƒ}ƒX—‰º‚·‚éŠÔ")]
+    [SerializeField, Header("1ãƒã‚¹è½ä¸‹ã™ã‚‹æ™‚é–“")]
     private float _fallTime = 0.0f;
     [SerializeField]
     protected Map map = null;
@@ -92,7 +92,7 @@ public class PlayerBase : MonoBehaviour
     }
 
     /// <summary>
-    /// ‘OƒtƒŒ[ƒ€‚Ì“ü—Í‚ğ•Û‘¶
+    /// å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®å…¥åŠ›ã‚’ä¿å­˜
     /// </summary>
     protected void SaveKeyValue()
     {
@@ -108,7 +108,7 @@ public class PlayerBase : MonoBehaviour
     {
         Vector3 move = Vector3.zero;
 
-        // ¶‰EˆÚ“®
+        // å·¦å³ç§»å‹•
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0) || Input.GetKeyDown(KeyCode.A))
             move.x = -1;
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0) || Input.GetKeyDown(KeyCode.D))
@@ -117,24 +117,24 @@ public class PlayerBase : MonoBehaviour
         if(isMyTurn)
         {
             _deltaTime += Time.deltaTime;
-            // ‰ºˆÚ“®
+            // ä¸‹ç§»å‹•
             if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0) || Input.GetKeyDown(KeyCode.S))
             {
                 _deltaTime = 0;
                 move.z = -1;
             }
-            else if (_deltaTime >= _fallTime)// ŠÔ—‰º
+            else if (_deltaTime >= _fallTime)// æ™‚é–“è½ä¸‹
             {
                 _deltaTime = 0;
                 move.z = -1;
             }
         }
 
-        // ˆÚ“®Œã‚ÌÀ•W‚ğŒvZ
+        // ç§»å‹•å¾Œã®åº§æ¨™ã‚’è¨ˆç®—
         Vector3 movedPos = controllPiece1.transform.position + move;
         Vector3 rotMovedPos = movedPos + rotationPos[rotationNum];
 
-        // ˆÚ“®Œã‚ÌÀ•W‚ÉáŠQ•¨‚ª‚È‚¯‚ê‚Î
+        // ç§»å‹•å¾Œã®åº§æ¨™ã«éšœå®³ç‰©ãŒãªã‘ã‚Œã°
         if (map.CheckWall(movedPos) && map.CheckWall(rotMovedPos))
         {
             controllPiece1.transform.position = movedPos;
@@ -145,20 +145,20 @@ public class PlayerBase : MonoBehaviour
     protected void PieceRotate()
     {
         int lastNum = rotationNum;
-        // ¶‰ñ“]
+        // å·¦å›è»¢
         if (_DS4_L1_value || _keyBoardLeft)
         {
             rotationNum++;
             SoundManager.Instance.PlaySE(2);
         }
-        // ‰E‰ñ“](=¶‚É3‰ñ“])
+        // å³å›è»¢(=å·¦ã«3å›è»¢)
         else if (_DS4_R1_value || _keyBoardRight)
         {
             rotationNum += 3;
             SoundManager.Instance.PlaySE(2);
         }
 
-        // ‹^—‰ñ“](ˆÚ“®‚ª‚â‚â‚±‚µ‚­‚È‚é‚Ì‚ÅRotation‚Í‚¢‚¶‚ç‚È‚¢)
+        // ç–‘ä¼¼å›è»¢(ç§»å‹•ãŒã‚„ã‚„ã“ã—ããªã‚‹ã®ã§Rotationã¯ã„ã˜ã‚‰ãªã„)
         rotationNum %= 4;
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
 
