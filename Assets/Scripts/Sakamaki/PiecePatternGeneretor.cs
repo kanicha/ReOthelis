@@ -7,28 +7,22 @@ public class PiecePatternGeneretor : MonoBehaviour
     [SerializeField]
     private GameObject piecePrefab = null;
 
-    // ”’lƒVƒƒƒbƒtƒ‹‚·‚é‚½‚ß‚Ì•Ï”
+    // æ•°å€¤ã‚·ãƒ£ãƒƒãƒ•ãƒ«ã™ã‚‹ãŸã‚ã®å¤‰æ•°
     static int SHUFFLE_NUM = 100;
-    // ƒVƒƒƒbƒtƒ‹‚³‚ê‚½”’lŠi”[‚·‚é•Ï”
+    // ã‚·ãƒ£ãƒƒãƒ•ãƒ«ã•ã‚ŒãŸæ•°å€¤æ ¼ç´ã™ã‚‹å¤‰æ•°
     int num = 0;
 
     bool whiteChecker = false;
     bool blackChecker = false;
-
-
-    private void Start()
-    {
-
-    }
-
+    
     public GameObject Generate(Vector3 GeneratePos)
     {
-        // ƒRƒ}ƒ^ƒCƒv
+        // ã‚³ãƒã‚¿ã‚¤ãƒ—
         int type = 0;
-        // ƒ‰ƒ“ƒ_ƒ€
+        // ãƒ©ãƒ³ãƒ€ãƒ 
         num = Random.Range(0, SHUFFLE_NUM);
 
-        // 50% ‚Å•ÊF
+        // 50% ã§åˆ¥è‰²
         if (num < 50 || (blackChecker && whiteChecker))
         {
             type = 3;
@@ -36,38 +30,43 @@ public class PiecePatternGeneretor : MonoBehaviour
             blackChecker = false;
             whiteChecker = false;
         }
-        // 25% ‚Å“¯F (”’)
+        // 25% ã§åŒè‰² (ç™½)
         else if ((num < 75 && !whiteChecker) || blackChecker)
         {
             type = 2;
+            
             whiteChecker = true;
         }
-        // —]‚è‚Ì25%@(•)
+        // ä½™ã‚Šã®25%ã€€(é»’)
         else
         {
             type = 1;
+            
             blackChecker = true;
         }
 
+        // ã‚³ãƒ1ã¤ç›®å‡¦ç†
         GameObject piece = Instantiate(piecePrefab);
-        GameObject piece2 = Instantiate(piecePrefab);
         piece.transform.parent = root.transform;
-        piece2.transform.parent = root.transform;
         piece.transform.position = GeneratePos;
-        piece2.transform.position = GeneratePos + new Vector3(0, 0, 1);
         Piece p1 = piece.GetComponent<Piece>();
+        
+        // 2ã¤ç›®å‡¦ç†
+        GameObject piece2 = Instantiate(piecePrefab);
+        piece2.transform.parent = root.transform;
+        piece2.transform.position = GameDirector.Instance._DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1);
         Piece p2 = piece2.GetComponent<Piece>();
 
         switch (type)
         {
-            // •“¯Fƒ^ƒCƒv
+            // é»’åŒè‰²ã‚¿ã‚¤ãƒ—
             case 1:
                 piece.name = "black";
                 piece2.name = "black";
                 p1.pieceType = Piece.PieceType.black;
                 p2.pieceType = Piece.PieceType.black;
                 break;
-            // ”’“¯F
+            // ç™½åŒè‰²
             case 2:
                 piece.name = "white";
                 piece2.name = "white";
@@ -76,7 +75,7 @@ public class PiecePatternGeneretor : MonoBehaviour
                 piece.transform.rotation = Quaternion.Euler(0, 0, 180);
                 piece2.transform.rotation = Quaternion.Euler(0, 0, 180);
                 break;
-            // •”’
+            // é»’ç™½
             case 3:
                 piece.name = "black";
                 piece2.name = "white";
@@ -85,10 +84,11 @@ public class PiecePatternGeneretor : MonoBehaviour
                 piece2.transform.rotation = Quaternion.Euler(0, 0, 180);
                 break;
             default:
+                Debug.LogError("æƒ³å®šã•ã‚Œã¦ã„ãªã„å€¤ãŒä»£å…¥ã•ã‚Œã¾ã—ãŸã€‚");
                 break;
         }
 
-        // ‘ã“ü
+        // ä»£å…¥
         GameDirector.Instance._activePieces[0] = piece;
         GameDirector.Instance._activePieces[1] = piece2;
 

@@ -10,7 +10,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     [SerializeField, Header("事前に操作できる時間")]
     private float _preActiveTime = 0;
     [SerializeField, Header("ミノの初期位置")]
-    private Vector3 _DEFAULT_POSITION = Vector3.zero;
+    public Vector3 _DEFAULT_POSITION = Vector3.zero;
     [SerializeField]
     PiecePatternGeneretor _generator = null;
     [SerializeField]
