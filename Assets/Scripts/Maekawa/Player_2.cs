@@ -33,7 +33,7 @@ public class Player_2 : PlayerBase
         base.key_board_horizontal_name = "Horizontal_2";
         base.key_board_vertical_name = "Vertical_2";
 
-        // キャラクターに応じてスキルをセット
+        // 繧ｭ繝｣繝ｩ繧ｯ繧ｿ繝ｼ縺ｫ蠢懊§縺ｦ繧ｹ繧ｭ繝ｫ繧偵そ繝�繝�
         base.playerType = Piece.PieceType.white;
         base.myColor = Map.Instance.white;
         base.enemyColor = Map.Instance.black;
@@ -44,9 +44,9 @@ public class Player_2 : PlayerBase
     {
         if (base.reversedCount > MAX_REVERSE_COUNT)
             base.reversedCount = MAX_REVERSE_COUNT;
-        base.reversedCountText.text = base.reversedCount.ToString();
+        base.reversedCountImage.fillAmount = base.reversedCount;
         base.scoreText.text = string.Format("{0:00000}", base.score);
-        base.myPieceCountText.text = "駒数" + base.myPieceCount.ToString();
+        base.myPieceCountText.text = "鬧呈焚" + base.myPieceCount.ToString();
 
         base.SaveKeyValue();
         base.KeyInput();
