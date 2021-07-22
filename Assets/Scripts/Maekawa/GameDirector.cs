@@ -22,7 +22,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     private float _timeCount = 0;
     private bool _isDown = true;
     public GameObject[] _activePieces = new GameObject[2];
-    public float intervalTime = 0;
     public GameState gameState = GameState.none;
     public GameState nextStateCue = GameState.none;
     public enum GameState
@@ -35,7 +34,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         interval,
         reversed,
         idle,
-        end,
         ended,
     }
 
@@ -52,7 +50,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     void Update()
     {
-        Map.Instance.CheckMap();
+        if(gameState != GameState.none)
+            Map.Instance.CheckMap();
 
         switch (gameState)
         {
@@ -60,17 +59,18 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 _isDown = true;
                 _timeCount += Time.deltaTime;
                 if (_timeCount > _preActiveTime)
-                {
-                    intervalTime = 0;
-                    gameState = GameState.interval;
-                    nextStateCue = GameState.active;
-                    // 本操作開始にあたり1マス下げる
-                    _activePieces[0].transform.position += Vector3.back;
-                    _activePieces[1].transform.position += Vector3.back;
-                }
+                    gameState = GameState.active;
                 break;
 
             case GameState.active:
+                if(_isDown)
+                {
+                    // 本操作開始時点で1マス下げる
+                    _activePieces[0].transform.position += Vector3.back;
+                    _activePieces[1].transform.position += Vector3.back;
+                    _isDown = false;
+                }
+
                 if (Map.Instance.CheckLanding(_activePieces[0].transform.position) || Map.Instance.CheckLanding(_activePieces[1].transform.position))
                 {
                     // 接地時にカウント
@@ -102,6 +102,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
             case GameState.falled:
                 SoundManager.Instance.PlaySE(3);
+
                 CheckPriority();
                 Map.Instance.TagClear();
 
@@ -116,7 +117,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
             case GameState.interval:// 強引スキル連打でバグが出るので時間を取る(応急処置)
                 _timeCount += Time.deltaTime;
-                if (_timeCount > intervalTime)
+                if (_timeCount > 0.3f)
                 {
                     gameState = nextStateCue;
                     _timeCount = 0;
@@ -125,8 +126,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
             case GameState.reversed:
                 // ゲーム終了判定
-                if (Map.Instance.CheckEnd())
-                    gameState = GameState.end;
+                if (Map.Instance.CheckMap())
+                    gameState = GameState.ended;
                 else
                 {
                     PieceSet();
@@ -134,14 +135,14 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 }
                 break;
 
-            case GameState.end:
+            case GameState.ended:
                 if (_player1.score > _player2.score)
                     Debug.Log("<color=red>1Pの勝ち</color>");
                 else if (_player1.score == _player2.score)
                         Debug.Log("<color=orange>引き分け</color>");
                 else
                     Debug.Log("<color=blue>2Pの勝ち</color>");
-                gameState = GameState.ended;
+                gameState = GameState.none;
                 break;
 
             default:
