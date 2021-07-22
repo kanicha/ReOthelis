@@ -55,11 +55,11 @@ public class PlayerBase : MonoBehaviour
     [SerializeField]
     protected Text scoreText = null;
     [SerializeField]
-    protected Image reversedCountImage = null;
-    [SerializeField]
     protected Text myPieceCountText = null;
     [SerializeField]
     protected Image charactorImage = null;
+    [SerializeField]
+    protected GaugeController gaugeController = null;
     private float _timeCount = 0.0f;
     public bool isMyTurn = false;
     public bool isPreurn = false;
