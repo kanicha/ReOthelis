@@ -161,6 +161,7 @@ public class Map : SingletonMonoBehaviour<Map>
         // スキル効果なら準備時間に戻る
         if (isSkillActivate)
         {
+            GameDirector.Instance.intervalTime = 0.3f;
             GameDirector.Instance.gameState = GameDirector.GameState.interval;
             GameDirector.Instance.nextStateCue = GameDirector.GameState.preActive;
             isSkillActivate = false;
@@ -168,6 +169,7 @@ public class Map : SingletonMonoBehaviour<Map>
         }
         if(_isSecondCheck)// 2回目のチェックならステートを進める
         {
+            GameDirector.Instance.intervalTime = 0.3f;
             GameDirector.Instance.gameState = GameDirector.GameState.interval;
             GameDirector.Instance.nextStateCue = GameDirector.GameState.reversed;
             _isSecondCheck = false;
@@ -314,11 +316,7 @@ public class Map : SingletonMonoBehaviour<Map>
         }
     }
 
-    /// <summary>
-    /// マップの各コマの数をチェック、ゲーム終了判定も行う
-    /// </summary>
-    /// <returns>ゲーム終了かどうか</returns>
-    public bool CheckMap()
+    public bool CheckEnd()
     {
         bool isEnd = true;
         int blackCount = 0;
@@ -332,22 +330,40 @@ public class Map : SingletonMonoBehaviour<Map>
 
                 if (cell == empty)
                     isEnd = false;
-                else if (cell == black)
+                else if (cell == black || cell == fixityBlack)
                     blackCount++;
-                else if (cell == white)
+                else if (cell == white || cell == fixityWhite)
                     whiteCount++;
             }
         }
-
-        GameDirector.Instance.AddPieceCount(blackCount, whiteCount);
 
         if (isEnd)
         {
             GameDirector.Instance.AddScore(true, GameDirector.Instance.point * blackCount);
             GameDirector.Instance.AddScore(false, GameDirector.Instance.point * whiteCount);
         }
-        
+
         return isEnd;
+    }
+    public void CheckMap()
+    {
+        int blackCount = 0;
+        int whiteCount = 0;
+
+        for (int i = _EMPTY_AREAS_HEIGHT; i < _HEIGHT; i++)
+        {
+            for (int j = 0; j < _WIDTH; j++)
+            {
+                string cell = map[i, j];
+
+                if (cell == black || cell == fixityBlack)
+                    blackCount++;
+                else if (cell == white || cell == fixityWhite)
+                    whiteCount++;
+            }
+        }
+
+        GameDirector.Instance.AddPieceCount(blackCount, whiteCount);
     }
 
     /// <summary>

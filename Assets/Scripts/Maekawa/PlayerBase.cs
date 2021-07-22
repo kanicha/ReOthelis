@@ -154,14 +154,12 @@ public class PlayerBase : MonoBehaviour
 
         _timeCount += Time.deltaTime;
 
-        // 左右移動
+        // 移動
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
             move.x = -1;
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
             move.x = 1;
-
-        // 下移動
-        if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+        else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
             isDown = true;
             move.z = -1;
@@ -189,25 +187,28 @@ public class PlayerBase : MonoBehaviour
     protected void PieceRotate()
     {
         int lastNum = rotationNum;
-        // 左回転
-        if (_DS4_L1_value || _keyBoardLeft)
-        {
-            rotationNum++;
-            SoundManager.Instance.PlaySE(2);
-        }
-        // 右回転(=左に3回転)
-        else if (_DS4_R1_value || _keyBoardRight)
-        {
-            rotationNum += 3;
-            SoundManager.Instance.PlaySE(2);
-        }
 
-        // 疑似回転(移動がややこしくなるのでRotationはいじらない)
+        if (_DS4_L1_value || _keyBoardLeft)
+            rotationNum++;// 左回転
+        else if (_DS4_R1_value || _keyBoardRight)
+            rotationNum += 3;// 右回転(=左に3回転)
+
         rotationNum %= 4;
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
+        Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
+
 
         if (Map.Instance.CheckWall(rotatedPos))
-            controllPiece2.transform.position = rotatedPos;
+        {
+            if ((int)rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
+                rotationNum = lastNum;  
+            else
+            {
+                if (rotationNum != lastNum)
+                    SoundManager.Instance.PlaySE(2);
+                controllPiece2.transform.position = rotatedPos;
+            }
+        }
         else
             rotationNum = lastNum;
     }
@@ -248,7 +249,13 @@ public class PlayerBase : MonoBehaviour
 
         // ↓入力したら本操作開始
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
-            GameDirector.Instance.gameState = GameDirector.GameState.active;
+        {
+            GameDirector.Instance.intervalTime = 0;
+            GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
+            GameDirector.Instance.gameState = GameDirector.GameState.interval;
+            controllPiece1.transform.position += Vector3.back;
+            controllPiece2.transform.position += Vector3.back;
+        }
     }
 
 
