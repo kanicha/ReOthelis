@@ -16,7 +16,8 @@ public class Piece : MonoBehaviour
         none,
         black,
         white,
-        fixity
+        fixityBlack,
+        fixityWhite
     }
 
     public PieceType pieceType = PieceType.none;
@@ -26,20 +27,6 @@ public class Piece : MonoBehaviour
     {
         _anim = GetComponent<Animator>();
         Init();
-    }
-
-    private void Update()
-    {
-        if (pieceType == PieceType.fixity)
-        {
-            _renderer[0].sharedMaterial = _fixedMaterial[0];
-            _renderer[1].sharedMaterial = _fixedMaterial[1];
-        }
-        else
-        {
-            _renderer[0].sharedMaterial = _material[(int)CharaImageMoved.charaType1P];
-            _renderer[1].sharedMaterial = _material[(int)CharaImageMoved2P.charaType2P + 4];
-        }            
     }
 
     public void Init()
@@ -54,13 +41,11 @@ public class Piece : MonoBehaviour
         {
             pieceType = PieceType.white;
             this.name = "white";
-            //this.transform.rotation = Quaternion.Euler(0, 0, 180);
         }
-        else
+        else if(pieceType == PieceType.white)
         {
             pieceType = PieceType.black;
             this.name = "black";
-            //this.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
         _anim.SetTrigger("Reverse");
         SoundManager.Instance.PlaySE(4);
@@ -93,5 +78,35 @@ public class Piece : MonoBehaviour
 
         for (int i = 0; i < _renderer.Length; i++)
             _renderer[i].material.color = setColor;
+    }
+
+    public void ChangeIsFixity()
+    {
+        switch (pieceType)
+        {
+            case PieceType.black:
+                pieceType = PieceType.fixityBlack;
+                break;
+            case PieceType.white:
+                pieceType = PieceType.fixityWhite;
+                break;
+            case PieceType.fixityBlack:
+                pieceType = PieceType.black;
+                break;
+            case PieceType.fixityWhite:
+                pieceType = PieceType.white;
+                break;
+        }
+
+        if (pieceType == PieceType.fixityBlack || pieceType == PieceType.fixityWhite)
+        {
+            _renderer[0].sharedMaterial = _fixedMaterial[0];
+            _renderer[1].sharedMaterial = _fixedMaterial[1];
+        }
+        else
+        {
+            _renderer[0].sharedMaterial = _material[(int)CharaImageMoved.charaType1P];
+            _renderer[1].sharedMaterial = _material[(int)CharaImageMoved2P.charaType2P + 4];
+        }
     }
 }

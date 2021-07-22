@@ -26,8 +26,8 @@ public class Map : SingletonMonoBehaviour<Map>
     public readonly string empty = "□";
     public readonly string black = "●";
     public readonly string white = "〇";
-    public readonly string fixed_black = "★";
-    public readonly string fixed_white = "☆";
+    public readonly string fixityBlack = "★";
+    public readonly string fixityWhite = "☆";
 
     /// <summary>
     /// 移動後のコマが障害物に当たるかを調べる
@@ -97,11 +97,24 @@ public class Map : SingletonMonoBehaviour<Map>
 
         Piece p = piece.GetComponent<Piece>();
 
-        if (p.pieceType == Piece.PieceType.black)
-            map[dz, x] = black;
-        else if (p.pieceType == Piece.PieceType.white)
-            map[dz, x] = white;
-
+        // mapに記録
+        switch(p.pieceType)
+        {
+            case Piece.PieceType.black:
+                map[dz, x] = black;
+                break;
+            case Piece.PieceType.white:
+                map[dz, x] = white;
+                break;
+            case Piece.PieceType.fixityBlack:
+                map[dz, x] = fixityBlack;
+                break;
+            case Piece.PieceType.fixityWhite:
+                map[dz, x] = fixityWhite;
+                break;
+            default:
+                break;
+        }
         pieceMap[dz, x] = piece;
     }
 
@@ -111,12 +124,16 @@ public class Map : SingletonMonoBehaviour<Map>
     private int _setPosX = 0;
     private int _setPosZ = 0;
     private string _myColor = string.Empty;
+    private string _enemyColor = string.Empty;
+    private string _fixityMyColor = string.Empty;
+    private string _fixityEnemyColor = string.Empty;
     private bool _isChecking = false;
     private const string _REVERSED_TAG = "Reversed";
     private bool _isSecondCheck = false;
     public Piece.PieceType turnPlayerColor = Piece.PieceType.none;
     public bool isSkillActivate = false;
-    public bool isIgnoreFixedPiece = false;
+    public string ignoreFixityPiece = string.Empty;// 指定した色の固定効果を無視する(基本は空文字)
+
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
     /// </summary>
@@ -136,7 +153,7 @@ public class Map : SingletonMonoBehaviour<Map>
             }
 
             piece.GetComponent<Piece>().Reverse();
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(0.3f);
         }
 
         _reversePiece.Clear();
@@ -144,13 +161,15 @@ public class Map : SingletonMonoBehaviour<Map>
         // スキル効果なら準備時間に戻る
         if (isSkillActivate)
         {
-            GameDirector.Instance.gameState = GameDirector.GameState.preActive;
+            GameDirector.Instance.gameState = GameDirector.GameState.interval;
+            GameDirector.Instance.nextStateCue = GameDirector.GameState.preActive;
             isSkillActivate = false;
             _isSecondCheck = false;
         }
         if(_isSecondCheck)// 2回目のチェックならステートを進める
         {
-            GameDirector.Instance.gameState = GameDirector.GameState.reversed;
+            GameDirector.Instance.gameState = GameDirector.GameState.interval;
+            GameDirector.Instance.nextStateCue = GameDirector.GameState.reversed;
             _isSecondCheck = false;
         }
         else
@@ -180,10 +199,21 @@ public class Map : SingletonMonoBehaviour<Map>
         _isChecking = true;
 
         // 自分の色と相手の色を決定
-        if (Piece.PieceType.black == piece.GetComponent<Piece>().pieceType)
+        Piece.PieceType type = piece.GetComponent<Piece>().pieceType;
+        if (type == Piece.PieceType.black || type == Piece.PieceType.fixityBlack)
+        {
             _myColor = black;
+            _fixityMyColor = fixityBlack;
+            _enemyColor = white;
+            _fixityEnemyColor = fixityWhite;
+        }
         else
+        {
             _myColor = white;
+            _fixityMyColor = fixityWhite;
+            _enemyColor = black;
+            _fixityEnemyColor = fixityBlack;
+        }
 
         // 置いたマスの座標を取得
         _setPosX = (int)piece.transform.position.x;
@@ -209,6 +239,7 @@ public class Map : SingletonMonoBehaviour<Map>
         //    Debug.Log(s);
         //}
         StartCoroutine(PieceReverse());
+        ignoreFixityPiece = string.Empty;// スキル効果は1ターンで終了
     }
 
     /// <summary>
@@ -233,15 +264,16 @@ public class Map : SingletonMonoBehaviour<Map>
             // 調べたい方向に進んでいく
             checkPosX += dirX;
             checkPosZ += dirZ;
-            // 壁 or 空白 or なら終了
-            if (map[checkPosZ, checkPosX] == wall || map[checkPosZ, checkPosX] == empty)
+            string targetType = map[checkPosZ, checkPosX];
+
+            // 壁 or 空白なら終了
+            if (targetType == wall || targetType == empty)
             {
                 break;
             }
-            else if (map[checkPosZ, checkPosX] == _myColor)
+            else if (targetType == _myColor || targetType == _fixityMyColor)
             {
-                // 進んだ先に自分の色があれば終了して裏返せる
-                isReverse = true;
+                isReverse = true;// 自分の色で挟んだ扱い
                 break;
             }
             moveCount++;
@@ -253,14 +285,31 @@ public class Map : SingletonMonoBehaviour<Map>
             checkPosX = _setPosX;
             checkPosZ = _setPosZ;
 
-            // ひっくり返せることが確定しているので色の判定はしない
+            // リバースするコマをリストに追加
             for(int i = 0; i < moveCount; i++)
             {
                 checkPosX += dirX;
                 checkPosZ += dirZ;
-                map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
-                _reversePiece.Add(pieceMap[checkPosZ, checkPosX]);
-                pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
+
+                // 相手の駒が固定コマなら
+                if (map[checkPosZ, checkPosX] == _fixityEnemyColor)
+                {
+                    // 固定効果を無視するスキル効果
+                    if (map[checkPosZ, checkPosX] == ignoreFixityPiece)
+                    {
+                        pieceMap[checkPosZ, checkPosX].GetComponent<Piece>().ChangeIsFixity();
+                        map[checkPosZ, checkPosX] = _myColor;
+                        _reversePiece.Add(pieceMap[checkPosZ, checkPosX]);
+                        pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
+                    }
+                    // スキルが発動していなければスルー
+                }
+                else// 相手色が確定しているので
+                {
+                    map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
+                    _reversePiece.Add(pieceMap[checkPosZ, checkPosX]);
+                    pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
+                }
             }
         }
     }

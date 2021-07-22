@@ -33,12 +33,11 @@ public class Player_1 : PlayerBase
         base.key_board_horizontal_name = "Horizontal";
         base.key_board_vertical_name = "Vertical";
 
-
         // キャラクターに応じてスキルをセット
+        base.playerType = Piece.PieceType.black;
         base.myColor = Map.Instance.black;
-        base.skill_1 = base.TakeAway;
-        //base.skill_2 = base.Lock;
-        //base.skill_3 =
+        base.enemyColor = Map.Instance.white;
+        SetSkills((int)CharaImageMoved.charaType1P);
     }
 
     private void Update()
@@ -54,7 +53,7 @@ public class Player_1 : PlayerBase
 
         if (isMyTurn)
         {
-            base.SkillActivate();
+            base.InputSkill();
 
             base.charactorImage.color = new UnityEngine.Color(1, 1, 1);
             if (GameDirector.Instance.gameState == GameDirector.GameState.active)

@@ -23,6 +23,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     private bool _isDown = true;
     private GameObject[] _activePieces = new GameObject[2];
     public GameState gameState = GameState.none;
+    public GameState nextStateCue = GameState.none;
     public enum GameState
     {
         none,
@@ -30,6 +31,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         active,
         confirmed,
         falled,
+        interval,
         reversed,
         idle,
         ended,
@@ -111,6 +113,15 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     if(Map.Instance.CheckHeightOver(_activePieces[i]))
                         StartCoroutine(Map.Instance.CheckReverse(_activePieces[i]));
                 }
+                break;
+
+            case GameState.interval:// 強引スキル連打でバグが出るので時間を取る(応急処置)
+                _timeCount += Time.deltaTime;
+                if (_timeCount > 0.3f)
+                {
+                    gameState = nextStateCue;
+                    _timeCount = 0;
+                }                
                 break;
 
             case GameState.reversed:

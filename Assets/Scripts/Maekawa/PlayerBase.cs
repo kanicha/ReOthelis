@@ -70,11 +70,17 @@ public class PlayerBase : MonoBehaviour
     public GameObject controllPiece1 = null;
     public GameObject controllPiece2 = null;
     public int rotationNum = 0;
+    //
+    private const int _SKILL_1_COST = 3;
+    private const int _SKILL_2_COST = 5;
+    private const int _SKILL_3_COST = 10;
+    protected Piece.PieceType playerType = Piece.PieceType.none;
     protected string myColor = "";
+    protected string enemyColor = "";
 
-    protected delegate void Skill_1();
-    protected delegate void Skill_2();
-    protected delegate void Skill_3();
+    protected delegate void Skill_1(int cost);
+    protected delegate void Skill_2(int cost);
+    protected delegate void Skill_3(int cost);
     protected Skill_1 skill_1;
     protected Skill_2 skill_2;
     protected Skill_3 skill_3;
@@ -124,24 +130,21 @@ public class PlayerBase : MonoBehaviour
         last_Rstick_vertical_value = _DS4_Rstick_vertical_value;
     }
 
-    protected void SkillActivate()
+    protected void InputSkill()
     {
         // スキル1...× スキル2...△ スキル3...□
         if(Input.GetKeyDown(KeyCode.Z) || _DS4_cross_value)
         {
-            Debug.Log("skill_1");
-            skill_1();
+            skill_1(_SKILL_1_COST);
         }
         else if(Input.GetKeyDown(KeyCode.X) || _DS4_triangle_value)
         {
-            Debug.Log("skill_2");
-            skill_2();
+            skill_2(_SKILL_2_COST);
         }
-        else if(Input.GetKeyDown(KeyCode.C) || _DS4_square_value)
-        {
-            Debug.Log("skill_3");
-            skill_3();
-        }
+        //else if(Input.GetKeyDown(KeyCode.C) || _DS4_square_value)
+        //{
+        //    skill_3(_SKILL_3_COST);
+        //}
     }
 
     protected void PieceMove()
@@ -252,7 +255,7 @@ public class PlayerBase : MonoBehaviour
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected void SetSkills(int charaType)
     {
-        // 同じ意味のenumが1Pと2Pで2つ分あるのでenum→int→enumにキャスト 
+        // 同じ意味のenumが1Pと2Pで2つあるのでenum→int→enumにキャスト 
         CharaImageMoved.CharaType1P type = (CharaImageMoved.CharaType1P)charaType;
 
         switch (type)
@@ -292,122 +295,128 @@ public class PlayerBase : MonoBehaviour
         return isThere;
     }
 
-    //  強引
-    public void TakeAway()
+    private bool ActivateCheck(GameDirector.GameState targetState, int cost)
     {
-        // 相手の色を探す
-        string targetColor;
-        if (myColor == Map.Instance.black)
-            targetColor = Map.Instance.white;
+        if (GameDirector.Instance.gameState == targetState && reversedCount >= cost)
+            return true;
         else
-            targetColor = Map.Instance.black;
+            return false;
+    }
 
-        // 最下段を除くマップに相手の色がなければリターン(固定コマは対象外)
-        if (!CheckColor(targetColor))
-        {
-            Debug.Log("相手の色のコマがありません");
-            return;
-        }
-
-        if (GameDirector.Instance.gameState == GameDirector.GameState.preActive)
-            GameDirector.Instance.gameState = GameDirector.GameState.idle;
-        else
+    //  強引
+    public void TakeAway(int cost)
+    {
+        if (!ActivateCheck(GameDirector.GameState.preActive, cost))
             return;
 
-        // 相手の色を決定
-        string enemyColor;
-        if (myColor == Map.Instance.black)
-            enemyColor = Map.Instance.white;
-        else
-            enemyColor = Map.Instance.black;
-
-        while (true)
+        // 最下段を除くマップに相手の色があるなら(固定コマは対象外)
+        if (CheckColor(enemyColor))
         {
-            // 適当にランダムな座標をとり、それが自分の色なら変換
-            int z = Random.Range(2, 9);
-            int x = Random.Range(1, 9);
-            if (Map.Instance.map[z, x] == enemyColor)
+            Debug.Log("強引");
+            reversedCount -= cost;
+            while (true)
             {
-                Map.Instance.map[z, x] = myColor;
-                Map.Instance.pieceMap[z, x].GetComponent<Piece>().SkillReverse();
-                Map.Instance.isSkillActivate = true;
-                // 検索、リバース処理を行う
-                Map.Instance.TagClear();
-                StartCoroutine(Map.Instance.CheckReverse(Map.Instance.pieceMap[z, x]));
-                break;
+                // 適当にランダムな座標をとり、それが自分の色なら変換
+                int z = Random.Range(2, 9);
+                int x = Random.Range(1, 9);
+                if (Map.Instance.map[z, x] == enemyColor)
+                {
+                    Map.Instance.map[z, x] = myColor;
+                    Map.Instance.pieceMap[z, x].GetComponent<Piece>().SkillReverse();
+                    // 検索、リバース処理を行う
+                    Map.Instance.TagClear();
+                    Map.Instance.isSkillActivate = true;
+                    GameDirector.Instance.gameState = GameDirector.GameState.idle;
+                    StartCoroutine(Map.Instance.CheckReverse(Map.Instance.pieceMap[z, x]));
+                    break;
+                }
             }
         }
+        else
+            Debug.Log("相手の色のコマがありません");
     }
 
     // 固定
-    public void RandomLock()
+    public void RandomLock(int cost)
     {
-        // 最下段を除くマップに自分の色がなければリターン(固定コマは対象外)
-        if (!CheckColor(myColor))
-        {
-            Debug.Log("自分の色のコマがありません");
+        if (!ActivateCheck(GameDirector.GameState.preActive, cost) && !ActivateCheck(GameDirector.GameState.active, cost))
             return;
-        }
 
-        GameDirector.Instance.gameState = GameDirector.GameState.idle;
-        while (true)
+        // 最下段を除くマップに自分の色があるなら(固定コマは対象外)
+        if (CheckColor(myColor))
         {
-            // 適当にランダムな座標をとり、それが自分の色なら変換
-            int z = Random.Range(2, 9);
-            int x = Random.Range(1, 9);
-            if (Map.Instance.map[z, x] == myColor)
+            Debug.Log("固定");
+            reversedCount -= cost;
+
+            string type;
+            if (myColor == Map.Instance.black)
+                type = Map.Instance.fixityBlack;
+            else
+                type = Map.Instance.fixityWhite;
+
+            while (true)
             {
-                Map.Instance.pieceMap[z, x].GetComponent<Piece>().pieceType = Piece.PieceType.fixity;
-                if (myColor == Map.Instance.black)
-                    Map.Instance.map[z, x] = Map.Instance.fixed_black;
-                else
-                    Map.Instance.map[z, x] = Map.Instance.fixed_black;
-                break;
+                // 適当にランダムな座標をとり、それが自分の色なら固定コマに変換
+                int z = Random.Range(2, 9);
+                int x = Random.Range(1, 9);
+                if (Map.Instance.map[z, x] == myColor)
+                {
+                    Map.Instance.map[z, x] = type;
+                    Map.Instance.pieceMap[z, x].GetComponent<Piece>().ChangeIsFixity();
+                    break;
+                }
             }
         }
-
-        GameDirector.Instance.gameState = GameDirector.GameState.active;
+        else
+            Debug.Log("自分の色のコマがありません");
     }
 
     // 残影
-    public void MyPieceLock()
+    public void MyPieceLock(int cost)
     {
-        Piece.PieceType playerType;
-        if (myColor == Map.Instance.black)
-            playerType = Piece.PieceType.black;
-        else
-            playerType = Piece.PieceType.white;
+        if (!ActivateCheck(GameDirector.GameState.preActive, cost) && !ActivateCheck(GameDirector.GameState.active, cost))
+            return;
 
         Piece piece1 = controllPiece1.GetComponent<Piece>();
         Piece piece2 = controllPiece2.GetComponent<Piece>();
 
-        // 自分の色がなければリターン
-        if (piece1.pieceType != playerType || piece2.pieceType != playerType)
+        // 自分の色があれば処理
+        if (piece1.pieceType == playerType || piece2.pieceType == playerType)
         {
-            Debug.Log("自分の色のコマを操作していません");
-            return;
+            Debug.Log("残影");
+            reversedCount -= cost;
+            // 自分の色を固定化(2つとも自分の色なら両方)
+            if (piece1.pieceType == playerType)
+                piece1.ChangeIsFixity();
+            if (piece2.pieceType == playerType)
+                piece2.ChangeIsFixity();
         }
-
-        if (piece1.pieceType == playerType)
-            piece1.pieceType = Piece.PieceType.fixity;
-        if (piece2.pieceType == playerType)
-            piece2.pieceType = Piece.PieceType.fixity;
+        else
+            Debug.Log("自分の色のコマを操作していません");
     }
 
-    public void Cancellation()
+    // 打消し
+    public void Cancellation(int cost)
     {
-        // 相手色の固定コマを探す
-        string searchColor;
-        if (myColor == Map.Instance.black)
-            searchColor = Map.Instance.fixed_white;
-        else
-            searchColor = Map.Instance.fixed_black;
-        if (!CheckColor(searchColor))
-        {
-            Debug.Log("相手色の固定コマがありません");
-            return;
-        }
+        // 自分の色のコマを操作していなくても発動できる(意味はない)ので要相談
 
-        Map.Instance.isIgnoreFixedPiece = true;
+        if (!ActivateCheck(GameDirector.GameState.preActive, cost))
+            return;
+
+        // 相手色の固定コマを探す
+        string targetColor;
+        if (myColor == Map.Instance.black)
+            targetColor = Map.Instance.fixityWhite;
+        else
+            targetColor = Map.Instance.fixityBlack;
+
+        if (CheckColor(targetColor))
+        {
+            Debug.Log("打消し");
+            reversedCount -= cost;
+            Map.Instance.ignoreFixityPiece = targetColor;// 相手の固定コマをひっくり返せるようになる
+        }
+        else
+            Debug.Log("相手色の固定コマがありません");
     }
 }
