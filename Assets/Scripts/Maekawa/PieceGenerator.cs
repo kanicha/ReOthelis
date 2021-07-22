@@ -10,7 +10,7 @@ public class PieceGenerator : MonoBehaviour
     private int _whiteCount, _blackCount, _jokerCount = 0;
     private const int _WHITE_COUNT_MAX = 15;
     private const int _BLACK_COUNT_MAX = 15;
-    private const int _JOKER_COUNT_MAX = 0;// ˆê’Ujoker‚È‚µ
+    private const int _JOKER_COUNT_MAX = 0;// ï¿½ï¿½Ujokerï¿½È‚ï¿½
 
     private void Start()
     {
@@ -19,37 +19,37 @@ public class PieceGenerator : MonoBehaviour
 
     public GameObject Generate(Vector3 GeneratePos)
     {
-        // ƒRƒ}ƒ^ƒCƒv
+        // ï¿½Rï¿½}ï¿½^ï¿½Cï¿½v
         int type;
 
-        // •ê”‚ªŒ¸‚éƒ{ƒbƒNƒXƒKƒ`ƒƒŒ`®‚ÅƒWƒ‡[ƒJ[‚ğ’Š‘I
+        // ï¿½ê”ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½bï¿½Nï¿½Xï¿½Kï¿½`ï¿½ï¿½ï¿½`ï¿½ï¿½ï¿½ÅƒWï¿½ï¿½ï¿½[ï¿½Jï¿½[ï¿½ğ’Š‘I
         int num = Random.Range(0, _range);
-        // 0 ~ 99‚Å•‚Æ”’’Š‘I‹æ•ª
-        int num2 = Random.Range(0, 100);
-        
-        // ¶¬‚²‚Æ‚ÉŒ¸­‚·‚é_renge•Ï”‚ª0 & ¶¬ãŒÀ‚É’B‚µ‚Ä‚¢‚È‚¯‚ê‚ÎƒWƒ‡[ƒJ[
+        // 0 ~ 99ï¿½Åï¿½ï¿½Æ”ï¿½ï¿½ï¿½ï¿½Iï¿½æ•ª
+        int num2 = Random.Range(0, 1000);
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ÉŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_rengeï¿½Ïï¿½ï¿½ï¿½0 & ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É’Bï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎƒWï¿½ï¿½ï¿½[ï¿½Jï¿½[
         if (num == 0 && _jokerCount < _JOKER_COUNT_MAX)
         {
             type = 3;
             _jokerCount++;
         }
-        // —]‚è‚ª0 & •‚Ì¶¬”‚ªãŒÀ‚É’B‚µ‚Ä‚¢‚È‚¢@or ”’‚Ì¶¬”‚ªãŒÀ‚É’B‚µ‚Ä‚¢‚é‚È‚ç•
+        // ï¿½]ï¿½è‚ª0 & ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É’Bï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½@or ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É’Bï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½È‚ç•
         else if ((num2 % 2 == 0 && _blackCount < _BLACK_COUNT_MAX) || _whiteCount >= _WHITE_COUNT_MAX)
         {
             type = 1;
             _blackCount++;
         }
-        // ã‹L‚ÉŠY“–‚µ‚È‚¯‚ê‚Î”’
+        // ï¿½ï¿½Lï¿½ÉŠYï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½Î”ï¿½
         else
         {
             type = 2;
             _whiteCount++;
         }
 
-        // ˆê‰ñ’Š‘I‚µ‚½‚ç”ÍˆÍ‚ğ‹·‚ß‚é
+        // ï¿½ï¿½ñ’Š‘Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÍˆÍ‚ï¿½ï¿½ï¿½ß‚ï¿½
         _range--;
 
-        // ”ÍˆÍ‚ª0‚É‚È‚Á‚½‚ÉƒŠƒZƒbƒgˆ—
+        // ï¿½ÍˆÍ‚ï¿½0ï¿½É‚È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éƒï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½
         if (_range == 0)
         {
             Debug.Log($"<color=orange>Joker : {_jokerCount} B : {_blackCount} W : {_whiteCount} </color>");
@@ -75,10 +75,10 @@ public class PieceGenerator : MonoBehaviour
                 p.pieceType = Piece.PieceType.white;
                 piece.transform.rotation = Quaternion.Euler(0, 0, 180);
                 break;
-            case 3:
-                piece.name = "joker";
-                p.pieceType = Piece.PieceType.joker;
-                break;
+            //case 3:
+            //    piece.name = "joker";
+            //    p.pieceType = Piece.PieceType.joker;
+                //break;
             default:
                 break;
         }

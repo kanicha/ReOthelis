@@ -32,18 +32,29 @@ public class Player_2 : PlayerBase
         //
         base.key_board_horizontal_name = "Horizontal_2";
         base.key_board_vertical_name = "Vertical_2";
+
+        // キャラクターに応じてスキルをセット
+        base.playerType = Piece.PieceType.white;
+        base.myColor = Map.Instance.white;
+        base.enemyColor = Map.Instance.black;
+        SetSkills((int)CharaImageMoved2P.charaType2P);
     }
 
     void Update()
     {
-        base.scoreText.text = string.Format("{0:00000}", base.score);
+        if (base.reversedCount > MAX_REVERSE_COUNT)
+            base.reversedCount = MAX_REVERSE_COUNT;
         base.reversedCountText.text = base.reversedCount.ToString();
+        base.scoreText.text = string.Format("{0:00000}", base.score);
         base.myPieceCountText.text = "駒数" + base.myPieceCount.ToString();
+
         base.SaveKeyValue();
         base.KeyInput();
 
         if (isMyTurn)
         {
+            base.InputSkill();
+
             base.charactorImage.color = new UnityEngine.Color(1, 1, 1);
             if (GameDirector.Instance.gameState == GameDirector.GameState.active)
             {

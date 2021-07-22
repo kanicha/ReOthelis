@@ -49,6 +49,9 @@ MonoBehaviour:
   _renderer:
   - {fileID: 1404232687702792147}
   - {fileID: 345245897857408365}
+  _fixedMaterial:
+  - {fileID: 2100000, guid: 450affc1c9b4b36459f89b08c7fa2cab, type: 2}
+  - {fileID: 2100000, guid: c435855ab3976b344b18941da46bac41, type: 2}
   _material:
   - {fileID: 2100000, guid: 497522e84d2236642af6209cfd37cee4, type: 2}
   - {fileID: 2100000, guid: f62f1f1dc80e1ea45a951ec4c56746e7, type: 2}
