@@ -5,14 +5,12 @@ using UnityEngine.UI;
 
 public class P1ResultScore : MonoBehaviour
 {
-    //private Player_1 _player1 = null;
     public Text scoreText = null;
     //スコアの初期値
     float score;
 
     void Start()
     {
-        //_player1 = FindObjectOfType<Player_1>();
         scoreText.text = score.ToString();
         StartCoroutine(ScoreAnimation(Player_1.displayScore, 0.5f));
     }

@@ -34,6 +34,6 @@ public class ResultSceneChange : Player1Base
     //次のシーンに進む
     public void SceneChange(GameSceneManager gameSceneManager)
     {
-        gameSceneManager.SceneNextCall("GameSceme");
+        gameSceneManager.SceneNextCall("Title");
     }
 }
