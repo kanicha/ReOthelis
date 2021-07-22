@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameDirector : SingletonMonoBehaviour<GameDirector>
+public class GameDirector : SingletonMonoBehaviour<GameDirector>    
 {
     [SerializeField, Header("基本スコア")]
     public int point = 0;
@@ -10,11 +10,9 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     [SerializeField, Header("事前に操作できる時間")]
     private float _preActiveTime = 0;
     [SerializeField, Header("ミノの初期位置")]
-    private Vector3 _DEFAULT_POSITION = Vector3.zero;
+    public Vector3 _DEFAULT_POSITION = Vector3.zero;
     [SerializeField]
-    PieceGenerator _generator = null;
-    [SerializeField]
-    private Map _map = null;
+    PiecePatternGeneretor _generator = null;
     [SerializeField]
     private Player_1 _player1 = null;
     [SerializeField]
@@ -23,8 +21,10 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     private int _turnCount = 0;
     private float _timeCount = 0;
     private bool _isDown = true;
-    private GameObject[] _activePieces = new GameObject[2];
+    public GameObject[] _activePieces = new GameObject[2];
+    public float intervalTime = 0;
     public GameState gameState = GameState.none;
+    public GameState nextStateCue = GameState.none;
     public enum GameState
     {
         none,
@@ -32,8 +32,10 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         active,
         confirmed,
         falled,
+        interval,
         reversed,
         idle,
+        end,
         ended,
     }
 
@@ -50,8 +52,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     void Update()
     {
-        if(gameState != GameState.none)
-            Map.Instance.CheckMap();
+        Map.Instance.CheckMap();
 
         switch (gameState)
         {
@@ -59,19 +60,18 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 _isDown = true;
                 _timeCount += Time.deltaTime;
                 if (_timeCount > _preActiveTime)
-                    gameState = GameState.active;
+                {
+                    intervalTime = 0;
+                    gameState = GameState.interval;
+                    nextStateCue = GameState.active;
+                    // 本操作開始にあたり1マス下げる
+                    _activePieces[0].transform.position += Vector3.back;
+                    _activePieces[1].transform.position += Vector3.back;
+                }
                 break;
 
             case GameState.active:
-                if(_isDown)
-                {
-                    // 本操作開始時点で1マス下げる
-                    _activePieces[0].transform.position += Vector3.back;
-                    _activePieces[1].transform.position += Vector3.back;
-                    _isDown = false;
-                }
-
-                if (_map.CheckLanding(_activePieces[0].transform.position) || _map.CheckLanding(_activePieces[1].transform.position))
+                if (Map.Instance.CheckLanding(_activePieces[0].transform.position) || Map.Instance.CheckLanding(_activePieces[1].transform.position))
                 {
                     // 接地時にカウント
                     _timeCount += Time.deltaTime;
@@ -94,31 +94,39 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     _activePieces[1] = tempPiece;
                 }
 
-                _map.FallPiece(_activePieces[0]);
-                _map.FallPiece(_activePieces[1]);
+                Map.Instance.FallPiece(_activePieces[0]);
+                Map.Instance.FallPiece(_activePieces[1]);
 
                 gameState = GameState.falled;
                 break;
 
             case GameState.falled:
                 SoundManager.Instance.PlaySE(3);
-
                 CheckPriority();
-                _map.TagClear();
+                Map.Instance.TagClear();
 
-                // リバース・アニメーション処理
                 gameState = GameState.idle;
-                for(int i = 0; i < _activePieces.Length; i++)
+                // リバース・アニメーション処理
+                for (int i = 0; i < _activePieces.Length; i++)
                 {
                     if(Map.Instance.CheckHeightOver(_activePieces[i]))
-                        StartCoroutine(_map.CheckReverse(_activePieces[i]));
+                        StartCoroutine(Map.Instance.CheckReverse(_activePieces[i]));
                 }
+                break;
+
+            case GameState.interval:// 強引スキル連打でバグが出るので時間を取る(応急処置)
+                _timeCount += Time.deltaTime;
+                if (_timeCount > intervalTime)
+                {
+                    gameState = nextStateCue;
+                    _timeCount = 0;
+                }                
                 break;
 
             case GameState.reversed:
                 // ゲーム終了判定
-                if (_map.CheckMap())
-                    gameState = GameState.ended;
+                if (Map.Instance.CheckEnd())
+                    gameState = GameState.end;
                 else
                 {
                     PieceSet();
@@ -126,14 +134,14 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 }
                 break;
 
-            case GameState.ended:
+            case GameState.end:
                 if (_player1.score > _player2.score)
                     Debug.Log("<color=red>1Pの勝ち</color>");
                 else if (_player1.score == _player2.score)
                         Debug.Log("<color=orange>引き分け</color>");
                 else
                     Debug.Log("<color=blue>2Pの勝ち</color>");
-                gameState = GameState.none;
+                gameState = GameState.ended;
                 break;
 
             default:
@@ -151,7 +159,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         else
             playersType = Piece.PieceType.white;
 
-        _map.turnPlayerColor = playersType;
+        Map.Instance.turnPlayerColor = playersType;
 
         // どちらのコマからひっくり返すか判定
         GameObject tempPiece = _activePieces[0];
@@ -216,8 +224,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             Vector3 checkPos = generatePos + new Vector3(x, 0);
             if (Map.Instance.CheckWall(checkPos))
             {
-                _activePieces[0] = _generator.Generate(checkPos + Vector3.forward);
-                _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));
+                _generator.Generate(checkPos + Vector3.forward);
+                /*_activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));*/
                 break;
             }
             else
@@ -225,8 +233,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 checkPos = generatePos + new Vector3(x * -1, 0);
                 if (Map.Instance.CheckWall(checkPos))
                 {
-                    _activePieces[0] = _generator.Generate(checkPos + Vector3.forward);
-                    _activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));
+                    _generator.Generate(checkPos + Vector3.forward);
+                    /*_activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));*/
                     break;
                 }
             }

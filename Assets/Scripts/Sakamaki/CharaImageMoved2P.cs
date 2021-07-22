@@ -9,11 +9,9 @@ public class CharaImageMoved2P : Player2Base
     [SerializeField] private Image charactorImage2P;
     [SerializeField] private Sprite[] charactorImageArray2P;
     [SerializeField] private GameObject[] charactorButtonWhite2P;
-
-    private int _back2P = 0;
     private int _prev2P = 0;
 
-    // ƒLƒƒƒ‰ƒNƒ^[ƒ^ƒCƒv
+    // ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚¿ã‚¤ãƒ—
     public enum CharaType2P
     {
         Cow,
@@ -26,7 +24,7 @@ public class CharaImageMoved2P : Player2Base
     // Start is called before the first frame update
     void Start()
     {
-        // ‰Šú‰»ˆ—
+        // åˆæœŸåŒ–å‡¦ç†
         charactorImage2P.sprite = charactorImageArray2P[0];
         charactorButtonWhite2P[0].SetActive(true);
     }
@@ -41,18 +39,32 @@ public class CharaImageMoved2P : Player2Base
     }
 
     /// <summary>
-    /// 1P ‰æ‘œˆ—ŠÖ”
+    /// 1P ç”»åƒå‡¦ç†é–¢æ•°
     /// </summary>
     void Player2CharaMoved()
     {
-        // “ü—Í•”•ª
+        // å…¥åŠ›éƒ¨åˆ†
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0))
+        {
             charaType2P--;
+
+            // Activeã—ãŸãƒœã‚¿ãƒ³falseã«ã™ã‚‹å‡¦ç†
+            for (int i = 0; i < charactorButtonWhite2P.Length; i++)
+            {
+                charactorButtonWhite2P[i].SetActive(false);
+            }
+        } 
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0))
+        {
             charaType2P++;
 
+            for (int i = 0; i < charactorButtonWhite2P.Length; i++)
+            {
+                charactorButtonWhite2P[i].SetActive(false);
+            }
+        }
 
-        // prev ‚Æ result •Ï”‚Ì’†g(intŒ^)‚ªˆá‚Á‚½ê‡•`‰æˆ—
+        // prev ã¨ result å¤‰æ•°ã®ä¸­èº«(intå‹)ãŒé•ã£ãŸå ´åˆæç”»å‡¦ç†
         if (_prev2P != (int)charaType2P)
         {
             _prev2P = (int)charaType2P;
@@ -68,23 +80,6 @@ public class CharaImageMoved2P : Player2Base
 
             charactorImage2P.sprite = charactorImageArray2P[(int)charaType2P];
             charactorButtonWhite2P[(int)charaType2P].SetActive(true);
-
-            _back2P = (int)charaType2P;
-        }
-
-        // Active‚µ‚½ƒ{ƒ^ƒ“false‚É‚·‚éˆ—
-        if (_back2P >= 1)
-        {
-            _back2P--;
-            charactorButtonWhite2P[_back2P].SetActive(false);
-        }
-        else if ((int)charaType2P <= _back2P)
-        {
-            charactorButtonWhite2P[3].SetActive(false);
-        }
-        else if ((int)charaType2P >= _back2P)
-        {
-            charactorButtonWhite2P[0].SetActive(false);
         }
     }
 }

@@ -7,7 +7,7 @@ public class Map : SingletonMonoBehaviour<Map>
     private const byte _WIDTH = 10;
     private const byte _HEIGHT = 11;
     private const byte _EMPTY_AREAS_HEIGHT = 2;// 上２ラインに置かれたコマは消滅する
-    private string[,] _map = new string[_HEIGHT, _WIDTH]// z, x座標で指定
+    public string[,] map = new string[_HEIGHT, _WIDTH]// z, x座標で指定
     {
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
         { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
@@ -22,10 +22,12 @@ public class Map : SingletonMonoBehaviour<Map>
         { "■", "■", "■", "■", "■", "■", "■", "■", "■", "■" }
     };
 
-    private const string _wall = "■";
-    private const string _empty = "□";
-    private const string _white = "〇";
-    private const string _black = "●";
+    public readonly string wall = "■";
+    public readonly string empty = "□";
+    public readonly string black = "●";
+    public readonly string white = "〇";
+    public readonly string fixityBlack = "★";
+    public readonly string fixityWhite = "☆";
 
     /// <summary>
     /// 移動後のコマが障害物に当たるかを調べる
@@ -40,7 +42,7 @@ public class Map : SingletonMonoBehaviour<Map>
         int x = (int)movedPos.x;
 
         // 2つの駒の移動後座標に何もなければ移動を通す
-        if (_map[z, x] == _empty)
+        if (map[z, x] == empty)
             isBlank = true;
 
         return isBlank;
@@ -59,7 +61,7 @@ public class Map : SingletonMonoBehaviour<Map>
         int z = (int)piecePos.z * -1;
         int x = (int)piecePos.x;
 
-        if (_map[z + 1, x] != _empty)
+        if (map[z + 1, x] != empty)
             isGrounded = true;
 
         return isGrounded;
@@ -83,7 +85,7 @@ public class Map : SingletonMonoBehaviour<Map>
             dz = z + i;// iの分だけ下の座標を調べる
 
             // 設置したマスからi個下のマスが空白なら下に落とす
-            if (_map[dz, x] == _empty)
+            if (map[dz, x] == empty)
                 piece.transform.position = new Vector3(x, 0, dz * -1);// 反転させたyをマイナスに戻す
             else
             {
@@ -95,24 +97,42 @@ public class Map : SingletonMonoBehaviour<Map>
 
         Piece p = piece.GetComponent<Piece>();
 
-        if (p.pieceType == Piece.PieceType.black)
-            _map[dz, x] = _black;
-        else if (p.pieceType == Piece.PieceType.white)
-            _map[dz, x] = _white;
-
-        _pieceMap[dz, x] = piece;
+        // mapに記録
+        switch(p.pieceType)
+        {
+            case Piece.PieceType.black:
+                map[dz, x] = black;
+                break;
+            case Piece.PieceType.white:
+                map[dz, x] = white;
+                break;
+            case Piece.PieceType.fixityBlack:
+                map[dz, x] = fixityBlack;
+                break;
+            case Piece.PieceType.fixityWhite:
+                map[dz, x] = fixityWhite;
+                break;
+            default:
+                break;
+        }
+        pieceMap[dz, x] = piece;
     }
 
     // ひっくり返す処理
     private List<GameObject> _reversePiece = new List<GameObject>();// ひっくり返すコマを格納
-    private GameObject[,] _pieceMap = new GameObject[_HEIGHT, _WIDTH];
+    public  GameObject[,] pieceMap = new GameObject[_HEIGHT, _WIDTH];
     private int _setPosX = 0;
     private int _setPosZ = 0;
     private string _myColor = string.Empty;
+    private string _enemyColor = string.Empty;
+    private string _fixityMyColor = string.Empty;
+    private string _fixityEnemyColor = string.Empty;
     private bool _isChecking = false;
     private const string _REVERSED_TAG = "Reversed";
     private bool _isSecondCheck = false;
     public Piece.PieceType turnPlayerColor = Piece.PieceType.none;
+    public bool isSkillActivate = false;
+    public string ignoreFixityPiece = string.Empty;// 指定した色の固定効果を無視する(基本は空文字)
 
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
@@ -133,15 +153,25 @@ public class Map : SingletonMonoBehaviour<Map>
             }
 
             piece.GetComponent<Piece>().Reverse();
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(0.3f);
         }
 
         _reversePiece.Clear();
 
-        // 2回目のチェックならステートを進める
-        if(_isSecondCheck)
+        // スキル効果なら準備時間に戻る
+        if (isSkillActivate)
         {
-            GameDirector.Instance.gameState = GameDirector.GameState.reversed;
+            GameDirector.Instance.intervalTime = 0.3f;
+            GameDirector.Instance.gameState = GameDirector.GameState.interval;
+            GameDirector.Instance.nextStateCue = GameDirector.GameState.preActive;
+            isSkillActivate = false;
+            _isSecondCheck = false;
+        }
+        if(_isSecondCheck)// 2回目のチェックならステートを進める
+        {
+            GameDirector.Instance.intervalTime = 0.3f;
+            GameDirector.Instance.gameState = GameDirector.GameState.interval;
+            GameDirector.Instance.nextStateCue = GameDirector.GameState.reversed;
             _isSecondCheck = false;
         }
         else
@@ -156,7 +186,7 @@ public class Map : SingletonMonoBehaviour<Map>
     /// <param name="piece">今置いたコマ</param>
     public IEnumerator CheckReverse(GameObject piece)
     {
-        while(_isChecking)
+        while (_isChecking)
             yield return null;// 2つのコルーチンは片方づつ処理する
 
         // このターンに置いたコマがリバースしている or このコマが盤面外に置かれているなら
@@ -166,15 +196,26 @@ public class Map : SingletonMonoBehaviour<Map>
             GameDirector.Instance.gameState = GameDirector.GameState.reversed;
             _isSecondCheck = false;
             yield break;
-        }       
+        }
 
         _isChecking = true;
 
         // 自分の色と相手の色を決定
-        if (Piece.PieceType.black == piece.GetComponent<Piece>().pieceType)
-            _myColor = _black;
+        Piece.PieceType type = piece.GetComponent<Piece>().pieceType;
+        if (type == Piece.PieceType.black || type == Piece.PieceType.fixityBlack)
+        {
+            _myColor = black;
+            _fixityMyColor = fixityBlack;
+            _enemyColor = white;
+            _fixityEnemyColor = fixityWhite;
+        }
         else
-            _myColor = _white;
+        {
+            _myColor = white;
+            _fixityMyColor = fixityWhite;
+            _enemyColor = black;
+            _fixityEnemyColor = fixityBlack;
+        }
 
         // 置いたマスの座標を取得
         _setPosX = (int)piece.transform.position.x;
@@ -190,16 +231,17 @@ public class Map : SingletonMonoBehaviour<Map>
         CheckInTheDirection(new Vector3(-1, 0, -1)); // ↖
         CheckInTheDirection(new Vector3(1, 0, -1));  // ↗
 
-        //for (int a = _EMPTY_AREAS_HEIGHT;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          a < _HEIGHT; a++)
+        //for (int a = _EMPTY_AREAS_HEIGHT; a < _HEIGHT; a++)
         //{
         //    string s = "";
         //    for (int b = 0; b < _WIDTH; b++)
         //    {
-        //        s += _map[a, b];
+        //        s += map[a, b];
         //    }
         //    Debug.Log(s);
         //}
         StartCoroutine(PieceReverse());
+        ignoreFixityPiece = string.Empty;// スキル効果は1ターンで終了
     }
 
     /// <summary>
@@ -224,15 +266,16 @@ public class Map : SingletonMonoBehaviour<Map>
             // 調べたい方向に進んでいく
             checkPosX += dirX;
             checkPosZ += dirZ;
-            // 壁 or 空白 or なら終了
-            if (_map[checkPosZ, checkPosX] == _wall || _map[checkPosZ, checkPosX] == _empty)
+            string targetType = map[checkPosZ, checkPosX];
+
+            // 壁 or 空白なら終了
+            if (targetType == wall || targetType == empty)
             {
                 break;
             }
-            else if (_map[checkPosZ, checkPosX] == _myColor)
+            else if (targetType == _myColor || targetType == _fixityMyColor)
             {
-                // 進んだ先に自分の色があれば終了して裏返せる
-                isReverse = true;
+                isReverse = true;// 自分の色で挟んだ扱い
                 break;
             }
             moveCount++;
@@ -244,23 +287,36 @@ public class Map : SingletonMonoBehaviour<Map>
             checkPosX = _setPosX;
             checkPosZ = _setPosZ;
 
-            // ひっくり返せることが確定しているので色の判定はしない
+            // リバースするコマをリストに追加
             for(int i = 0; i < moveCount; i++)
             {
                 checkPosX += dirX;
                 checkPosZ += dirZ;
-                _map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
-                _reversePiece.Add(_pieceMap[checkPosZ, checkPosX]);
-                _pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
+
+                // 相手の駒が固定コマなら
+                if (map[checkPosZ, checkPosX] == _fixityEnemyColor)
+                {
+                    // 固定効果を無視するスキル効果
+                    if (map[checkPosZ, checkPosX] == ignoreFixityPiece)
+                    {
+                        pieceMap[checkPosZ, checkPosX].GetComponent<Piece>().ChangeIsFixity();
+                        map[checkPosZ, checkPosX] = _myColor;
+                        _reversePiece.Add(pieceMap[checkPosZ, checkPosX]);
+                        pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
+                    }
+                    // スキルが発動していなければスルー
+                }
+                else// 相手色が確定しているので
+                {
+                    map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
+                    _reversePiece.Add(pieceMap[checkPosZ, checkPosX]);
+                    pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
+                }
             }
         }
     }
 
-    /// <summary>
-    /// マップの各コマの数をチェック、ゲーム終了判定も行う
-    /// </summary>
-    /// <returns>ゲーム終了かどうか</returns>
-    public bool CheckMap()
+    public bool CheckEnd()
     {
         bool isEnd = true;
         int blackCount = 0;
@@ -270,26 +326,44 @@ public class Map : SingletonMonoBehaviour<Map>
         {
             for (int j = 0; j < _WIDTH; j++)
             {
-                string cell = _map[i, j];
+                string cell = map[i, j];
 
-                if (cell == _empty)
+                if (cell == empty)
                     isEnd = false;
-                else if (cell == _black)
+                else if (cell == black || cell == fixityBlack)
                     blackCount++;
-                else if (cell == _white)
+                else if (cell == white || cell == fixityWhite)
                     whiteCount++;
             }
         }
-
-        GameDirector.Instance.AddPieceCount(blackCount, whiteCount);
 
         if (isEnd)
         {
             GameDirector.Instance.AddScore(true, GameDirector.Instance.point * blackCount);
             GameDirector.Instance.AddScore(false, GameDirector.Instance.point * whiteCount);
         }
-        
+
         return isEnd;
+    }
+    public void CheckMap()
+    {
+        int blackCount = 0;
+        int whiteCount = 0;
+
+        for (int i = _EMPTY_AREAS_HEIGHT; i < _HEIGHT; i++)
+        {
+            for (int j = 0; j < _WIDTH; j++)
+            {
+                string cell = map[i, j];
+
+                if (cell == black || cell == fixityBlack)
+                    blackCount++;
+                else if (cell == white || cell == fixityWhite)
+                    whiteCount++;
+            }
+        }
+
+        GameDirector.Instance.AddPieceCount(blackCount, whiteCount);
     }
 
     /// <summary>
@@ -302,7 +376,7 @@ public class Map : SingletonMonoBehaviour<Map>
         bool isSafeLine = true;
         if ((int)piece.transform.position.z * -1 < _EMPTY_AREAS_HEIGHT)
         {
-            _map[(int)piece.transform.position.z * -1, (int)piece.transform.position.x] = _empty;
+            map[(int)piece.transform.position.z * -1, (int)piece.transform.position.x] = empty;
             piece.transform.position = new Vector3(999, 999, 999);
             isSafeLine = false;
 
@@ -324,8 +398,8 @@ public class Map : SingletonMonoBehaviour<Map>
         {
             for (int j = 0; j < _WIDTH; j++)
             {
-                if (_pieceMap[i,j] != null)
-                    _pieceMap[i, j].tag = "Untagged";
+                if (pieceMap[i,j] != null)
+                    pieceMap[i, j].tag = "Untagged";
             }
         }
     }

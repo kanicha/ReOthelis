@@ -20,10 +20,6 @@ public class ScoreDisplay : MonoBehaviour
     private int P2Score = 36975;
     private int RouletteDisplay;
 
-    //int FirstDigit = 0;
-
-    private int[] Roulette = new int[5]{10000,1000,100,10,1};
-
     // Start is called before the first frame update
     void Start()
     {
@@ -49,13 +45,26 @@ public class ScoreDisplay : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             P1ScoreStore[i] = P1FinalScore.Substring(i,1);
-            Debug.Log(P1ScoreStore[i]);
+            //Debug.Log(P1ScoreStore[i]);
         }
         for (int i = 0; i < 5; i++)
         {
             P2ScoreStore[i] = P2FinalScore.Substring(i,1);
-            Debug.Log(P2ScoreStore[i]);
+            //Debug.Log(P2ScoreStore[i]);
         }
-        yield return new WaitForSeconds(0.01f);
+        for (int i = 0; i < 10; i++)
+        {
+            P1Score_Digit1.text = i.ToString();
+            P1Score_Digit2.text = i.ToString();
+            P1Score_Digit3.text = i.ToString();
+            P1Score_Digit4.text = i.ToString();
+            P1Score_Digit5.text = i.ToString();
+            P2Score_Digit1.text = i.ToString();
+            P2Score_Digit2.text = i.ToString();
+            P2Score_Digit3.text = i.ToString();
+            P2Score_Digit4.text = i.ToString();
+            P2Score_Digit5.text = i.ToString();
+        }
+        yield return new WaitForSeconds(0.1f);
     }
 }
