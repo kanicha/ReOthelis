@@ -2554,6 +2554,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   P1Judgment: {fileID: 183395438}
   P2Judgment: {fileID: 242316910}
+  P1Image: {fileID: 1602146446}
+  P2Image: {fileID: 1760585053}
   FirstSize: 300
   MiddleSize: 120
   FinalSize: 150
