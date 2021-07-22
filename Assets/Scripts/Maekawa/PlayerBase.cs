@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerBase : MonoBehaviour
 {
-    // ã‚­ãƒ¼ãƒãƒ¼ãƒ 
+    // ƒL[ƒl[ƒ€
     protected string DS4_circle_name = "";
     protected string DS4_cross_name = "";
     protected string DS4_square_name = "";
@@ -19,10 +19,10 @@ public class PlayerBase : MonoBehaviour
     protected string DS4_Lstick_vertical_name = "";
     protected string DS4_Rstick_horizontal_name = "";
     protected string DS4_Rstick_vertical_name = "";
-    // ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æ“ä½œç”¨ã‚­ãƒ¼ãƒãƒ¼ãƒ 
+    // ƒL[ƒ{[ƒh‘€ì—pƒL[ƒl[ƒ€
     protected string key_board_horizontal_name = "";
     protected string key_board_vertical_name = "";
-    // ã‚­ãƒ¼ãƒãƒªãƒ¥ãƒ¼
+    // ƒL[ƒoƒŠƒ…[
     protected bool _DS4_circle_value = false;
     protected bool _DS4_cross_value = false;
     protected bool _DS4_square_value = false;
@@ -36,26 +36,26 @@ public class PlayerBase : MonoBehaviour
     protected float _DS4_Lstick_vertical_value = 0.0f;
     protected float _DS4_Rstick_horizontal_value = 0.0f;
     protected float _DS4_Rstick_vertical_value = 0.0f;
-    // å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®ã‚­ãƒ¼ãƒãƒªãƒ¥ãƒ¼
+    // ‘OƒtƒŒ[ƒ€‚ÌƒL[ƒoƒŠƒ…[
     protected float last_horizontal_value = 0.0f;
     protected float last_vertical_value = 0.0f;
     protected float lastLstick_horizontal_value = 0.0f;
     protected float last_Lstick_vertical_value = 0.0f;
     protected float last_Rstick_horizontal_value = 0.0f;
     protected float last_Rstick_vertical_value = 0.0f;
-    // ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ç”¨
+    // ƒL[ƒ{[ƒh—p
     //private float _keyBoardHorizontal = 0.0f;
     //private float _keyBoardVertical = 0.0f;
     private bool _keyBoardLeft = false;
     private bool _keyBoardRight = false;
 
     //
-    [SerializeField, Header("1ãƒã‚¹è½ä¸‹ã™ã‚‹æ™‚é–“")]
+    [SerializeField, Header("1ƒ}ƒX—‰º‚·‚éŠÔ")]
     private float _fallTime = 0.0f;
     [SerializeField]
     protected Text scoreText = null;
     [SerializeField]
-    protected Image reversedCountImage = null;
+    protected Text reversedCountText = null;
     [SerializeField]
     protected Text myPieceCountText = null;
     [SerializeField]
@@ -118,7 +118,7 @@ public class PlayerBase : MonoBehaviour
     }
 
     /// <summary>
-    /// å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®å…¥åŠ›ã‚’ä¿å­˜
+    /// ‘OƒtƒŒ[ƒ€‚Ì“ü—Í‚ğ•Û‘¶
     /// </summary>
     protected void SaveKeyValue()
     {
@@ -132,7 +132,7 @@ public class PlayerBase : MonoBehaviour
 
     protected void InputSkill()
     {
-        // ã‚¹ã‚­ãƒ«1...Ã— ã‚¹ã‚­ãƒ«2...â–³ ã‚¹ã‚­ãƒ«3...â–¡
+        // ƒXƒLƒ‹1...~ ƒXƒLƒ‹2...¢ ƒXƒLƒ‹3... 
         if(Input.GetKeyDown(KeyCode.Z) || _DS4_cross_value)
         {
             skill_1(_SKILL_1_COST);
@@ -154,60 +154,61 @@ public class PlayerBase : MonoBehaviour
 
         _timeCount += Time.deltaTime;
 
-        // å·¦å³ç§»å‹•
+        // ˆÚ“®
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
             move.x = -1;
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
             move.x = 1;
-
-        // ä¸‹ç§»å‹•
-        if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+        else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
             isDown = true;
             move.z = -1;
         }
-        else if (_timeCount >= _fallTime)// æ™‚é–“è½ä¸‹
+        else if (_timeCount >= _fallTime)// ŠÔ—‰º
         {
             _timeCount = 0;
             move.z = -1;
         }
 
-        // ç§»å‹•å¾Œã®åº§æ¨™ã‚’è¨ˆç®—
+        // ˆÚ“®Œã‚ÌÀ•W‚ğŒvZ
         Vector3 movedPos = controllPiece1.transform.position + move;
         Vector3 rotMovedPos = movedPos + rotationPos[rotationNum];
 
-        // ç§»å‹•å¾Œã®åº§æ¨™ã«éšœå®³ç‰©ãŒãªã‘ã‚Œã°
+        // ˆÚ“®Œã‚ÌÀ•W‚ÉáŠQ•¨‚ª‚È‚¯‚ê‚Î
         if (Map.Instance.CheckWall(movedPos) && Map.Instance.CheckWall(rotMovedPos))
         {
             controllPiece1.transform.position = movedPos;
             controllPiece2.transform.position = rotMovedPos;
         }
         else if (isDown)
-            GameDirector.Instance.gameState = GameDirector.GameState.confirmed;// ä¸‹å…¥åŠ›ã‚’ã—ã€éšœå®³ç‰©ãŒã‚ã‚‹ãªã‚‰ç¢ºå®š
+            GameDirector.Instance.gameState = GameDirector.GameState.confirmed;// ‰º“ü—Í‚ğ‚µAáŠQ•¨‚ª‚ ‚é‚È‚çŠm’è
     }
 
     protected void PieceRotate()
     {
         int lastNum = rotationNum;
-        // å·¦å›è»¢
-        if (_DS4_L1_value || _keyBoardLeft)
-        {
-            rotationNum++;
-            SoundManager.Instance.PlaySE(2);
-        }
-        // å³å›è»¢(=å·¦ã«3å›è»¢)
-        else if (_DS4_R1_value || _keyBoardRight)
-        {
-            rotationNum += 3;
-            SoundManager.Instance.PlaySE(2);
-        }
 
-        // ç–‘ä¼¼å›è»¢(ç§»å‹•ãŒã‚„ã‚„ã“ã—ããªã‚‹ã®ã§Rotationã¯ã„ã˜ã‚‰ãªã„)
+        if (_DS4_L1_value || _keyBoardLeft)
+            rotationNum++;// ¶‰ñ“]
+        else if (_DS4_R1_value || _keyBoardRight)
+            rotationNum += 3;// ‰E‰ñ“](=¶‚É3‰ñ“])
+
         rotationNum %= 4;
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
+        Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
+
 
         if (Map.Instance.CheckWall(rotatedPos))
-            controllPiece2.transform.position = rotatedPos;
+        {
+            if ((int)rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
+                rotationNum = lastNum;  
+            else
+            {
+                if (rotationNum != lastNum)
+                    SoundManager.Instance.PlaySE(2);
+                controllPiece2.transform.position = rotatedPos;
+            }
+        }
         else
             rotationNum = lastNum;
     }
@@ -216,13 +217,13 @@ public class PlayerBase : MonoBehaviour
     {
         Vector3 move = Vector3.zero;
 
-        // å·¦å³ç§»å‹•
+        // ¶‰EˆÚ“®
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
             move.x = -1;
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
             move.x = 1;
 
-        // å·¦å³ã«å…¥åŠ›ã—ãŸãªã‚‰ç§»å‹•
+        // ¶‰E‚É“ü—Í‚µ‚½‚È‚çˆÚ“®
         if (move != Vector3.zero)
         {
             Vector3 movedPos = controllPiece1.transform.position;
@@ -232,11 +233,11 @@ public class PlayerBase : MonoBehaviour
                 Vector3 movedUnderPos = movedPos + Vector3.back;
                 Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
 
-                // å£ã¾ã§è¡Œã£ãŸã‚‰ã‚¹ãƒ«ãƒ¼
+                // •Ç‚Ü‚Ås‚Á‚½‚çƒXƒ‹[
                 if ((int)movedPos.x < 1 || (int)movedPos.x > 8)
                     break;
 
-                // ç§»å‹•å¾Œã®åº§æ¨™ã®1ã¤ä¸‹ã«éšœå®³ç‰©ãŒãªã‘ã‚Œã°
+                // ˆÚ“®Œã‚ÌÀ•W‚Ì1‚Â‰º‚ÉáŠQ•¨‚ª‚È‚¯‚ê‚Î
                 if (Map.Instance.CheckWall(movedUnderPos) && Map.Instance.CheckWall(rotMovedPos))
                 {
                     controllPiece1.transform.position = movedPos;
@@ -246,16 +247,22 @@ public class PlayerBase : MonoBehaviour
             }
         }
 
-        // â†“å…¥åŠ›ã—ãŸã‚‰æœ¬æ“ä½œé–‹å§‹
+        // «“ü—Í‚µ‚½‚ç–{‘€ìŠJn
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
-            GameDirector.Instance.gameState = GameDirector.GameState.active;
+        {
+            GameDirector.Instance.intervalTime = 0;
+            GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
+            GameDirector.Instance.gameState = GameDirector.GameState.interval;
+            controllPiece1.transform.position += Vector3.back;
+            controllPiece2.transform.position += Vector3.back;
+        }
     }
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected void SetSkills(int charaType)
     {
-        // åŒã˜æ„å‘³ã®enumãŒ1Pã¨2Pã§2ã¤ã‚ã‚‹ã®ã§enumâ†’intâ†’enumã«ã‚­ãƒ£ã‚¹ãƒˆ 
+        // “¯‚¶ˆÓ–¡‚Ìenum‚ª1P‚Æ2P‚Å2‚Â‚ ‚é‚Ì‚Åenum¨int¨enum‚ÉƒLƒƒƒXƒg 
         CharaImageMoved.CharaType1P type = (CharaImageMoved.CharaType1P)charaType;
 
         switch (type)
@@ -284,7 +291,7 @@ public class PlayerBase : MonoBehaviour
     private bool CheckColor(string type)
     { 
         bool isThere = false;
-        // ä¸‹ä¸€è¡Œã‚’é™¤ã„ãŸã‚³ãƒãŒç½®ã‹ã‚Œã‚‹å¯èƒ½æ€§ã®ã‚ã‚‹ãƒã‚¹ã‚’æ¢ç´¢
+        // ‰ºˆês‚ğœ‚¢‚½ƒRƒ}‚ª’u‚©‚ê‚é‰Â”\«‚Ì‚ ‚éƒ}ƒX‚ğ’Tõ
         for (int i = 2; i < 9; i++)
             for (int j = 1; j < 9; j++)
             {
@@ -303,27 +310,27 @@ public class PlayerBase : MonoBehaviour
             return false;
     }
 
-    //  å¼·å¼•
+    //  ‹­ˆø
     public void TakeAway(int cost)
     {
         if (!ActivateCheck(GameDirector.GameState.preActive, cost))
             return;
 
-        // æœ€ä¸‹æ®µã‚’é™¤ããƒãƒƒãƒ—ã«ç›¸æ‰‹ã®è‰²ãŒã‚ã‚‹ãªã‚‰(å›ºå®šã‚³ãƒã¯å¯¾è±¡å¤–)
+        // Å‰º’i‚ğœ‚­ƒ}ƒbƒv‚É‘Šè‚ÌF‚ª‚ ‚é‚È‚ç(ŒÅ’èƒRƒ}‚Í‘ÎÛŠO)
         if (CheckColor(enemyColor))
         {
-            Debug.Log("å¼·å¼•");
+            Debug.Log("‹­ˆø");
             reversedCount -= cost;
             while (true)
             {
-                // é©å½“ã«ãƒ©ãƒ³ãƒ€ãƒ ãªåº§æ¨™ã‚’ã¨ã‚Šã€ãã‚ŒãŒè‡ªåˆ†ã®è‰²ãªã‚‰å¤‰æ›
+                // “K“–‚Éƒ‰ƒ“ƒ_ƒ€‚ÈÀ•W‚ğ‚Æ‚èA‚»‚ê‚ª©•ª‚ÌF‚È‚ç•ÏŠ·
                 int z = Random.Range(2, 9);
                 int x = Random.Range(1, 9);
                 if (Map.Instance.map[z, x] == enemyColor)
                 {
                     Map.Instance.map[z, x] = myColor;
                     Map.Instance.pieceMap[z, x].GetComponent<Piece>().SkillReverse();
-                    // æ¤œç´¢ã€ãƒªãƒãƒ¼ã‚¹å‡¦ç†ã‚’è¡Œã†
+                    // ŒŸõAƒŠƒo[ƒXˆ—‚ğs‚¤
                     Map.Instance.TagClear();
                     Map.Instance.isSkillActivate = true;
                     GameDirector.Instance.gameState = GameDirector.GameState.idle;
@@ -333,19 +340,19 @@ public class PlayerBase : MonoBehaviour
             }
         }
         else
-            Debug.Log("ç›¸æ‰‹ã®è‰²ã®ã‚³ãƒãŒã‚ã‚Šã¾ã›ã‚“");
+            Debug.Log("‘Šè‚ÌF‚ÌƒRƒ}‚ª‚ ‚è‚Ü‚¹‚ñ");
     }
 
-    // å›ºå®š
+    // ŒÅ’è
     public void RandomLock(int cost)
     {
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) && !ActivateCheck(GameDirector.GameState.active, cost))
             return;
 
-        // æœ€ä¸‹æ®µã‚’é™¤ããƒãƒƒãƒ—ã«è‡ªåˆ†ã®è‰²ãŒã‚ã‚‹ãªã‚‰(å›ºå®šã‚³ãƒã¯å¯¾è±¡å¤–)
+        // Å‰º’i‚ğœ‚­ƒ}ƒbƒv‚É©•ª‚ÌF‚ª‚ ‚é‚È‚ç(ŒÅ’èƒRƒ}‚Í‘ÎÛŠO)
         if (CheckColor(myColor))
         {
-            Debug.Log("å›ºå®š");
+            Debug.Log("ŒÅ’è");
             reversedCount -= cost;
 
             string type;
@@ -356,7 +363,7 @@ public class PlayerBase : MonoBehaviour
 
             while (true)
             {
-                // é©å½“ã«ãƒ©ãƒ³ãƒ€ãƒ ãªåº§æ¨™ã‚’ã¨ã‚Šã€ãã‚ŒãŒè‡ªåˆ†ã®è‰²ãªã‚‰å›ºå®šã‚³ãƒã«å¤‰æ›
+                // “K“–‚Éƒ‰ƒ“ƒ_ƒ€‚ÈÀ•W‚ğ‚Æ‚èA‚»‚ê‚ª©•ª‚ÌF‚È‚çŒÅ’èƒRƒ}‚É•ÏŠ·
                 int z = Random.Range(2, 9);
                 int x = Random.Range(1, 9);
                 if (Map.Instance.map[z, x] == myColor)
@@ -368,10 +375,10 @@ public class PlayerBase : MonoBehaviour
             }
         }
         else
-            Debug.Log("è‡ªåˆ†ã®è‰²ã®ã‚³ãƒãŒã‚ã‚Šã¾ã›ã‚“");
+            Debug.Log("©•ª‚ÌF‚ÌƒRƒ}‚ª‚ ‚è‚Ü‚¹‚ñ");
     }
 
-    // æ®‹å½±
+    // c‰e
     public void MyPieceLock(int cost)
     {
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) && !ActivateCheck(GameDirector.GameState.active, cost))
@@ -380,30 +387,30 @@ public class PlayerBase : MonoBehaviour
         Piece piece1 = controllPiece1.GetComponent<Piece>();
         Piece piece2 = controllPiece2.GetComponent<Piece>();
 
-        // è‡ªåˆ†ã®è‰²ãŒã‚ã‚Œã°å‡¦ç†
+        // ©•ª‚ÌF‚ª‚ ‚ê‚Îˆ—
         if (piece1.pieceType == playerType || piece2.pieceType == playerType)
         {
-            Debug.Log("æ®‹å½±");
+            Debug.Log("c‰e");
             reversedCount -= cost;
-            // è‡ªåˆ†ã®è‰²ã‚’å›ºå®šåŒ–(2ã¤ã¨ã‚‚è‡ªåˆ†ã®è‰²ãªã‚‰ä¸¡æ–¹)
+            // ©•ª‚ÌF‚ğŒÅ’è‰»(2‚Â‚Æ‚à©•ª‚ÌF‚È‚ç—¼•û)
             if (piece1.pieceType == playerType)
                 piece1.ChangeIsFixity();
             if (piece2.pieceType == playerType)
                 piece2.ChangeIsFixity();
         }
         else
-            Debug.Log("è‡ªåˆ†ã®è‰²ã®ã‚³ãƒã‚’æ“ä½œã—ã¦ã„ã¾ã›ã‚“");
+            Debug.Log("©•ª‚ÌF‚ÌƒRƒ}‚ğ‘€ì‚µ‚Ä‚¢‚Ü‚¹‚ñ");
     }
 
-    // æ‰“æ¶ˆã—
+    // ‘ÅÁ‚µ
     public void Cancellation(int cost)
     {
-        // è‡ªåˆ†ã®è‰²ã®ã‚³ãƒã‚’æ“ä½œã—ã¦ã„ãªãã¦ã‚‚ç™ºå‹•ã§ãã‚‹(æ„å‘³ã¯ãªã„)ã®ã§è¦ç›¸è«‡
+        // ©•ª‚ÌF‚ÌƒRƒ}‚ğ‘€ì‚µ‚Ä‚¢‚È‚­‚Ä‚à”­“®‚Å‚«‚é(ˆÓ–¡‚Í‚È‚¢)‚Ì‚Å—v‘Š’k
 
         if (!ActivateCheck(GameDirector.GameState.preActive, cost))
             return;
 
-        // ç›¸æ‰‹è‰²ã®å›ºå®šã‚³ãƒã‚’æ¢ã™
+        // ‘ŠèF‚ÌŒÅ’èƒRƒ}‚ğ’T‚·
         string targetColor;
         if (myColor == Map.Instance.black)
             targetColor = Map.Instance.fixityWhite;
@@ -412,11 +419,11 @@ public class PlayerBase : MonoBehaviour
 
         if (CheckColor(targetColor))
         {
-            Debug.Log("æ‰“æ¶ˆã—");
+            Debug.Log("‘ÅÁ‚µ");
             reversedCount -= cost;
-            Map.Instance.ignoreFixityPiece = targetColor;// ç›¸æ‰‹ã®å›ºå®šã‚³ãƒã‚’ã²ã£ãã‚Šè¿”ã›ã‚‹ã‚ˆã†ã«ãªã‚‹
+            Map.Instance.ignoreFixityPiece = targetColor;// ‘Šè‚ÌŒÅ’èƒRƒ}‚ğ‚Ğ‚Á‚­‚è•Ô‚¹‚é‚æ‚¤‚É‚È‚é
         }
         else
-            Debug.Log("ç›¸æ‰‹è‰²ã®å›ºå®šã‚³ãƒãŒã‚ã‚Šã¾ã›ã‚“");
+            Debug.Log("‘ŠèF‚ÌŒÅ’èƒRƒ}‚ª‚ ‚è‚Ü‚¹‚ñ");
     }
 }
