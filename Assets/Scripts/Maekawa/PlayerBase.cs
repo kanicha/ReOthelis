@@ -154,14 +154,12 @@ public class PlayerBase : MonoBehaviour
 
         _timeCount += Time.deltaTime;
 
-        // ¶‰EˆÚ“®
+        // ˆÚ“®
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
             move.x = -1;
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
             move.x = 1;
-
-        // ‰ºˆÚ“®
-        if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+        else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
             isDown = true;
             move.z = -1;
@@ -189,25 +187,28 @@ public class PlayerBase : MonoBehaviour
     protected void PieceRotate()
     {
         int lastNum = rotationNum;
-        // ¶‰ñ“]
-        if (_DS4_L1_value || _keyBoardLeft)
-        {
-            rotationNum++;
-            SoundManager.Instance.PlaySE(2);
-        }
-        // ‰E‰ñ“](=¶‚É3‰ñ“])
-        else if (_DS4_R1_value || _keyBoardRight)
-        {
-            rotationNum += 3;
-            SoundManager.Instance.PlaySE(2);
-        }
 
-        // ‹^—‰ñ“](ˆÚ“®‚ª‚â‚â‚±‚µ‚­‚È‚é‚Ì‚ÅRotation‚Í‚¢‚¶‚ç‚È‚¢)
+        if (_DS4_L1_value || _keyBoardLeft)
+            rotationNum++;// ¶‰ñ“]
+        else if (_DS4_R1_value || _keyBoardRight)
+            rotationNum += 3;// ‰E‰ñ“](=¶‚É3‰ñ“])
+
         rotationNum %= 4;
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
+        Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
+
 
         if (Map.Instance.CheckWall(rotatedPos))
-            controllPiece2.transform.position = rotatedPos;
+        {
+            if ((int)rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
+                rotationNum = lastNum;  
+            else
+            {
+                if (rotationNum != lastNum)
+                    SoundManager.Instance.PlaySE(2);
+                controllPiece2.transform.position = rotatedPos;
+            }
+        }
         else
             rotationNum = lastNum;
     }
@@ -248,7 +249,13 @@ public class PlayerBase : MonoBehaviour
 
         // «“ü—Í‚µ‚½‚ç–{‘€ìŠJn
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
-            GameDirector.Instance.gameState = GameDirector.GameState.active;
+        {
+            GameDirector.Instance.intervalTime = 0;
+            GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
+            GameDirector.Instance.gameState = GameDirector.GameState.interval;
+            controllPiece1.transform.position += Vector3.back;
+            controllPiece2.transform.position += Vector3.back;
+        }
     }
 
 
