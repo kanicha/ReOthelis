@@ -7,10 +7,8 @@ public class MainGameChara2P : MonoBehaviour
 {
     [SerializeField] private Image charactorImage2P;
     [SerializeField] private Image charactorSkillImage2P;
-    [SerializeField] private Image charactorGageImage2P;
     [SerializeField] private Sprite[] charactorImageArray2P;
     [SerializeField] private Sprite[] charactorSkillImageArray2P;
-    [SerializeField] private Sprite[] charactorGageImageArray2P;
     
     // Start is called before the first frame update
     void Start()
