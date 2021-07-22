@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class P1ResultScore : MonoBehaviour
+public class P2ResultScore : MonoBehaviour
 {
-    //テキストに表示
+    private Player_2 _player2 = null;
     public Text scoreText = null;
     //スコアの初期値
     float score;
 
     void Start()
     {
-        //ToStringでString型にしてテキストに表示
+        _player2 = FindObjectOfType<Player_2>();
         scoreText.text = score.ToString();
-        StartCoroutine(ScoreAnimation(30000, 0.5f));
+        StartCoroutine(ScoreAnimation(Player_2.displayScore, 0.5f));
     }
 
     // スコアをアニメーションさせる
     IEnumerator ScoreAnimation(float addScore, float time)
     {
         //前回のスコア
-        float befor = score;
+        float before = score;
         //今回のスコア
         float after = score + addScore;
         //得点加算
@@ -34,7 +34,7 @@ public class P1ResultScore : MonoBehaviour
         {
             float rate = elapsedTime / time;
             // テキストの更新
-            scoreText.text = (befor + (after - befor) * rate).ToString("f0");
+            scoreText.text = (before + (after - before) * rate).ToString("f0");
 
             elapsedTime += Time.deltaTime;
             // 0.01秒待つ
