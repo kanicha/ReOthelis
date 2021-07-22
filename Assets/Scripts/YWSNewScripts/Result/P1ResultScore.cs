@@ -8,9 +8,11 @@ public class P1ResultScore : MonoBehaviour
     public Text scoreText = null;
     //スコアの初期値
     float score;
+    public static bool isScoreAppear = false;
 
     void Start()
     {
+        isScoreAppear = false;
         scoreText.text = score.ToString();
         StartCoroutine(ScoreAnimation(Player_1.displayScore, 0.5f));
     }
@@ -40,5 +42,6 @@ public class P1ResultScore : MonoBehaviour
         }
         // 最終的な着地のスコア
         scoreText.text = after.ToString();
+        isScoreAppear = true;
     }
 }

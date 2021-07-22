@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class P2ResultScore : MonoBehaviour
 {
-    private Player_2 _player2 = null;
     public Text scoreText = null;
     //スコアの初期値
     float score;
+    public static bool isScoreAppear = false;
 
     void Start()
     {
-        _player2 = FindObjectOfType<Player_2>();
+        isScoreAppear = false;
         scoreText.text = score.ToString();
         StartCoroutine(ScoreAnimation(Player_2.displayScore, 0.5f));
     }
@@ -42,5 +42,6 @@ public class P2ResultScore : MonoBehaviour
         }
         // 最終的な着地のスコア
         scoreText.text = after.ToString();
+        isScoreAppear = true;
     }
 }
