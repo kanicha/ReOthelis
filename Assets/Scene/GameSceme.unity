@@ -799,10 +799,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 746cce9bce0ce0842adbca497d80abbd, type: 3}
   - {fileID: 21300000, guid: d18d937f8a922e1498ecbb9ddab5bb2c, type: 3}
   charactorSkillImageArray2P:
-  - {fileID: 21300000, guid: e4fb14fe004fd14498d55b7336dfe17a, type: 3}
-  - {fileID: 21300000, guid: 505d8fe686ff0854d81cc607c340f1bd, type: 3}
-  - {fileID: 21300000, guid: 60555facedcfc8745b253f9990e5f7fe, type: 3}
-  - {fileID: 21300000, guid: 74505be1732a6a14fb28adf383121387, type: 3}
+  - {fileID: 21300000, guid: 4e5736efdbdd9f74c976c940e33b3b15, type: 3}
+  - {fileID: 21300000, guid: 9772f54fd4001324d9763600afbba2f1, type: 3}
+  - {fileID: 21300000, guid: fa184a6bdb4277f439329294a05a0f2c, type: 3}
+  - {fileID: 21300000, guid: e396b0e8a7f53d54a8db16ca688942f2, type: 3}
   charactorGageImageArray2P:
   - {fileID: 21300000, guid: 04d0de191659006418221de71b79f551, type: 3}
   - {fileID: 21300000, guid: 6937252f9223ed44089d0a70925dafd1, type: 3}
@@ -828,10 +828,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 746cce9bce0ce0842adbca497d80abbd, type: 3}
   - {fileID: 21300000, guid: d18d937f8a922e1498ecbb9ddab5bb2c, type: 3}
   charactorSkillImageArray1P:
-  - {fileID: 21300000, guid: e4fb14fe004fd14498d55b7336dfe17a, type: 3}
-  - {fileID: 21300000, guid: 505d8fe686ff0854d81cc607c340f1bd, type: 3}
-  - {fileID: 21300000, guid: 60555facedcfc8745b253f9990e5f7fe, type: 3}
-  - {fileID: 21300000, guid: 74505be1732a6a14fb28adf383121387, type: 3}
+  - {fileID: 21300000, guid: 4e5736efdbdd9f74c976c940e33b3b15, type: 3}
+  - {fileID: 21300000, guid: 9772f54fd4001324d9763600afbba2f1, type: 3}
+  - {fileID: 21300000, guid: fa184a6bdb4277f439329294a05a0f2c, type: 3}
+  - {fileID: 21300000, guid: e396b0e8a7f53d54a8db16ca688942f2, type: 3}
 --- !u!4 &326221984
 Transform:
   m_ObjectHideFlags: 0
@@ -3382,7 +3382,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 64ea58735727710448be90778916f321, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e4fb14fe004fd14498d55b7336dfe17a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
