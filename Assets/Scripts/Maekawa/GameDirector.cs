@@ -141,6 +141,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                         Debug.Log("<color=orange>引き分け</color>");
                 else
                     Debug.Log("<color=blue>2Pの勝ち</color>");
+                SoundManager.Instance.StopBGM();
                 gameState = GameState.ended;
                 break;
 
