@@ -320,7 +320,6 @@ public class PlayerBase : MonoBehaviour
         if (CheckColor(enemyColor))
         {
             Debug.Log("強引");
-            SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
             while (true)
             {
@@ -354,7 +353,6 @@ public class PlayerBase : MonoBehaviour
         if (CheckColor(myColor))
         {
             Debug.Log("固定");
-            SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
 
             string type;
@@ -393,9 +391,7 @@ public class PlayerBase : MonoBehaviour
         if (piece1.pieceType == playerType || piece2.pieceType == playerType)
         {
             Debug.Log("残影");
-            SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
-
             // 自分の色を固定化(2つとも自分の色なら両方)
             if (piece1.pieceType == playerType)
                 piece1.ChangeIsFixity();
@@ -424,7 +420,6 @@ public class PlayerBase : MonoBehaviour
         if (CheckColor(targetColor))
         {
             Debug.Log("打消し");
-            SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
             Map.Instance.ignoreFixityPiece = targetColor;// 相手の固定コマをひっくり返せるようになる
         }

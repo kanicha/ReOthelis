@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class CharacterSelectSceneChange : Player1Base
+public class CharacterSelectScene : Player1Base
 {
     private GameSceneManager _gameSceneManager;
     UnityEvent Approval = new UnityEvent();

@@ -152,7 +152,6 @@ public class Map : SingletonMonoBehaviour<Map>
                 GameDirector.Instance.AddReversedCount(false);
             }
 
-            piece.transform.SetAsLastSibling();
             piece.GetComponent<Piece>().Reverse();
             yield return new WaitForSeconds(0.3f);
         }

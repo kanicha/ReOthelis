@@ -5,23 +5,23 @@ using UnityEngine.UI;
 
 public class P2ResultScore : MonoBehaviour
 {
+    //テキストに表示
     public Text scoreText = null;
     //スコアの初期値
     float score;
-    public static bool isScoreAppear = false;
 
     void Start()
     {
-        isScoreAppear = false;
+        //ToStringでString型にしてテキストに表示
         scoreText.text = score.ToString();
-        StartCoroutine(ScoreAnimation(Player_2.displayScore, 0.5f));
+        StartCoroutine(ScoreAnimation(30000, 0.5f));
     }
 
     // スコアをアニメーションさせる
     IEnumerator ScoreAnimation(float addScore, float time)
     {
         //前回のスコア
-        float before = score;
+        float befor = score;
         //今回のスコア
         float after = score + addScore;
         //得点加算
@@ -34,7 +34,7 @@ public class P2ResultScore : MonoBehaviour
         {
             float rate = elapsedTime / time;
             // テキストの更新
-            scoreText.text = (before + (after - before) * rate).ToString("f0");
+            scoreText.text = (befor + (after - befor) * rate).ToString("f0");
 
             elapsedTime += Time.deltaTime;
             // 0.01秒待つ
@@ -42,6 +42,5 @@ public class P2ResultScore : MonoBehaviour
         }
         // 最終的な着地のスコア
         scoreText.text = after.ToString();
-        isScoreAppear = true;
     }
 }

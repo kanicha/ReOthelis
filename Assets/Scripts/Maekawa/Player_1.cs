@@ -14,9 +14,6 @@ public class Player_1 : PlayerBase
     private const string _PLAYER1_RSTICK_HORIZONTAL_NAME = "Horizontal Stick-R";
     private const string _PLAYER1_RSTICK_VERTICAL_NAME = "Vertical Stick-R";
 
-    public static int displayScore = 0;
-    public static int displayPieceAmount = 0;
-
     void Start()
     {
         base.DS4_circle_name = _PLAYER1_CIRCLE_NAME;
@@ -50,9 +47,7 @@ public class Player_1 : PlayerBase
 
         base.gaugeController.DrawGauge(reversedCount);
         base.scoreText.text = string.Format("{0:00000}", base.score);
-
-        displayScore = base.score;
-        displayPieceAmount = base.myPieceCount;
+        base.myPieceCountText.text = "駒数" + base.myPieceCount.ToString();
 
         base.SaveKeyValue();
         base.KeyInput();
