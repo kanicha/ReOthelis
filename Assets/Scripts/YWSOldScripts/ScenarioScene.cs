@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ScenarioScene : MonoBehaviour
 {
-    //ƒ{ƒ^ƒ“‚Ìæ“¾
+    //ãƒœã‚¿ãƒ³ã®å–å¾—
     [SerializeField] private Button _button;
     public Button Button
     {
@@ -14,7 +14,7 @@ public class ScenarioScene : MonoBehaviour
 
     private GameSceneManager _gameSceneManager;
 
-    //Ÿ‚ÌƒV[ƒ“‚Éi‚Ş
+    //æ¬¡ã®ã‚·ãƒ¼ãƒ³ã«é€²ã‚€
     public void ButtonPush(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("CharacterSelect");
