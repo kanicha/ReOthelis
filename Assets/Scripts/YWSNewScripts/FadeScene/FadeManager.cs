@@ -43,7 +43,7 @@ public class FadeManager : MonoBehaviour
         canvasGroup.alpha = 0.0f;
         while(canvasGroup.alpha < 1.0f)
         {
-            canvasGroup.alpha += Time.deltaTime + 1.5f;
+            canvasGroup.alpha += Time.deltaTime;
             if (canvasGroup.alpha >= 1.0f)
             {
                 canvasGroup.alpha = 1.0f;
