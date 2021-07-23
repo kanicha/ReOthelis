@@ -17,7 +17,6 @@ public class MainGameChara2P : MonoBehaviour
     {
         charactorImage2P.sprite = charactorImageArray2P[(int) CharaImageMoved2P.charaType2P];
         charactorSkillImage2P.sprite = charactorSkillImageArray2P[(int)CharaImageMoved2P.charaType2P];
-        charactorGageImage2P.sprite = charactorGageImageArray2P[(int) CharaImageMoved2P.charaType2P];
     }
 
     // Update is called once per frame
