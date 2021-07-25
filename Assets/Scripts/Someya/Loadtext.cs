@@ -16,10 +16,12 @@ public class Loadtext : MonoBehaviour
     //一文字一文字の表示する速さ
     [SerializeField]
     float novelSpeed;
+    // CSVの行数
+    public int height; 
     private void Start()
     {
         // Resouces下のCSV読み込み
-        csvFile = Resources.Load("Datas/oseris_01") as TextAsset;
+        csvFile = Resources.Load("Resources/Datas/oseris_01") as TextAsset;
         StringReader reader = new StringReader(csvFile.text);
 
         // , で分割しつつ一行ずつ読み込み
@@ -31,6 +33,10 @@ public class Loadtext : MonoBehaviour
             string line = reader.ReadLine();
             // , 区切りでリストに追加
             csvDatas.Add(line.Split(','));
+            // 行数加算
+            height++; 
         }
+        // csvDatas[行][列]を指定して値を自由に取り出せる
+        Debug.Log(csvDatas[2][1]);
     }
 }

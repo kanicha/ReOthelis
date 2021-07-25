@@ -218,6 +218,7 @@ MonoBehaviour:
   maintext: {fileID: 38517066}
   csvFile: {fileID: 4900000, guid: 5b262f6504f0906468e8e2fda4484115, type: 3}
   novelSpeed: 0
+  height: 0
 --- !u!1 &156281176
 GameObject:
   m_ObjectHideFlags: 0
