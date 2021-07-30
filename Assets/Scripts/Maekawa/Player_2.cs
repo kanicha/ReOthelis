@@ -47,10 +47,11 @@ public class Player_2 : PlayerBase
     {
         if (base.reversedCount > MAX_REVERSE_COUNT)
             base.reversedCount = MAX_REVERSE_COUNT;
-        base.reversedCountImage.fillAmount = base.reversedCount;
+
+        base.gaugeController.DrawGauge(reversedCount);
         base.scoreText.text = string.Format("{0:00000}", base.score);
+
         displayScore = base.score;
-        base.myPieceCountText.text = "駒数" + base.myPieceCount.ToString();
         displayPieceAmount = base.myPieceCount;
 
         base.SaveKeyValue();

@@ -7,17 +7,14 @@ public class MainGameChara2P : MonoBehaviour
 {
     [SerializeField] private Image charactorImage2P;
     [SerializeField] private Image charactorSkillImage2P;
-    [SerializeField] private Image charactorGageImage2P;
     [SerializeField] private Sprite[] charactorImageArray2P;
     [SerializeField] private Sprite[] charactorSkillImageArray2P;
-    [SerializeField] private Sprite[] charactorGageImageArray2P;
     
     // Start is called before the first frame update
     void Start()
     {
         charactorImage2P.sprite = charactorImageArray2P[(int) CharaImageMoved2P.charaType2P];
         charactorSkillImage2P.sprite = charactorSkillImageArray2P[(int)CharaImageMoved2P.charaType2P];
-        charactorGageImage2P.sprite = charactorGageImageArray2P[(int) CharaImageMoved2P.charaType2P];
     }
 
     // Update is called once per frame
