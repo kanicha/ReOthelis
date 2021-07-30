@@ -62,7 +62,7 @@ public class Judgment : MonoBehaviour
     void Update()
     {
         //テキストを透明から不透明に変更
-        if (IsAppear == false && P1ResultScore.isScoreAppear == true && P2ResultScore.isScoreAppear == true)
+        if (IsAppear == false && ScoreDisplay.IsScoreAppear == true)
         {
             P1Judgment.color = new Color(0,0,0,TextColor);
             P2Judgment.color = new Color(0,0,0,TextColor);
@@ -75,7 +75,7 @@ public class Judgment : MonoBehaviour
         }
 
         //テキストのサイズを変更
-        if (IsDecreased == false && IsIncreased == true && P1ResultScore.isScoreAppear == true && P2ResultScore.isScoreAppear == true)
+        if (IsDecreased == false && IsIncreased == true && ScoreDisplay.IsScoreAppear == true)
         {
             P1Judgment.fontSize = FirstSize;
             P2Judgment.fontSize = FirstSize;
@@ -87,7 +87,7 @@ public class Judgment : MonoBehaviour
                 IsIncreased = false;
             }
         }
-        else if (IsDecreased == true && IsIncreased == false && P1ResultScore.isScoreAppear == true && P2ResultScore.isScoreAppear == true)
+        else if (IsDecreased == true && IsIncreased == false && ScoreDisplay.IsScoreAppear == true)
         {
             P1Judgment.fontSize = FirstSize;
             P2Judgment.fontSize = FirstSize;
