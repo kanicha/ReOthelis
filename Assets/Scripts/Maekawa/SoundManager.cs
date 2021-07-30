@@ -161,12 +161,12 @@ public class SoundManager : MonoBehaviour
         // çƒê∂íÜÇ≈ñ≥Ç¢AudioSouceÇ≈ñ¬ÇÁÇ∑
         foreach (AudioSource source in SEsources)
         {
-            if (false == source.isPlaying)
-            {
+            /*if (false == source.isPlaying)
+            {*/
                 source.clip = SE[index];
                 source.Play();
                 return;
-            }
+            /*}*/
         }
     }
 
