@@ -13,6 +13,14 @@ public class GameSceneChange : MonoBehaviour
     void Start()
     {
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
+        if (_gameSceneManager) 
+        {
+            Debug.Log("ALL GREEN");
+        } 
+        else 
+        {
+            Debug.Log("No game object called GameSceneManager found");
+        }
         _gameDirector = FindObjectOfType<GameDirector>();
         Approval.AddListener(() => SceneChange(_gameSceneManager));
         isGameEnd = false;
