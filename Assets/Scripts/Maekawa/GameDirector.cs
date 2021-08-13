@@ -226,7 +226,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             if (Map.Instance.CheckWall(checkPos))
             {
                 _generator.Generate(checkPos + Vector3.forward);
-                /*_activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));*/
                 break;
             }
             else
@@ -235,7 +234,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 if (Map.Instance.CheckWall(checkPos))
                 {
                     _generator.Generate(checkPos + Vector3.forward);
-                    /*_activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));*/
                     break;
                 }
             }
