@@ -92,7 +92,7 @@ public class PlayerBase : MonoBehaviour
     protected Skill_1 skill_1;
     protected Skill_2 skill_2;
     protected Skill_3 skill_3;
-    
+
     protected readonly Vector3[] rotationPos = new Vector3[]
     {
         new Vector3(0, 0, 1),
@@ -204,7 +204,9 @@ public class PlayerBase : MonoBehaviour
         else if (_DS4_R1_value || _keyBoardRight)
             rotationNum += 3; // 右回転(=左に3回転)
 
+        // 初期値0 左から 1,2,3
         rotationNum %= 4;
+
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
         Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
 
@@ -466,12 +468,22 @@ public class PlayerBase : MonoBehaviour
     }
 
     // 一列一式
-    // 横一列をすべて自分の色に変える(固定駒は無視)
+    // 横一列をすべて自分の色に変える(固定駒も適用)
     public void OneRowSet(int cost)
     {
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
             !ActivateCheck(GameDirector.GameState.active, cost))
             return;
+
+        Debug.Log("一列一式");
+        /*reversedCount -= cost;*/
+
+        Piece piece1 = controllPiece1.GetComponent<Piece>();
+        Piece piece2 = controllPiece1.GetComponent<Piece>();
+
+        // 設置したコマの座標を習得してきて、コマの座標から横軸にプレイヤーの色に変更を行う (movedPosで取れそう)
+
+        // 回転の値 (縦と横) に応じて処理を変更
     }
 
     // 優先頂戴
@@ -494,11 +506,11 @@ public class PlayerBase : MonoBehaviour
         int myColorCount = 0;
         int skillReversePoint = 25;
         int addAns = 0;
-        
+
         Debug.Log("強奪一瞬");
         reversedCount -= cost;
         /*SoundManager.Instance.PlaySE(5);*/
-        
+
         // forでループで探索
         for (int i = 2; i < 9; i++)
         {
@@ -508,12 +520,13 @@ public class PlayerBase : MonoBehaviour
                 if (Map.Instance.map[i, j] == myColor)
                 {
                     Map.Instance.map[i, j] = enemyColor;
-                    Map.Instance.pieceMap[i,j].GetComponent<Piece>().SkillReverse();
+                    Map.Instance.pieceMap[i, j].GetComponent<Piece>().SkillReverse();
                 }
-                else if(Map.Instance.map[i,j] == enemyColor)
+                else if (Map.Instance.map[i, j] == enemyColor)
                 {
                     Map.Instance.map[i, j] = myColor;
-                    Map.Instance.pieceMap[i,j].GetComponent<Piece>().SkillReverse();
+                    Map.Instance.pieceMap[i, j].GetComponent<Piece>().SkillReverse();
+                    // 自分の色 -> 相手の色 になったコマをカウント
                     myColorCount++;
                 }
             }
@@ -523,13 +536,9 @@ public class PlayerBase : MonoBehaviour
         addAns = myColorCount * skillReversePoint;
         // 自分の色が黒だったら黒にポイント
         if (myColor == Map.Instance.black)
-        {
             GameDirector.Instance.AddScore(true, addAns);
-        }
         // 白だったら白にポイント
         else if (myColor == Map.Instance.white)
-        {
             GameDirector.Instance.AddScore(false, addAns);
-        }
     }
 }
