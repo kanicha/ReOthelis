@@ -51,7 +51,7 @@ public class Piece : MonoBehaviour
         SoundManager.Instance.PlaySE(4);
     }
 
-    public void SkillReverse()
+    public void SkillReverse(bool se)
     {
         if (pieceType == PieceType.black)
         {
@@ -65,8 +65,12 @@ public class Piece : MonoBehaviour
             this.name = "black";
             this.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
+        
+        if (se)
         SoundManager.Instance.PlaySE(4);
-    }
+        else
+            return;
+        }
 
     public void ChangeColor(bool isActive)
     {

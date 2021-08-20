@@ -350,7 +350,7 @@ public class PlayerBase : MonoBehaviour
                 if (Map.Instance.map[z, x] == enemyColor)
                 {
                     Map.Instance.map[z, x] = myColor;
-                    Map.Instance.pieceMap[z, x].GetComponent<Piece>().SkillReverse();
+                    Map.Instance.pieceMap[z, x].GetComponent<Piece>().SkillReverse(true);
                     // 検索、リバース処理を行う
                     Map.Instance.TagClear();
                     Map.Instance.isSkillActivate = true;
@@ -520,12 +520,12 @@ public class PlayerBase : MonoBehaviour
                 if (Map.Instance.map[i, j] == myColor)
                 {
                     Map.Instance.map[i, j] = enemyColor;
-                    Map.Instance.pieceMap[i, j].GetComponent<Piece>().SkillReverse();
+                    Map.Instance.pieceMap[i, j].GetComponent<Piece>().SkillReverse(false);
                 }
                 else if (Map.Instance.map[i, j] == enemyColor)
                 {
                     Map.Instance.map[i, j] = myColor;
-                    Map.Instance.pieceMap[i, j].GetComponent<Piece>().SkillReverse();
+                    Map.Instance.pieceMap[i, j].GetComponent<Piece>().SkillReverse(false);
                     // 自分の色 -> 相手の色 になったコマをカウント
                     myColorCount++;
                 }
