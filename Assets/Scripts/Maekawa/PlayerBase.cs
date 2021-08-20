@@ -18,10 +18,14 @@ public class PlayerBase : MonoBehaviour
     protected string DS4_Lstick_horizontal_name = "";
     protected string DS4_Lstick_vertical_name = "";
     protected string DS4_Rstick_horizontal_name = "";
+
     protected string DS4_Rstick_vertical_name = "";
+
     // キーボード操作用キーネーム
     protected string key_board_horizontal_name = "";
+
     protected string key_board_vertical_name = "";
+
     // キーバリュー
     protected bool _DS4_circle_value = false;
     protected bool _DS4_cross_value = false;
@@ -35,14 +39,18 @@ public class PlayerBase : MonoBehaviour
     protected float _DS4_Lstick_horizontal_value = 0.0f;
     protected float _DS4_Lstick_vertical_value = 0.0f;
     protected float _DS4_Rstick_horizontal_value = 0.0f;
+
     protected float _DS4_Rstick_vertical_value = 0.0f;
+
     // 前フレームのキーバリュー
     protected float last_horizontal_value = 0.0f;
     protected float last_vertical_value = 0.0f;
     protected float lastLstick_horizontal_value = 0.0f;
     protected float last_Lstick_vertical_value = 0.0f;
     protected float last_Rstick_horizontal_value = 0.0f;
+
     protected float last_Rstick_vertical_value = 0.0f;
+
     // キーボード用
     //private float _keyBoardHorizontal = 0.0f;
     //private float _keyBoardVertical = 0.0f;
@@ -50,16 +58,11 @@ public class PlayerBase : MonoBehaviour
     private bool _keyBoardRight = false;
 
     //
-    [SerializeField, Header("1マス落下する時間")]
-    private float _fallTime = 0.0f;
-    [SerializeField]
-    protected Text scoreText = null;
-    [SerializeField]
-    protected Text myPieceCountText = null;
-    [SerializeField]
-    protected Image charactorImage = null;
-    [SerializeField]
-    protected GaugeController gaugeController = null;
+    [SerializeField, Header("1マス落下する時間")] private float _fallTime = 0.0f;
+    [SerializeField] protected Text scoreText = null;
+    [SerializeField] protected Text myPieceCountText = null;
+    [SerializeField] protected Image charactorImage = null;
+    [SerializeField] protected GaugeController gaugeController = null;
     private float _timeCount = 0.0f;
     public bool isMyTurn = false;
     public bool isPreurn = false;
@@ -69,28 +72,33 @@ public class PlayerBase : MonoBehaviour
     public int myPieceCount = 0;
     public GameObject controllPiece1 = null;
     public GameObject controllPiece2 = null;
+
     public int rotationNum = 0;
+
     //
     private const int _SKILL_1_COST = 3;
     private const int _SKILL_2_COST = 5;
-    private const int _SKILL_3_COST = 10;
+    private const int _SKILL_3_COST = 15;
     protected Piece.PieceType playerType = Piece.PieceType.none;
     protected string myColor = "";
     protected string enemyColor = "";
 
     protected delegate void Skill_1(int cost);
+
     protected delegate void Skill_2(int cost);
+
     protected delegate void Skill_3(int cost);
+
     protected Skill_1 skill_1;
     protected Skill_2 skill_2;
     protected Skill_3 skill_3;
 
     protected readonly Vector3[] rotationPos = new Vector3[]
     {
-        new Vector3(0,  0, 1),
+        new Vector3(0, 0, 1),
         new Vector3(-1, 0, 0),
-        new Vector3(0,  0, -1),
-        new Vector3(1,  0, 0)
+        new Vector3(0, 0, -1),
+        new Vector3(1, 0, 0)
     };
 
     protected void KeyInput()
@@ -133,18 +141,18 @@ public class PlayerBase : MonoBehaviour
     protected void InputSkill()
     {
         // スキル1...× スキル2...△ スキル3...□
-        if(Input.GetKeyDown(KeyCode.Z) || _DS4_cross_value)
+        if (Input.GetKeyDown(KeyCode.Z) || _DS4_cross_value)
         {
             skill_1(_SKILL_1_COST);
         }
-        else if(Input.GetKeyDown(KeyCode.X) || _DS4_triangle_value)
+        else if (Input.GetKeyDown(KeyCode.X) || _DS4_triangle_value)
         {
             skill_2(_SKILL_2_COST);
         }
-        //else if(Input.GetKeyDown(KeyCode.C) || _DS4_square_value)
-        //{
-        //    skill_3(_SKILL_3_COST);
-        //}
+        else if (Input.GetKeyDown(KeyCode.C) || _DS4_square_value)
+        {
+            skill_3(_SKILL_3_COST);
+        }
     }
 
     protected void PieceMove()
@@ -155,16 +163,19 @@ public class PlayerBase : MonoBehaviour
         _timeCount += Time.deltaTime;
 
         // 移動
-        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
+        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
+            (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
             move.x = -1;
-        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
+        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) ||
+                 (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
             move.x = 1;
-        else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+        else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
+                 (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
             isDown = true;
             move.z = -1;
         }
-        else if (_timeCount >= _fallTime)// 時間落下
+        else if (_timeCount >= _fallTime) // 時間落下
         {
             _timeCount = 0;
             move.z = -1;
@@ -181,7 +192,7 @@ public class PlayerBase : MonoBehaviour
             controllPiece2.transform.position = rotMovedPos;
         }
         else if (isDown)
-            GameDirector.Instance.gameState = GameDirector.GameState.confirmed;// 下入力をし、障害物があるなら確定
+            GameDirector.Instance.gameState = GameDirector.GameState.confirmed; // 下入力をし、障害物があるなら確定
     }
 
     protected void PieceRotate()
@@ -189,19 +200,21 @@ public class PlayerBase : MonoBehaviour
         int lastNum = rotationNum;
 
         if (_DS4_L1_value || _keyBoardLeft)
-            rotationNum++;// 左回転
+            rotationNum++; // 左回転
         else if (_DS4_R1_value || _keyBoardRight)
-            rotationNum += 3;// 右回転(=左に3回転)
+            rotationNum += 3; // 右回転(=左に3回転)
 
+        // 初期値0 左から 1,2,3
         rotationNum %= 4;
+
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
         Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
 
 
         if (Map.Instance.CheckWall(rotatedPos))
         {
-            if ((int)rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
-                rotationNum = lastNum;  
+            if ((int) rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
+                rotationNum = lastNum;
             else
             {
                 if (rotationNum != lastNum)
@@ -218,9 +231,11 @@ public class PlayerBase : MonoBehaviour
         Vector3 move = Vector3.zero;
 
         // 左右移動
-        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
+        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
+            (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
             move.x = -1;
-        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) || (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
+        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) ||
+                 (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
             move.x = 1;
 
         // 左右に入力したなら移動
@@ -234,7 +249,7 @@ public class PlayerBase : MonoBehaviour
                 Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
 
                 // 壁まで行ったらスルー
-                if ((int)movedPos.x < 1 || (int)movedPos.x > 8)
+                if ((int) movedPos.x < 1 || (int) movedPos.x > 8)
                     break;
 
                 // 移動後の座標の1つ下に障害物がなければ
@@ -248,7 +263,8 @@ public class PlayerBase : MonoBehaviour
         }
 
         // ↓入力したら本操作開始
-        if ((_DS4_vertical_value < 0 && last_vertical_value == 0) || (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+        if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
+            (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
             GameDirector.Instance.intervalTime = 0;
             GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
@@ -263,25 +279,29 @@ public class PlayerBase : MonoBehaviour
     protected void SetSkills(int charaType)
     {
         // 同じ意味のenumが1Pと2Pで2つあるのでenum→int→enumにキャスト 
-        CharaImageMoved.CharaType1P type = (CharaImageMoved.CharaType1P)charaType;
+        CharaImageMoved.CharaType1P type = (CharaImageMoved.CharaType1P) charaType;
 
         switch (type)
         {
             case CharaImageMoved.CharaType1P.Cow:
                 skill_1 = Cancellation;
                 skill_2 = MyPieceLock;
+                skill_3 = RobberyMoment;
                 break;
             case CharaImageMoved.CharaType1P.Mouse:
                 skill_1 = RandomLock;
                 skill_2 = Cancellation;
+                skill_3 = OneRowSet;
                 break;
             case CharaImageMoved.CharaType1P.Rabbit:
                 skill_1 = TakeAway;
                 skill_2 = RandomLock;
+                skill_3 = PriorityGet;
                 break;
             case CharaImageMoved.CharaType1P.Tiger:
                 skill_1 = MyPieceLock;
                 skill_2 = TakeAway;
+                skill_3 = ForceConvertion;
                 break;
             default:
                 break;
@@ -289,15 +309,15 @@ public class PlayerBase : MonoBehaviour
     }
 
     private bool CheckColor(string type)
-    { 
+    {
         bool isThere = false;
         // 下一行を除いたコマが置かれる可能性のあるマスを探索
         for (int i = 2; i < 9; i++)
-            for (int j = 1; j < 9; j++)
-            {
-                if (Map.Instance.map[i, j] == type)
-                    isThere = true;
-            }
+        for (int j = 1; j < 9; j++)
+        {
+            if (Map.Instance.map[i, j] == type)
+                isThere = true;
+        }
 
         return isThere;
     }
@@ -347,7 +367,8 @@ public class PlayerBase : MonoBehaviour
     // 固定
     public void RandomLock(int cost)
     {
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) && !ActivateCheck(GameDirector.GameState.active, cost))
+        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+            !ActivateCheck(GameDirector.GameState.active, cost))
             return;
 
         // 最下段を除くマップに自分の色があるなら(固定コマは対象外)
@@ -383,7 +404,8 @@ public class PlayerBase : MonoBehaviour
     // 残影
     public void MyPieceLock(int cost)
     {
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) && !ActivateCheck(GameDirector.GameState.active, cost))
+        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+            !ActivateCheck(GameDirector.GameState.active, cost))
             return;
 
         Piece piece1 = controllPiece1.GetComponent<Piece>();
@@ -410,7 +432,6 @@ public class PlayerBase : MonoBehaviour
     public void Cancellation(int cost)
     {
         // 自分の色のコマを操作していなくても発動できる(意味はない)ので要相談
-
         if (!ActivateCheck(GameDirector.GameState.preActive, cost))
             return;
 
@@ -426,9 +447,98 @@ public class PlayerBase : MonoBehaviour
             Debug.Log("打消し");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
-            Map.Instance.ignoreFixityPiece = targetColor;// 相手の固定コマをひっくり返せるようになる
+            Map.Instance.ignoreFixityPiece = targetColor; // 相手の固定コマをひっくり返せるようになる
         }
         else
             Debug.Log("相手色の固定コマがありません");
+    }
+
+    /*
+       キャラクター限定スキル定義
+     */
+
+    // 強制変換
+    // 配置した駒と周りの駒をすべて自分の色に置き換える
+    public void ForceConvertion(int cost)
+    {
+        // ゲームステートがpreActive(自動落下前) と active(操作中)の時コストがある時 発動可能
+        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+            !ActivateCheck(GameDirector.GameState.active, cost))
+            return;
+    }
+
+    // 一列一式
+    // 横一列をすべて自分の色に変える(固定駒も適用)
+    public void OneRowSet(int cost)
+    {
+        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+            !ActivateCheck(GameDirector.GameState.active, cost))
+            return;
+
+        Debug.Log("一列一式");
+        /*reversedCount -= cost;*/
+
+        Piece piece1 = controllPiece1.GetComponent<Piece>();
+        Piece piece2 = controllPiece1.GetComponent<Piece>();
+
+        // 設置したコマの座標を習得してきて、コマの座標から横軸にプレイヤーの色に変更を行う (movedPosで取れそう)
+
+        // 回転の値 (縦と横) に応じて処理を変更
+    }
+
+    // 優先頂戴
+    // 下一番端の自分の色の駒からナナメに全て自分の色に置き換える
+    public void PriorityGet(int cost)
+    {
+        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+            !ActivateCheck(GameDirector.GameState.active, cost))
+            return;
+    }
+
+    // 強奪一瞬
+    // 盤面のコマを自分の駒と相手の駒を入れ替える
+    public void RobberyMoment(int cost)
+    {
+        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+            !ActivateCheck(GameDirector.GameState.active, cost))
+            return;
+
+        int myColorCount = 0;
+        int skillReversePoint = 25;
+        int addAns = 0;
+
+        Debug.Log("強奪一瞬");
+        reversedCount -= cost;
+        /*SoundManager.Instance.PlaySE(5);*/
+
+        // forでループで探索
+        for (int i = 2; i < 9; i++)
+        {
+            for (int j = 1; j < 9; j++)
+            {
+                // マップを探索して自分の色があった場合それを相手の色に置き換え
+                if (Map.Instance.map[i, j] == myColor)
+                {
+                    Map.Instance.map[i, j] = enemyColor;
+                    Map.Instance.pieceMap[i, j].GetComponent<Piece>().SkillReverse();
+                }
+                else if (Map.Instance.map[i, j] == enemyColor)
+                {
+                    Map.Instance.map[i, j] = myColor;
+                    Map.Instance.pieceMap[i, j].GetComponent<Piece>().SkillReverse();
+                    // 自分の色 -> 相手の色 になったコマをカウント
+                    myColorCount++;
+                }
+            }
+        }
+
+        // 自分の色 -> 相手の色 になった枚数 x25p を計算して代入
+        addAns = myColorCount * skillReversePoint;
+        // 自分の色が黒だったら黒にポイント
+        if (myColor == Map.Instance.black)
+            GameDirector.Instance.AddScore(true, addAns);
+        // 白だったら白にポイント
+        else if (myColor == Map.Instance.white)
+            GameDirector.Instance.AddScore(false, addAns);
     }
 }
