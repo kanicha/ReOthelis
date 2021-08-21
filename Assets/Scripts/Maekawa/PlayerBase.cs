@@ -78,8 +78,10 @@ public class PlayerBase : MonoBehaviour
     //
     private const int _SKILL_1_COST = 3;
     private const int _SKILL_2_COST = 5;
-    private const int _SKILL_3_COST = 15;
+    private const int _SKILL_3_COST = 1;
     protected Piece.PieceType playerType = Piece.PieceType.none;
+    private bool _isBlack;
+    private bool _isWhite;
     protected string myColor = "";
     protected string enemyColor = "";
 
@@ -213,7 +215,7 @@ public class PlayerBase : MonoBehaviour
 
         if (Map.Instance.CheckWall(rotatedPos))
         {
-            if ((int) rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
+            if ((int)rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
                 rotationNum = lastNum;
             else
             {
@@ -249,7 +251,7 @@ public class PlayerBase : MonoBehaviour
                 Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
 
                 // 壁まで行ったらスルー
-                if ((int) movedPos.x < 1 || (int) movedPos.x > 8)
+                if ((int)movedPos.x < 1 || (int)movedPos.x > 8)
                     break;
 
                 // 移動後の座標の1つ下に障害物がなければ
@@ -279,7 +281,7 @@ public class PlayerBase : MonoBehaviour
     protected void SetSkills(int charaType)
     {
         // 同じ意味のenumが1Pと2Pで2つあるのでenum→int→enumにキャスト 
-        CharaImageMoved.CharaType1P type = (CharaImageMoved.CharaType1P) charaType;
+        CharaImageMoved.CharaType1P type = (CharaImageMoved.CharaType1P)charaType;
 
         switch (type)
         {
@@ -313,11 +315,11 @@ public class PlayerBase : MonoBehaviour
         bool isThere = false;
         // 下一行を除いたコマが置かれる可能性のあるマスを探索
         for (int i = 2; i < 9; i++)
-        for (int j = 1; j < 9; j++)
-        {
-            if (Map.Instance.map[i, j] == type)
-                isThere = true;
-        }
+            for (int j = 1; j < 9; j++)
+            {
+                if (Map.Instance.map[i, j] == type)
+                    isThere = true;
+            }
 
         return isThere;
     }
@@ -325,6 +327,15 @@ public class PlayerBase : MonoBehaviour
     private bool ActivateCheck(GameDirector.GameState targetState, int cost)
     {
         if (GameDirector.Instance.gameState == targetState && reversedCount >= cost)
+            return true;
+        else
+            return false;
+    }
+
+    // そのスキルを既に使用したかどうかチェック関数
+    private bool isSkillCheck()
+    {
+        if (_isBlack == true || _isWhite == true)
             return true;
         else
             return false;
@@ -499,7 +510,8 @@ public class PlayerBase : MonoBehaviour
     // 盤面のコマを自分の駒と相手の駒を入れ替える
     public void RobberyMoment(int cost)
     {
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+        if (isSkillCheck() &&
+            !ActivateCheck(GameDirector.GameState.preActive, cost) &&
             !ActivateCheck(GameDirector.GameState.active, cost))
             return;
 
@@ -536,9 +548,16 @@ public class PlayerBase : MonoBehaviour
         addAns = myColorCount * skillReversePoint;
         // 自分の色が黒だったら黒にポイント
         if (myColor == Map.Instance.black)
+        {
             GameDirector.Instance.AddScore(true, addAns);
+            _isBlack = true;
+        }
         // 白だったら白にポイント
         else if (myColor == Map.Instance.white)
+        {
             GameDirector.Instance.AddScore(false, addAns);
+            _isWhite = true;
+        }
+
     }
 }
