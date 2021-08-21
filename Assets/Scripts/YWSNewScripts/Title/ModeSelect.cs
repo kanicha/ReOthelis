@@ -12,7 +12,6 @@ public class ModeSelect : Player1Base
     private int _moveSpeed = 10;
     private bool _repeatHit = false;
     private GameSceneManager _gameSceneManager;
-    UnityEvent Approval = new UnityEvent();
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +20,6 @@ public class ModeSelect : Player1Base
         _selectCount = 0;
 
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
-        Approval.AddListener(() => SceneChange(_gameSceneManager));
     }
 
     // Update is called once per frame
@@ -36,7 +34,7 @@ public class ModeSelect : Player1Base
         else if (_DS4_circle_value && _selectCount == 1 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
         {
             _repeatHit = true;
-            Approval.Invoke();
+            SceneChange(_gameSceneManager);
         }
 
         //���L�[���͂ɍ��킹�ăJ�[�\������Ɉړ�������
