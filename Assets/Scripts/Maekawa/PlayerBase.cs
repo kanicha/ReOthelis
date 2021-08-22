@@ -78,10 +78,10 @@ public class PlayerBase : MonoBehaviour
     //
     private const int _SKILL_1_COST = 3;
     private const int _SKILL_2_COST = 5;
-    private const int _SKILL_3_COST = 1;
+    private const int _SKILL_3_COST = 15;
     protected Piece.PieceType playerType = Piece.PieceType.none;
-    private bool _isBlack;
-    private bool _isWhite;
+    private bool _isSkillBlack;
+    private bool _isSkillWhite;
     protected string myColor = "";
     protected string enemyColor = "";
 
@@ -335,7 +335,7 @@ public class PlayerBase : MonoBehaviour
     // そのスキルを既に使用したかどうかチェック関数
     private bool isSkillCheck()
     {
-        if (_isBlack == true || _isWhite == true)
+        if (_isSkillBlack == true || _isSkillWhite == true)
             return true;
         else
             return false;
@@ -473,8 +473,9 @@ public class PlayerBase : MonoBehaviour
     public void ForceConvertion(int cost)
     {
         // ゲームステートがpreActive(自動落下前) と active(操作中)の時コストがある時 発動可能
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost))
+        if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+             !ActivateCheck(GameDirector.GameState.active, cost)) ||
+            isSkillCheck())
             return;
     }
 
@@ -482,8 +483,9 @@ public class PlayerBase : MonoBehaviour
     // 横一列をすべて自分の色に変える(固定駒も適用)
     public void OneRowSet(int cost)
     {
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost))
+        if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+             !ActivateCheck(GameDirector.GameState.active, cost)) ||
+            isSkillCheck())
             return;
 
         Debug.Log("一列一式");
@@ -510,9 +512,9 @@ public class PlayerBase : MonoBehaviour
     // 盤面のコマを自分の駒と相手の駒を入れ替える
     public void RobberyMoment(int cost)
     {
-        if (isSkillCheck() &&
-            !ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost))
+        if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+            !ActivateCheck(GameDirector.GameState.active, cost)) ||
+            isSkillCheck())
             return;
 
         int myColorCount = 0;
@@ -550,13 +552,13 @@ public class PlayerBase : MonoBehaviour
         if (myColor == Map.Instance.black)
         {
             GameDirector.Instance.AddScore(true, addAns);
-            _isBlack = true;
+            _isSkillBlack = true;
         }
         // 白だったら白にポイント
         else if (myColor == Map.Instance.white)
         {
             GameDirector.Instance.AddScore(false, addAns);
-            _isWhite = true;
+            _isSkillWhite = true;
         }
 
     }
