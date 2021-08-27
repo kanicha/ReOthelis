@@ -23,6 +23,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     private bool _isDown = true;
     public GameObject[] _activePieces = new GameObject[2];
     public float intervalTime = 0;
+    public bool _isLanding = false;
     public GameState gameState = GameState.none;
     public GameState nextStateCue = GameState.none;
     public enum GameState
@@ -57,6 +58,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         switch (gameState)
         {
             case GameState.preActive:
+                _isLanding = false;
                 _isDown = true;
                 _timeCount += Time.deltaTime;
                 if (_timeCount > _preActiveTime)
@@ -96,7 +98,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
                 Map.Instance.FallPiece(_activePieces[0]);
                 Map.Instance.FallPiece(_activePieces[1]);
-
+                _isLanding = true;
                 gameState = GameState.falled;
                 break;
 

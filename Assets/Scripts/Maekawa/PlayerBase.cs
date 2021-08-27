@@ -78,12 +78,14 @@ public class PlayerBase : MonoBehaviour
     //
     private const int _SKILL_1_COST = 3;
     private const int _SKILL_2_COST = 5;
-    private const int _SKILL_3_COST = 15;
+    private const int _SKILL_3_COST = 1;
     protected Piece.PieceType playerType = Piece.PieceType.none;
     private bool _isSkillBlack;
     private bool _isSkillWhite;
     protected string myColor = "";
+    protected string myColorfixity = "";
     protected string enemyColor = "";
+    protected string enemyColorfixity = "";
 
     protected delegate void Skill_1(int cost);
 
@@ -215,7 +217,7 @@ public class PlayerBase : MonoBehaviour
 
         if (Map.Instance.CheckWall(rotatedPos))
         {
-            if ((int)rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
+            if ((int) rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
                 rotationNum = lastNum;
             else
             {
@@ -251,7 +253,7 @@ public class PlayerBase : MonoBehaviour
                 Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
 
                 // 壁まで行ったらスルー
-                if ((int)movedPos.x < 1 || (int)movedPos.x > 8)
+                if ((int) movedPos.x < 1 || (int) movedPos.x > 8)
                     break;
 
                 // 移動後の座標の1つ下に障害物がなければ
@@ -281,7 +283,7 @@ public class PlayerBase : MonoBehaviour
     protected void SetSkills(int charaType)
     {
         // 同じ意味のenumが1Pと2Pで2つあるのでenum→int→enumにキャスト 
-        CharaImageMoved.CharaType1P type = (CharaImageMoved.CharaType1P)charaType;
+        CharaImageMoved.CharaType1P type = (CharaImageMoved.CharaType1P) charaType;
 
         switch (type)
         {
@@ -315,11 +317,11 @@ public class PlayerBase : MonoBehaviour
         bool isThere = false;
         // 下一行を除いたコマが置かれる可能性のあるマスを探索
         for (int i = 2; i < 9; i++)
-            for (int j = 1; j < 9; j++)
-            {
-                if (Map.Instance.map[i, j] == type)
-                    isThere = true;
-            }
+        for (int j = 1; j < 9; j++)
+        {
+            if (Map.Instance.map[i, j] == type)
+                isThere = true;
+        }
 
         return isThere;
     }
@@ -489,14 +491,95 @@ public class PlayerBase : MonoBehaviour
             return;
 
         Debug.Log("一列一式");
-        /*reversedCount -= cost;*/
+        reversedCount -= cost;
 
+        // 座標が低いほうが優先だったらいい感じになりそう
+        // コマが着地したら処理を行う
+        // Boolでフラグ管理をし、それがtrueになったら処理
+        StartCoroutine(OneRawWaitCoroutine());
+    }
+
+    /// <summary>
+    /// 一列一式のコルーチン処理関数
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator OneRawWaitCoroutine()
+    {
+        while (!GameDirector.Instance._isLanding)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        // スキル変数
+        // コマの座標を習得
         Piece piece1 = controllPiece1.GetComponent<Piece>();
-        Piece piece2 = controllPiece1.GetComponent<Piece>();
+        Piece piece2 = controllPiece2.GetComponent<Piece>();
+        int piece1z = (int) piece1.transform.position.z * -1;
+        int piece2z = (int) piece2.transform.position.z * -1;
 
-        // 設置したコマの座標を習得してきて、コマの座標から横軸にプレイヤーの色に変更を行う (movedPosで取れそう)
+        // コマの座標を比較して1個目と2個目の座標が同じだった場合
+        if (piece1z == piece2z)
+        {
+            // piece2のx座標を使用して、for文で回す
+            OneRawReverse(piece2z);
+        }
+        // 比較して片方が落ちた場合落ちたほうの横列を変更
+        else if (piece1z != piece2z && piece1z < piece2z)
+        {
+            OneRawReverse(piece2z);
+        }
+        else
+        {
+            OneRawReverse(piece1z);
+        }
 
-        // 回転の値 (縦と横) に応じて処理を変更
+        // ゲームステートを変更
+        Map.Instance.TagClear();
+        yield return null;
+    }
+
+    private void OneRawReverse(int z)
+    {
+        // スコア変数
+        int myColorCount = 0;
+        int skillReversePoint = 100;
+        int addAns = 0;
+
+        GameDirector.Instance.gameState = GameDirector.GameState.idle;
+
+        // 値で縦軸を判別 (引数で)
+        // 横軸分ループを回す
+        for (int x = 0; x < 9; x++)
+        {
+            // 横軸を変える
+            if (Map.Instance.map[z, x] == enemyColor || Map.Instance.map[z, x] == enemyColorfixity)
+            {
+                Map.Instance.map[z, x] = myColor;
+                Map.Instance.pieceMap[z, x].GetComponent<Piece>().SkillReverse(false);
+                myColorCount++;
+            }
+            else
+            {
+                continue;
+            }
+        }
+
+        // 自分の色 -> 相手の色 になった枚数 x100p を計算して代入
+        addAns = myColorCount * skillReversePoint;
+        // 自分の色が黒だったら黒にポイント
+        if (myColor == Map.Instance.black)
+        {
+            GameDirector.Instance.AddScore(true, addAns);
+            _isSkillBlack = true;
+        }
+        // 白だったら白にポイント
+        else if (myColor == Map.Instance.white)
+        {
+            GameDirector.Instance.AddScore(false, addAns);
+            _isSkillWhite = true;
+        }
+        
+        GameDirector.Instance.gameState = GameDirector.GameState.reversed;
     }
 
     // 優先頂戴
@@ -504,8 +587,9 @@ public class PlayerBase : MonoBehaviour
     public void PriorityGet(int cost)
     {
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost))
-            return;
+            !ActivateCheck(GameDirector.GameState.active, cost) ||
+            isSkillCheck())
+        return;
     }
 
     // 強奪一瞬
@@ -513,7 +597,7 @@ public class PlayerBase : MonoBehaviour
     public void RobberyMoment(int cost)
     {
         if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost)) ||
+             !ActivateCheck(GameDirector.GameState.active, cost)) ||
             isSkillCheck())
             return;
 
@@ -560,6 +644,5 @@ public class PlayerBase : MonoBehaviour
             GameDirector.Instance.AddScore(false, addAns);
             _isSkillWhite = true;
         }
-
     }
 }
