@@ -578,7 +578,7 @@ public class PlayerBase : MonoBehaviour
             GameDirector.Instance.AddScore(false, addAns);
             _isSkillWhite = true;
         }
-        
+
         GameDirector.Instance.gameState = GameDirector.GameState.reversed;
     }
 
@@ -586,10 +586,26 @@ public class PlayerBase : MonoBehaviour
     // 下一番端の自分の色の駒からナナメに全て自分の色に置き換える
     public void PriorityGet(int cost)
     {
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost) ||
+        if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+             !ActivateCheck(GameDirector.GameState.active, cost)) ||
             isSkillCheck())
-        return;
+            return;
+
+        Debug.Log("優先頂戴");
+        reversedCount -= cost;
+        
+        // プレイヤーが白プレイヤーか黒か判別
+        if (myColor == Map.Instance.black)
+        {
+            // 判別したら座標右端と左端スタートを区分
+            
+            // 白なら左端 (x,1 z,9)
+            // for文でxとzの値を増やしながらそこに相手のコマがあったら置き換え(固定ごまも)
+        }
+        else if (myColor == Map.Instance.white)
+        {
+            // 黒なら右端　(x,8 z,9)
+        }
     }
 
     // 強奪一瞬
