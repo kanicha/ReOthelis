@@ -9,7 +9,6 @@ public class ModeSelect : Player1Base
     [SerializeField] private RectTransform cursor;
 
     int _selectCount = 0;
-    private int _moveSpeed = 10;
     private bool _repeatHit = false;
     private GameSceneManager _gameSceneManager;
 
