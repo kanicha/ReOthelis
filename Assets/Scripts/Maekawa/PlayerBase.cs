@@ -334,7 +334,10 @@ public class PlayerBase : MonoBehaviour
             return false;
     }
 
-    // そのスキルを既に使用したかどうかチェック関数
+    /// <summary>
+    /// そのスキルをすでに使用しているかどうかのチェック関数
+    /// </summary>
+    /// <returns></returns>
     private bool isSkillCheck()
     {
         if (_isSkillBlack == true || _isSkillWhite == true)
@@ -343,6 +346,28 @@ public class PlayerBase : MonoBehaviour
             return false;
     }
 
+    /// <summary>
+    /// スキルでスコアを追加する処理関数(スキル使用フラグも処理)
+    /// </summary>
+    /// <param name="multiplyNum">追加するスコアの倍数</param>
+    private void AddSkillScore(int multiplyNum,int colorCount)
+    {
+        int addAns = 0;
+
+        addAns = colorCount * multiplyNum;
+
+        if (myColor == Map.Instance.black)
+        {
+            GameDirector.Instance.AddScore(true, addAns);
+            _isSkillBlack = true;
+        }
+        else if (myColor == Map.Instance.white)
+        {
+            GameDirector.Instance.AddScore(false, addAns);
+            _isSkillWhite = true;
+        }
+    }
+    
     //  強引
     public void TakeAway(int cost)
     {
@@ -479,6 +504,7 @@ public class PlayerBase : MonoBehaviour
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
             isSkillCheck())
             return;
+        
     }
 
     // 一列一式
@@ -498,7 +524,6 @@ public class PlayerBase : MonoBehaviour
         // Boolでフラグ管理をし、それがtrueになったら処理
         StartCoroutine(OneRawWaitCoroutine());
     }
-
     /// <summary>
     /// 一列一式のコルーチン処理関数
     /// </summary>
@@ -537,13 +562,14 @@ public class PlayerBase : MonoBehaviour
         Map.Instance.TagClear();
         yield return null;
     }
-
+    /// <summary>
+    /// 一列一式のリバース処理
+    /// </summary>
+    /// <param name="z"></param>
     private void OneRawReverse(int z)
     {
         // スコア変数
         int myColorCount = 0;
-        int skillReversePoint = 100;
-        int addAns = 0;
 
         GameDirector.Instance.gameState = GameDirector.GameState.idle;
 
@@ -563,21 +589,8 @@ public class PlayerBase : MonoBehaviour
                 continue;
             }
         }
-
-        // 自分の色 -> 相手の色 になった枚数 x100p を計算して代入
-        addAns = myColorCount * skillReversePoint;
-        // 自分の色が黒だったら黒にポイント
-        if (myColor == Map.Instance.black)
-        {
-            GameDirector.Instance.AddScore(true, addAns);
-            _isSkillBlack = true;
-        }
-        // 白だったら白にポイント
-        else if (myColor == Map.Instance.white)
-        {
-            GameDirector.Instance.AddScore(false, addAns);
-            _isSkillWhite = true;
-        }
+        
+        AddSkillScore(100,myColorCount);
 
         GameDirector.Instance.gameState = GameDirector.GameState.reversed;
     }
@@ -593,19 +606,61 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("優先頂戴");
         reversedCount -= cost;
-        
-        // プレイヤーが白プレイヤーか黒か判別
+
+        // プレイヤーが黒プレイヤーか白か判別
         if (myColor == Map.Instance.black)
         {
-            // 判別したら座標右端と左端スタートを区分
-            
-            // 白なら左端 (x,1 z,9)
-            // for文でxとzの値を増やしながらそこに相手のコマがあったら置き換え(固定ごまも)
+            PriorityGetReverse(true);
         }
         else if (myColor == Map.Instance.white)
         {
-            // 黒なら右端　(x,8 z,9)
+            PriorityGetReverse(false);
         }
+    }
+    /// <summary>
+    /// 優先頂戴の処理記述
+    /// </summary>
+    private void PriorityGetReverse(bool black)
+    {
+        // 判別したら座標右端と左端スタートを区分
+        // 黒なら右端 白なら左端
+        int x;
+        int myColorCount = 0;
+        switch (black)
+        {
+            case true:
+                x = 1;
+                break;
+            case false:
+                x = 10;
+                break;
+            default:
+                return;
+        }
+
+        for (int z = 0; z < 10; z++)
+        {
+            if (Map.Instance.map[x, z] == enemyColor || Map.Instance.map[x, z] == enemyColorfixity)
+            {
+                Map.Instance.map[x, z] = myColor;
+                Map.Instance.pieceMap[x, z].GetComponent<Piece>().SkillReverse(false);
+                myColorCount++;
+            }
+
+            switch (black)
+            {
+                case true:
+                    x++;
+                    break;
+                case false:
+                    x--;
+                    break;
+                default:
+                    return;
+            }
+        }
+        
+        AddSkillScore(150,myColorCount);
     }
 
     // 強奪一瞬
@@ -618,8 +673,6 @@ public class PlayerBase : MonoBehaviour
             return;
 
         int myColorCount = 0;
-        int skillReversePoint = 25;
-        int addAns = 0;
 
         Debug.Log("強奪一瞬");
         reversedCount -= cost;
@@ -645,20 +698,7 @@ public class PlayerBase : MonoBehaviour
                 }
             }
         }
-
-        // 自分の色 -> 相手の色 になった枚数 x25p を計算して代入
-        addAns = myColorCount * skillReversePoint;
-        // 自分の色が黒だったら黒にポイント
-        if (myColor == Map.Instance.black)
-        {
-            GameDirector.Instance.AddScore(true, addAns);
-            _isSkillBlack = true;
-        }
-        // 白だったら白にポイント
-        else if (myColor == Map.Instance.white)
-        {
-            GameDirector.Instance.AddScore(false, addAns);
-            _isSkillWhite = true;
-        }
+        
+        AddSkillScore(25,myColorCount);
     }
 }
