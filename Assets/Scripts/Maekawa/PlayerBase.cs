@@ -505,7 +505,24 @@ public class PlayerBase : MonoBehaviour
             isSkillCheck())
             return;
         
+        Debug.Log("強制変換");
+        /*reversedCount -= cost;*/
+        
+        StartCoroutine(ForceConvertionCoroutine());
     }
+
+    IEnumerator ForceConvertionCoroutine()
+    {
+        // コマの座標を習得
+        Piece piece1 = controllPiece1.GetComponent<Piece>();
+        Piece piece2 = controllPiece2.GetComponent<Piece>();
+        int piece1z = (int) piece1.transform.position.z * -1;
+        int piece2z = (int) piece2.transform.position.z * -1;
+        
+        // piece1の座標に値を足して、それを相手の駒に変換
+        yield return null;
+    }
+
 
     // 一列一式
     // 横一列をすべて自分の色に変える(固定駒も適用)
@@ -557,8 +574,7 @@ public class PlayerBase : MonoBehaviour
         {
             OneRawReverse(piece1z);
         }
-
-        // ゲームステートを変更
+        
         Map.Instance.TagClear();
         yield return null;
     }
@@ -592,9 +608,11 @@ public class PlayerBase : MonoBehaviour
         
         AddSkillScore(100,myColorCount);
 
+        // ゲームステートを変更
         GameDirector.Instance.gameState = GameDirector.GameState.reversed;
     }
 
+    
     // 優先頂戴
     // 下一番端の自分の色の駒からナナメに全て自分の色に置き換える
     public void PriorityGet(int cost)
@@ -663,6 +681,7 @@ public class PlayerBase : MonoBehaviour
         AddSkillScore(150,myColorCount);
     }
 
+    
     // 強奪一瞬
     // 盤面のコマを自分の駒と相手の駒を入れ替える
     public void RobberyMoment(int cost)
