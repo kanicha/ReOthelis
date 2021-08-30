@@ -78,7 +78,7 @@ public class PlayerBase : MonoBehaviour
     //
     private const int _SKILL_1_COST = 3;
     private const int _SKILL_2_COST = 5;
-    private const int _SKILL_3_COST = 1;
+    private const int _SKILL_3_COST = 15;
     protected Piece.PieceType playerType = Piece.PieceType.none;
     private bool _isSkillBlack;
     private bool _isSkillWhite;
@@ -506,21 +506,70 @@ public class PlayerBase : MonoBehaviour
             return;
         
         Debug.Log("強制変換");
-        /*reversedCount -= cost;*/
+        reversedCount -= cost;
         
         StartCoroutine(ForceConvertionCoroutine());
     }
-
+    /// <summary>
+    /// 強制変換のコルーチン処理関数
+    /// </summary>
+    /// <returns></returns>
     IEnumerator ForceConvertionCoroutine()
     {
+        while (!GameDirector.Instance._isLanding)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        
         // コマの座標を習得
         Piece piece1 = controllPiece1.GetComponent<Piece>();
         Piece piece2 = controllPiece2.GetComponent<Piece>();
         int piece1z = (int) piece1.transform.position.z * -1;
         int piece2z = (int) piece2.transform.position.z * -1;
+        int piece1x = (int) piece1.transform.position.x;
+        int piece2x = (int) piece2.transform.position.x;
         
-        // piece1の座標に値を足して、それを相手の駒に変換
+        GameDirector.Instance.gameState = GameDirector.GameState.idle;
+        
+        // 関数呼び出し
+        ForceConvertionReverse(piece1x,piece1z);
+        ForceConvertionReverse(piece2x,piece2z);
+
+        GameDirector.Instance.gameState = GameDirector.GameState.reversed;
         yield return null;
+    }
+    /// <summary>
+    /// 強制変換の処理関数
+    /// </summary>
+    /// <param name="px">pieceX座標 (横)</param>
+    /// <param name="pz">pieceZ座標 (縦)</param>
+    private void ForceConvertionReverse(int px, int pz)
+    {
+        int myColorCount = 0;
+        
+        // 落ちたコマの座標 x,z - 1をして3回ネストで回す
+        for (int z = pz; z < pz + 3; z++)
+        {
+            for (int x = px; x < px + 3; x++)
+            {
+                // 一番下の変更できないコマが来た場合スルー
+                if (z >= 10)
+                {
+                    continue;
+                }
+                
+                // その座標に相手の駒と相手の固定駒があった場合、自分の色に変更
+                if (Map.Instance.map[z - 1, x - 1] == enemyColor || Map.Instance.map[z - 1, x - 1] == enemyColorfixity)
+                {
+                    Map.Instance.map[z - 1, x - 1] = myColor;
+                    Map.Instance.pieceMap[z - 1, x - 1].GetComponent<Piece>().SkillReverse(false);
+                    myColorCount++;
+                }
+            }
+        }
+        
+        // スコア追加
+        AddSkillScore(100,myColorCount);
     }
 
 
@@ -535,8 +584,7 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("一列一式");
         reversedCount -= cost;
-
-        // 座標が低いほうが優先だったらいい感じになりそう
+        
         // コマが着地したら処理を行う
         // Boolでフラグ管理をし、それがtrueになったら処理
         StartCoroutine(OneRawWaitCoroutine());
