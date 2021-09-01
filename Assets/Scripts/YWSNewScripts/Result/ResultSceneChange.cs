@@ -6,14 +6,12 @@ using UnityEngine.Events;
 public class ResultSceneChange : Player1Base
 {
     private GameSceneManager _gameSceneManager;
-    UnityEvent Approval = new UnityEvent();
     
     private bool _repeatHit = false;
 
     void Start()
     {
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
-        Approval.AddListener(() => SceneChange(_gameSceneManager));
     }
 
     // Update is called once per frame
@@ -27,7 +25,7 @@ public class ResultSceneChange : Player1Base
         else if (_DS4_triangle_value || Input.GetKeyDown(KeyCode.Space))
         {
             _repeatHit = true;
-            Approval.Invoke();
+            SceneChange(_gameSceneManager);
         }
     }
 

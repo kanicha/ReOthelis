@@ -23,6 +23,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     private bool _isDown = true;
     public GameObject[] _activePieces = new GameObject[2];
     public float intervalTime = 0;
+    public bool _isLanding = false;
     public GameState gameState = GameState.none;
     public GameState nextStateCue = GameState.none;
     public enum GameState
@@ -38,12 +39,14 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         end,
         ended,
     }
+    private AIThinking _aiThinking; 
 
     void Start()
     {
         SoundManager.Instance.PlayBGM(0);
         _player1.isMyTurn = false;
         _player2.isMyTurn = false;
+        _aiThinking = GetComponent<AIThinking>();
 
         // 最初は2セット生成
         PieceSet();
@@ -57,6 +60,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         switch (gameState)
         {
             case GameState.preActive:
+                _isLanding = false;
                 _isDown = true;
                 _timeCount += Time.deltaTime;
                 if (_timeCount > _preActiveTime)
@@ -96,7 +100,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
                 Map.Instance.FallPiece(_activePieces[0]);
                 Map.Instance.FallPiece(_activePieces[1]);
-
+                _isLanding = true;
                 gameState = GameState.falled;
                 break;
 
@@ -211,6 +215,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             _player2.controllPiece1 = _activePieces[0];
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
+            _aiThinking.CheckVertical();
+            _aiThinking.ShowData();
         }
         gameState = GameState.preActive;
     }
@@ -226,7 +232,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             if (Map.Instance.CheckWall(checkPos))
             {
                 _generator.Generate(checkPos + Vector3.forward);
-                /*_activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));*/
                 break;
             }
             else
@@ -235,7 +240,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 if (Map.Instance.CheckWall(checkPos))
                 {
                     _generator.Generate(checkPos + Vector3.forward);
-                    /*_activePieces[1] = _generator.Generate(_DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1));*/
                     break;
                 }
             }

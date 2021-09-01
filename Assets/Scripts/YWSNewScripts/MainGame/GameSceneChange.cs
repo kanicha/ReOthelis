@@ -7,22 +7,12 @@ public class GameSceneChange : MonoBehaviour
 {
     private GameSceneManager _gameSceneManager;
     private GameDirector _gameDirector;
-    UnityEvent Approval = new UnityEvent();
     bool isGameEnd = false;
 
     void Start()
     {
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
-        if (_gameSceneManager) 
-        {
-            Debug.Log("ALL GREEN");
-        } 
-        else 
-        {
-            Debug.Log("No game object called GameSceneManager found");
-        }
         _gameDirector = FindObjectOfType<GameDirector>();
-        Approval.AddListener(() => SceneChange(_gameSceneManager));
         isGameEnd = false;
     }
 
@@ -31,7 +21,7 @@ public class GameSceneChange : MonoBehaviour
     {
         if (_gameDirector.gameState == GameDirector.GameState.end && isGameEnd == false)
         {
-            Approval.Invoke();
+            SceneChange(_gameSceneManager);
             isGameEnd = true;
         }
     }

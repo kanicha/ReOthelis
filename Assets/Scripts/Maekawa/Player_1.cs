@@ -39,7 +39,9 @@ public class Player_1 : PlayerBase
         // キャラクターに応じてスキルをセット
         base.playerType = Piece.PieceType.black;
         base.myColor = Map.Instance.black;
+        base.myColorfixity = Map.Instance.fixityBlack;
         base.enemyColor = Map.Instance.white;
+        base.enemyColorfixity = Map.Instance.fixityWhite;
         SetSkills((int)CharaImageMoved.charaType1P);
     }
 

@@ -32,7 +32,6 @@ public class GaugeController : MonoBehaviour
                 break;
             default:
                 break;
-
         }
         _defaultSize = _gauge.size;
         DrawGauge(0);
