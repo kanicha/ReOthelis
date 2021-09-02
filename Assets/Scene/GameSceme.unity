@@ -797,8 +797,8 @@ MonoBehaviour:
   charactorImageArray2P:
   - {fileID: 21300000, guid: c65869561b4c62c419129f0c997e4410, type: 3}
   - {fileID: 21300000, guid: a7fdec302c3748143bd5b9a1715dfef3, type: 3}
-  - {fileID: 21300000, guid: 6f18e7d73f66bfa46bc53e703420df45, type: 3}
   - {fileID: 21300000, guid: 0563e93f3e51336459a14e69a77f0ecc, type: 3}
+  - {fileID: 21300000, guid: 8f1343df498f1b14c8b16264ca9405bf, type: 3}
   charactorSkillImageArray2P:
   - {fileID: 21300000, guid: e4fb14fe004fd14498d55b7336dfe17a, type: 3}
   - {fileID: 21300000, guid: 505d8fe686ff0854d81cc607c340f1bd, type: 3}
