@@ -11,32 +11,21 @@ public class Judgment : MonoBehaviour
     [SerializeField] private Sprite[] JudgeImageArray2P;
     private float ImageColor = 0;
     private int Winner = 0;
-    private float TextR = 1;
-    private float TextG = 1;
-    private float TextB = 1;
     private bool IsAppear = false;
     //private bool IsGotDark = false;
     //勝敗判定のテキストは2倍で出現し、0.8倍にまで縮小し、最後に1倍に戻る。
     private RectTransform P1Appear;
     private RectTransform P2Appear;
     //2倍の時のサイズ
-    public int FirstSize = 300;
-    /*public int FirstWidth_P1x = 800;
-    public int FirstHeight_P1y = 500;
-    public int FirstWidth_P2x = 800;
-    public int FirstHeight_P2y = 400;*/
+    public int FirstWidth_X = 800;
+    public int FirstHeight_Y = 500;
     //0.8倍の時のサイズ
-    public int MiddleSize = 120;
-    /*public int MiddleWidth_P1x = 320;
-    public int MiddleHeight_P1y = 200;
-    public int MiddleWidth_P2x = 320;
-    public int MiddleHeight_P2y = 160;*/
+    public int MiddleWidth_X = 320;
+    public int MiddleHeight_Y = 200;
     //1倍の時のサイズ
-    public int FinalSize = 150;
-    /*public int FinalWidth_P1x = 400;
-    public int FinalHeight_P1y = 250;
-    public int FinalWidth_P2x = 400;
-    public int FinalHeight_p2y = 200;*/
+    public int FinalWidth_X = 400;
+    public int FinalHeight_Y = 250;
+    public int AppearSpeed = 3;
     private bool IsDecreased = false;
     private bool IsIncreased = true;
 
@@ -50,10 +39,10 @@ public class Judgment : MonoBehaviour
         ImageColor = 0;
         JudgeImage1P.color = new Color(255,255,255,0);
         JudgeImage2P.color = new Color(255,255,255,0);
-        /*P1Appear = GameObject.Find("JudgeImage1P").GetComponent<RectTransform>();
+        P1Appear = GameObject.Find("JudgeImage1P").GetComponent<RectTransform>();
         P2Appear = GameObject.Find("JudgeImage2P").GetComponent<RectTransform>();
-        P1Appear.sizeDelta = new Vector2(FirstWidth_P1x,FirstHeight_P1y);
-        P2Appear.sizeDelta = new Vector2(FirstWidth_P2x,FirstHeight_P2y);*/
+        P1Appear.sizeDelta = new Vector2(FirstWidth_X,FirstHeight_Y);
+        P2Appear.sizeDelta = new Vector2(FirstWidth_X,FirstHeight_Y);
         
         if (Player_1.displayScore > Player_2.displayScore)
         {
@@ -92,32 +81,34 @@ public class Judgment : MonoBehaviour
         }
 
         //画像のサイズを変更
-        /*if (IsDecreased == false && IsIncreased == true && ScoreDisplay.IsScoreAppear == true)
+        if (IsDecreased == false && IsIncreased == true && ScoreDisplay.IsScoreAppear == true)
         {
-            //P1Judgment.fontSize = FirstSize;
-            //P2Judgment.fontSize = FirstSize;
-            P1Appear.sizeDelta = new Vector2(FirstWidth_P1x,FirstHeight_P1y);
-            P2Appear.sizeDelta = new Vector2(FirstWidth_P2x,FirstHeight_P2y);
-            FirstSize -= 5;
-            if (FirstSize <= MiddleSize)
+            P1Appear.sizeDelta = new Vector2(FirstWidth_X,FirstHeight_Y);
+            P2Appear.sizeDelta = new Vector2(FirstWidth_X,FirstHeight_Y);
+            FirstWidth_X -= AppearSpeed;
+            FirstHeight_Y -= AppearSpeed;
+            if (FirstWidth_X <= MiddleWidth_X && FirstHeight_Y <= MiddleHeight_Y)
             {
-                FirstSize = MiddleSize;
+                FirstWidth_X = MiddleWidth_X;
+                FirstHeight_Y = MiddleHeight_Y;
                 IsDecreased = true;
                 IsIncreased = false;
             }
         }
         else if (IsDecreased == true && IsIncreased == false && ScoreDisplay.IsScoreAppear == true)
         {
-            //P1Judgment.fontSize = FirstSize;
-            //P2Judgment.fontSize = FirstSize;
-            FirstSize += 5;
-            if (FirstSize >= FinalSize)
+            P1Appear.sizeDelta = new Vector2(FirstWidth_X,FirstHeight_Y);
+            P2Appear.sizeDelta = new Vector2(FirstWidth_X,FirstHeight_Y);
+            FirstWidth_X += AppearSpeed;
+            FirstHeight_Y += AppearSpeed;
+            if (FirstWidth_X >= FinalWidth_X && FirstHeight_Y >= FinalHeight_Y)
             {
-                FirstSize = FinalSize;
+                FirstWidth_X = FinalWidth_X;
+                FirstHeight_Y = FinalHeight_Y;
                 IsDecreased = false;
                 IsIncreased = false;
             }
-        }*/
+        }
 
 
         /*if (IsAppear == true && IsGotDark == false && Winner == 1)

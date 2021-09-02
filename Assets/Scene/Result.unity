@@ -641,7 +641,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b9f73bfc3a902aa46bf32fe9d3307abe, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 727665dff92e71b4e9a637feb1e58384, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1169,7 +1169,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 740, y: -90}
-  m_SizeDelta: {x: 400, y: 200}
+  m_SizeDelta: {x: 400, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &874266676
 MonoBehaviour:
@@ -1191,7 +1191,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: dc610efe752982c41b5899f3f7d44bda, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8533de2d70fe3b04ebf8c6aff698d450, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2613,14 +2613,17 @@ MonoBehaviour:
   JudgeImage1P: {fileID: 540882907}
   JudgeImage2P: {fileID: 874266676}
   JudgeImageArray1P:
-  - {fileID: 21300000, guid: b9f73bfc3a902aa46bf32fe9d3307abe, type: 3}
-  - {fileID: 21300000, guid: dc610efe752982c41b5899f3f7d44bda, type: 3}
+  - {fileID: 21300000, guid: 727665dff92e71b4e9a637feb1e58384, type: 3}
+  - {fileID: 21300000, guid: 8533de2d70fe3b04ebf8c6aff698d450, type: 3}
   JudgeImageArray2P:
-  - {fileID: 21300000, guid: b9f73bfc3a902aa46bf32fe9d3307abe, type: 3}
-  - {fileID: 21300000, guid: dc610efe752982c41b5899f3f7d44bda, type: 3}
-  FirstSize: 300
-  MiddleSize: 120
-  FinalSize: 150
+  - {fileID: 21300000, guid: 727665dff92e71b4e9a637feb1e58384, type: 3}
+  - {fileID: 21300000, guid: 8533de2d70fe3b04ebf8c6aff698d450, type: 3}
+  FirstWidth_X: 800
+  FirstHeight_Y: 500
+  MiddleWidth_X: 320
+  MiddleHeight_Y: 200
+  FinalWidth_X: 400
+  FinalHeight_Y: 250
 --- !u!1 &1839300276
 GameObject:
   m_ObjectHideFlags: 0
