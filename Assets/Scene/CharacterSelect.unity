@@ -5640,7 +5640,8 @@ MonoBehaviour:
   gaugeController: {fileID: 0}
   isMyTurn: 0
   isPreurn: 0
-  score: 0
+  reverseScore: 0
+  preScore: 0
   reversedCount: 0
   myPieceCount: 0
   controllPiece1: {fileID: 0}
@@ -5679,7 +5680,8 @@ MonoBehaviour:
   gaugeController: {fileID: 0}
   isMyTurn: 0
   isPreurn: 0
-  score: 0
+  reverseScore: 0
+  preScore: 0
   reversedCount: 0
   myPieceCount: 0
   controllPiece1: {fileID: 0}
@@ -5716,7 +5718,8 @@ MonoBehaviour:
   gaugeController: {fileID: 0}
   isMyTurn: 0
   isPreurn: 0
-  score: 0
+  reverseScore: 0
+  preScore: 0
   reversedCount: 0
   myPieceCount: 0
   controllPiece1: {fileID: 0}
@@ -5749,10 +5752,10 @@ MonoBehaviour:
   _player: 1
   _charaName: {fileID: 1028931832}
   _charaNameImage:
-  - {fileID: 21300000, guid: 26b50cffab957384fa7f3d791bdf2181, type: 3}
-  - {fileID: 21300000, guid: 5baebd50af0e7a042b09cb3bc8ee88f5, type: 3}
-  - {fileID: 21300000, guid: 9fa3d58ef8ad1214ca1ed368b6444cc9, type: 3}
-  - {fileID: 21300000, guid: 385b753f26fba634782874a62cceef62, type: 3}
+  - {fileID: 21300000, guid: c343f4ccbb0e8d94cb0838ba4db60b95, type: 3}
+  - {fileID: 21300000, guid: 3eaf66db2217e1941b0f24f8c6b317a9, type: 3}
+  - {fileID: 21300000, guid: 054aefa9502764d4b9e7aacab5088853, type: 3}
+  - {fileID: 21300000, guid: 195f59f504540484495777a8851f865c, type: 3}
   _skillObject:
   - {fileID: 408572413}
   - {fileID: 163554684}
@@ -5773,10 +5776,10 @@ MonoBehaviour:
   _player: 2
   _charaName: {fileID: 1407499557}
   _charaNameImage:
-  - {fileID: 21300000, guid: 8f8dfbcd257d52a418d4283d4a077283, type: 3}
-  - {fileID: 21300000, guid: 7d50df20ba43e754f97145e57cd9c402, type: 3}
-  - {fileID: 21300000, guid: e61cf7a893ff1974b9078f7a34fc4642, type: 3}
-  - {fileID: 21300000, guid: 535c7d90ae59dec49874990eadc07820, type: 3}
+  - {fileID: 21300000, guid: f9155475aa91de5498cc42df3424ba28, type: 3}
+  - {fileID: 21300000, guid: c09c5934250821f41be96c80b15eeeb5, type: 3}
+  - {fileID: 21300000, guid: ec57db69612c5d44a81b13a8886e94ae, type: 3}
+  - {fileID: 21300000, guid: 40f93cb622b03024a9634362d3e4d7f3, type: 3}
   _skillObject:
   - {fileID: 8568734}
   - {fileID: 521338149}
