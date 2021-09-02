@@ -139,9 +139,9 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 break;
 
             case GameState.end:
-                if (_player1.score > _player2.score)
+                if (_player1.reverseScore > _player2.reverseScore)
                     Debug.Log("<color=red>1Pの勝ち</color>");
-                else if (_player1.score == _player2.score)
+                else if (_player1.reverseScore == _player2.reverseScore)
                         Debug.Log("<color=orange>引き分け</color>");
                 else
                     Debug.Log("<color=blue>2Pの勝ち</color>");
@@ -253,11 +253,23 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     {
         if(isBlack)
         {
-            _player1.score += point;
+            _player1.reverseScore += point;
         }
         else
         {
-            _player2.score += point;
+            _player2.reverseScore += point;
+        }
+    }
+
+    public void AddPreScore(bool isBlack, int point)
+    {
+        if (isBlack)
+        {
+            _player1.preScore += point;
+        }
+        else
+        {
+            _player2.preScore += point;
         }
     }
 

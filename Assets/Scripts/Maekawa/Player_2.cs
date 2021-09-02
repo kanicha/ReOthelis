@@ -14,6 +14,8 @@ public class Player_2 : PlayerBase
     private const string _PLAYER2_RSTICK_HORIZONTAL_NAME = "Horizontal Stick-R_2";
     private const string _PLAYER2_RSTICK_VERTICAL_NAME = "Vertical Stick-R_2";
 
+    public static int displayReverseScore = 0;
+    public static int displayPreScore = 0;
     public static int displayScore = 0;
     public static int displayPieceAmount = 0;
 
@@ -42,7 +44,7 @@ public class Player_2 : PlayerBase
         base.myColorfixity = Map.Instance.fixityWhite;
         base.enemyColor = Map.Instance.black;
         base.enemyColorfixity = Map.Instance.fixityBlack;
-        SetSkills((int)CharaImageMoved2P.charaType2P);
+        SetSkills((int) CharaImageMoved2P.charaType2P);
     }
 
     void Update()
@@ -51,9 +53,11 @@ public class Player_2 : PlayerBase
             base.reversedCount = MAX_REVERSE_COUNT;
 
         base.gaugeController.DrawGauge(reversedCount);
-        base.scoreText.text = string.Format("{0:00000}", base.score);
+        base.scoreText.text = string.Format("{0:00000}", base.reverseScore);
 
-        displayScore = base.score;
+        displayReverseScore = base.reverseScore;
+        displayPreScore = base.preScore;
+        displayScore = base.reverseScore + base.preScore;
         displayPieceAmount = base.myPieceCount;
 
         base.SaveKeyValue();

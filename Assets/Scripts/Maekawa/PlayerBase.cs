@@ -66,7 +66,8 @@ public class PlayerBase : MonoBehaviour
     private float _timeCount = 0.0f;
     public bool isMyTurn = false;
     public bool isPreurn = false;
-    public int score = 0;
+    public int reverseScore = 0;
+    public int preScore = 0;
     public int reversedCount = 0;
     protected const int MAX_REVERSE_COUNT = 20;
     public int myPieceCount = 0;
