@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 public class P1ResultScore : MonoBehaviour
 {
-    public Text scoreText = null;
+    [SerializeField, Header("コマ数スコア")] private Text preScoreText = null;
+    [SerializeField, Header("基本スコア")] private Text reverseText = null;
+    
     //スコアの初期値
     float score;
     public static bool isScoreAppear = false;
@@ -13,11 +15,14 @@ public class P1ResultScore : MonoBehaviour
     void Start()
     {
         isScoreAppear = false;
-        scoreText.text = score.ToString();
-        StartCoroutine(ScoreAnimation(Player_1.displayScore, 0.5f));
+        preScoreText.text = Player_1.displayPreScore.ToString();
+        reverseText.text = Player_1.displayReverseScore.ToString();
+        
+        /*scoreText.text = score.ToString();
+        StartCoroutine(ScoreAnimation(Player_1.displayScore, 0.5f));*/
     }
 
-    // スコアをアニメーションさせる
+    /*// スコアをアニメーションさせる
     IEnumerator ScoreAnimation(float addScore, float time)
     {
         //前回のスコア
@@ -43,5 +48,5 @@ public class P1ResultScore : MonoBehaviour
         // 最終的な着地のスコア
         scoreText.text = after.ToString();
         isScoreAppear = true;
-    }
+    }*/
 }

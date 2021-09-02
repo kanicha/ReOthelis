@@ -7,8 +7,8 @@ public class Judgment : MonoBehaviour
 {
     public Text P1Judgment = null;
     public Text P2Judgment = null;
-    public Image P1Image = null;
-    public Image P2Image = null;
+    /*public Image P1Image = null;
+    public Image P2Image = null;*/
     private float TextColor = 0;
     private int Winner = 0;
     private float TextR = 1;
@@ -38,6 +38,7 @@ public class Judgment : MonoBehaviour
         P2Judgment.color = new Color(0,0,0,0);
         P1Judgment.fontSize = FirstSize;
         P2Judgment.fontSize = FirstSize;
+        
         if (Player_1.displayScore > Player_2.displayScore)
         {
             P1Judgment.text = "WIN";
@@ -102,7 +103,7 @@ public class Judgment : MonoBehaviour
 
         if (IsAppear == true && IsGotDark == false && Winner == 1)
         {
-            P2Image.color = new Color(TextR,TextG,TextB);
+            /*P2Image.color = new Color(TextR,TextG,TextB);*/
             TextR -= Time.deltaTime;
             TextG -= Time.deltaTime;
             TextB -= Time.deltaTime;
@@ -116,7 +117,7 @@ public class Judgment : MonoBehaviour
         }
         else if (IsAppear == true && IsGotDark == false && Winner == 2)
         {
-            P1Image.color = new Color(TextR,TextG,TextB);
+            /*P1Image.color = new Color(TextR,TextG,TextB);*/
             TextR -= Time.deltaTime;
             TextG -= Time.deltaTime;
             TextB -= Time.deltaTime;

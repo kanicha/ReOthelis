@@ -340,8 +340,8 @@ public class Map : SingletonMonoBehaviour<Map>
 
         if (isEnd)
         {
-            GameDirector.Instance.AddScore(true, GameDirector.Instance.point * blackCount);
-            GameDirector.Instance.AddScore(false, GameDirector.Instance.point * whiteCount);
+            GameDirector.Instance.AddPreScore(true, GameDirector.Instance.point * blackCount);
+            GameDirector.Instance.AddPreScore(false, GameDirector.Instance.point * whiteCount);
         }
 
         return isEnd;

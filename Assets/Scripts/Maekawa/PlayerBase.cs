@@ -66,7 +66,8 @@ public class PlayerBase : MonoBehaviour
     private float _timeCount = 0.0f;
     public bool isMyTurn = false;
     public bool isPreurn = false;
-    public int score = 0;
+    public int reverseScore = 0;
+    public int preScore = 0;
     public int reversedCount = 0;
     protected const int MAX_REVERSE_COUNT = 20;
     public int myPieceCount = 0;
@@ -80,8 +81,12 @@ public class PlayerBase : MonoBehaviour
     private const int _SKILL_2_COST = 5;
     private const int _SKILL_3_COST = 15;
     protected Piece.PieceType playerType = Piece.PieceType.none;
+    private bool _isSkillBlack;
+    private bool _isSkillWhite;
     protected string myColor = "";
+    protected string myColorfixity = "";
     protected string enemyColor = "";
+    protected string enemyColorfixity = "";
 
     protected delegate void Skill_1(int cost);
 
@@ -330,6 +335,40 @@ public class PlayerBase : MonoBehaviour
             return false;
     }
 
+    /// <summary>
+    /// そのスキルをすでに使用しているかどうかのチェック関数
+    /// </summary>
+    /// <returns></returns>
+    private bool isSkillCheck()
+    {
+        if (_isSkillBlack == true || _isSkillWhite == true)
+            return true;
+        else
+            return false;
+    }
+
+    /// <summary>
+    /// スキルでスコアを追加する処理関数(スキル使用フラグも処理)
+    /// </summary>
+    /// <param name="multiplyNum">追加するスコアの倍数</param>
+    private void AddSkillScore(int multiplyNum,int colorCount)
+    {
+        int addAns = 0;
+
+        addAns = colorCount * multiplyNum;
+
+        if (myColor == Map.Instance.black)
+        {
+            GameDirector.Instance.AddScore(true, addAns);
+            _isSkillBlack = true;
+        }
+        else if (myColor == Map.Instance.white)
+        {
+            GameDirector.Instance.AddScore(false, addAns);
+            _isSkillWhite = true;
+        }
+    }
+    
     //  強引
     public void TakeAway(int cost)
     {
@@ -350,7 +389,7 @@ public class PlayerBase : MonoBehaviour
                 if (Map.Instance.map[z, x] == enemyColor)
                 {
                     Map.Instance.map[z, x] = myColor;
-                    Map.Instance.pieceMap[z, x].GetComponent<Piece>().SkillReverse();
+                    Map.Instance.pieceMap[z, x].GetComponent<Piece>().SkillReverse(true);
                     // 検索、リバース処理を行う
                     Map.Instance.TagClear();
                     Map.Instance.isSkillActivate = true;
@@ -462,50 +501,246 @@ public class PlayerBase : MonoBehaviour
     public void ForceConvertion(int cost)
     {
         // ゲームステートがpreActive(自動落下前) と active(操作中)の時コストがある時 発動可能
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost))
+        if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+             !ActivateCheck(GameDirector.GameState.active, cost)) ||
+            isSkillCheck())
             return;
+        
+        Debug.Log("強制変換");
+        reversedCount -= cost;
+        
+        StartCoroutine(ForceConvertionCoroutine());
     }
+    /// <summary>
+    /// 強制変換のコルーチン処理関数
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator ForceConvertionCoroutine()
+    {
+        while (!GameDirector.Instance._isLanding)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        
+        // コマの座標を習得
+        Piece piece1 = controllPiece1.GetComponent<Piece>();
+        Piece piece2 = controllPiece2.GetComponent<Piece>();
+        int piece1z = (int) piece1.transform.position.z * -1;
+        int piece2z = (int) piece2.transform.position.z * -1;
+        int piece1x = (int) piece1.transform.position.x;
+        int piece2x = (int) piece2.transform.position.x;
+        
+        GameDirector.Instance.gameState = GameDirector.GameState.idle;
+        
+        // 関数呼び出し
+        ForceConvertionReverse(piece1x,piece1z);
+        ForceConvertionReverse(piece2x,piece2z);
+
+        GameDirector.Instance.gameState = GameDirector.GameState.reversed;
+        yield return null;
+    }
+    /// <summary>
+    /// 強制変換の処理関数
+    /// </summary>
+    /// <param name="px">pieceX座標 (横)</param>
+    /// <param name="pz">pieceZ座標 (縦)</param>
+    private void ForceConvertionReverse(int px, int pz)
+    {
+        int myColorCount = 0;
+        
+        // 落ちたコマの座標 x,z - 1をして3回ネストで回す
+        for (int z = pz; z < pz + 3; z++)
+        {
+            for (int x = px; x < px + 3; x++)
+            {
+                // 一番下の変更できないコマが来た場合スルー
+                if (z >= 10)
+                {
+                    continue;
+                }
+                
+                // その座標に相手の駒と相手の固定駒があった場合、自分の色に変更
+                if (Map.Instance.map[z - 1, x - 1] == enemyColor || Map.Instance.map[z - 1, x - 1] == enemyColorfixity)
+                {
+                    Map.Instance.map[z - 1, x - 1] = myColor;
+                    Map.Instance.pieceMap[z - 1, x - 1].GetComponent<Piece>().SkillReverse(false);
+                    myColorCount++;
+                }
+            }
+        }
+        
+        // スコア追加
+        AddSkillScore(100,myColorCount);
+    }
+
 
     // 一列一式
     // 横一列をすべて自分の色に変える(固定駒も適用)
     public void OneRowSet(int cost)
     {
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost))
+        if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+             !ActivateCheck(GameDirector.GameState.active, cost)) ||
+            isSkillCheck())
             return;
 
         Debug.Log("一列一式");
-        /*reversedCount -= cost;*/
+        reversedCount -= cost;
+        
+        // コマが着地したら処理を行う
+        // Boolでフラグ管理をし、それがtrueになったら処理
+        StartCoroutine(OneRawWaitCoroutine());
+    }
+    /// <summary>
+    /// 一列一式のコルーチン処理関数
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator OneRawWaitCoroutine()
+    {
+        while (!GameDirector.Instance._isLanding)
+        {
+            yield return new WaitForEndOfFrame();
+        }
 
+        // スキル変数
+        // コマの座標を習得
         Piece piece1 = controllPiece1.GetComponent<Piece>();
-        Piece piece2 = controllPiece1.GetComponent<Piece>();
+        Piece piece2 = controllPiece2.GetComponent<Piece>();
+        int piece1z = (int) piece1.transform.position.z * -1;
+        int piece2z = (int) piece2.transform.position.z * -1;
 
-        // 設置したコマの座標を習得してきて、コマの座標から横軸にプレイヤーの色に変更を行う (movedPosで取れそう)
+        // コマの座標を比較して1個目と2個目の座標が同じだった場合
+        if (piece1z == piece2z)
+        {
+            // piece2のx座標を使用して、for文で回す
+            OneRawReverse(piece2z);
+        }
+        // 比較して片方が落ちた場合落ちたほうの横列を変更
+        else if (piece1z != piece2z && piece1z < piece2z)
+        {
+            OneRawReverse(piece2z);
+        }
+        else
+        {
+            OneRawReverse(piece1z);
+        }
+        
+        Map.Instance.TagClear();
+        yield return null;
+    }
+    /// <summary>
+    /// 一列一式のリバース処理
+    /// </summary>
+    /// <param name="z"></param>
+    private void OneRawReverse(int z)
+    {
+        // スコア変数
+        int myColorCount = 0;
 
-        // 回転の値 (縦と横) に応じて処理を変更
+        GameDirector.Instance.gameState = GameDirector.GameState.idle;
+
+        // 値で縦軸を判別 (引数で)
+        // 横軸分ループを回す
+        for (int x = 0; x < 9; x++)
+        {
+            // 横軸を変える
+            if (Map.Instance.map[z, x] == enemyColor || Map.Instance.map[z, x] == enemyColorfixity)
+            {
+                Map.Instance.map[z, x] = myColor;
+                Map.Instance.pieceMap[z, x].GetComponent<Piece>().SkillReverse(false);
+                myColorCount++;
+            }
+            else
+            {
+                continue;
+            }
+        }
+        
+        AddSkillScore(100,myColorCount);
+
+        // ゲームステートを変更
+        GameDirector.Instance.gameState = GameDirector.GameState.reversed;
     }
 
+    
     // 優先頂戴
     // 下一番端の自分の色の駒からナナメに全て自分の色に置き換える
     public void PriorityGet(int cost)
     {
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost))
+        if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+             !ActivateCheck(GameDirector.GameState.active, cost)) ||
+            isSkillCheck())
             return;
+
+        Debug.Log("優先頂戴");
+        reversedCount -= cost;
+
+        // プレイヤーが黒プレイヤーか白か判別
+        if (myColor == Map.Instance.black)
+        {
+            PriorityGetReverse(true);
+        }
+        else if (myColor == Map.Instance.white)
+        {
+            PriorityGetReverse(false);
+        }
+    }
+    /// <summary>
+    /// 優先頂戴の処理記述
+    /// </summary>
+    private void PriorityGetReverse(bool black)
+    {
+        // 判別したら座標右端と左端スタートを区分
+        // 黒なら右端 白なら左端
+        int x;
+        int myColorCount = 0;
+        switch (black)
+        {
+            case true:
+                x = 1;
+                break;
+            case false:
+                x = 10;
+                break;
+            default:
+                return;
+        }
+
+        for (int z = 0; z < 10; z++)
+        {
+            if (Map.Instance.map[x, z] == enemyColor || Map.Instance.map[x, z] == enemyColorfixity)
+            {
+                Map.Instance.map[x, z] = myColor;
+                Map.Instance.pieceMap[x, z].GetComponent<Piece>().SkillReverse(false);
+                myColorCount++;
+            }
+
+            switch (black)
+            {
+                case true:
+                    x++;
+                    break;
+                case false:
+                    x--;
+                    break;
+                default:
+                    return;
+            }
+        }
+        
+        AddSkillScore(150,myColorCount);
     }
 
+    
     // 強奪一瞬
     // 盤面のコマを自分の駒と相手の駒を入れ替える
     public void RobberyMoment(int cost)
     {
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost))
+        if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+             !ActivateCheck(GameDirector.GameState.active, cost)) ||
+            isSkillCheck())
             return;
 
         int myColorCount = 0;
-        int skillReversePoint = 25;
-        int addAns = 0;
 
         Debug.Log("強奪一瞬");
         reversedCount -= cost;
@@ -520,25 +755,18 @@ public class PlayerBase : MonoBehaviour
                 if (Map.Instance.map[i, j] == myColor)
                 {
                     Map.Instance.map[i, j] = enemyColor;
-                    Map.Instance.pieceMap[i, j].GetComponent<Piece>().SkillReverse();
+                    Map.Instance.pieceMap[i, j].GetComponent<Piece>().SkillReverse(false);
                 }
                 else if (Map.Instance.map[i, j] == enemyColor)
                 {
                     Map.Instance.map[i, j] = myColor;
-                    Map.Instance.pieceMap[i, j].GetComponent<Piece>().SkillReverse();
+                    Map.Instance.pieceMap[i, j].GetComponent<Piece>().SkillReverse(false);
                     // 自分の色 -> 相手の色 になったコマをカウント
                     myColorCount++;
                 }
             }
         }
-
-        // 自分の色 -> 相手の色 になった枚数 x25p を計算して代入
-        addAns = myColorCount * skillReversePoint;
-        // 自分の色が黒だったら黒にポイント
-        if (myColor == Map.Instance.black)
-            GameDirector.Instance.AddScore(true, addAns);
-        // 白だったら白にポイント
-        else if (myColor == Map.Instance.white)
-            GameDirector.Instance.AddScore(false, addAns);
+        
+        AddSkillScore(25,myColorCount);
     }
 }
