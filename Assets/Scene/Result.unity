@@ -2624,7 +2624,7 @@ MonoBehaviour:
   MiddleHeight_Y: 200
   FinalWidth_X: 400
   FinalHeight_Y: 250
-  AppearSpeed: 3
+  AppearSpeed: 5
 --- !u!1 &1839300276
 GameObject:
   m_ObjectHideFlags: 0
