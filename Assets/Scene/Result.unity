@@ -308,7 +308,7 @@ RectTransform:
   - {fileID: 823824237}
   - {fileID: 1159568525}
   m_Father: {fileID: 1057520717}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -577,7 +577,7 @@ RectTransform:
   - {fileID: 1991899232}
   - {fileID: 1591888922}
   m_Father: {fileID: 1057520717}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1470,9 +1470,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1352542157}
   - {fileID: 528988148}
   - {fileID: 174173715}
+  - {fileID: 1352542157}
   m_Father: {fileID: 1087525808}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2143,7 +2143,7 @@ RectTransform:
   m_Children:
   - {fileID: 1079414364}
   m_Father: {fileID: 1057520717}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2624,6 +2624,7 @@ MonoBehaviour:
   MiddleHeight_Y: 200
   FinalWidth_X: 400
   FinalHeight_Y: 250
+  AppearSpeed: 3
 --- !u!1 &1839300276
 GameObject:
   m_ObjectHideFlags: 0
