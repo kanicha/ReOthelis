@@ -5,24 +5,27 @@ using UnityEngine.UI;
 
 public class Judgment : MonoBehaviour
 {
-    public Text P1Judgment = null;
-    public Text P2Judgment = null;
-    /*public Image P1Image = null;
-    public Image P2Image = null;*/
-    private float TextColor = 0;
+    [SerializeField] private Image JudgeImage1P;
+    [SerializeField] private Image JudgeImage2P;
+    [SerializeField] private Sprite[] JudgeImageArray1P;
+    [SerializeField] private Sprite[] JudgeImageArray2P;
+    private float ImageColor = 0;
     private int Winner = 0;
-    private float TextR = 1;
-    private float TextG = 1;
-    private float TextB = 1;
     private bool IsAppear = false;
-    private bool IsGotDark = false;
+    //private bool IsGotDark = false;
     //勝敗判定のテキストは2倍で出現し、0.8倍にまで縮小し、最後に1倍に戻る。
+    private RectTransform P1Appear;
+    private RectTransform P2Appear;
     //2倍の時のサイズ
-    public int FirstSize = 300;
+    public int FirstWidth_X = 800;
+    public int FirstHeight_Y = 500;
     //0.8倍の時のサイズ
-    public int MiddleSize = 120;
+    public int MiddleWidth_X = 320;
+    public int MiddleHeight_Y = 200;
     //1倍の時のサイズ
-    public int FinalSize = 150;
+    public int FinalWidth_X = 400;
+    public int FinalHeight_Y = 250;
+    public int AppearSpeed = 3;
     private bool IsDecreased = false;
     private bool IsIncreased = true;
 
@@ -32,29 +35,31 @@ public class Judgment : MonoBehaviour
         IsAppear = false;
         IsDecreased = false;
         IsIncreased = true;
-        IsGotDark = false;
-        TextColor = 0;
-        P1Judgment.color = new Color(0,0,0,0);
-        P2Judgment.color = new Color(0,0,0,0);
-        P1Judgment.fontSize = FirstSize;
-        P2Judgment.fontSize = FirstSize;
+        //IsGotDark = false;
+        ImageColor = 0;
+        JudgeImage1P.color = new Color(255,255,255,0);
+        JudgeImage2P.color = new Color(255,255,255,0);
+        P1Appear = GameObject.Find("JudgeImage1P").GetComponent<RectTransform>();
+        P2Appear = GameObject.Find("JudgeImage2P").GetComponent<RectTransform>();
+        P1Appear.sizeDelta = new Vector2(FirstWidth_X,FirstHeight_Y);
+        P2Appear.sizeDelta = new Vector2(FirstWidth_X,FirstHeight_Y);
         
         if (Player_1.displayScore > Player_2.displayScore)
         {
-            P1Judgment.text = "WIN";
-            P2Judgment.text = "LOSE";
+            JudgeImage1P.sprite = JudgeImageArray1P[0];
+            JudgeImage2P.sprite = JudgeImageArray2P[1];
             Winner = 1;
         }
         else if (Player_1.displayScore < Player_2.displayScore)
         {
-            P1Judgment.text = "LOSE";
-            P2Judgment.text = "WIN";
+            JudgeImage1P.sprite = JudgeImageArray1P[1];
+            JudgeImage2P.sprite = JudgeImageArray2P[0];
             Winner = 2;
         }
         else
         {
-            P1Judgment.text = "DRAW";
-            P2Judgment.text = "DRAW";
+            //P1Judgment.text = "DRAW";
+            //P2Judgment.text = "DRAW";
             Winner = 0;
         }
     }
@@ -62,48 +67,53 @@ public class Judgment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //テキストを透明から不透明に変更
+        //画像を透明から不透明に変更
         if (IsAppear == false && ScoreDisplay.IsScoreAppear == true)
         {
-            P1Judgment.color = new Color(0,0,0,TextColor);
-            P2Judgment.color = new Color(0,0,0,TextColor);
-            TextColor += Time.deltaTime;
-            if (TextColor >= 1)
+            JudgeImage1P.color = new Color(255,255,255,ImageColor);
+            JudgeImage2P.color = new Color(255,255,255,ImageColor);
+            ImageColor += Time.deltaTime;
+            if (ImageColor >= 1)
             {
-                TextColor = 1;
+                ImageColor = 1;
                 IsAppear = true;
             }
         }
 
-        //テキストのサイズを変更
+        //画像のサイズを変更
         if (IsDecreased == false && IsIncreased == true && ScoreDisplay.IsScoreAppear == true)
         {
-            P1Judgment.fontSize = FirstSize;
-            P2Judgment.fontSize = FirstSize;
-            FirstSize -= 5;
-            if (FirstSize <= MiddleSize)
+            P1Appear.sizeDelta = new Vector2(FirstWidth_X,FirstHeight_Y);
+            P2Appear.sizeDelta = new Vector2(FirstWidth_X,FirstHeight_Y);
+            FirstWidth_X -= AppearSpeed;
+            FirstHeight_Y -= AppearSpeed;
+            if (FirstWidth_X <= MiddleWidth_X && FirstHeight_Y <= MiddleHeight_Y)
             {
-                FirstSize = MiddleSize;
+                FirstWidth_X = MiddleWidth_X;
+                FirstHeight_Y = MiddleHeight_Y;
                 IsDecreased = true;
                 IsIncreased = false;
             }
         }
         else if (IsDecreased == true && IsIncreased == false && ScoreDisplay.IsScoreAppear == true)
         {
-            P1Judgment.fontSize = FirstSize;
-            P2Judgment.fontSize = FirstSize;
-            FirstSize += 5;
-            if (FirstSize >= FinalSize)
+            P1Appear.sizeDelta = new Vector2(FirstWidth_X,FirstHeight_Y);
+            P2Appear.sizeDelta = new Vector2(FirstWidth_X,FirstHeight_Y);
+            FirstWidth_X += AppearSpeed;
+            FirstHeight_Y += AppearSpeed;
+            if (FirstWidth_X >= FinalWidth_X && FirstHeight_Y >= FinalHeight_Y)
             {
-                FirstSize = FinalSize;
+                FirstWidth_X = FinalWidth_X;
+                FirstHeight_Y = FinalHeight_Y;
                 IsDecreased = false;
                 IsIncreased = false;
             }
         }
 
-        if (IsAppear == true && IsGotDark == false && Winner == 1)
+
+        /*if (IsAppear == true && IsGotDark == false && Winner == 1)
         {
-            /*P2Image.color = new Color(TextR,TextG,TextB);*/
+            P2Image.color = new Color(TextR,TextG,TextB);
             TextR -= Time.deltaTime;
             TextG -= Time.deltaTime;
             TextB -= Time.deltaTime;
@@ -117,7 +127,7 @@ public class Judgment : MonoBehaviour
         }
         else if (IsAppear == true && IsGotDark == false && Winner == 2)
         {
-            /*P1Image.color = new Color(TextR,TextG,TextB);*/
+            P1Image.color = new Color(TextR,TextG,TextB);
             TextR -= Time.deltaTime;
             TextG -= Time.deltaTime;
             TextB -= Time.deltaTime;
@@ -128,6 +138,7 @@ public class Judgment : MonoBehaviour
                 TextB = 0.5f;
                 IsGotDark = true;
             } 
-        }
+        }*/
     }
+
 }

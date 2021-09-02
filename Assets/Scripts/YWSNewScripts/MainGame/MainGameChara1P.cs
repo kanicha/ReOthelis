@@ -16,10 +16,4 @@ public class MainGameChara1P : MonoBehaviour
         charactorImage1P.sprite = charactorImageArray1P[(int)CharaImageMoved.charaType1P];
         charactorSkillImage1P.sprite = charactorSkillImageArray1P[(int)CharaImageMoved.charaType1P];
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
