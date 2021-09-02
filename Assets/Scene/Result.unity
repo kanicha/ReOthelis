@@ -1533,7 +1533,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 342a0639afd138a4ea9da21d1b18c92f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1625,9 +1625,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 639, y: -460}
+  m_AnchoredPosition: {x: 638.98865, y: -459.9919}
   m_SizeDelta: {x: 511.9, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0.49999964}
 --- !u!114 &1183962014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1661,7 +1661,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u3007\u6B21\u3078\u3000\u25B3\u3082\u30461\u5EA6\u904A\u3076"
+  m_Text: "\u6B21\u3078"
 --- !u!222 &1183962015
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2453,9 +2453,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fallTime: 0
   scoreText: {fileID: 0}
-  reversedCountImage: {fileID: 0}
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 0}
+  gaugeController: {fileID: 0}
   isMyTurn: 0
   isPreurn: 0
   score: 0
@@ -2708,7 +2708,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u30EA\u30B6\u30EB\u30C9\u753B\u9762"
+  m_Text: "\u30EA\u30B6\u30EB\u30C8\u753B\u9762"
 --- !u!222 &1886166775
 CanvasRenderer:
   m_ObjectHideFlags: 0

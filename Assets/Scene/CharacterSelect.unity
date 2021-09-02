@@ -2344,7 +2344,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b0f11b3f832dec94f836351609696e58, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 342a0639afd138a4ea9da21d1b18c92f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2650,14 +2650,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fallTime: 0
-  map: {fileID: 0}
   scoreText: {fileID: 0}
+  myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 0}
+  gaugeController: {fileID: 0}
   isMyTurn: 0
+  isPreurn: 0
+  score: 0
+  reversedCount: 0
+  myPieceCount: 0
   controllPiece1: {fileID: 0}
   controllPiece2: {fileID: 0}
   rotationNum: 0
-  p1: {fileID: 0}
 --- !u!4 &1540159296
 Transform:
   m_ObjectHideFlags: 0
@@ -2685,10 +2689,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fallTime: 0
-  map: {fileID: 0}
   scoreText: {fileID: 0}
+  myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 0}
+  gaugeController: {fileID: 0}
   isMyTurn: 0
+  isPreurn: 0
+  score: 0
+  reversedCount: 0
+  myPieceCount: 0
   controllPiece1: {fileID: 0}
   controllPiece2: {fileID: 0}
   rotationNum: 0
@@ -2716,10 +2725,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fallTime: 0
-  map: {fileID: 0}
   scoreText: {fileID: 0}
+  myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 0}
+  gaugeController: {fileID: 0}
   isMyTurn: 0
+  isPreurn: 0
+  score: 0
+  reversedCount: 0
+  myPieceCount: 0
   controllPiece1: {fileID: 0}
   controllPiece2: {fileID: 0}
   rotationNum: 0
