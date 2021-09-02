@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class CharaImageMoved2P : Player2Base
 {
+    [SerializeField] private CharactorInfo _charactorInfo;
     [SerializeField] private Image charactorImage2P;
     [SerializeField] private Sprite[] charactorImageArray2P;
     [SerializeField] private GameObject[] charactorButtonWhite2P;
@@ -36,6 +37,7 @@ public class CharaImageMoved2P : Player2Base
         base.KeyInput();
 
         Player2CharaMoved();
+        _charactorInfo.InfoDraw();
     }
 
     /// <summary>

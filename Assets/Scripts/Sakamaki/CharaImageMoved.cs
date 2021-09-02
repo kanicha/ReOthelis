@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-
-// 正直クソ実装なので修正しなきゃなと思っている
 public class CharaImageMoved : Player1Base
 {
+    [SerializeField] private CharactorInfo _charactorInfo = null;
     [SerializeField] private Image charactorImage1P;
     [SerializeField] private Sprite[] charactorImageArray1P;
     [SerializeField] private GameObject[] charactorButtonWhite1P;
+
     private int _prev1P = 0;
 
     // キャラクタータイプ
@@ -38,6 +38,7 @@ public class CharaImageMoved : Player1Base
         base.KeyInput();
 
         Player1CharaMoved();
+        _charactorInfo.InfoDraw();
     }
 
     /// <summary>
