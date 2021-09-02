@@ -12,6 +12,7 @@ public class CharaImageMoved : Player1Base
     [SerializeField] private GameObject[] charactorButtonWhite1P;
 
     private int _prev1P = 0;
+    public bool isConfirm = false;
 
     // キャラクタータイプ
     public enum CharaType1P
@@ -27,6 +28,7 @@ public class CharaImageMoved : Player1Base
     void Start()
     {
         // 初期化処理
+        charaType1P = CharaType1P.Cow;
         charactorImage1P.sprite = charactorImageArray1P[0];
         charactorButtonWhite1P[0].SetActive(true);
     }
@@ -46,8 +48,20 @@ public class CharaImageMoved : Player1Base
     /// </summary>
     void Player1CharaMoved()
     {
+        if (CharacterSelectSceneChange.Instance.isLoading)
+            return;
+
+        if(isConfirm)
+        {
+            // キャラ決定解除
+            if (_DS4_cross_value || Input.GetKeyDown(KeyCode.Q))
+                isConfirm = false;
+            else
+                return;
+        }
+
         // 入力部分
-        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0))
+        if (_DS4_horizontal_value < 0 && last_horizontal_value == 0)
         {
             charaType1P--;
 
@@ -57,7 +71,7 @@ public class CharaImageMoved : Player1Base
                 charactorButtonWhite1P[i].SetActive(false);
             }
         }
-        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0))
+        else if (_DS4_horizontal_value > 0 && last_horizontal_value == 0)
         {
             charaType1P++;
 
@@ -65,6 +79,11 @@ public class CharaImageMoved : Player1Base
             {
                 charactorButtonWhite1P[i].SetActive(false);
             }
+        }
+        else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.E))
+        {
+            // キャラ決定
+            isConfirm = true;
         }
 
         // prev と result 変数の中身(int型)が違った場合描画処理

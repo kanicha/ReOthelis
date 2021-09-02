@@ -1,30 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-
-public class CharacterSelectSceneChange : Player1Base
+public class CharacterSelectSceneChange : SingletonMonoBehaviour<CharacterSelectSceneChange>
 {
     private GameSceneManager _gameSceneManager;
-    
-    private bool _repeatHit = false;
+    [SerializeField]
+    private CharaImageMoved _CIM1 = null;
+    [SerializeField]
+    private CharaImageMoved2P _CIM2 = null;
+    public bool isLoading = false;
 
     void Start()
     {
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
+        _CIM1 = FindObjectOfType<CharaImageMoved>();
+        _CIM2 = FindObjectOfType<CharaImageMoved2P>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        base.SaveKeyValue();
-        base.KeyInput();
-
-        if (_repeatHit)
+        if (isLoading)
             return;
-        else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space))
+
+        // 1p&2pの確定を待ってから
+        if (_CIM1.isConfirm && _CIM2.isConfirm)
         {
-            _repeatHit = true;
+            isLoading = true;
             SceneChange(_gameSceneManager);
         }
     }

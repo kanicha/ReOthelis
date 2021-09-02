@@ -10,7 +10,9 @@ public class CharaImageMoved2P : Player2Base
     [SerializeField] private Image charactorImage2P;
     [SerializeField] private Sprite[] charactorImageArray2P;
     [SerializeField] private GameObject[] charactorButtonWhite2P;
+
     private int _prev2P = 0;
+    public bool isConfirm = false;
 
     // キャラクタータイプ
     public enum CharaType2P
@@ -26,6 +28,7 @@ public class CharaImageMoved2P : Player2Base
     void Start()
     {
         // 初期化処理
+        charaType2P = CharaType2P.Cow;
         charactorImage2P.sprite = charactorImageArray2P[0];
         charactorButtonWhite2P[0].SetActive(true);
     }
@@ -45,6 +48,18 @@ public class CharaImageMoved2P : Player2Base
     /// </summary>
     void Player2CharaMoved()
     {
+        if (CharacterSelectSceneChange.Instance.isLoading)
+            return;
+
+        if (isConfirm)
+        {
+            // キャラ決定解除
+            if (_DS4_cross_value || Input.GetKeyDown(KeyCode.U))
+                isConfirm = false;
+            else
+                return;
+        }
+
         // 入力部分
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0))
         {
@@ -64,6 +79,11 @@ public class CharaImageMoved2P : Player2Base
             {
                 charactorButtonWhite2P[i].SetActive(false);
             }
+        }
+        else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.O))
+        {
+            // キャラ決定
+            isConfirm = true;
         }
 
         // prev と result 変数の中身(int型)が違った場合描画処理

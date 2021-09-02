@@ -5633,20 +5633,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f95703b499287054e8a66efc490a98b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fallTime: 0
-  scoreText: {fileID: 0}
-  myPieceCountText: {fileID: 0}
-  charactorImage: {fileID: 0}
-  gaugeController: {fileID: 0}
-  isMyTurn: 0
-  isPreurn: 0
-  reverseScore: 0
-  preScore: 0
-  reversedCount: 0
-  myPieceCount: 0
-  controllPiece1: {fileID: 0}
-  controllPiece2: {fileID: 0}
-  rotationNum: 0
+  _CIM1: {fileID: 1540159298}
+  _CIM2: {fileID: 1540159297}
+  isLoading: 0
 --- !u!4 &1540159296
 Transform:
   m_ObjectHideFlags: 0
@@ -5699,6 +5688,7 @@ MonoBehaviour:
   - {fileID: 1297245090}
   - {fileID: 904739539}
   - {fileID: 328601756}
+  isConfirm: 0
 --- !u!114 &1540159298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5737,6 +5727,7 @@ MonoBehaviour:
   - {fileID: 281690948}
   - {fileID: 632642901}
   - {fileID: 1918481656}
+  isConfirm: 0
 --- !u!114 &1540159299
 MonoBehaviour:
   m_ObjectHideFlags: 0
