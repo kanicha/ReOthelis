@@ -27,10 +27,14 @@ public class CharaImageMoved : Player1Base
     // Start is called before the first frame update
     void Start()
     {
+        SoundManager.Instance.PlayBGM(2);
+
         // 初期化処理
         charaType1P = CharaType1P.Cow;
         charactorImage1P.sprite = charactorImageArray1P[0];
         charactorButtonWhite1P[0].SetActive(true);
+
+        
     }
 
     // Update is called once per frame

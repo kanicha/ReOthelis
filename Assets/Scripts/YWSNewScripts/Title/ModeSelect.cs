@@ -15,6 +15,8 @@ public class ModeSelect : Player1Base
     // Start is called before the first frame update
     void Start()
     {
+        SoundManager.Instance.PlayBGM(1);
+
         cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -171, 0);
         _selectCount = 0;
 
