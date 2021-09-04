@@ -2618,12 +2618,17 @@ MonoBehaviour:
   JudgeImageArray2P:
   - {fileID: 21300000, guid: 727665dff92e71b4e9a637feb1e58384, type: 3}
   - {fileID: 21300000, guid: 8533de2d70fe3b04ebf8c6aff698d450, type: 3}
+  P1Image: {fileID: 2031892510}
+  P2Image: {fileID: 1326292995}
+  P1CharaName: {fileID: 1610275036}
+  P2CharaName: {fileID: 401628774}
   FirstWidth_X: 800
   FirstHeight_Y: 500
   MiddleWidth_X: 320
   MiddleHeight_Y: 200
   FinalWidth_X: 400
   FinalHeight_Y: 250
+  AppearSpeed: 5
 --- !u!1 &1839300276
 GameObject:
   m_ObjectHideFlags: 0

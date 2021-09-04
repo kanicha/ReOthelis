@@ -10,9 +10,7 @@ public class Judgment : MonoBehaviour
     [SerializeField] private Sprite[] JudgeImageArray1P;
     [SerializeField] private Sprite[] JudgeImageArray2P;
     private float ImageColor = 0;
-    private int Winner = 0;
     private bool IsAppear = false;
-    //private bool IsGotDark = false;
     //勝敗判定のテキストは2倍で出現し、0.8倍にまで縮小し、最後に1倍に戻る。
     private RectTransform P1Appear;
     private RectTransform P2Appear;
@@ -25,7 +23,7 @@ public class Judgment : MonoBehaviour
     //1倍の時のサイズ
     public int FinalWidth_X = 400;
     public int FinalHeight_Y = 250;
-    public int AppearSpeed = 3;
+    public int AppearSpeed = 5;
     private bool IsDecreased = false;
     private bool IsIncreased = true;
 
@@ -35,7 +33,6 @@ public class Judgment : MonoBehaviour
         IsAppear = false;
         IsDecreased = false;
         IsIncreased = true;
-        //IsGotDark = false;
         ImageColor = 0;
         JudgeImage1P.color = new Color(255,255,255,0);
         JudgeImage2P.color = new Color(255,255,255,0);
@@ -48,19 +45,11 @@ public class Judgment : MonoBehaviour
         {
             JudgeImage1P.sprite = JudgeImageArray1P[0];
             JudgeImage2P.sprite = JudgeImageArray2P[1];
-            Winner = 1;
         }
         else if (Player_1.displayScore < Player_2.displayScore)
         {
             JudgeImage1P.sprite = JudgeImageArray1P[1];
             JudgeImage2P.sprite = JudgeImageArray2P[0];
-            Winner = 2;
-        }
-        else
-        {
-            //P1Judgment.text = "DRAW";
-            //P2Judgment.text = "DRAW";
-            Winner = 0;
         }
     }
 
@@ -109,36 +98,5 @@ public class Judgment : MonoBehaviour
                 IsIncreased = false;
             }
         }
-
-
-        /*if (IsAppear == true && IsGotDark == false && Winner == 1)
-        {
-            P2Image.color = new Color(TextR,TextG,TextB);
-            TextR -= Time.deltaTime;
-            TextG -= Time.deltaTime;
-            TextB -= Time.deltaTime;
-            if (TextR <= 0.5f && TextG <= 0.5f && TextB <= 0.5f)
-            {
-                TextR = 0.5f;
-                TextG = 0.5f;
-                TextB = 0.5f;
-                IsGotDark = true;
-            } 
-        }
-        else if (IsAppear == true && IsGotDark == false && Winner == 2)
-        {
-            P1Image.color = new Color(TextR,TextG,TextB);
-            TextR -= Time.deltaTime;
-            TextG -= Time.deltaTime;
-            TextB -= Time.deltaTime;
-            if (TextR <= 0.5f && TextG <= 0.5f && TextB <= 0.5f)
-            {
-                TextR = 0.5f;
-                TextG = 0.5f;
-                TextB = 0.5f;
-                IsGotDark = true;
-            } 
-        }*/
     }
-
 }
