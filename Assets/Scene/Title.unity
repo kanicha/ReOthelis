@@ -676,7 +676,8 @@ MonoBehaviour:
   gaugeController: {fileID: 0}
   isMyTurn: 0
   isPreurn: 0
-  score: 0
+  reverseScore: 0
+  preScore: 0
   reversedCount: 0
   myPieceCount: 0
   controllPiece1: {fileID: 0}

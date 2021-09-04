@@ -44,6 +44,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     void Start()
     {
         SoundManager.Instance.PlayBGM(0);
+
         _player1.isMyTurn = false;
         _player2.isMyTurn = false;
         _aiThinking = GetComponent<AIThinking>();

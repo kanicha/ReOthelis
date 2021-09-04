@@ -1830,7 +1830,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 26b50cffab957384fa7f3d791bdf2181, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e710cb1dc01bd9441b51af6d04f65a78, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4859,7 +4859,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8d34d07725dd3e54dbd6780cef3cc963, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 90c4e65f8ed55974b8a91e7827a5f7c8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5503,7 +5503,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8f8dfbcd257d52a418d4283d4a077283, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c65869561b4c62c419129f0c997e4410, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5633,20 +5633,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f95703b499287054e8a66efc490a98b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fallTime: 0
-  scoreText: {fileID: 0}
-  myPieceCountText: {fileID: 0}
-  charactorImage: {fileID: 0}
-  gaugeController: {fileID: 0}
-  isMyTurn: 0
-  isPreurn: 0
-  reverseScore: 0
-  preScore: 0
-  reversedCount: 0
-  myPieceCount: 0
-  controllPiece1: {fileID: 0}
-  controllPiece2: {fileID: 0}
-  rotationNum: 0
+  _CIM1: {fileID: 1540159298}
+  _CIM2: {fileID: 1540159297}
+  isLoading: 0
 --- !u!4 &1540159296
 Transform:
   m_ObjectHideFlags: 0
@@ -5690,15 +5679,16 @@ MonoBehaviour:
   _charactorInfo: {fileID: 1540159300}
   charactorImage2P: {fileID: 1521255023}
   charactorImageArray2P:
-  - {fileID: 21300000, guid: 8f8dfbcd257d52a418d4283d4a077283, type: 3}
-  - {fileID: 21300000, guid: 7d50df20ba43e754f97145e57cd9c402, type: 3}
-  - {fileID: 21300000, guid: e61cf7a893ff1974b9078f7a34fc4642, type: 3}
-  - {fileID: 21300000, guid: 535c7d90ae59dec49874990eadc07820, type: 3}
+  - {fileID: 21300000, guid: c65869561b4c62c419129f0c997e4410, type: 3}
+  - {fileID: 21300000, guid: a7fdec302c3748143bd5b9a1715dfef3, type: 3}
+  - {fileID: 21300000, guid: 0563e93f3e51336459a14e69a77f0ecc, type: 3}
+  - {fileID: 21300000, guid: 8f1343df498f1b14c8b16264ca9405bf, type: 3}
   charactorButtonWhite2P:
   - {fileID: 1041737290}
   - {fileID: 1297245090}
   - {fileID: 904739539}
   - {fileID: 328601756}
+  isConfirm: 0
 --- !u!114 &1540159298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5728,15 +5718,16 @@ MonoBehaviour:
   _charactorInfo: {fileID: 1540159299}
   charactorImage1P: {fileID: 415923391}
   charactorImageArray1P:
-  - {fileID: 21300000, guid: 26b50cffab957384fa7f3d791bdf2181, type: 3}
-  - {fileID: 21300000, guid: 5baebd50af0e7a042b09cb3bc8ee88f5, type: 3}
-  - {fileID: 21300000, guid: 9fa3d58ef8ad1214ca1ed368b6444cc9, type: 3}
-  - {fileID: 21300000, guid: 385b753f26fba634782874a62cceef62, type: 3}
+  - {fileID: 21300000, guid: e710cb1dc01bd9441b51af6d04f65a78, type: 3}
+  - {fileID: 21300000, guid: cadb9af30b92e134f86d2671431985a3, type: 3}
+  - {fileID: 21300000, guid: 6f18e7d73f66bfa46bc53e703420df45, type: 3}
+  - {fileID: 21300000, guid: bc53539e8b309544b85c16669a32ce32, type: 3}
   charactorButtonWhite1P:
   - {fileID: 629646310}
   - {fileID: 281690948}
   - {fileID: 632642901}
   - {fileID: 1918481656}
+  isConfirm: 0
 --- !u!114 &1540159299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5752,10 +5743,10 @@ MonoBehaviour:
   _player: 1
   _charaName: {fileID: 1028931832}
   _charaNameImage:
-  - {fileID: 21300000, guid: c343f4ccbb0e8d94cb0838ba4db60b95, type: 3}
+  - {fileID: 21300000, guid: 581ee23077bb3b4499bb574d4855a06d, type: 3}
   - {fileID: 21300000, guid: 3eaf66db2217e1941b0f24f8c6b317a9, type: 3}
   - {fileID: 21300000, guid: 054aefa9502764d4b9e7aacab5088853, type: 3}
-  - {fileID: 21300000, guid: 195f59f504540484495777a8851f865c, type: 3}
+  - {fileID: 21300000, guid: a3058c491aa930d4fb650f0e713e3a2f, type: 3}
   _skillObject:
   - {fileID: 408572413}
   - {fileID: 163554684}
@@ -5776,10 +5767,10 @@ MonoBehaviour:
   _player: 2
   _charaName: {fileID: 1407499557}
   _charaNameImage:
-  - {fileID: 21300000, guid: f9155475aa91de5498cc42df3424ba28, type: 3}
+  - {fileID: 21300000, guid: 90c4e65f8ed55974b8a91e7827a5f7c8, type: 3}
   - {fileID: 21300000, guid: c09c5934250821f41be96c80b15eeeb5, type: 3}
   - {fileID: 21300000, guid: ec57db69612c5d44a81b13a8886e94ae, type: 3}
-  - {fileID: 21300000, guid: 40f93cb622b03024a9634362d3e4d7f3, type: 3}
+  - {fileID: 21300000, guid: 19bd9870348f2fb4caa9dcdb406d3f41, type: 3}
   _skillObject:
   - {fileID: 8568734}
   - {fileID: 521338149}

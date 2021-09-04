@@ -36,8 +36,12 @@ public class ScoreDisplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        SoundManager.Instance.PlayBGM(3);
+
         Init(Player_1.displayScore,Player_2.displayScore);
         Invoke(nameof(ScoreRoulette), 1f);
+
     }
 
     void Init(int P1Score, int P2Score)
