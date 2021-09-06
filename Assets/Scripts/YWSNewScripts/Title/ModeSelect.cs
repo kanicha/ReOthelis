@@ -32,13 +32,22 @@ public class ModeSelect : Player1Base
         //�J�[�\����OFFLINE�ɍ��킹�Ă���A���I��{�^���������ꂽ�ꍇ�ɃV�[���J�ڂ�s��
         if (_repeatHit)
             return;
-        else if (_DS4_circle_value && _selectCount == 1 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
+        
+        if (_DS4_circle_value && _selectCount == 1 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
         {
             _repeatHit = true;
             SoundManager.Instance.PlaySE(9);
-            SceneChange(_gameSceneManager);
+            
+            CharactorSceneChange(_gameSceneManager);
         }
-
+        else if (_DS4_circle_value && _selectCount == 2 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 2)
+        {
+            _repeatHit = true;
+            SoundManager.Instance.StopBGM();
+            SoundManager.Instance.StopSE();
+            
+            TutorialSceneChange(_gameSceneManager);
+        }
         //���L�[���͂ɍ��킹�ăJ�[�\������Ɉړ�������
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0))
         {
@@ -86,8 +95,12 @@ public class ModeSelect : Player1Base
     }
 
     //���̃V�[���ɐi��
-    public void SceneChange(GameSceneManager gameSceneManager)
+    private void CharactorSceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("CharacterSelect");
+    }
+    private void TutorialSceneChange(GameSceneManager gameSceneManager)
+    {
+        gameSceneManager.SceneNextCall("Tutorial");
     }
 }
