@@ -35,12 +35,15 @@ public class ModeSelect : Player1Base
         else if (_DS4_circle_value && _selectCount == 1 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
         {
             _repeatHit = true;
+            SoundManager.Instance.PlaySE(9);
             SceneChange(_gameSceneManager);
         }
 
         //���L�[���͂ɍ��킹�ăJ�[�\������Ɉړ�������
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0))
         {
+            SoundManager.Instance.PlaySE(8);
+            
             if (_selectCount == 0)
             {
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -272, 0);
@@ -61,6 +64,8 @@ public class ModeSelect : Player1Base
         //��L�[���͂ɍ��킹�ăJ�[�\�����Ɉړ�������
         else if ((_DS4_vertical_value > 0 && last_vertical_value == 0))
         {
+            SoundManager.Instance.PlaySE(8);
+            
             if (_selectCount == 0)
             {
                 //��ԏ��STORY�ɍ��킹�Ă�ꍇ�͈�ԉ��Ɉڂ�

@@ -59,7 +59,11 @@ public class CharaImageMoved : Player1Base
         {
             // キャラ決定解除
             if (_DS4_cross_value || Input.GetKeyDown(KeyCode.Q))
+            {
+                SoundManager.Instance.PlaySE(6);
+                
                 isConfirm = false;
+            }
             else
                 return;
         }
@@ -67,6 +71,8 @@ public class CharaImageMoved : Player1Base
         // 入力部分
         if (_DS4_horizontal_value < 0 && last_horizontal_value == 0)
         {
+            SoundManager.Instance.PlaySE(8);
+            
             charaType1P--;
 
             // Activeしたボタンfalseにする処理
@@ -77,6 +83,8 @@ public class CharaImageMoved : Player1Base
         }
         else if (_DS4_horizontal_value > 0 && last_horizontal_value == 0)
         {
+            SoundManager.Instance.PlaySE(8);
+            
             charaType1P++;
 
             for (int i = 0; i < charactorButtonWhite1P.Length; i++)
@@ -86,6 +94,8 @@ public class CharaImageMoved : Player1Base
         }
         else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.E))
         {
+            SoundManager.Instance.PlaySE(7);
+            
             // キャラ決定
             isConfirm = true;
         }
