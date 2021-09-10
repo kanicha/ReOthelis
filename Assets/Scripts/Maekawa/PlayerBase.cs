@@ -300,11 +300,26 @@ public class PlayerBase : MonoBehaviour
         Vector3 skillWindowPos = skillWindow.transform.position;
         Vector3 skillWindowTargetPos = skillwindowTarget.transform.position;
 
+        /*while (true)
+        {
+            skillWindowPos.x += 100f;
+            skillWindow.transform.position = skillWindowPos;
+        
+            if (skillWindow.transform.position.x >= 300)
+            {
+                Debug.Log("a");
+                break;
+            
+            }
+        }*/
+        
         for (int step = 0; step <= 1000; step++)
         {
+            
             skillWindow.transform.position =
                 Vector3.MoveTowards(skillWindowPos, skillWindowTargetPos, step);
         }
+        
         
         yield return null;
     }

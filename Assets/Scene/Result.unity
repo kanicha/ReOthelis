@@ -2499,6 +2499,8 @@ MonoBehaviour:
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 0}
   gaugeController: {fileID: 0}
+  skillWindow: {fileID: 0}
+  skillwindowTarget: {fileID: 0}
   isMyTurn: 0
   isPreurn: 0
   reverseScore: 0
@@ -2610,21 +2612,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab6226ff146a91d4f9f039dc5a00feef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JudgeImage1P: {fileID: 540882907}
-  JudgeImage2P: {fileID: 874266676}
-  JudgeImageArray1P:
+  _judgeImage1P: {fileID: 540882907}
+  _judgeImage2P: {fileID: 874266676}
+  _judgeImageArray:
   - {fileID: 21300000, guid: 727665dff92e71b4e9a637feb1e58384, type: 3}
   - {fileID: 21300000, guid: 8533de2d70fe3b04ebf8c6aff698d450, type: 3}
-  JudgeImageArray2P:
-  - {fileID: 21300000, guid: 727665dff92e71b4e9a637feb1e58384, type: 3}
-  - {fileID: 21300000, guid: 8533de2d70fe3b04ebf8c6aff698d450, type: 3}
-  FirstWidth_X: 800
-  FirstHeight_Y: 500
-  MiddleWidth_X: 320
-  MiddleHeight_Y: 200
-  FinalWidth_X: 400
-  FinalHeight_Y: 250
-  AppearSpeed: 5
+  _playerImage:
+  - {fileID: 2031892510}
+  - {fileID: 1326292995}
+  _winPlayerImageArray:
+  - {fileID: 21300000, guid: 9889c1f493aaa244cba1ba3d5f9f4393, type: 3}
+  - {fileID: 21300000, guid: 3485aa25d08fcbe42ad42e6e82a83a1b, type: 3}
+  - {fileID: 21300000, guid: 746cce9bce0ce0842adbca497d80abbd, type: 3}
+  - {fileID: 21300000, guid: d18d937f8a922e1498ecbb9ddab5bb2c, type: 3}
 --- !u!1 &1839300276
 GameObject:
   m_ObjectHideFlags: 0
