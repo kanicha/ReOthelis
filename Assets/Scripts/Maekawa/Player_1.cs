@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Player_1 : PlayerBase
 {
     private const string _PLAYER1_CIRCLE_NAME = "Fire_2";
@@ -69,7 +71,7 @@ public class Player_1 : PlayerBase
         if (isMyTurn)
         {
             base.InputSkill();
-
+            
             base.charactorImage.color = new UnityEngine.Color(1, 1, 1);
             if (GameDirector.Instance.gameState == GameDirector.GameState.active)
             {

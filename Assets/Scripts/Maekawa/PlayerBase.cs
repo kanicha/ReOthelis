@@ -63,6 +63,7 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected Text myPieceCountText = null;
     [SerializeField] protected Image charactorImage = null;
     [SerializeField] protected GaugeController gaugeController = null;
+    [SerializeField] protected GameObject skillWindow = null;
     private float _timeCount = 0.0f;
     public bool isMyTurn = false;
     public bool isPreurn = false;
@@ -348,6 +349,22 @@ public class PlayerBase : MonoBehaviour
     }
 
     /// <summary>
+    /// プレイヤーが1Pか2P判別 黒 = 1P
+    /// </summary>
+    /// <returns></returns>
+    private bool PlayerCheck()
+    {
+        if (myColor == Map.Instance.black)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
     /// スキルでスコアを追加する処理関数(スキル使用フラグも処理)
     /// </summary>
     /// <param name="multiplyNum">追加するスコアの倍数</param>
@@ -357,12 +374,12 @@ public class PlayerBase : MonoBehaviour
 
         addAns = colorCount * multiplyNum;
 
-        if (myColor == Map.Instance.black)
+        if (PlayerCheck())
         {
             GameDirector.Instance.AddScore(true, addAns);
             _isSkillBlack = true;
         }
-        else if (myColor == Map.Instance.white)
+        else if (!PlayerCheck())
         {
             GameDirector.Instance.AddScore(false, addAns);
             _isSkillWhite = true;
