@@ -56,6 +56,7 @@ public class Player_1 : PlayerBase
 
         base.gaugeController.DrawGauge(reversedCount);
         base.scoreText.text = string.Format("{0:00000}", base.reverseScore);
+        base.ShowSkillWindow(KeyCode.Z);
         
         // ひっくり返しコマ数スコア
         displayReverseScore = base.reverseScore;

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Player_2 : PlayerBase
 {
     private const string _PLAYER2_CIRCLE_NAME = "Fire_2_2";
@@ -54,6 +56,7 @@ public class Player_2 : PlayerBase
 
         base.gaugeController.DrawGauge(reversedCount);
         base.scoreText.text = string.Format("{0:00000}", base.reverseScore);
+        base.ShowSkillWindow(KeyCode.M);
 
         displayReverseScore = base.reverseScore;
         displayPreScore = base.preScore;
