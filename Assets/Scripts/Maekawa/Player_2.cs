@@ -56,7 +56,6 @@ public class Player_2 : PlayerBase
 
         base.gaugeController.DrawGauge(reversedCount);
         base.scoreText.text = string.Format("{0:00000}", base.reverseScore);
-        base.ShowSkillWindow(KeyCode.M);
 
         displayReverseScore = base.reverseScore;
         displayPreScore = base.preScore;
@@ -66,6 +65,8 @@ public class Player_2 : PlayerBase
         base.SaveKeyValue();
         base.KeyInput();
 
+        base.ShowSkillWindow(KeyCode.M);
+        
         if (isMyTurn)
         {
             base.InputSkill();

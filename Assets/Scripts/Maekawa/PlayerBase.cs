@@ -63,8 +63,7 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected Text myPieceCountText = null;
     [SerializeField] protected Image charactorImage = null;
     [SerializeField] protected GaugeController gaugeController = null;
-    [SerializeField] protected GameObject skillWindow = null;
-    [SerializeField] protected GameObject skillwindowTarget = null;
+    [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _timeCount = 0.0f;
     public bool isMyTurn = false;
     public bool isPreurn = false;
@@ -281,49 +280,11 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Optionボタン押下でスキルウィンドウ出現処理関数
-    /// </summary>
-    protected void ShowSkillWindow(KeyCode inputCode)
+    protected void ShowSkillWindow(KeyCode inputKey)
     {
-        // 当加速用変数
-
-        // 入力受付
-        if (Input.GetKeyDown(inputCode) || _DS4_option_value)
-        {
-            StartCoroutine(ShowSkillCroutine());
-        }
+        /*if (Input.GetKeyDown(inputKey) || _DS4_option_value)*/
+        skillWindowControl.ShowSkillWindow();
     }
-
-    IEnumerator ShowSkillCroutine()
-    {
-        Vector3 skillWindowPos = skillWindow.transform.position;
-        Vector3 skillWindowTargetPos = skillwindowTarget.transform.position;
-
-        /*while (true)
-        {
-            skillWindowPos.x += 100f;
-            skillWindow.transform.position = skillWindowPos;
-        
-            if (skillWindow.transform.position.x >= 300)
-            {
-                Debug.Log("a");
-                break;
-            
-            }
-        }*/
-        
-        for (int step = 0; step <= 1000; step++)
-        {
-            
-            skillWindow.transform.position =
-                Vector3.MoveTowards(skillWindowPos, skillWindowTargetPos, step);
-        }
-        
-        
-        yield return null;
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected void SetSkills(int charaType)
     {

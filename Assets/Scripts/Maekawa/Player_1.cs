@@ -46,7 +46,7 @@ public class Player_1 : PlayerBase
         base.myColorfixity = Map.Instance.fixityBlack;
         base.enemyColor = Map.Instance.white;
         base.enemyColorfixity = Map.Instance.fixityWhite;
-        SetSkills((int)CharaImageMoved.charaType1P);
+        SetSkills((int) CharaImageMoved.charaType1P);
     }
 
     private void Update()
@@ -56,8 +56,8 @@ public class Player_1 : PlayerBase
 
         base.gaugeController.DrawGauge(reversedCount);
         base.scoreText.text = string.Format("{0:00000}", base.reverseScore);
-        base.ShowSkillWindow(KeyCode.Z);
-        
+
+
         // ひっくり返しコマ数スコア
         displayReverseScore = base.reverseScore;
         // 基本スコア
@@ -68,11 +68,13 @@ public class Player_1 : PlayerBase
 
         base.SaveKeyValue();
         base.KeyInput();
-
+        
+        base.ShowSkillWindow(KeyCode.Z);
+        
         if (isMyTurn)
         {
             base.InputSkill();
-            
+
             base.charactorImage.color = new UnityEngine.Color(1, 1, 1);
             if (GameDirector.Instance.gameState == GameDirector.GameState.active)
             {
@@ -88,4 +90,5 @@ public class Player_1 : PlayerBase
         else
             base.charactorImage.color = new UnityEngine.Color(0.5f, 0.5f, 0.5f);
     }
+    
 }
