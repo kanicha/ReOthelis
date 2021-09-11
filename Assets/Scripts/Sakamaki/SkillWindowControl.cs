@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SkillWindowControl : PlayerBase
-{ 
+{
     [SerializeField] GameObject _skillWindow = null;
     [SerializeField] GameObject _skillWindowTarget = null;
     [SerializeField, Range(0, 10)] float _moveSpeed = 1f;
     private Vector3 _windowPos;
     private Vector3 _targetPos;
-    
+    private Vector3 _lastPos;
+
     private float _startTime;
     private float rate;
     private bool isCheck = false;
@@ -36,25 +37,30 @@ public class SkillWindowControl : PlayerBase
     {
         // シーンがロードされた時からの時間 - 初期値
         var diff = Time.timeSinceLevelLoad - _startTime;
-        
+
         if (diff > _moveSpeed)
         {
-            if (!isCheck)
-            {
-                isCheck = true;
-                _windowPos = _targetPos;
-                _skillWindow.transform.position = _windowPos;
-                Debug.Log("check");
-            }
+            _lastPos = _targetPos;
+            _skillWindow.transform.position = _lastPos;
         }
-        
+
         rate = diff / _moveSpeed;
 
-        if (_windowPos != _targetPos)
+        switch (isCheck)
         {
-            _skillWindow.transform.position = Vector3.Lerp(_windowPos, _targetPos, rate);
+            case false:
+                isCheck = true;
+                _skillWindow.transform.position = Vector3.Lerp(_windowPos, _targetPos, rate);
+                break;
+            case true:
+                isCheck = false;
+                _skillWindow.transform.position = Vector3.Lerp(_targetPos, _windowPos, rate);
+                break;
+            default:
+                break;
         }
-        
+
+
         yield return null;
     }
 }
