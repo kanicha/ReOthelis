@@ -282,7 +282,7 @@ public class PlayerBase : MonoBehaviour
 
     protected void ShowSkillWindow(KeyCode inputKey)
     {
-        /*if (Input.GetKeyDown(inputKey) || _DS4_option_value)*/
+        if (Input.GetKeyDown(inputKey) || _DS4_option_value)
         skillWindowControl.ShowSkillWindow();
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
