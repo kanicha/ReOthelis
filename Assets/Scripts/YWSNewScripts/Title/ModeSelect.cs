@@ -29,7 +29,7 @@ public class ModeSelect : Player1Base
         base.SaveKeyValue();
         base.KeyInput();
 
-        //�J�[�\����OFFLINE�ɍ��킹�Ă���A���I��{�^���������ꂽ�ꍇ�ɃV�[���J�ڂ�s��
+        //カーソルがOFFLINEにある時に選択ボタンが押されたら遷移を行う
         if (_repeatHit)
             return;
         else if (_DS4_circle_value && _selectCount == 1 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
@@ -38,7 +38,7 @@ public class ModeSelect : Player1Base
             SceneChange(_gameSceneManager);
         }
 
-        //���L�[���͂ɍ��킹�ăJ�[�\������Ɉړ�������
+        //下キーの入力に応じてカーソルを動かす
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0))
         {
             if (_selectCount == 0)
@@ -53,17 +53,17 @@ public class ModeSelect : Player1Base
             }
             else if (_selectCount == 2)
             {
-                //��ԉ���ONLINE�ɍ��킹�Ă�ꍇ�͈�ԏ�ɖ߂�
+                //カーソルがONLINEにある場合で下キーが入力されたら、一番上のSTORYに戻す
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -171, 0);
                 _selectCount = 0;
             }
         }
-        //��L�[���͂ɍ��킹�ăJ�[�\�����Ɉړ�������
+        //上キーの入力に応じてカーソルを動かす
         else if ((_DS4_vertical_value > 0 && last_vertical_value == 0))
         {
             if (_selectCount == 0)
             {
-                //��ԏ��STORY�ɍ��킹�Ă�ꍇ�͈�ԉ��Ɉڂ�
+                //カーソルがSTORYにある場合で上キーが入力されたら、一番下のONLINEに戻す
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -373, 0);
                 _selectCount = 2;
             }
@@ -80,7 +80,7 @@ public class ModeSelect : Player1Base
         }
     }
 
-    //���̃V�[���ɐi��
+    //キャラクター選択シーンへの遷移
     public void SceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("CharacterSelect");

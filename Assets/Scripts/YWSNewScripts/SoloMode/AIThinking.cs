@@ -4,74 +4,110 @@ using UnityEngine;
 
 public class AIThinking : MonoBehaviour
 {
+    private const byte _WIDTH = 10;
+    private const byte _HEIGHT = 11;
+    public string[,] thinkingMap = new string[_HEIGHT, _WIDTH]
+    {
+        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
+        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
+        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
+        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
+        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
+        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
+        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
+        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
+        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
+        { "■", "〇", "●", "〇", "●", "〇", "●", "〇", "●", "■" },
+        { "■", "■", "■", "■", "■", "■", "■", "■", "■", "■" }
+    };
     public readonly string wall = "■";
     public readonly string empty = "□";
     public readonly string black = "●";
     public readonly string white = "〇";
     public readonly string fixityBlack = "★";
     public readonly string fixityWhite = "☆";
-    private string _myColor = string.Empty;
-    private string _enemyColor = string.Empty;
-    private int[,] CheckEmpty = new int [16,4];
+    private int[,] CheckEmpty = new int [15,5];　//データ保存用の配列
+    private int CheckPosX = 0;
+    private int CheckPosZ = 0;
+    bool IsAboveExist = false;
+
+    //どの座標が一番駒をひっくり返せるかを調べるためのマップを準備
+    public void MapPrepare()
+    {
+        //マップデータをメインゲームのマップからコピー
+        for (int a = 0; a < _HEIGHT; a++)
+        {
+            for (int b = 0; b < _WIDTH; b++)
+            {
+                thinkingMap[a,b] = Map.Instance.map[a,b];
+            }
+        }
+
+        string printMapData = "";
+		for (int i = 0; i < _HEIGHT; i++)
+		{
+			for (int j = 0; j < _WIDTH; j++)
+			{
+				printMapData += thinkingMap[i, j].ToString() + ",";
+			}
+			printMapData += "\n";
+		}
+		Debug.Log("CPU用マップ" + printMapData);
+    }
 
     public void CheckVertical()
     {
+        //座標パターンの番号
         int ItemNum = 0;
-        for (int x = 1; x < 9; x++)
+        //全ての縦行を検索
+        for (int x = 1; x < 10; x++)
         {
+            //縦行の一番下から検索を行う
             for (int z = 9; z > 1; z--)
             {
-                if (Map.Instance.map[z, x] == empty && Map.Instance.map[z+1,x] != empty)
+                //一番下にある空いてる座標をデータ保存用の配列に入れる
+                if (thinkingMap[z, x] == empty && thinkingMap[z+1,x] != empty)
                 {
+                    //データ保存配列の見方：
+                    //0 x座標1
+                    //1 z座標1
+                    //2 x座標2
+                    //3 z座標2
+                    //4 ひっくり返せる駒の数の合計
+
+                    //前の座標で上に空きが存在した場合、新しい座標を二個目の座標として取得
+                    if (IsAboveExist == true)
+                    {
+                        CheckEmpty[ItemNum,2] = x;
+                        CheckEmpty[ItemNum,3] = z;
+                        ItemNum++;
+                    }
+                    //前の座標で上に空きがなかった場合、新しい座標を前の行に入力
+                    //1列目は最初なのでこの処理は行わない
+                    else if (IsAboveExist == false && x != 1)
+                    {
+                        CheckEmpty[ItemNum-1,2] = x;
+                        CheckEmpty[ItemNum-1,3] = z;
+                        ItemNum++;
+                    }
                     CheckEmpty[ItemNum,0] = x;
                     CheckEmpty[ItemNum,1] = z;
-
-                    //CheckIfBlack(ItemNum,x,z,new Vector3(-1, 0, 0));  // ←
-                    //CheckIfBlack(ItemNum,x,z,new Vector3(1, 0, 0));   // →
-                    //CheckIfBlack(ItemNum,x,z,new Vector3(0, 0, 1));   // ↓
-                    //CheckIfBlack(ItemNum,x,z,new Vector3(-1, 0, 1));  // ↙
-                    //CheckIfBlack(ItemNum,x,z,new Vector3(1, 0, 1));   // ↘
-                    //CheckIfBlack(ItemNum,x,z,new Vector3(-1, 0, -1)); // ↖
-                    //CheckIfBlack(ItemNum,x,z,new Vector3(1, 0, -1));  // ↗
-                    
-                    //CheckIfWhite(ItemNum,x,z,new Vector3(-1, 0, 0));  // ←
-                    //CheckIfWhite(ItemNum,x,z,new Vector3(1, 0, 0));   // →
-                    //CheckIfWhite(ItemNum,x,z,new Vector3(0, 0, 1));   // ↓
-                    //CheckIfWhite(ItemNum,x,z,new Vector3(-1, 0, 1));  // ↙
-                    //CheckIfWhite(ItemNum,x,z,new Vector3(1, 0, 1));   // ↘
-                    //CheckIfWhite(ItemNum,x,z,new Vector3(-1, 0, -1)); // ↖
-                    //CheckIfWhite(ItemNum,x,z,new Vector3(1, 0, -1));  // ↗
-
-                    CheckIfWhite(ItemNum,x,z);
-                    CheckIfBlack(ItemNum,x,z);
-
-                    ItemNum++;
-
-                    if (z > 2)
+                    IsAboveExist = false;
+                    //縦パターン
+                    //取得した座標の一個上が空いていれば、それを二個目の座標として取得
+                    if (thinkingMap[z-1,x] == empty)
                     {
-                        CheckEmpty[ItemNum,0] = x;
-                        CheckEmpty[ItemNum,1] = z-1;
-
-                        //CheckIfBlack(ItemNum,x,z-1,new Vector3(-1, 0, 0));  // ←
-                        //CheckIfBlack(ItemNum,x,z-1,new Vector3(1, 0, 0));   // →
-                        //CheckIfBlack(ItemNum,x,z-1,new Vector3(0, 0, 1));   // ↓
-                        //CheckIfBlack(ItemNum,x,z-1,new Vector3(-1, 0, 1));  // ↙
-                        //CheckIfBlack(ItemNum,x,z-1,new Vector3(1, 0, 1));   // ↘
-                        //CheckIfBlack(ItemNum,x,z-1,new Vector3(-1, 0, -1)); // ↖
-                        //CheckIfBlack(ItemNum,x,z-1,new Vector3(1, 0, -1));  // ↗
-                    
-                        //CheckIfWhite(ItemNum,x,z-1,new Vector3(-1, 0, 0));  // ←
-                        //CheckIfWhite(ItemNum,x,z-1,new Vector3(1, 0, 0));   // →
-                        //CheckIfWhite(ItemNum,x,z-1,new Vector3(0, 0, 1));   // ↓
-                        //CheckIfWhite(ItemNum,x,z-1,new Vector3(-1, 0, 1));  // ↙
-                        //CheckIfWhite(ItemNum,x,z-1,new Vector3(1, 0, 1));   // ↘
-                        //CheckIfWhite(ItemNum,x,z-1,new Vector3(-1, 0, -1)); // ↖
-                        //CheckIfWhite(ItemNum,x,z-1,new Vector3(1, 0, -1));  // ↗
-
-                        CheckIfWhite(ItemNum,x,z-1);
-                        CheckIfBlack(ItemNum,x,z-1);
-                    
+                        CheckEmpty[ItemNum,2] = x;
+                        CheckEmpty[ItemNum,3] = z-1;
                         ItemNum++;
+                        //縦パターンが存在するため、横パターンを想定して次の行に座標を入力
+                        //8列目の右は壁なので横パターンは存在しない
+                        if (x < 8)
+                        {
+                            CheckEmpty[ItemNum,0] = x;
+                            CheckEmpty[ItemNum,1] = z;
+                            IsAboveExist = true;
+                        }
                     }
                     break;
                 }
@@ -79,41 +115,53 @@ public class AIThinking : MonoBehaviour
         }
     }
 
+    //マップ確認用
     public void ShowData()
     {
         string printData = "";
-		for (int i = 0; i < 16; i++)
+		for (int i = 0; i < 15; i++)
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 5; j++)
 			{
 				printData += CheckEmpty[i, j].ToString() + ",";
 			}
 			printData += "\n";
 		}
-
 		Debug.Log(printData);
     }
 
-/*
-    private void CheckIfBlack(int CheckingNum,int PosX,int PosZ,Vector3 dir)
+    
+
+    private void CheckBlackBlack()
     {
-        // 調べる座標
-        int checkPosX = PosX;
-        int checkPosZ = PosZ;
+
+    }
+
+    private void CheckWhiteWhite()
+    {
+
+    }
+
+    private void CheckBlackWhite()
+    {
+        
+    }
+
+    private void CheckBlack(int CheckingNum,Vector3 dir)
+    {
         // 調べたい方向
         int dirX = (int)dir.x;
         int dirZ = (int)dir.z;
         
-        int moveCount = 0;
         int enemyPieceCounter = 0;
 
         // dirの方向に「ひっくり返せるか」探索
         while(true)
         {
             // 調べたい方向に進んでいく
-            checkPosX += dirX;
-            checkPosZ += dirZ;
-            string targetType = Map.Instance.map[checkPosZ, checkPosX];
+            CheckPosX += dirX;
+            CheckPosZ += dirZ;
+            string targetType = thinkingMap[CheckPosZ, CheckPosX];
 
             // 壁 or 空白なら終了
             if (targetType == wall || targetType == empty)
@@ -126,37 +174,31 @@ public class AIThinking : MonoBehaviour
             }
             else if (targetType == black || targetType == fixityBlack)
             {
-                CheckEmpty[CheckingNum,3] = enemyPieceCounter;
+                CheckEmpty[CheckingNum,3] += enemyPieceCounter;
                 break;
             }
-            moveCount++;
         }
     }
 
-    private void CheckIfWhite(int CheckingNum,int PosX,int PosZ,Vector3 dir)
+    private void CheckWhite(int CheckingNum,Vector3 dir)
     {
-        // 調べる座標
-        int checkPosX = PosX;
-        int checkPosZ = PosZ;
         // 調べたい方向
         int dirX = (int)dir.x;
         int dirZ = (int)dir.z;
         
-        int moveCount = 0;
         int enemyPieceCounter = 0;
 
         // dirの方向に「ひっくり返せるか」探索
         while(true)
         {
             // 調べたい方向に進んでいく
-            checkPosX += dirX;
-            checkPosZ += dirZ;
-            string targetType = Map.Instance.map[checkPosZ, checkPosX];
+            CheckPosX += dirX;
+            CheckPosZ += dirZ;
+            string targetType = thinkingMap[CheckPosZ, CheckPosX];
 
             // 壁 or 空白なら終了
             if (targetType == wall || targetType == empty)
             {
-                enemyPieceCounter = 0;
                 break;
             }
             else if (targetType == black)
@@ -165,120 +207,8 @@ public class AIThinking : MonoBehaviour
             }
             else if (targetType == white || targetType == fixityWhite)
             {
-                CheckEmpty[CheckingNum,2] = enemyPieceCounter;
+                CheckEmpty[CheckingNum,2] += enemyPieceCounter;
                 break;
-            }
-            moveCount++;
-        }
-    }
-    */
-
-    private void CheckIfBlack(int CheckingNum,int x,int y)
-    {
-        int scoreCounter = 0;
-
-		for (int i = -1; i < 2; i++)
-        {
-			for (int j = -1; j < 2; j++)
-            {
-				//検索方向変数
-				int Direction_X = x + j;
-				int Direction_Y = y + i;
-
-				//置かれた駒のマスは検索しない
-				if (i == 0 && j == 0)
-                {
-					continue;
-                }
-				//検索方向に相手プレイヤーの駒が存在しない場合、その方向の検索を終了させる
-				if (Map.Instance.map[Direction_Y,Direction_X] != white)
-                {
-					continue;
-                }
-				//検索の距離を足していく
-				for (int s = 2; s < 9; s++)
-				{
-					//検索マス関数
-					int Range_X = x + j * s;
-					int Range_Y = y + i * s;
-
-					if (Range_X >= 0 && Range_X < 10 && Range_Y >= 0 && Range_Y < 9)
-					{
-						//相手の駒を発見したあとに空きに当たった場合、その方向の検索を終了させる
-						if (Map.Instance.map[Range_Y, Range_X] == empty || Map.Instance.map[Range_Y, Range_X] == wall)
-						{
-							break; 
-						}
-						//相手の駒を発見したあとに同じ色の駒に当たった場合、そのマスにいたるまでのマスの駒をひっくり返す
-						if (Map.Instance.map[Range_Y, Range_X] == black || Map.Instance.map[Range_Y, Range_X] == fixityBlack)
-						{
-							for (int n = 1; n < s; n++)
-                            {
-								int Change_X = x + j * n;
-								int Change_Y = y + i * n;
-								scoreCounter++;
-								Debug.Log("count = " + scoreCounter);
-                                CheckEmpty[CheckingNum,3] = scoreCounter;
-							}
-							break;
-						}
-					}
-				}
-            }
-        }
-    }
-
-    private void CheckIfWhite(int CheckingNum,int x,int y)
-    {
-        int scoreCounter = 0;
-
-		for (int i = -1; i < 2; i++)
-        {
-			for (int j = -1; j < 2; j++)
-            {
-				//検索方向変数
-				int Direction_X = x + j;
-				int Direction_Y = y + i;
-
-				//置かれた駒のマスは検索しない
-				if (i == 0 && j == 0)
-                {
-					continue;
-                }
-				//検索方向に相手プレイヤーの駒が存在しない場合、その方向の検索を終了させる
-				if (Map.Instance.map[Direction_Y,Direction_X] != black)
-                {
-					continue;
-                }
-				//検索の距離を足していく
-				for (int s = 2; s < 9; s++)
-				{
-					//検索マス関数
-					int Range_X = x + j * s;
-					int Range_Y = y + i * s;
-
-					if (Range_X >= 0 && Range_X < 10 && Range_Y >= 0 && Range_Y < 9)
-					{
-						//相手の駒を発見したあとに空きに当たった場合、その方向の検索を終了させる
-						if (Map.Instance.map[Range_Y, Range_X] == empty || Map.Instance.map[Range_Y, Range_X] == wall)
-						{
-							break; 
-						}
-						//相手の駒を発見したあとに同じ色の駒に当たった場合、そのマスにいたるまでのマスの駒をひっくり返す
-						if (Map.Instance.map[Range_Y, Range_X] == white || Map.Instance.map[Range_Y, Range_X] == fixityWhite)
-						{
-							for (int n = 1; n < s; n++)
-                            {
-								int Change_X = x + j * n;
-								int Change_Y = y + i * n;
-								scoreCounter++;
-								//Debug.Log("count = " + scoreCounter);
-                                CheckEmpty[CheckingNum,2] = scoreCounter;
-							}
-							break;
-						}
-					}
-				}
             }
         }
     }
