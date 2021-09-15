@@ -216,8 +216,9 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             _player2.controllPiece1 = _activePieces[0];
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
-            //_aiThinking.CheckVertical();
-            //_aiThinking.ShowData();
+            _aiThinking.MapPrepare();
+            _aiThinking.CheckVertical();
+            _aiThinking.ShowData();
         }
         gameState = GameState.preActive;
     }

@@ -11,14 +11,14 @@ public class PiecePatternGeneretor : MonoBehaviour
     static int SHUFFLE_NUM = 100;
     // シャッフルされた数値格納する変数
     int num = 0;
-
+    public static int type = 0;
     bool whiteChecker = false;
     bool blackChecker = false;
     
     public GameObject Generate(Vector3 GeneratePos)
     {
         // コマタイプ
-        int type = 0;
+        type = 0;
         // ランダム
         num = Random.Range(0, SHUFFLE_NUM);
 
