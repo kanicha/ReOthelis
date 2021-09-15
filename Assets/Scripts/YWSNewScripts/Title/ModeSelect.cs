@@ -1,0 +1,106 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
+
+public class ModeSelect : Player1Base
+{
+    [SerializeField] private RectTransform cursor;
+
+    int _selectCount = 0;
+    private bool _repeatHit = false;
+    private GameSceneManager _gameSceneManager;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        SoundManager.Instance.PlayBGM(1);
+
+        cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -171, 0);
+        _selectCount = 0;
+
+        _gameSceneManager = FindObjectOfType<GameSceneManager>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        base.SaveKeyValue();
+        base.KeyInput();
+
+        //�J�[�\����OFFLINE�ɍ��킹�Ă���A���I��{�^���������ꂽ�ꍇ�ɃV�[���J�ڂ�s��
+        if (_repeatHit)
+            return;
+        
+        if (_DS4_circle_value && _selectCount == 1 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
+        {
+            _repeatHit = true;
+            SoundManager.Instance.PlaySE(9);
+            
+            CharactorSceneChange(_gameSceneManager);
+        }
+        else if (_DS4_circle_value && _selectCount == 2 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 2)
+        {
+            _repeatHit = true;
+            SoundManager.Instance.StopBGM();
+            SoundManager.Instance.StopSE();
+            
+            TutorialSceneChange(_gameSceneManager);
+        }
+        //���L�[���͂ɍ��킹�ăJ�[�\������Ɉړ�������
+        if ((_DS4_vertical_value < 0 && last_vertical_value == 0))
+        {
+            SoundManager.Instance.PlaySE(8);
+            
+            if (_selectCount == 0)
+            {
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -272, 0);
+                _selectCount++;
+            }
+            else if (_selectCount == 1)
+            {
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -373, 0);
+                _selectCount++;
+            }
+            else if (_selectCount == 2)
+            {
+                //��ԉ���ONLINE�ɍ��킹�Ă�ꍇ�͈�ԏ�ɖ߂�
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -171, 0);
+                _selectCount = 0;
+            }
+        }
+        //��L�[���͂ɍ��킹�ăJ�[�\�����Ɉړ�������
+        else if ((_DS4_vertical_value > 0 && last_vertical_value == 0))
+        {
+            SoundManager.Instance.PlaySE(8);
+            
+            if (_selectCount == 0)
+            {
+                //��ԏ��STORY�ɍ��킹�Ă�ꍇ�͈�ԉ��Ɉڂ�
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -373, 0);
+                _selectCount = 2;
+            }
+            else if (_selectCount == 1)
+            {
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -171, 0);
+                _selectCount--;
+            }
+            else if (_selectCount == 2)
+            {
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -272, 0);
+                _selectCount--;
+            }
+        }
+    }
+
+    //���̃V�[���ɐi��
+    private void CharactorSceneChange(GameSceneManager gameSceneManager)
+    {
+        gameSceneManager.SceneNextCall("CharacterSelect");
+    }
+    private void TutorialSceneChange(GameSceneManager gameSceneManager)
+    {
+        gameSceneManager.SceneNextCall("Tutorial");
+    }
+}

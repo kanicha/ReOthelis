@@ -18,7 +18,7 @@ public class BlockControl : MonoBehaviour
     // ミノ地面着地判定変数
     public bool komaLanding = false;
     // コントローラー入力制御
-    private DS4ControllerP1 ds4;
+    /*private DS4ControllerP1 ds4;*/
 
     // グリッド宣言
     private static Transform[,] grid = new Transform[width, height];

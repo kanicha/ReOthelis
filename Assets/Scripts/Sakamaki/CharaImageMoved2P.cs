@@ -6,12 +6,15 @@ using UnityEngine.UI;
 
 public class CharaImageMoved2P : Player2Base
 {
+    [SerializeField] private CharactorInfo _charactorInfo;
     [SerializeField] private Image charactorImage2P;
     [SerializeField] private Sprite[] charactorImageArray2P;
     [SerializeField] private GameObject[] charactorButtonWhite2P;
-    private int _prev2P = 0;
 
-    // ƒLƒƒƒ‰ƒNƒ^[ƒ^ƒCƒv
+    private int _prev2P = 0;
+    public bool isConfirm = false;
+
+    // ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚¿ã‚¤ãƒ—
     public enum CharaType2P
     {
         Cow,
@@ -24,7 +27,8 @@ public class CharaImageMoved2P : Player2Base
     // Start is called before the first frame update
     void Start()
     {
-        // ‰Šú‰»ˆ—
+        // åˆæœŸåŒ–å‡¦ç†
+        charaType2P = CharaType2P.Cow;
         charactorImage2P.sprite = charactorImageArray2P[0];
         charactorButtonWhite2P[0].SetActive(true);
     }
@@ -36,19 +40,38 @@ public class CharaImageMoved2P : Player2Base
         base.KeyInput();
 
         Player2CharaMoved();
+        _charactorInfo.InfoDraw();
     }
 
     /// <summary>
-    /// 1P ‰æ‘œˆ—ŠÖ”
+    /// 1P ç”»åƒå‡¦ç†é–¢æ•°
     /// </summary>
     void Player2CharaMoved()
     {
-        // “ü—Í•”•ª
+        if (CharacterSelectSceneChange.Instance.isLoading)
+            return;
+
+        if (isConfirm)
+        {
+            // ã‚­ãƒ£ãƒ©æ±ºå®šè§£é™¤
+            if (_DS4_cross_value || Input.GetKeyDown(KeyCode.U))
+            {
+                SoundManager.Instance.PlaySE(6);
+                
+                isConfirm = false;
+            }
+            else
+                return;
+        }
+
+        // å…¥åŠ›éƒ¨åˆ†
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0))
         {
+            SoundManager.Instance.PlaySE(8);
+            
             charaType2P--;
 
-            // Active‚µ‚½ƒ{ƒ^ƒ“false‚É‚·‚éˆ—
+            // Activeã—ãŸãƒœã‚¿ãƒ³falseã«ã™ã‚‹å‡¦ç†
             for (int i = 0; i < charactorButtonWhite2P.Length; i++)
             {
                 charactorButtonWhite2P[i].SetActive(false);
@@ -56,6 +79,8 @@ public class CharaImageMoved2P : Player2Base
         } 
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0))
         {
+            SoundManager.Instance.PlaySE(8);
+            
             charaType2P++;
 
             for (int i = 0; i < charactorButtonWhite2P.Length; i++)
@@ -63,8 +88,15 @@ public class CharaImageMoved2P : Player2Base
                 charactorButtonWhite2P[i].SetActive(false);
             }
         }
+        else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.O))
+        {
+            SoundManager.Instance.PlaySE(7);
+            
+            // ã‚­ãƒ£ãƒ©æ±ºå®š
+            isConfirm = true;
+        }
 
-        // prev ‚Æ result •Ï”‚Ì’†g(intŒ^)‚ªˆá‚Á‚½ê‡•`‰æˆ—
+        // prev ã¨ result å¤‰æ•°ã®ä¸­èº«(intå‹)ãŒé•ã£ãŸå ´åˆæç”»å‡¦ç†
         if (_prev2P != (int)charaType2P)
         {
             _prev2P = (int)charaType2P;

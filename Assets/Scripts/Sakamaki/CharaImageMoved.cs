@@ -4,14 +4,15 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-
-// 正直クソ実装なので修正しなきゃなと思っている
 public class CharaImageMoved : Player1Base
 {
+    [SerializeField] private CharactorInfo _charactorInfo = null;
     [SerializeField] private Image charactorImage1P;
     [SerializeField] private Sprite[] charactorImageArray1P;
     [SerializeField] private GameObject[] charactorButtonWhite1P;
+
     private int _prev1P = 0;
+    public bool isConfirm = false;
 
     // キャラクタータイプ
     public enum CharaType1P
@@ -26,9 +27,14 @@ public class CharaImageMoved : Player1Base
     // Start is called before the first frame update
     void Start()
     {
+        SoundManager.Instance.PlayBGM(2);
+
         // 初期化処理
+        charaType1P = CharaType1P.Cow;
         charactorImage1P.sprite = charactorImageArray1P[0];
         charactorButtonWhite1P[0].SetActive(true);
+
+        
     }
 
     // Update is called once per frame
@@ -38,6 +44,7 @@ public class CharaImageMoved : Player1Base
         base.KeyInput();
 
         Player1CharaMoved();
+        _charactorInfo.InfoDraw();
     }
 
     /// <summary>
@@ -45,9 +52,27 @@ public class CharaImageMoved : Player1Base
     /// </summary>
     void Player1CharaMoved()
     {
-        // 入力部分
-        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0))
+        if (CharacterSelectSceneChange.Instance.isLoading)
+            return;
+
+        if(isConfirm)
         {
+            // キャラ決定解除
+            if (_DS4_cross_value || Input.GetKeyDown(KeyCode.Q))
+            {
+                SoundManager.Instance.PlaySE(6);
+                
+                isConfirm = false;
+            }
+            else
+                return;
+        }
+
+        // 入力部分
+        if (_DS4_horizontal_value < 0 && last_horizontal_value == 0)
+        {
+            SoundManager.Instance.PlaySE(8);
+            
             charaType1P--;
 
             // Activeしたボタンfalseにする処理
@@ -56,14 +81,23 @@ public class CharaImageMoved : Player1Base
                 charactorButtonWhite1P[i].SetActive(false);
             }
         }
-        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0))
+        else if (_DS4_horizontal_value > 0 && last_horizontal_value == 0)
         {
+            SoundManager.Instance.PlaySE(8);
+            
             charaType1P++;
 
             for (int i = 0; i < charactorButtonWhite1P.Length; i++)
             {
                 charactorButtonWhite1P[i].SetActive(false);
             }
+        }
+        else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.E))
+        {
+            SoundManager.Instance.PlaySE(7);
+            
+            // キャラ決定
+            isConfirm = true;
         }
 
         // prev と result 変数の中身(int型)が違った場合描画処理

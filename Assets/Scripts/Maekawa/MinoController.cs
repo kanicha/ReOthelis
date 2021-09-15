@@ -1,115 +1,115 @@
-using UnityEngine;
-using UnityEngine.UI;
+//using UnityEngine;
+//using UnityEngine.UI;
 
-public class MinoController : MonoBehaviour
-{
-    [SerializeField]
-    private int moveSpeed = 40;
-    [SerializeField]
-    private float fallTime = 1f;
-    [SerializeField]
-    private Map _map = null;
-    [SerializeField]
-    private Player1 p1 = null;
-    [SerializeField]
-    private Player2 p2 = null;
+//public class MinoController : MonoBehaviour
+//{
+//    [SerializeField]
+//    private int moveSpeed = 40;
+//    [SerializeField]
+//    private float fallTime = 1f;
+//    [SerializeField]
+//    private Map _map = null;
+//    [SerializeField]
+//    private Player1 p1 = null;
+//    [SerializeField]
+//    private Player2 p2 = null;
 
-    public GameObject[] controllPieces = new GameObject[2];
-    private Piece.PieceType playersType = Piece.PieceType.black;// 初期値黒プレイヤー(1P)
-    private bool _isInput = false;
-    private bool _isFalled = false;
-    public static bool isBlack = true; // ターン処理変数
-    protected float _vertical = 0.0f;
-    protected float _horizontal = 0.0f;
-    private int _frameCount = 0;
-    private float previousTime = 0.0f;
-    public int rotationNum = 0; //回転数
+//    public GameObject[] controllPieces = new GameObject[2];
+//    private Piece.PieceType playersType = Piece.PieceType.black;// 初期値黒プレイヤー(1P)
+//    private bool _isInput = false;
+//    private bool _isFalled = false;
+//    public static bool isBlack = true; // ターン処理変数
+//    protected float _vertical = 0.0f;
+//    protected float _horizontal = 0.0f;
+//    private int _frameCount = 0;
+//    private float previousTime = 0.0f;
+//    public int rotationNum = 0; //回転数
 
-    private Vector3[] rotationPos = new Vector3[]
-    {
-        new Vector3(0,  0, 1),
-        new Vector3(-1, 0, 0),
-        new Vector3(0,  0, -1),
-        new Vector3(1,  0, 0)
-    };
+//    private Vector3[] rotationPos = new Vector3[]
+//    {
+//        new Vector3(0,  0, 1),
+//        new Vector3(-1, 0, 0),
+//        new Vector3(0,  0, -1),
+//        new Vector3(1,  0, 0)
+//    };
 
-    //void Update()
-    //{
-    //    PlayerInput();
-    //}
+//    //void Update()
+//    //{
+//    //    PlayerInput();
+//    //}
 
-    private void Move()
-    {
-        Vector3 move = Vector3.zero;
+//    private void Move()
+//    {
+//        Vector3 move = Vector3.zero;
 
-        // 左移動
-        if (((p1._horizontal < 0 || p1._stickHorizontal < 0 || p1._keyBoardHorizontal < 0) && isBlack) ||
-            ((p2._horizontal < 0 || p2._stickHorizontal < 0 || p1._keyBoardHorizontal < 0) && !isBlack))
-        {
-            move.x = -1;
-        }
-        // 右移動
-        else if (((p1._horizontal > 0 || p1._stickHorizontal > 0 || p1._keyBoardHorizontal > 0) && isBlack) ||
-                ((p2._horizontal > 0 || p2._stickHorizontal > 0 || p1._keyBoardHorizontal > 0) && !isBlack))
-        {
-            move.x = 1;
-        }
-        // S入力すると一段下がる
-        else if (((p1._vertical < 0 || p1._stickVertical > 0 || p1._keyBoardVertical > 0) && isBlack) ||
-                ((p2._vertical < 0 || p2._stickVertical > 0 || p1._keyBoardVertical > 0) && !isBlack))
-        {
-            move.z = -1;
-        }
-        // 時間落下
-        else if (Time.time - previousTime >= fallTime)
-        {
-            move.z = -1;
+//        // 左移動
+//        if (((p1._horizontal < 0 || p1._stickHorizontal < 0 || p1._keyBoardHorizontal < 0) && isBlack) ||
+//            ((p2._horizontal < 0 || p2._stickHorizontal < 0 || p1._keyBoardHorizontal < 0) && !isBlack))
+//        {
+//            move.x = -1;
+//        }
+//        // 右移動
+//        else if (((p1._horizontal > 0 || p1._stickHorizontal > 0 || p1._keyBoardHorizontal > 0) && isBlack) ||
+//                ((p2._horizontal > 0 || p2._stickHorizontal > 0 || p1._keyBoardHorizontal > 0) && !isBlack))
+//        {
+//            move.x = 1;
+//        }
+//        // S入力すると一段下がる
+//        else if (((p1._vertical < 0 || p1._stickVertical > 0 || p1._keyBoardVertical > 0) && isBlack) ||
+//                ((p2._vertical < 0 || p2._stickVertical > 0 || p1._keyBoardVertical > 0) && !isBlack))
+//        {
+//            move.z = -1;
+//        }
+//        // 時間落下
+//        else if (Time.time - previousTime >= fallTime)
+//        {
+//            move.z = -1;
 
-            previousTime = Time.time;
-        }
+//            previousTime = Time.time;
+//        }
 
-        Vector3 movedPos = controllPieces[0].transform.position + move;
-        Vector3 rotMovedPos = rotationPos[rotationNum] + movedPos;
+//        Vector3 movedPos = controllPieces[0].transform.position + move;
+//        Vector3 rotMovedPos = rotationPos[rotationNum] + movedPos;
 
-        if (_map.CheckWall(movedPos) && _map.CheckWall(rotMovedPos))
-        {
-            controllPieces[0].transform.position = movedPos;
-            controllPieces[1].transform.position = rotMovedPos;
-            _isInput = true;
-        }
-    }
+//        if (_map.CheckWall(movedPos) && _map.CheckWall(rotMovedPos))
+//        {
+//            controllPieces[0].transform.position = movedPos;
+//            controllPieces[1].transform.position = rotMovedPos;
+//            _isInput = true;
+//        }
+//    }
 
-    private void Rotate()
-    {
-        int lastNum = rotationNum;
-        // 左回転
-        if (((p1._ds4L1 || p1._ds4cross || p1._keyBoardLeft) && isBlack) ||
-            ((p2._ds4L1 || p2._ds4cross || p1._keyBoardLeft) && !isBlack))
-        {
-            rotationNum++;
-            SoundManager.Instance.PlaySE(2);
-        }
-        // 右回転(=左に3回転)
-        else if (((p1._ds4R1 || p1._ds4circle || p1._keyBoardRight) && isBlack) ||
-                ((p2._ds4R1 || p2._ds4circle || p1._keyBoardRight) && !isBlack))
-        {
-            rotationNum += 3;
-            SoundManager.Instance.PlaySE(2);
-        }
-        // 疑似回転(移動がややこしくなるのでRotationはいじらない)
-        rotationNum %= 4;
-        Vector3 rotatedPos = controllPieces[0].transform.position + rotationPos[rotationNum];
+//    private void Rotate()
+//    {
+//        int lastNum = rotationNum;
+//        // 左回転
+//        if (((p1._ds4L1 || p1._ds4cross || p1._keyBoardLeft) && isBlack) ||
+//            ((p2._ds4L1 || p2._ds4cross || p1._keyBoardLeft) && !isBlack))
+//        {
+//            rotationNum++;
+//            SoundManager.Instance.PlaySE(2);
+//        }
+//        // 右回転(=左に3回転)
+//        else if (((p1._ds4R1 || p1._ds4circle || p1._keyBoardRight) && isBlack) ||
+//                ((p2._ds4R1 || p2._ds4circle || p1._keyBoardRight) && !isBlack))
+//        {
+//            rotationNum += 3;
+//            SoundManager.Instance.PlaySE(2);
+//        }
+//        // 疑似回転(移動がややこしくなるのでRotationはいじらない)
+//        rotationNum %= 4;
+//        Vector3 rotatedPos = controllPieces[0].transform.position + rotationPos[rotationNum];
 
-        if (_map.CheckWall(rotatedPos))
-        {
-            _isInput = true;
-            controllPieces[1].transform.position = rotatedPos;
-        }
-        else
-            rotationNum = lastNum;
+//        if (_map.CheckWall(rotatedPos))
+//        {
+//            _isInput = true;
+//            controllPieces[1].transform.position = rotatedPos;
+//        }
+//        else
+//            rotationNum = lastNum;
 
-    }
-}
+//    }
+//}
 
     //protected void PlayerInput()
     //{

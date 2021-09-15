@@ -16,7 +16,7 @@ public class BlockController : MonoBehaviour
     // グリッド制御クラス呼び出し
     private GridManager _gridManager;
     // コントローラー入力制御
-    private DS4ControllerP1 ds4;
+    /*private DS4ControllerP1 ds4;*/
 
     // ステージの大きさ
     private static int width = 10;
@@ -30,7 +30,7 @@ public class BlockController : MonoBehaviour
     private void Start()
     {
         _gridManager = GetComponent<GridManager>();
-        ds4 = GetComponent<DS4ControllerP1>();
+        /*ds4 = GetComponent<DS4ControllerP1>();*/
     }
 
     // Update is called once per frame
