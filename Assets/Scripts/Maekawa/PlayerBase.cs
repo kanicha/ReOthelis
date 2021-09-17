@@ -63,6 +63,7 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected Text myPieceCountText = null;
     [SerializeField] protected Image charactorImage = null;
     [SerializeField] protected GaugeController gaugeController = null;
+    [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _timeCount = 0.0f;
     public bool isMyTurn = false;
     public bool isPreurn = false;
@@ -279,7 +280,11 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
-
+    protected void ShowSkillWindow(KeyCode inputKey)
+    {
+        if (Input.GetKeyDown(inputKey) || _DS4_option_value)
+        skillWindowControl.ShowSkillWindow();
+    }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected void SetSkills(int charaType)
     {
@@ -348,27 +353,43 @@ public class PlayerBase : MonoBehaviour
     }
 
     /// <summary>
+    /// プレイヤーが1Pか2P判別 黒 = 1P
+    /// </summary>
+    /// <returns></returns>
+    private bool PlayerCheck()
+    {
+        if (myColor == Map.Instance.black)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
     /// スキルでスコアを追加する処理関数(スキル使用フラグも処理)
     /// </summary>
     /// <param name="multiplyNum">追加するスコアの倍数</param>
-    private void AddSkillScore(int multiplyNum,int colorCount)
+    private void AddSkillScore(int multiplyNum, int colorCount)
     {
         int addAns = 0;
 
         addAns = colorCount * multiplyNum;
 
-        if (myColor == Map.Instance.black)
+        if (PlayerCheck())
         {
             GameDirector.Instance.AddScore(true, addAns);
             _isSkillBlack = true;
         }
-        else if (myColor == Map.Instance.white)
+        else if (!PlayerCheck())
         {
             GameDirector.Instance.AddScore(false, addAns);
             _isSkillWhite = true;
         }
     }
-    
+
     //  強引
     public void TakeAway(int cost)
     {
@@ -417,12 +438,6 @@ public class PlayerBase : MonoBehaviour
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
 
-            string type;
-            if (myColor == Map.Instance.black)
-                type = Map.Instance.fixityBlack;
-            else
-                type = Map.Instance.fixityWhite;
-
             while (true)
             {
                 // 適当にランダムな座標をとり、それが自分の色なら固定コマに変換
@@ -430,14 +445,14 @@ public class PlayerBase : MonoBehaviour
                 int x = Random.Range(1, 9);
                 if (Map.Instance.map[z, x] == myColor)
                 {
-                    Map.Instance.map[z, x] = type;
+                    Map.Instance.map[z, x] = myColorfixity;
                     Map.Instance.pieceMap[z, x].GetComponent<Piece>().ChangeIsFixity();
                     break;
                 }
             }
         }
         else
-            Debug.Log("自分の色のコマがありません");
+            Debug.Log("自分の色のコマがフィールド上にありません");
     }
 
     // 残影
@@ -474,22 +489,37 @@ public class PlayerBase : MonoBehaviour
         if (!ActivateCheck(GameDirector.GameState.preActive, cost))
             return;
 
-        // 相手色の固定コマを探す
-        string targetColor;
-        if (myColor == Map.Instance.black)
-            targetColor = Map.Instance.fixityWhite;
-        else
-            targetColor = Map.Instance.fixityBlack;
-
-        if (CheckColor(targetColor))
+        // フィールドに相手の色の固定こまがあった時発動
+        if (CheckColor(enemyColorfixity))
         {
-            Debug.Log("打消し");
-            SoundManager.Instance.PlaySE(5);
+            Debug.Log("打ち消し");
             reversedCount -= cost;
-            Map.Instance.ignoreFixityPiece = targetColor; // 相手の固定コマをひっくり返せるようになる
+
+            bool isCheck = false;
+
+            // 探索
+            for (int z = 2; z < 9; z++)
+            {
+                for (int x = 1; x < 9; x++)
+                {
+                    // 相手の固定こまがあったら
+                    if (Map.Instance.map[z, x] == enemyColorfixity)
+                    {
+                        if (!isCheck)
+                        {
+                            isCheck = true;
+                            // 色を戻す
+                            Map.Instance.map[z, x] = enemyColor;
+                            Map.Instance.pieceMap[z, x].GetComponent<Piece>().ChangeIsFixity();
+                        }
+                    }
+                }
+            }
         }
         else
-            Debug.Log("相手色の固定コマがありません");
+        {
+            Debug.Log("相手の固定駒がフィールド上にありません");
+        }
     }
 
     /*
@@ -505,12 +535,13 @@ public class PlayerBase : MonoBehaviour
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
             isSkillCheck())
             return;
-        
+
         Debug.Log("強制変換");
         reversedCount -= cost;
-        
+
         StartCoroutine(ForceConvertionCoroutine());
     }
+
     /// <summary>
     /// 強制変換のコルーチン処理関数
     /// </summary>
@@ -521,7 +552,7 @@ public class PlayerBase : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
         }
-        
+
         // コマの座標を習得
         Piece piece1 = controllPiece1.GetComponent<Piece>();
         Piece piece2 = controllPiece2.GetComponent<Piece>();
@@ -529,16 +560,17 @@ public class PlayerBase : MonoBehaviour
         int piece2z = (int) piece2.transform.position.z * -1;
         int piece1x = (int) piece1.transform.position.x;
         int piece2x = (int) piece2.transform.position.x;
-        
+
         GameDirector.Instance.gameState = GameDirector.GameState.idle;
-        
+
         // 関数呼び出し
-        ForceConvertionReverse(piece1x,piece1z);
-        ForceConvertionReverse(piece2x,piece2z);
+        ForceConvertionReverse(piece1x, piece1z);
+        ForceConvertionReverse(piece2x, piece2z);
 
         GameDirector.Instance.gameState = GameDirector.GameState.reversed;
         yield return null;
     }
+
     /// <summary>
     /// 強制変換の処理関数
     /// </summary>
@@ -547,7 +579,7 @@ public class PlayerBase : MonoBehaviour
     private void ForceConvertionReverse(int px, int pz)
     {
         int myColorCount = 0;
-        
+
         // 落ちたコマの座標 x,z - 1をして3回ネストで回す
         for (int z = pz; z < pz + 3; z++)
         {
@@ -558,7 +590,7 @@ public class PlayerBase : MonoBehaviour
                 {
                     continue;
                 }
-                
+
                 // その座標に相手の駒と相手の固定駒があった場合、自分の色に変更
                 if (Map.Instance.map[z - 1, x - 1] == enemyColor || Map.Instance.map[z - 1, x - 1] == enemyColorfixity)
                 {
@@ -568,9 +600,9 @@ public class PlayerBase : MonoBehaviour
                 }
             }
         }
-        
+
         // スコア追加
-        AddSkillScore(100,myColorCount);
+        AddSkillScore(100, myColorCount);
     }
 
 
@@ -585,11 +617,12 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("一列一式");
         reversedCount -= cost;
-        
+
         // コマが着地したら処理を行う
         // Boolでフラグ管理をし、それがtrueになったら処理
         StartCoroutine(OneRawWaitCoroutine());
     }
+
     /// <summary>
     /// 一列一式のコルーチン処理関数
     /// </summary>
@@ -623,10 +656,11 @@ public class PlayerBase : MonoBehaviour
         {
             OneRawReverse(piece1z);
         }
-        
+
         Map.Instance.TagClear();
         yield return null;
     }
+
     /// <summary>
     /// 一列一式のリバース処理
     /// </summary>
@@ -654,14 +688,14 @@ public class PlayerBase : MonoBehaviour
                 continue;
             }
         }
-        
-        AddSkillScore(100,myColorCount);
+
+        AddSkillScore(100, myColorCount);
 
         // ゲームステートを変更
         GameDirector.Instance.gameState = GameDirector.GameState.reversed;
     }
 
-    
+
     // 優先頂戴
     // 下一番端の自分の色の駒からナナメに全て自分の色に置き換える
     public void PriorityGet(int cost)
@@ -684,6 +718,7 @@ public class PlayerBase : MonoBehaviour
             PriorityGetReverse(false);
         }
     }
+
     /// <summary>
     /// 優先頂戴の処理記述
     /// </summary>
@@ -726,11 +761,11 @@ public class PlayerBase : MonoBehaviour
                     return;
             }
         }
-        
-        AddSkillScore(150,myColorCount);
+
+        AddSkillScore(150, myColorCount);
     }
 
-    
+
     // 強奪一瞬
     // 盤面のコマを自分の駒と相手の駒を入れ替える
     public void RobberyMoment(int cost)
@@ -766,7 +801,7 @@ public class PlayerBase : MonoBehaviour
                 }
             }
         }
-        
-        AddSkillScore(25,myColorCount);
+
+        AddSkillScore(25, myColorCount);
     }
 }

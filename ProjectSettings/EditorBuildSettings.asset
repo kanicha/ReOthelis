@@ -24,6 +24,11 @@ EditorBuildSettings:
     path: Assets/Scene/Title.unity
     guid: a8bc64e60d5e4554d9314aad0ecbcd83
   - enabled: 1
+<<<<<<< HEAD
     path: Assets/Scene/Scenario.unity
     guid: ba3010a537a14fc458d5c2ceeea7b8cc
+=======
+    path: Assets/Scene/Tutorial.unity
+    guid: 0dfc3f982b5ed7a46a78cc2698727c43
+>>>>>>> origin/sakamaki
   m_configObjects: {}

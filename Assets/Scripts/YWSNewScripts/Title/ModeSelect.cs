@@ -32,6 +32,7 @@ public class ModeSelect : Player1Base
         //カーソルがOFFLINEにある時に選択ボタンが押されたら遷移を行う
         if (_repeatHit)
             return;
+<<<<<<< HEAD
         else if (_DS4_circle_value && _selectCount == 0 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 0)
         {
             _repeatHit = true;
@@ -44,8 +45,29 @@ public class ModeSelect : Player1Base
         }
 
         //下キーの入力に応じてカーソルを動かす
+=======
+        
+        if (_DS4_circle_value && _selectCount == 1 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
+        {
+            _repeatHit = true;
+            SoundManager.Instance.PlaySE(9);
+            
+            CharactorSceneChange(_gameSceneManager);
+        }
+        else if (_DS4_circle_value && _selectCount == 2 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 2)
+        {
+            _repeatHit = true;
+            SoundManager.Instance.StopBGM();
+            SoundManager.Instance.StopSE();
+            
+            TutorialSceneChange(_gameSceneManager);
+        }
+        //���L�[���͂ɍ��킹�ăJ�[�\������Ɉړ�������
+>>>>>>> origin/sakamaki
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0))
         {
+            SoundManager.Instance.PlaySE(8);
+            
             if (_selectCount == 0)
             {
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -272, 0);
@@ -66,6 +88,8 @@ public class ModeSelect : Player1Base
         //上キーの入力に応じてカーソルを動かす
         else if ((_DS4_vertical_value > 0 && last_vertical_value == 0))
         {
+            SoundManager.Instance.PlaySE(8);
+            
             if (_selectCount == 0)
             {
                 //カーソルがSTORYにある場合で上キーが入力されたら、一番下のONLINEに戻す
@@ -85,6 +109,7 @@ public class ModeSelect : Player1Base
         }
     }
 
+<<<<<<< HEAD
     //キャラクター選択シーンへの遷移
     public void GoToCharacterSelect(GameSceneManager gameSceneManager)
     {
@@ -94,5 +119,15 @@ public class ModeSelect : Player1Base
     public void GoToScenario(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("Scenario");
+=======
+    //���̃V�[���ɐi��
+    private void CharactorSceneChange(GameSceneManager gameSceneManager)
+    {
+        gameSceneManager.SceneNextCall("CharacterSelect");
+    }
+    private void TutorialSceneChange(GameSceneManager gameSceneManager)
+    {
+        gameSceneManager.SceneNextCall("Tutorial");
+>>>>>>> origin/sakamaki
     }
 }

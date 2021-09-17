@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Player_2 : PlayerBase
 {
     private const string _PLAYER2_CIRCLE_NAME = "Fire_2_2";
@@ -63,6 +65,8 @@ public class Player_2 : PlayerBase
         base.SaveKeyValue();
         base.KeyInput();
 
+        base.ShowSkillWindow(KeyCode.M);
+        
         if (isMyTurn)
         {
             base.InputSkill();

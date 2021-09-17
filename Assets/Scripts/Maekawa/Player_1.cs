@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Player_1 : PlayerBase
 {
     private const string _PLAYER1_CIRCLE_NAME = "Fire_2";
@@ -44,7 +46,7 @@ public class Player_1 : PlayerBase
         base.myColorfixity = Map.Instance.fixityBlack;
         base.enemyColor = Map.Instance.white;
         base.enemyColorfixity = Map.Instance.fixityWhite;
-        SetSkills((int)CharaImageMoved.charaType1P);
+        SetSkills((int) CharaImageMoved.charaType1P);
     }
 
     private void Update()
@@ -54,7 +56,8 @@ public class Player_1 : PlayerBase
 
         base.gaugeController.DrawGauge(reversedCount);
         base.scoreText.text = string.Format("{0:00000}", base.reverseScore);
-        
+
+
         // ひっくり返しコマ数スコア
         displayReverseScore = base.reverseScore;
         // 基本スコア
@@ -65,7 +68,9 @@ public class Player_1 : PlayerBase
 
         base.SaveKeyValue();
         base.KeyInput();
-
+        
+        base.ShowSkillWindow(KeyCode.Z);
+        
         if (isMyTurn)
         {
             base.InputSkill();
@@ -85,4 +90,5 @@ public class Player_1 : PlayerBase
         else
             base.charactorImage.color = new UnityEngine.Color(0.5f, 0.5f, 0.5f);
     }
+    
 }
