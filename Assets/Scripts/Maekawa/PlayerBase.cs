@@ -280,6 +280,10 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// スキルウィンドウ関数呼び出し
+    /// </summary>
+    /// <param name="inputKey"></param>
     protected void ShowSkillWindow(KeyCode inputKey)
     {
         if (Input.GetKeyDown(inputKey) || _DS4_option_value)

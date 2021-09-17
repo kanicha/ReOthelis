@@ -46,6 +46,7 @@ public class SkillWindowControl : PlayerBase
 
         rate = diff / _moveSpeed;
 
+        // フラグ管理でfalseだったら前面にだす、trueだったら引っ込める
         switch (isCheck)
         {
             case false:

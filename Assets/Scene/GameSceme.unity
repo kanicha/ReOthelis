@@ -726,9 +726,6 @@ MonoBehaviour:
   _skillWindow: {fileID: 1195277679}
   _skillWindowTarget: {fileID: 2108310033}
   _moveSpeed: 1
-  _startTime: 0
-  _windowPos: {x: 0, y: 0, z: 0}
-  _targetPos: {x: 0, y: 0, z: 0}
 --- !u!4 &200742604
 Transform:
   m_ObjectHideFlags: 0
@@ -4357,7 +4354,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -300, y: 0}
+  m_AnchoredPosition: {x: -290, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1228194838
@@ -6599,7 +6596,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 300, y: 0}
+  m_AnchoredPosition: {x: 290, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &2126648149
@@ -6774,9 +6771,6 @@ MonoBehaviour:
   _skillWindow: {fileID: 2068463960}
   _skillWindowTarget: {fileID: 1201569184}
   _moveSpeed: 1
-  _startTime: 0
-  _windowPos: {x: 0, y: 0, z: 0}
-  _targetPos: {x: 0, y: 0, z: 0}
 --- !u!4 &2133164098
 Transform:
   m_ObjectHideFlags: 0
