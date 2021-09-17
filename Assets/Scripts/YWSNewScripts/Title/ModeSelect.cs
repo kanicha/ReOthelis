@@ -32,25 +32,17 @@ public class ModeSelect : Player1Base
         //カーソルがOFFLINEにある時に選択ボタンが押されたら遷移を行う
         if (_repeatHit)
             return;
-<<<<<<< HEAD
-        else if (_DS4_circle_value && _selectCount == 0 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 0)
+        
+        if (_DS4_circle_value && _selectCount == 0 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 0)
         {
             _repeatHit = true;
             GoToScenario(_gameSceneManager);
         }
+        //下キーの入力に応じてカーソルを動かす
         else if (_DS4_circle_value && _selectCount == 1 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
         {
             _repeatHit = true;
             GoToCharacterSelect(_gameSceneManager);
-        }
-
-        //下キーの入力に応じてカーソルを動かす
-=======
-        
-        if (_DS4_circle_value && _selectCount == 1 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
-        {
-            _repeatHit = true;
-            SceneChange(_gameSceneManager);
         }
         else if (_DS4_circle_value && _selectCount == 2 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 2)
         {
@@ -60,8 +52,8 @@ public class ModeSelect : Player1Base
             
             TutorialSceneChange(_gameSceneManager);
         }
+        
         //���L�[���͂ɍ��킹�ăJ�[�\������Ɉړ�������
->>>>>>> origin/sakamaki
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0))
         {
             if (_selectCount == 0)
@@ -102,26 +94,18 @@ public class ModeSelect : Player1Base
             }
         }
     }
-
-<<<<<<< HEAD
+    
     //キャラクター選択シーンへの遷移
     public void GoToCharacterSelect(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("CharacterSelect");
     }
-
     public void GoToScenario(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("Scenario");
-=======
-    //���̃V�[���ɐi��
-    private void CharactorSceneChange(GameSceneManager gameSceneManager)
-    {
-        gameSceneManager.SceneNextCall("CharacterSelect");
     }
     private void TutorialSceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("Tutorial");
->>>>>>> origin/sakamaki
     }
 }
