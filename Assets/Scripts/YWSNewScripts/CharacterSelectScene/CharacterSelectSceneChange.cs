@@ -21,7 +21,7 @@ public class CharacterSelectSceneChange : SingletonMonoBehaviour<CharacterSelect
             return;
 
         // 1p&2pの確定を待ってから
-        if (_CIM1.isConfirm && _CIM2.isConfirm)
+        if (_gameSceneManager.IsChanged == true && _CIM1.isConfirm && _CIM2.isConfirm)
         {
             isLoading = true;
             SceneChange(_gameSceneManager);

@@ -29,22 +29,21 @@ public class ModeSelect : Player1Base
         base.SaveKeyValue();
         base.KeyInput();
 
-        //カーソルがOFFLINEにある時に選択ボタンが押されたら遷移を行う
+        //選択ボタンが押されたらカーソルが指しているモードに応じて遷移を行う
         if (_repeatHit)
             return;
         
-        if (_DS4_circle_value && _selectCount == 0 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 0)
+        if (_gameSceneManager.IsChanged == true && _DS4_circle_value && _selectCount == 0 || _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space) && _selectCount == 0)
         {
             _repeatHit = true;
-            GoToScenario(_gameSceneManager);
+            ScenarioSceneChange(_gameSceneManager);
         }
-        //下キーの入力に応じてカーソルを動かす
-        else if (_DS4_circle_value && _selectCount == 1 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
+        else if (_gameSceneManager.IsChanged == true && _DS4_circle_value && _selectCount == 1 || _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
         {
             _repeatHit = true;
-            GoToCharacterSelect(_gameSceneManager);
+            CharacterSelectSceneChange(_gameSceneManager);
         }
-        else if (_DS4_circle_value && _selectCount == 2 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 2)
+        else if (_gameSceneManager.IsChanged == true && _DS4_circle_value && _selectCount == 2 || _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space) && _selectCount == 2)
         {
             _repeatHit = true;
             SoundManager.Instance.StopBGM();
@@ -53,7 +52,7 @@ public class ModeSelect : Player1Base
             TutorialSceneChange(_gameSceneManager);
         }
         
-        //���L�[���͂ɍ��킹�ăJ�[�\������Ɉړ�������
+        //下キーの入力に応じてカーソルを動かす
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0))
         {
             if (_selectCount == 0)
@@ -68,7 +67,7 @@ public class ModeSelect : Player1Base
             }
             else if (_selectCount == 2)
             {
-                //カーソルがONLINEにある場合で下キーが入力されたら、一番上のSTORYに戻す
+                //カーソルがTUTORIALにある場合で下キーが入力されたら、一番上のSTORYに戻す
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -171, 0);
                 _selectCount = 0;
             }
@@ -96,11 +95,11 @@ public class ModeSelect : Player1Base
     }
     
     //キャラクター選択シーンへの遷移
-    public void GoToCharacterSelect(GameSceneManager gameSceneManager)
+    public void CharacterSelectSceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("CharacterSelect");
     }
-    public void GoToScenario(GameSceneManager gameSceneManager)
+    public void ScenarioSceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("Scenario");
     }
