@@ -20,7 +20,7 @@ public class ScenarioSceneChange : Player1Base
 
         if (_repeatHit)
             return;
-        else if (_gameSceneManager.IsChanged == true && _DS4_circle_value || _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space))
+        else if (TextDisplay.IsScenarioEnd == true && _gameSceneManager.IsChanged == true && _DS4_circle_value || TextDisplay.IsScenarioEnd == true && _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space))
         {
             _repeatHit = true;
             SceneChange(_gameSceneManager);
