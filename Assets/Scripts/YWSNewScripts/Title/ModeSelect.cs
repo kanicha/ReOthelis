@@ -42,6 +42,7 @@ public class ModeSelect : Player1Base
         {
             _repeatHit = true;
             SoundManager.Instance.PlaySE(9);
+            GoToCharacterSelect(_gameSceneManager);
             CharacterSelectSceneChange(_gameSceneManager);
         }
         else if (_gameSceneManager.IsChanged == true && _DS4_circle_value && _selectCount == 2 || _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space) && _selectCount == 2)
