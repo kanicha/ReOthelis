@@ -9,6 +9,8 @@ public class CharactorInfo : MonoBehaviour
     [SerializeField, Header("キャラクターの名前オブジェクト")] private Image _charaName;
     [SerializeField, Header("キャラクターの名前画像")] private Sprite[] _charaNameImage = new Sprite[4];
     [SerializeField, Header("スキルのオブジェクト")] private GameObject[] _skillObject = new GameObject[4];
+    [SerializeField, Header("OKボタンオブジェクト")] private Image _okButton;
+    [SerializeField, Header("OKボタン画像")] private Sprite[] _okButtonImage = new Sprite[4];
     
     enum Player
     {
@@ -35,10 +37,12 @@ public class CharactorInfo : MonoBehaviour
         {
             case Player.Player1:
                 _charaName.sprite = _charaNameImage[(int) CharaImageMoved.charaType1P];
+                _okButton.sprite = _okButtonImage[(int) CharaImageMoved.charaType1P];
                 _skillObject[(int) CharaImageMoved.charaType1P].SetActive(true);
                 break;
             case Player.Player2:
                 _charaName.sprite = _charaNameImage[(int) CharaImageMoved2P.charaType2P];
+                _okButton.sprite = _okButtonImage[(int) CharaImageMoved2P.charaType2P];
                 _skillObject[(int) CharaImageMoved2P.charaType2P].SetActive(true);
                 break;
             default:

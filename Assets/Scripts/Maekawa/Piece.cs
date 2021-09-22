@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Piece : MonoBehaviour
 {
-    [SerializeField]
-    private Renderer[] _renderer = new Renderer[2];
-    [SerializeField]
-    private Material[] _fixedMaterial = new Material[2];
+    [SerializeField] private Renderer[] _renderer = new Renderer[2];
+    [SerializeField] private Material[] _fixedMaterial = new Material[2];
     public Material[] _material;
     private Animator _anim = null;
 
@@ -31,22 +29,23 @@ public class Piece : MonoBehaviour
 
     public void Init()
     {
-        _renderer[0].GetComponent<Renderer>().sharedMaterial = _material[(int)CharaImageMoved.charaType1P];
-        _renderer[1].GetComponent<Renderer>().sharedMaterial = _material[(int)CharaImageMoved2P.charaType2P + 4];
+        _renderer[0].GetComponent<Renderer>().sharedMaterial = _material[(int) CharaImageMoved.charaType1P];
+        _renderer[1].GetComponent<Renderer>().sharedMaterial = _material[(int) CharaImageMoved2P.charaType2P + 4];
     }
 
     public void Reverse()
     {
-        if(pieceType == PieceType.black)
+        if (pieceType == PieceType.black)
         {
             pieceType = PieceType.white;
             this.name = "white";
         }
-        else if(pieceType == PieceType.white)
+        else if (pieceType == PieceType.white)
         {
             pieceType = PieceType.black;
             this.name = "black";
         }
+
         _anim.SetTrigger("Reverse");
         SoundManager.Instance.PlaySE(4);
     }
@@ -65,12 +64,12 @@ public class Piece : MonoBehaviour
             this.name = "black";
             this.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
-        
+
         if (se)
-        SoundManager.Instance.PlaySE(4);
+            SoundManager.Instance.PlaySE(4);
         else
             return;
-        }
+    }
 
     public void ChangeColor(bool isActive)
     {
@@ -109,8 +108,8 @@ public class Piece : MonoBehaviour
         }
         else
         {
-            _renderer[0].sharedMaterial = _material[(int)CharaImageMoved.charaType1P];
-            _renderer[1].sharedMaterial = _material[(int)CharaImageMoved2P.charaType2P + 4];
+            _renderer[0].sharedMaterial = _material[(int) CharaImageMoved.charaType1P];
+            _renderer[1].sharedMaterial = _material[(int) CharaImageMoved2P.charaType2P + 4];
         }
     }
 }
