@@ -11,7 +11,7 @@ public class GameSceneManager : MonoBehaviour
     [SerializeField] private Enum _fadeType;
     private string nowSceneName = "";
     private FadeManager _fadeManager;
-    public bool isChange = false;
+    public bool IsChanged = false;
     
     public IEnumerator SceneChange(string sceneName)
     {
@@ -29,20 +29,20 @@ public class GameSceneManager : MonoBehaviour
         _fadeManager = GetComponent<FadeManager>();
         yield return SceneChange("Title");
         yield return _fadeManager.FadeIn(_fadeManager.FadeCanvasGroup, _fadeManager.FadeImage);
+        IsChanged = true;
     }
 
     public void SceneNextCall(string sceneName)
     {
         StartCoroutine(LoadScene(sceneName));
-
-        isChange = false;
     }
 
     private IEnumerator LoadScene(string sceneName)
     {
+        IsChanged = false;
         yield return _fadeManager.FadeOut(_fadeManager.FadeCanvasGroup, _fadeManager.FadeImage);
         yield return SceneChange(sceneName);
         yield return _fadeManager.FadeIn(_fadeManager.FadeCanvasGroup, _fadeManager.FadeImage);
-        isChange = true;
+        IsChanged = true;
     }
 }
