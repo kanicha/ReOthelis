@@ -42,6 +42,7 @@ public class ModeSelect : Player1Base
         else if (_DS4_circle_value && _selectCount == 1 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 1)
         {
             _repeatHit = true;
+            SoundManager.Instance.PlaySE(9);
             GoToCharacterSelect(_gameSceneManager);
         }
         else if (_DS4_circle_value && _selectCount == 2 || Input.GetKeyDown(KeyCode.Space) && _selectCount == 2)
@@ -56,6 +57,8 @@ public class ModeSelect : Player1Base
         //���L�[���͂ɍ��킹�ăJ�[�\������Ɉړ�������
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0))
         {
+            SoundManager.Instance.PlaySE(8);
+            
             if (_selectCount == 0)
             {
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -272, 0);
@@ -76,6 +79,8 @@ public class ModeSelect : Player1Base
         //上キーの入力に応じてカーソルを動かす
         else if ((_DS4_vertical_value > 0 && last_vertical_value == 0))
         {
+            SoundManager.Instance.PlaySE(8);
+            
             if (_selectCount == 0)
             {
                 //カーソルがSTORYにある場合で上キーが入力されたら、一番下のONLINEに戻す
