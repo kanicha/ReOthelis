@@ -1734,7 +1734,7 @@ RectTransform:
   - {fileID: 1057520717}
   - {fileID: 948361062}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2522,7 +2522,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1784185851
 MonoBehaviour:
@@ -2620,16 +2620,26 @@ MonoBehaviour:
   _playerImage:
   - {fileID: 2031892510}
   - {fileID: 1326292995}
-  _winPlayerImageArray:
+  _winPlayerImageArray1P:
   - {fileID: 21300000, guid: cc59672481b28094a97db6c9c92fad14, type: 3}
   - {fileID: 21300000, guid: d1d5e66d223a8df438bffa211c03c872, type: 3}
   - {fileID: 21300000, guid: 24f810a44ef16504f93569ada5e6e2e3, type: 3}
   - {fileID: 21300000, guid: f52deac2c753ac84891ca81e91e9f1ff, type: 3}
-  _losePlayerImageArray:
+  _losePlayerImageArray1P:
   - {fileID: 21300000, guid: 0c85582e0a38e9f4987d90a730f83037, type: 3}
   - {fileID: 21300000, guid: 7c30671377515ab49a9dd6fd3c0c336b, type: 3}
-  - {fileID: 21300000, guid: 8c6dc4d39fd669b479d5d8193840fd41, type: 3}
+  - {fileID: 21300000, guid: 4897ffe793d2856488066d67c26bd107, type: 3}
   - {fileID: 21300000, guid: 92be3db25dd19d3418ee7222692250ad, type: 3}
+  _winPlayerImageArray2P:
+  - {fileID: 21300000, guid: c20fb65a86f43d64cb52785bf5b59999, type: 3}
+  - {fileID: 21300000, guid: 3e9f3b38418378f4ca01a9212a3c2463, type: 3}
+  - {fileID: 21300000, guid: 1f19fa44fabf5394f928a1755fe57608, type: 3}
+  - {fileID: 21300000, guid: 9a8e188f24eda7143a04fb92c927d39c, type: 3}
+  _losePlayerImageArray2P:
+  - {fileID: 21300000, guid: ae68e7397687370499f55fafcf4568d1, type: 3}
+  - {fileID: 21300000, guid: 29dc8be4255f7ce4a8824f657f32ede2, type: 3}
+  - {fileID: 21300000, guid: eeabc85b7c3141e46be1b4dee52dde14, type: 3}
+  - {fileID: 21300000, guid: 9973cd946e17f1644bc02ee7ed6ff46e, type: 3}
 --- !u!1 &1839300276
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,8 +11,10 @@ public class Judgment : MonoBehaviour
     [SerializeField] private Sprite[] _judgeImageArray = new Sprite[2];
     [Header("表情差分")]
     [SerializeField,Header("0が1P 1が2P")] private Image[] _playerImage = new Image[2];
-    [SerializeField] private Sprite[] _winPlayerImageArray = new Sprite[4];
-    [SerializeField] private Sprite[] _losePlayerImageArray = new Sprite[4];
+    [SerializeField] private Sprite[] _winPlayerImageArray1P = new Sprite[4];
+    [SerializeField] private Sprite[] _losePlayerImageArray1P = new Sprite[4];
+    [SerializeField] private Sprite[] _winPlayerImageArray2P = new Sprite[4];
+    [SerializeField] private Sprite[] _losePlayerImageArray2P = new Sprite[4];
     private float _imageColor = 0;
     private bool _isAppear = false;
     //勝敗判定のテキストは2倍で出現し、0.8倍にまで縮小し、最後に1倍に戻る。
@@ -48,16 +50,16 @@ public class Judgment : MonoBehaviour
         // 1P勝利
         if (Player_1.displayScore > Player_2.displayScore)
         {
-            _playerImage[0].sprite = _winPlayerImageArray[(int) CharaImageMoved.charaType1P];
-            _playerImage[1].sprite = _losePlayerImageArray[(int) CharaImageMoved2P.charaType2P];
+            _playerImage[0].sprite = _winPlayerImageArray1P[(int) CharaImageMoved.charaType1P];
+            _playerImage[1].sprite = _losePlayerImageArray2P[(int) CharaImageMoved2P.charaType2P];
             _judgeImage1P.sprite = _judgeImageArray[0];
             _judgeImage2P.sprite = _judgeImageArray[1];
         }
         // 2P勝利
         else if (Player_1.displayScore < Player_2.displayScore)
         {
-            _playerImage[0].sprite = _losePlayerImageArray[(int) CharaImageMoved.charaType1P];
-            _playerImage[1].sprite = _winPlayerImageArray[(int) CharaImageMoved2P.charaType2P];
+            _playerImage[0].sprite = _losePlayerImageArray1P[(int) CharaImageMoved.charaType1P];
+            _playerImage[1].sprite = _winPlayerImageArray2P[(int) CharaImageMoved2P.charaType2P];
             _judgeImage1P.sprite = _judgeImageArray[1];
             _judgeImage2P.sprite = _judgeImageArray[0];
         }
