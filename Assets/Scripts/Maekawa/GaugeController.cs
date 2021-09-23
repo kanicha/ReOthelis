@@ -10,6 +10,10 @@ public class GaugeController : MonoBehaviour
     private SpriteRenderer _gauge = null;
     [SerializeField]
     private Sprite[] _charaGauges = new Sprite[4];
+    [SerializeField] 
+    private SpriteRenderer _koma = null;
+    [SerializeField]
+    private Sprite[] _komaImage = new Sprite[4];
 
     private const int _MAX_REVERSE_COUNT = 20;
     private Vector2 _defaultSize = Vector2.zero;
@@ -26,9 +30,11 @@ public class GaugeController : MonoBehaviour
         {
             case Player.player1:
                 _gauge.sprite = _charaGauges[(int)CharaImageMoved.charaType1P];
+                _koma.sprite = _komaImage[(int) CharaImageMoved.charaType1P];
                 break;
             case Player.player2:
                 _gauge.sprite = _charaGauges[(int)CharaImageMoved2P.charaType2P];
+                _koma.sprite = _komaImage[(int) CharaImageMoved2P.charaType2P];
                 break;
             default:
                 break;

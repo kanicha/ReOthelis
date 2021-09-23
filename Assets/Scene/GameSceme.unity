@@ -7180,6 +7180,22 @@ PrefabInstance:
       propertyPath: _player
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6091143235498661368, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
+      propertyPath: _komaImage.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: f9ed01a2075b82240835b78d1df0d503, type: 3}
+    - target: {fileID: 6091143235498661368, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
+      propertyPath: _komaImage.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: af491dc8ff2070141872c7e00d9014f0, type: 3}
+    - target: {fileID: 6091143235498661368, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
+      propertyPath: _komaImage.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 195e3a53e2a0d564bbc5ad6a1f64c80a, type: 3}
+    - target: {fileID: 6091143235498661368, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
+      propertyPath: _komaImage.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: 7df414a60b9ee8148b73246498d53eec, type: 3}
     - target: {fileID: 6091143235498661370, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
       propertyPath: m_SortingOrder
       value: 11

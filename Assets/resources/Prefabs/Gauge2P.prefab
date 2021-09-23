@@ -353,8 +353,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4874789431816964068}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.01, y: 14.61, z: -0.02}
-  m_LocalScale: {x: 1, y: 1.2, z: 1}
+  m_LocalPosition: {x: -0.003, y: 14.33, z: -0.02}
+  m_LocalScale: {x: 0.12535994, y: 0.15043192, z: 0.12539998}
   m_Children: []
   m_Father: {fileID: 6091143235498661371}
   m_RootOrder: 0
@@ -399,7 +399,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 22
-  m_Sprite: {fileID: 21300000, guid: 5ac10887870f87d45b288931d856faff, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 18e8486c0afcf5d49b7491b02e2cc8cf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -604,6 +604,12 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6937252f9223ed44089d0a70925dafd1, type: 3}
   - {fileID: 21300000, guid: fd7026bbbc239704f9dbf2ada7ef50d0, type: 3}
   - {fileID: 21300000, guid: 270b94203accbe84184cc1c6ac3ee109, type: 3}
+  _koma: {fileID: 8277377879152211595}
+  _komaImage:
+  - {fileID: 21300000, guid: 18e8486c0afcf5d49b7491b02e2cc8cf, type: 3}
+  - {fileID: 21300000, guid: 0ce825d49b4bf1941b60efe246417cf6, type: 3}
+  - {fileID: 21300000, guid: ffe125d74398c194e92910c6e5e1bd46, type: 3}
+  - {fileID: 21300000, guid: fd56da481671ed844b06c283ee350aba, type: 3}
 --- !u!1 &6091143235736726696
 GameObject:
   m_ObjectHideFlags: 0
