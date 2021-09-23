@@ -2499,8 +2499,8 @@ MonoBehaviour:
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 0}
   gaugeController: {fileID: 0}
-  skillWindow: {fileID: 0}
-  skillwindowTarget: {fileID: 0}
+  skillCutinControl: {fileID: 0}
+  skillWindowControl: {fileID: 0}
   isMyTurn: 0
   isPreurn: 0
   reverseScore: 0
@@ -2621,10 +2621,15 @@ MonoBehaviour:
   - {fileID: 2031892510}
   - {fileID: 1326292995}
   _winPlayerImageArray:
-  - {fileID: 21300000, guid: 9889c1f493aaa244cba1ba3d5f9f4393, type: 3}
-  - {fileID: 21300000, guid: 3485aa25d08fcbe42ad42e6e82a83a1b, type: 3}
-  - {fileID: 21300000, guid: 746cce9bce0ce0842adbca497d80abbd, type: 3}
-  - {fileID: 21300000, guid: d18d937f8a922e1498ecbb9ddab5bb2c, type: 3}
+  - {fileID: 21300000, guid: cc59672481b28094a97db6c9c92fad14, type: 3}
+  - {fileID: 21300000, guid: d1d5e66d223a8df438bffa211c03c872, type: 3}
+  - {fileID: 21300000, guid: 24f810a44ef16504f93569ada5e6e2e3, type: 3}
+  - {fileID: 21300000, guid: f52deac2c753ac84891ca81e91e9f1ff, type: 3}
+  _losePlayerImageArray:
+  - {fileID: 21300000, guid: 0c85582e0a38e9f4987d90a730f83037, type: 3}
+  - {fileID: 21300000, guid: 7c30671377515ab49a9dd6fd3c0c336b, type: 3}
+  - {fileID: 21300000, guid: 8c6dc4d39fd669b479d5d8193840fd41, type: 3}
+  - {fileID: 21300000, guid: 92be3db25dd19d3418ee7222692250ad, type: 3}
 --- !u!1 &1839300276
 GameObject:
   m_ObjectHideFlags: 0
