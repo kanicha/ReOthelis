@@ -57,6 +57,7 @@ public class CharaImageMoved2P : Player2Base
             if (_DS4_cross_value || Input.GetKeyDown(KeyCode.U))
             {
                 SoundManager.Instance.PlaySE(6);
+                _charactorInfo.OKButtonAnimControl();
                 
                 isConfirm = false;
             }
@@ -91,6 +92,7 @@ public class CharaImageMoved2P : Player2Base
         else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.O))
         {
             SoundManager.Instance.PlaySE(7);
+            _charactorInfo.OKButtonAnimControl();
             
             // キャラ決定
             isConfirm = true;

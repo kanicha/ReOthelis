@@ -33,8 +33,6 @@ public class CharaImageMoved : Player1Base
         charaType1P = CharaType1P.Cow;
         charactorImage1P.sprite = charactorImageArray1P[0];
         charactorButtonWhite1P[0].SetActive(true);
-
-        
     }
 
     // Update is called once per frame
@@ -61,6 +59,7 @@ public class CharaImageMoved : Player1Base
             if (_DS4_cross_value || Input.GetKeyDown(KeyCode.Q))
             {
                 SoundManager.Instance.PlaySE(6);
+                _charactorInfo.OKButtonAnimControl();
                 
                 isConfirm = false;
             }
@@ -95,6 +94,7 @@ public class CharaImageMoved : Player1Base
         else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.E))
         {
             SoundManager.Instance.PlaySE(7);
+            _charactorInfo.OKButtonAnimControl();
             
             // キャラ決定
             isConfirm = true;

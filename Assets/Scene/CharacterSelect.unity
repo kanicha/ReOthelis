@@ -1667,13 +1667,14 @@ GameObject:
   - component: {fileID: 400706124}
   - component: {fileID: 400706126}
   - component: {fileID: 400706125}
+  - component: {fileID: 400706127}
   m_Layer: 5
   m_Name: OKImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &400706124
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1731,6 +1732,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 400706123}
   m_CullTransparentMesh: 1
+--- !u!95 &400706127
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 400706123}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1c7852861c2533a4589c2e8b39efddeb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &408572413
 GameObject:
   m_ObjectHideFlags: 0
@@ -3242,13 +3262,14 @@ GameObject:
   - component: {fileID: 806663780}
   - component: {fileID: 806663782}
   - component: {fileID: 806663781}
+  - component: {fileID: 806663783}
   m_Layer: 5
   m_Name: OKImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &806663780
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3306,6 +3327,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 806663779}
   m_CullTransparentMesh: 1
+--- !u!95 &806663783
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 806663779}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1c7852861c2533a4589c2e8b39efddeb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &813760399
 GameObject:
   m_ObjectHideFlags: 0
@@ -5360,7 +5400,7 @@ RectTransform:
   - {fileID: 1881980338}
   - {fileID: 47741215}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5799,7 +5839,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1540159297
 MonoBehaviour:
@@ -5818,6 +5858,7 @@ MonoBehaviour:
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 0}
   gaugeController: {fileID: 0}
+  skillCutinControl: {fileID: 0}
   skillWindowControl: {fileID: 0}
   isMyTurn: 0
   isPreurn: 0
@@ -5858,6 +5899,7 @@ MonoBehaviour:
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 0}
   gaugeController: {fileID: 0}
+  skillCutinControl: {fileID: 0}
   skillWindowControl: {fileID: 0}
   isMyTurn: 0
   isPreurn: 0
@@ -5905,7 +5947,7 @@ MonoBehaviour:
   - {fileID: 163554684}
   - {fileID: 1181649207}
   - {fileID: 69745640}
-  _okButton: {fileID: 806663781}
+  _okButton: {fileID: 806663779}
   _okButtonImage:
   - {fileID: 21300000, guid: ba7bd4a64ee3eb7408386e6b079709a2, type: 3}
   - {fileID: 21300000, guid: 57db07951708bb74fa42683d589d911c, type: 3}
@@ -5935,7 +5977,7 @@ MonoBehaviour:
   - {fileID: 521338149}
   - {fileID: 879142978}
   - {fileID: 335918510}
-  _okButton: {fileID: 400706125}
+  _okButton: {fileID: 400706123}
   _okButtonImage:
   - {fileID: 21300000, guid: ba7bd4a64ee3eb7408386e6b079709a2, type: 3}
   - {fileID: 21300000, guid: 57db07951708bb74fa42683d589d911c, type: 3}
