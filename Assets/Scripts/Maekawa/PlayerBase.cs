@@ -63,6 +63,7 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected Text myPieceCountText = null;
     [SerializeField] protected Image charactorImage = null;
     [SerializeField] protected GaugeController gaugeController = null;
+    [SerializeField] protected SkillCutinControl skillCutinControl = null;
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _timeCount = 0.0f;
     public bool isMyTurn = false;
@@ -80,7 +81,7 @@ public class PlayerBase : MonoBehaviour
     //
     private const int _SKILL_1_COST = 3;
     private const int _SKILL_2_COST = 5;
-    private const int _SKILL_3_COST = 15;
+    private const int _SKILL_3_COST = 1;
     protected Piece.PieceType playerType = Piece.PieceType.none;
     private bool _isSkillBlack;
     private bool _isSkillWhite;
@@ -541,6 +542,7 @@ public class PlayerBase : MonoBehaviour
             return;
 
         Debug.Log("強制変換");
+        skillCutinControl.ShowSkillCutin(3);
         reversedCount -= cost;
 
         StartCoroutine(ForceConvertionCoroutine());
@@ -620,6 +622,7 @@ public class PlayerBase : MonoBehaviour
             return;
 
         Debug.Log("一列一式");
+        skillCutinControl.ShowSkillCutin(1);
         reversedCount -= cost;
 
         // コマが着地したら処理を行う
@@ -710,6 +713,7 @@ public class PlayerBase : MonoBehaviour
             return;
 
         Debug.Log("優先頂戴");
+        skillCutinControl.ShowSkillCutin(2);
         reversedCount -= cost;
 
         // プレイヤーが黒プレイヤーか白か判別
@@ -782,6 +786,7 @@ public class PlayerBase : MonoBehaviour
         int myColorCount = 0;
 
         Debug.Log("強奪一瞬");
+        skillCutinControl.ShowSkillCutin(0);
         reversedCount -= cost;
         /*SoundManager.Instance.PlaySE(5);*/
 

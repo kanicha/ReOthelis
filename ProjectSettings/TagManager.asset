@@ -14,7 +14,7 @@ TagManager:
   - Water
   - UI
   - 3D
-  - 
+  - Cutin
   - 
   - 
   - 
@@ -42,4 +42,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: 3D
+    uniqueID: 1952034571
     locked: 0
