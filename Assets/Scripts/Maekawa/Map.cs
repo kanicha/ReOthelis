@@ -6,20 +6,21 @@ public class Map : SingletonMonoBehaviour<Map>
 {
     private const byte _WIDTH = 10;
     private const byte _HEIGHT = 11;
-    private const byte _EMPTY_AREAS_HEIGHT = 2;// 上２ラインに置かれたコマは消滅する
-    public string[,] map = new string[_HEIGHT, _WIDTH]// z, x座標で指定
+    private const byte _EMPTY_AREAS_HEIGHT = 2; // 上２ラインに置かれたコマは消滅する
+
+    public string[,] map = new string[_HEIGHT, _WIDTH] // z, x座標で指定
     {
-        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
-        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
-        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
-        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
-        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
-        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
-        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
-        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
-        { "■", "□", "□", "□", "□", "□", "□", "□", "□", "■" },
-        { "■", "〇", "●", "〇", "●", "〇", "●", "〇", "●", "■" },
-        { "■", "■", "■", "■", "■", "■", "■", "■", "■", "■" }
+        {"■", "□", "□", "□", "□", "□", "□", "□", "□", "■"},
+        {"■", "□", "□", "□", "□", "□", "□", "□", "□", "■"},
+        {"■", "□", "□", "□", "□", "□", "□", "□", "□", "■"},
+        {"■", "□", "□", "□", "□", "□", "□", "□", "□", "■"},
+        {"■", "□", "□", "□", "□", "□", "□", "□", "□", "■"},
+        {"■", "□", "□", "□", "□", "□", "□", "□", "□", "■"},
+        {"■", "□", "□", "□", "□", "□", "□", "□", "□", "■"},
+        {"■", "□", "□", "□", "□", "□", "□", "□", "□", "■"},
+        {"■", "□", "□", "□", "□", "□", "□", "□", "□", "■"},
+        {"■", "〇", "●", "〇", "●", "〇", "●", "〇", "●", "■"},
+        {"■", "■", "■", "■", "■", "■", "■", "■", "■", "■"}
     };
 
     public readonly string wall = "■";
@@ -38,8 +39,8 @@ public class Map : SingletonMonoBehaviour<Map>
     {
         bool isBlank = false;
         // ミノの移動後x, y座標
-        int z = (int)movedPos.z * -1;// zは基本0以下になるので符号を反転させ配列を指定する
-        int x = (int)movedPos.x;
+        int z = (int) movedPos.z * -1; // zは基本0以下になるので符号を反転させ配列を指定する
+        int x = (int) movedPos.x;
 
         // 2つの駒の移動後座標に何もなければ移動を通す
         if (map[z, x] == empty)
@@ -58,8 +59,8 @@ public class Map : SingletonMonoBehaviour<Map>
         bool isGrounded = false;
 
         // ミノの移動後座標
-        int z = (int)piecePos.z * -1;
-        int x = (int)piecePos.x;
+        int z = (int) piecePos.z * -1;
+        int x = (int) piecePos.x;
 
         if (map[z + 1, x] != empty)
             isGrounded = true;
@@ -73,8 +74,8 @@ public class Map : SingletonMonoBehaviour<Map>
     public void FallPiece(GameObject piece)
     {
         // 配列指定子用のコマの座標         
-        int x = (int)piece.transform.position.x;
-        int z = (int)piece.transform.position.z * -1;// zはマイナス方向に進むので符号を反転させる
+        int x = (int) piece.transform.position.x;
+        int z = (int) piece.transform.position.z * -1; // zはマイナス方向に進むので符号を反転させる
 
         int i = 0;
         int dz = 0;
@@ -82,11 +83,11 @@ public class Map : SingletonMonoBehaviour<Map>
         while (true)
         {
             i++;
-            dz = z + i;// iの分だけ下の座標を調べる
+            dz = z + i; // iの分だけ下の座標を調べる
 
             // 設置したマスからi個下のマスが空白なら下に落とす
             if (map[dz, x] == empty)
-                piece.transform.position = new Vector3(x, 0, dz * -1);// 反転させたyをマイナスに戻す
+                piece.transform.position = new Vector3(x, 0, dz * -1); // 反転させたyをマイナスに戻す
             else
             {
                 dz--;
@@ -98,7 +99,7 @@ public class Map : SingletonMonoBehaviour<Map>
         Piece p = piece.GetComponent<Piece>();
 
         // mapに記録
-        switch(p.pieceType)
+        switch (p.pieceType)
         {
             case Piece.PieceType.black:
                 map[dz, x] = black;
@@ -115,12 +116,13 @@ public class Map : SingletonMonoBehaviour<Map>
             default:
                 break;
         }
+
         pieceMap[dz, x] = piece;
     }
 
     // ひっくり返す処理
-    private List<GameObject> _reversePiece = new List<GameObject>();// ひっくり返すコマを格納
-    public  GameObject[,] pieceMap = new GameObject[_HEIGHT, _WIDTH];
+    private List<GameObject> _reversePiece = new List<GameObject>(); // ひっくり返すコマを格納
+    public GameObject[,] pieceMap = new GameObject[_HEIGHT, _WIDTH];
     private int _setPosX = 0;
     private int _setPosZ = 0;
     private string _myColor = string.Empty;
@@ -132,26 +134,44 @@ public class Map : SingletonMonoBehaviour<Map>
     private bool _isSecondCheck = false;
     public Piece.PieceType turnPlayerColor = Piece.PieceType.none;
     public bool isSkillActivate = false;
-    public string ignoreFixityPiece = string.Empty;// 指定した色の固定効果を無視する(基本は空文字)
+    public string ignoreFixityPiece = string.Empty; // 指定した色の固定効果を無視する(基本は空文字)
 
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
     /// </summary>
-    private IEnumerator PieceReverse()
+    private IEnumerator PieceReverse(bool isSkill)
     {
         foreach (GameObject piece in _reversePiece)
         {
-            if (turnPlayerColor == Piece.PieceType.black)
-            {
-                GameDirector.Instance.AddScore(true, GameDirector.Instance.point);
-                GameDirector.Instance.AddReversedCount(true);
-            }
-            else
-            {
-                GameDirector.Instance.AddScore(false, GameDirector.Instance.point);
-                GameDirector.Instance.AddReversedCount(false);
-            }
 
+            switch (isSkill)
+            {
+                case true:
+                    if (turnPlayerColor == Piece.PieceType.white)
+                    {
+                        GameDirector.Instance.AddScore(true, GameDirector.Instance.point);
+                    }
+                    else
+                    {
+                        GameDirector.Instance.AddScore(false, GameDirector.Instance.point);
+                    }
+                    break;
+                case false:
+                    if (turnPlayerColor == Piece.PieceType.black)
+                    {
+                        GameDirector.Instance.AddScore(true, GameDirector.Instance.point);
+                        GameDirector.Instance.AddReversedCount(true);
+                    }
+                    else
+                    {
+                        GameDirector.Instance.AddScore(false, GameDirector.Instance.point);
+                        GameDirector.Instance.AddReversedCount(false);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            
             piece.transform.SetAsLastSibling();
             piece.GetComponent<Piece>().Reverse();
             yield return new WaitForSeconds(0.3f);
@@ -162,21 +182,22 @@ public class Map : SingletonMonoBehaviour<Map>
         // スキル効果なら準備時間に戻る
         if (isSkillActivate)
         {
-            GameDirector.Instance.intervalTime = 0.3f;
+            GameDirector.Instance.intervalTime = 0.5f;
             GameDirector.Instance.gameState = GameDirector.GameState.interval;
             GameDirector.Instance.nextStateCue = GameDirector.GameState.preActive;
             isSkillActivate = false;
             _isSecondCheck = false;
         }
-        if(_isSecondCheck)// 2回目のチェックならステートを進める
+
+        if (_isSecondCheck) // 2回目のチェックならステートを進める
         {
-            GameDirector.Instance.intervalTime = 0.3f;
+            GameDirector.Instance.intervalTime = 0.5f;
             GameDirector.Instance.gameState = GameDirector.GameState.interval;
             GameDirector.Instance.nextStateCue = GameDirector.GameState.reversed;
             _isSecondCheck = false;
         }
         else
-            _isSecondCheck = true;// 2回目のチェックに入る
+            _isSecondCheck = true; // 2回目のチェックに入る
 
         _isChecking = false;
     }
@@ -185,10 +206,10 @@ public class Map : SingletonMonoBehaviour<Map>
     /// 探索の準備と各方向に探索する関数を呼ぶ関数
     /// </summary>
     /// <param name="piece">今置いたコマ</param>
-    public IEnumerator CheckReverse(GameObject piece)
+    public IEnumerator CheckReverse(GameObject piece, bool isSkill)
     {
         while (_isChecking)
-            yield return null;// 2つのコルーチンは片方づつ処理する
+            yield return null; // 2つのコルーチンは片方づつ処理する
 
         // このターンに置いたコマがリバースしている or このコマが盤面外に置かれているなら
         if (piece.CompareTag(_REVERSED_TAG))
@@ -219,18 +240,18 @@ public class Map : SingletonMonoBehaviour<Map>
         }
 
         // 置いたマスの座標を取得
-        _setPosX = (int)piece.transform.position.x;
-        _setPosZ = (int)piece.transform.position.z * -1;
+        _setPosX = (int) piece.transform.position.x;
+        _setPosZ = (int) piece.transform.position.z * -1;
 
         // 7方向にチェック(zは符号が逆転する)
-        CheckInTheDirection(new Vector3(-1, 0, 0));  // ←
-        CheckInTheDirection(new Vector3(1, 0, 0));   // →
-        CheckInTheDirection(new Vector3(0, 0, 1));   // ↓
+        CheckInTheDirection(new Vector3(-1, 0, 0)); // ←
+        CheckInTheDirection(new Vector3(1, 0, 0)); // →
+        CheckInTheDirection(new Vector3(0, 0, 1)); // ↓
         //CheckInTheDirection(new Vector3(0, 0, -1));// ↑
-        CheckInTheDirection(new Vector3(-1, 0, 1));  // ↙
-        CheckInTheDirection(new Vector3(1, 0, 1));   // ↘
+        CheckInTheDirection(new Vector3(-1, 0, 1)); // ↙
+        CheckInTheDirection(new Vector3(1, 0, 1)); // ↘
         CheckInTheDirection(new Vector3(-1, 0, -1)); // ↖
-        CheckInTheDirection(new Vector3(1, 0, -1));  // ↗
+        CheckInTheDirection(new Vector3(1, 0, -1)); // ↗
 
         /*for (int a = _EMPTY_AREAS_HEIGHT; a < _HEIGHT; a++)
         {
@@ -241,8 +262,12 @@ public class Map : SingletonMonoBehaviour<Map>
             }
             Debug.Log(s);
         }*/
-        StartCoroutine(PieceReverse());
-        ignoreFixityPiece = string.Empty;// スキル効果は1ターンで終了
+        if (isSkill)
+            StartCoroutine(PieceReverse(true));
+        else
+            StartCoroutine(PieceReverse(false));
+        
+            ignoreFixityPiece = string.Empty; // スキル効果は1ターンで終了
     }
 
     /// <summary>
@@ -255,14 +280,14 @@ public class Map : SingletonMonoBehaviour<Map>
         int checkPosX = _setPosX;
         int checkPosZ = _setPosZ;
         // 調べたい方向
-        int dirX = (int)dir.x;
-        int dirZ = (int)dir.z;
+        int dirX = (int) dir.x;
+        int dirZ = (int) dir.z;
 
         bool isReverse = false;
         int moveCount = 0;
 
         // dirの方向に「ひっくり返せるか」探索
-        while(true)
+        while (true)
         {
             // 調べたい方向に進んでいく
             checkPosX += dirX;
@@ -276,9 +301,10 @@ public class Map : SingletonMonoBehaviour<Map>
             }
             else if (targetType == _myColor || targetType == _fixityMyColor)
             {
-                isReverse = true;// 自分の色で挟んだ扱い
+                isReverse = true; // 自分の色で挟んだ扱い
                 break;
             }
+
             moveCount++;
         }
 
@@ -289,7 +315,7 @@ public class Map : SingletonMonoBehaviour<Map>
             checkPosZ = _setPosZ;
 
             // リバースするコマをリストに追加
-            for(int i = 0; i < moveCount; i++)
+            for (int i = 0; i < moveCount; i++)
             {
                 checkPosX += dirX;
                 checkPosZ += dirZ;
@@ -307,9 +333,9 @@ public class Map : SingletonMonoBehaviour<Map>
                     }
                     // スキルが発動していなければスルー
                 }
-                else// 相手色が確定しているので
+                else // 相手色が確定しているので
                 {
-                    map[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
+                    map[checkPosZ, checkPosX] = _myColor; // ←の都合で探索を分割しなければならない
                     _reversePiece.Add(pieceMap[checkPosZ, checkPosX]);
                     pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
                 }
@@ -346,6 +372,7 @@ public class Map : SingletonMonoBehaviour<Map>
 
         return isEnd;
     }
+
     public void CheckMap()
     {
         int blackCount = 0;
@@ -375,9 +402,9 @@ public class Map : SingletonMonoBehaviour<Map>
     public bool CheckHeightOver(GameObject piece)
     {
         bool isSafeLine = true;
-        if ((int)piece.transform.position.z * -1 < _EMPTY_AREAS_HEIGHT)
+        if ((int) piece.transform.position.z * -1 < _EMPTY_AREAS_HEIGHT)
         {
-            map[(int)piece.transform.position.z * -1, (int)piece.transform.position.x] = empty;
+            map[(int) piece.transform.position.z * -1, (int) piece.transform.position.x] = empty;
             piece.transform.position = new Vector3(999, 999, 999);
             isSafeLine = false;
 
@@ -388,8 +415,9 @@ public class Map : SingletonMonoBehaviour<Map>
                 _isSecondCheck = false;
             }
             else
-                _isSecondCheck = true;// 2回目のチェックに入る
+                _isSecondCheck = true; // 2回目のチェックに入る
         }
+
         return isSafeLine;
     }
 
@@ -399,7 +427,7 @@ public class Map : SingletonMonoBehaviour<Map>
         {
             for (int j = 0; j < _WIDTH; j++)
             {
-                if (pieceMap[i,j] != null)
+                if (pieceMap[i, j] != null)
                     pieceMap[i, j].tag = "Untagged";
             }
         }

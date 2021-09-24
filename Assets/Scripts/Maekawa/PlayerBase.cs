@@ -290,6 +290,18 @@ public class PlayerBase : MonoBehaviour
         if (Input.GetKeyDown(inputKey) || _DS4_option_value)
         skillWindowControl.ShowSkillWindow();
     }
+
+    /// <summary>
+    /// ゲーム終了デバッグ用関数 VB
+    /// </summary>
+    protected void DebugGameEnd()
+    {
+        if (Input.GetKeyDown(KeyCode.V) && Input.GetKey(KeyCode.B))
+        {
+            Debug.Log("GameEnd");
+            GameDirector.Instance.gameState = GameDirector.GameState.end;
+        }
+    }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected void SetSkills(int charaType)
     {
@@ -349,7 +361,7 @@ public class PlayerBase : MonoBehaviour
     /// そのスキルをすでに使用しているかどうかのチェック関数
     /// </summary>
     /// <returns></returns>
-    private bool isSkillCheck()
+    private bool SpacialSkillCheck()
     {
         if (_isSkillBlack == true || _isSkillWhite == true)
             return true;
@@ -357,10 +369,18 @@ public class PlayerBase : MonoBehaviour
             return false;
     }
 
+    private bool NormalSkillCheck()
+    {
+        if (GameDirector.Instance._isSkillBlack || GameDirector.Instance._isSkillWhite)
+            return true;
+        else
+            return false;
+    }
+    
     /// <summary>
     /// プレイヤーが1Pか2P判別 黒 = 1P
     /// </summary>
-    /// <returns></returns>
+    /// <returns>true = black</returns>
     private bool PlayerCheck()
     {
         if (myColor == Map.Instance.black)
@@ -374,7 +394,7 @@ public class PlayerBase : MonoBehaviour
     }
 
     /// <summary>
-    /// スキルでスコアを追加する処理関数(スキル使用フラグも処理)
+    /// 必殺技スキルでスコアを追加する処理関数(スキル使用フラグも処理)
     /// </summary>
     /// <param name="multiplyNum">追加するスコアの倍数</param>
     private void AddSkillScore(int multiplyNum, int colorCount)
@@ -394,11 +414,28 @@ public class PlayerBase : MonoBehaviour
             _isSkillWhite = true;
         }
     }
+    
+    /// <summary>
+    /// 通常スキルを使用したかどうか管理関数
+    /// </summary>
+    private void NormalSkillFlag()
+    {
+        if(PlayerCheck())
+        {
+            GameDirector.Instance._isSkillBlack = true;
+        }
+        else if (!PlayerCheck())
+        {
+            GameDirector.Instance._isSkillWhite = true;
+        }
+    }
+
 
     //  強引
     public void TakeAway(int cost)
     {
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost))
+        if (!ActivateCheck(GameDirector.GameState.preActive, cost) ||
+            NormalSkillCheck())
             return;
 
         // 最下段を除くマップに相手の色があるなら(固定コマは対象外)
@@ -420,7 +457,9 @@ public class PlayerBase : MonoBehaviour
                     Map.Instance.TagClear();
                     Map.Instance.isSkillActivate = true;
                     GameDirector.Instance.gameState = GameDirector.GameState.idle;
-                    StartCoroutine(Map.Instance.CheckReverse(Map.Instance.pieceMap[z, x]));
+                    StartCoroutine(Map.Instance.CheckReverse(Map.Instance.pieceMap[z, x],true));
+                    
+                    NormalSkillFlag();
                     break;
                 }
             }
@@ -433,7 +472,8 @@ public class PlayerBase : MonoBehaviour
     public void RandomLock(int cost)
     {
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost))
+            !ActivateCheck(GameDirector.GameState.active, cost) || 
+            NormalSkillCheck())
             return;
 
         // 最下段を除くマップに自分の色があるなら(固定コマは対象外)
@@ -452,6 +492,8 @@ public class PlayerBase : MonoBehaviour
                 {
                     Map.Instance.map[z, x] = myColorfixity;
                     Map.Instance.pieceMap[z, x].GetComponent<Piece>().ChangeIsFixity();
+                    
+                    NormalSkillFlag();
                     break;
                 }
             }
@@ -464,7 +506,8 @@ public class PlayerBase : MonoBehaviour
     public void MyPieceLock(int cost)
     {
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost))
+            !ActivateCheck(GameDirector.GameState.active, cost) || 
+            NormalSkillCheck())
             return;
 
         Piece piece1 = controllPiece1.GetComponent<Piece>();
@@ -482,6 +525,8 @@ public class PlayerBase : MonoBehaviour
                 piece1.ChangeIsFixity();
             if (piece2.pieceType == playerType)
                 piece2.ChangeIsFixity();
+            
+            NormalSkillFlag();
         }
         else
             Debug.Log("自分の色のコマを操作していません");
@@ -491,7 +536,8 @@ public class PlayerBase : MonoBehaviour
     public void Cancellation(int cost)
     {
         // 自分の色のコマを操作していなくても発動できる(意味はない)ので要相談
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost))
+        if (!ActivateCheck(GameDirector.GameState.preActive, cost) ||
+            NormalSkillCheck())
             return;
 
         // フィールドに相手の色の固定こまがあった時発動
@@ -516,6 +562,8 @@ public class PlayerBase : MonoBehaviour
                             // 色を戻す
                             Map.Instance.map[z, x] = enemyColor;
                             Map.Instance.pieceMap[z, x].GetComponent<Piece>().ChangeIsFixity();
+                            
+                            NormalSkillFlag();
                         }
                     }
                 }
@@ -538,7 +586,7 @@ public class PlayerBase : MonoBehaviour
         // ゲームステートがpreActive(自動落下前) と active(操作中)の時コストがある時 発動可能
         if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
-            isSkillCheck())
+            SpacialSkillCheck())
             return;
 
         Debug.Log("強制変換");
@@ -618,7 +666,7 @@ public class PlayerBase : MonoBehaviour
     {
         if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
-            isSkillCheck())
+            SpacialSkillCheck())
             return;
 
         Debug.Log("一列一式");
@@ -709,7 +757,7 @@ public class PlayerBase : MonoBehaviour
     {
         if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
-            isSkillCheck())
+            SpacialSkillCheck())
             return;
 
         Debug.Log("優先頂戴");
@@ -780,7 +828,7 @@ public class PlayerBase : MonoBehaviour
     {
         if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
-            isSkillCheck())
+            SpacialSkillCheck())
             return;
 
         int myColorCount = 0;

@@ -69,7 +69,8 @@ public class Player_1 : PlayerBase
         base.SaveKeyValue();
         base.KeyInput();
         
-        base.ShowSkillWindow(KeyCode.Z);
+        DebugGameEnd();
+        base.ShowSkillWindow(KeyCode.N);
         
         if (isMyTurn)
         {
