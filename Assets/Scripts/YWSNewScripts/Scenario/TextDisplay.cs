@@ -6,59 +6,68 @@ using UnityEngine.UI;
 public class TextDisplay : Player1Base
 {
     private GameSceneManager _gameSceneManager;
-    public string[] MainStory;
-    public string[] KurotoStory;
-    public string[] SeasteyStory;
-    public string[] LuiceStory;
-    public string[] LuminaStory;
-    private int TextNumber;//何番目のtexts[]を表示させるか
-    private string DisplayText;//表示させるstring
-    private int TextCharNumber;//何文字目をdisplayTextに追加するか
-    public int DisplayTextSpeed; //全体のフレームレートを落とす変数
-    private bool Click = false;
-    public static bool IsScenarioEnd = false;
+    [SerializeField] private Text _word;
+    [SerializeField] private Text _charaName;
+    public string[] _mainStory_Text;
+    public string[] _mainStory_Name;
+    //public string[] KurotoStory;
+    //public string[] SeasteyStory;
+    //public string[] LuiceStory;
+    //public string[] LuminaStory;
+    private int _textNum = 0;
+    private string _displayText;
+    private int _textCharNum = 0;
+    private int _displayTextSpeed = 0; //全体のフレームレートを落とす変数
+    public int _interval = 5;
+    public static bool _click = false;
+    public static bool _isScenarioEnd = false;
     void Start()
     {
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
     }
     void Update()
     {
-        if (_gameSceneManager.IsChanged == true && IsScenarioEnd == false)
-        { 
-            DisplayTextSpeed++;
-            if (DisplayTextSpeed % 5 == 0)
+        if (_gameSceneManager.IsChanged == true && _isScenarioEnd == false)
+        {
+            _charaName.text = _mainStory_Name[_textNum];
+            _displayTextSpeed++;
+            if (_displayTextSpeed % _interval == 0)
             {
-                if (TextCharNumber != MainStory[TextNumber].Length)//もしtext[textNumber]の文字列の文字が最後の文字じゃなければ
+                if (_textCharNum != _mainStory_Text[_textNum].Length)
                 {
-                    DisplayText = DisplayText + MainStory[TextNumber][TextCharNumber];//displayTextに文字を追加していく
-                    TextCharNumber = TextCharNumber + 1;//次の文字にする
-                }
-                else//もしtext[textNumber]の文字列の文字が最後の文字だったら
-                {
-                    if (TextNumber != MainStory.Length - 1)//もしtexts[]が最後のセリフじゃないときは
+                    _displayText = _displayText + _mainStory_Text[_textNum][_textCharNum];
+                    _textCharNum += 1;
+                    if (_textCharNum == 25)
                     {
-                        if (Click == true)//クリックされた判定
+                        _displayText = _displayText + "\n";
+                    }
+                }
+                else
+                {
+                    if (_textNum != _mainStory_Text.Length - 1)
+                    {
+                        if (_click == true)
                         {
-                            DisplayText = "";//表示させる文字列を消す
-                            TextCharNumber = 0;//文字の番号を最初にする
-                            TextNumber = TextNumber + 1;//次のセリフにする
+                            _displayText = "";
+                            _textCharNum = 0;
+                            _textNum += 1;
                         }
                     }
-                    else //もしtexts[]が最後のセリフになったら
+                    else
                     { 
-                        if (TextCharNumber == MainStory[TextNumber].Length) //クリックされた判定
+                        if (_textCharNum == _mainStory_Text[_textNum].Length)
                         { 
-                            IsScenarioEnd = true;
+                            _isScenarioEnd = true;
                         } 
                     } 
                 }
 
-                this.GetComponent<Text>().text = DisplayText;
-                Click = false;
+                _word.text = _displayText;
+                _click = false;
             }
             if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space))
             {
-                Click = true;
+                _click = true;
             }
         } 
     }
