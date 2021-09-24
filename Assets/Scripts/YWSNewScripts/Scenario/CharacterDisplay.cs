@@ -9,6 +9,7 @@ public class CharacterDisplay : MonoBehaviour
     [SerializeField] private Image _rightCharacter;
     [SerializeField] private Sprite[] _leftCharacterImage;
     [SerializeField] private Sprite[] _rightCharacterImage;
+    public int[] _whoIsTalking;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +30,22 @@ public class CharacterDisplay : MonoBehaviour
             }
             else
             {
+                _rightCharacter.color = new Color(255,255,255,1);
+            }
+            if (_whoIsTalking[TextDisplay._textNum+1] == 1)
+            {
+                if (_rightCharacterImage[TextDisplay._textNum+1] != null)
+                {
+                    _rightCharacter.color = new Color(165,165,165,0.65f);
+                }
+                _leftCharacter.color = new Color(255,255,255,1);
+            }
+            else if (_whoIsTalking[TextDisplay._textNum+1] == 2)
+            {
+                if (_leftCharacterImage[TextDisplay._textNum+1] != null)
+                {
+                    _leftCharacter.color = new Color(165,165,165,0.65f);
+                }
                 _rightCharacter.color = new Color(255,255,255,1);
             }
         }
