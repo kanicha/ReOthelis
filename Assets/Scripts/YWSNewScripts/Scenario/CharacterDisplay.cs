@@ -9,7 +9,6 @@ public class CharacterDisplay : MonoBehaviour
     [SerializeField] private Image _rightCharacter;
     [SerializeField] private Sprite[] _leftCharacterImage;
     [SerializeField] private Sprite[] _rightCharacterImage;
-    private int DialogueNum = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -22,10 +21,13 @@ public class CharacterDisplay : MonoBehaviour
     {
         if (TextDisplay._click == true)
         {
-            _leftCharacter.sprite = _leftCharacterImage[DialogueNum];
-            _rightCharacter.sprite = _rightCharacterImage[DialogueNum];
-            DialogueNum += 1;
-            if (DialogueNum == 3)
+            _leftCharacter.sprite = _leftCharacterImage[TextDisplay._textNum+1];
+            _rightCharacter.sprite = _rightCharacterImage[TextDisplay._textNum+1];
+            if (_rightCharacterImage[TextDisplay._textNum+1] == null)
+            {
+                _rightCharacter.color = new Color(255,255,255,0);
+            }
+            else
             {
                 _rightCharacter.color = new Color(255,255,255,1);
             }

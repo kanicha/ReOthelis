@@ -14,7 +14,7 @@ public class TextDisplay : Player1Base
     //public string[] SeasteyStory;
     //public string[] LuiceStory;
     //public string[] LuminaStory;
-    private int _textNum = 0;
+    public static int _textNum = 0;
     private string _displayText;
     private int _textCharNum = 0;
     private int _displayTextSpeed = 0; //全体のフレームレートを落とす変数
