@@ -17,6 +17,8 @@ public class Judgment : MonoBehaviour
     [SerializeField] private Sprite[] _losePlayerImageArray2P = new Sprite[4];
     private float _imageColor = 0;
     private bool _isAppear = false;
+    private bool _isCheck = false;
+    private int _winNum = 0;
     //勝敗判定のテキストは2倍で出現し、0.8倍にまで縮小し、最後に1倍に戻る。
     private RectTransform _p1Appear;
     private RectTransform _p2Appear;
@@ -50,16 +52,16 @@ public class Judgment : MonoBehaviour
         // 1P勝利
         if (Player_1.displayScore > Player_2.displayScore)
         {
-            _playerImage[0].sprite = _winPlayerImageArray1P[(int) CharaImageMoved.charaType1P];
-            _playerImage[1].sprite = _losePlayerImageArray2P[(int) CharaImageMoved2P.charaType2P];
+            _winNum = 1;
+            
             _judgeImage1P.sprite = _judgeImageArray[0];
             _judgeImage2P.sprite = _judgeImageArray[1];
         }
         // 2P勝利
         else if (Player_1.displayScore < Player_2.displayScore)
         {
-            _playerImage[0].sprite = _losePlayerImageArray1P[(int) CharaImageMoved.charaType1P];
-            _playerImage[1].sprite = _winPlayerImageArray2P[(int) CharaImageMoved2P.charaType2P];
+            _winNum = 2;
+            
             _judgeImage1P.sprite = _judgeImageArray[1];
             _judgeImage2P.sprite = _judgeImageArray[0];
         }
@@ -68,6 +70,16 @@ public class Judgment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        JudgeImageMoved();
+    }
+
+    /// <summary>
+    /// Win/Lose の画像アニメーション処理
+    /// </summary>
+    private void JudgeImageMoved()
+    {
+        StartCoroutine(JudgeFaceChange());
+        
         //画像を透明から不透明に変更
         if (_isAppear == false && ScoreDisplay.IsScoreAppear == true)
         {
@@ -94,6 +106,8 @@ public class Judgment : MonoBehaviour
                 _firstHeight_Y = _middleHeight_Y;
                 _isDecreased = true;
                 _isIncreased = false;
+                
+                _isCheck = true;
             }
         }
         else if (_isDecreased == true && _isIncreased == false && ScoreDisplay.IsScoreAppear == true)
@@ -108,7 +122,36 @@ public class Judgment : MonoBehaviour
                 _firstHeight_Y = _finalHeight_Y;
                 _isDecreased = false;
                 _isIncreased = false;
+                
+                _isCheck = true;
             }
         }
+    }
+
+    /// <summary>
+    /// 勝利判定後に表情変化
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator JudgeFaceChange()
+    {
+        while (!_isCheck)
+        {
+            yield return new WaitForEndOfFrame ();
+        }
+
+        switch (_winNum)
+        {
+            case 1:
+                _playerImage[0].sprite = _winPlayerImageArray1P[(int) CharaImageMoved.charaType1P];
+                _playerImage[1].sprite = _losePlayerImageArray2P[(int) CharaImageMoved2P.charaType2P];
+                break;
+            case 2:
+                _playerImage[0].sprite = _losePlayerImageArray1P[(int) CharaImageMoved.charaType1P];
+                _playerImage[1].sprite = _winPlayerImageArray2P[(int) CharaImageMoved2P.charaType2P];
+                break;
+            default:
+                break;
+        }
+        yield return null;
     }
 }
