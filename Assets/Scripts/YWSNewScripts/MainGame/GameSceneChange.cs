@@ -19,7 +19,7 @@ public class GameSceneChange : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_gameDirector.gameState == GameDirector.GameState.end && isGameEnd == false)
+        if (_gameDirector.gameState == GameDirector.GameState.ended && isGameEnd == false)
         {
             SceneChange(_gameSceneManager);
             isGameEnd = true;

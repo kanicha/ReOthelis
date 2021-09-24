@@ -290,6 +290,18 @@ public class PlayerBase : MonoBehaviour
         if (Input.GetKeyDown(inputKey) || _DS4_option_value)
         skillWindowControl.ShowSkillWindow();
     }
+
+    /// <summary>
+    /// ゲーム終了デバッグ用関数 VB
+    /// </summary>
+    protected void DebugGameEnd()
+    {
+        if (Input.GetKeyDown(KeyCode.V) && Input.GetKey(KeyCode.B))
+        {
+            Debug.Log("GameEnd");
+            GameDirector.Instance.gameState = GameDirector.GameState.end;
+        }
+    }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected void SetSkills(int charaType)
     {
