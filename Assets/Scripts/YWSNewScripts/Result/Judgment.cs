@@ -139,6 +139,9 @@ public class Judgment : MonoBehaviour
             yield return new WaitForEndOfFrame ();
         }
 
+        // 0.3秒待つ
+        yield return  new WaitForSeconds(0.3f);
+        
         switch (_winNum)
         {
             case 1:
