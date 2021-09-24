@@ -971,7 +971,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 584, y: -554.4}
+  m_AnchoredPosition: {x: 655, y: -554.4}
   m_SizeDelta: {x: 925.8528, y: 1389.1184}
   m_Pivot: {x: 0.5, y: 0.50000006}
 --- !u!114 &318023282
@@ -1374,6 +1374,8 @@ MonoBehaviour:
   - {fileID: 0}
   intervalTime: 0
   _isLanding: 0
+  _isSkillBlack: 0
+  _isSkillWhite: 0
   gameState: 0
   nextStateCue: 0
 --- !u!114 &326221982
@@ -5725,7 +5727,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -554.9998, y: -554.4001}
+  m_AnchoredPosition: {x: -655, y: -554.4001}
   m_SizeDelta: {x: 925.8528, y: 1389.118}
   m_Pivot: {x: 0.5, y: 0.49999994}
 --- !u!114 &1873248609
