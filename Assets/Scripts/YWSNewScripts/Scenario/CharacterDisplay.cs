@@ -14,6 +14,9 @@ public class CharacterDisplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _leftCharacter.sprite = _leftCharacterImage[0];
+        _rightCharacter.sprite = _rightCharacterImage[0];
+        _leftCharacter.color = new Color(255,255,255,1);
         _rightCharacter.color = new Color(255,255,255,0);
     }
 
