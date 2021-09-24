@@ -420,7 +420,7 @@ public class PlayerBase : MonoBehaviour
                     Map.Instance.TagClear();
                     Map.Instance.isSkillActivate = true;
                     GameDirector.Instance.gameState = GameDirector.GameState.idle;
-                    StartCoroutine(Map.Instance.CheckReverse(Map.Instance.pieceMap[z, x]));
+                    StartCoroutine(Map.Instance.CheckReverse(Map.Instance.pieceMap[z, x],true));
                     break;
                 }
             }

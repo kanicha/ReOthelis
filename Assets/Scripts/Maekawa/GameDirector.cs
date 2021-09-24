@@ -115,7 +115,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 for (int i = 0; i < _activePieces.Length; i++)
                 {
                     if(Map.Instance.CheckHeightOver(_activePieces[i]))
-                        StartCoroutine(Map.Instance.CheckReverse(_activePieces[i]));
+                        StartCoroutine(Map.Instance.CheckReverse(_activePieces[i],false));
                 }
                 break;
 
