@@ -24,6 +24,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     public GameObject[] _activePieces = new GameObject[2];
     public float intervalTime = 0;
     public bool _isLanding = false;
+    public bool _isSkillBlack = false;
+    public bool _isSkillWhite = false;
     public GameState gameState = GameState.none;
     public GameState nextStateCue = GameState.none;
     public enum GameState
@@ -117,6 +119,10 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     if(Map.Instance.CheckHeightOver(_activePieces[i]))
                         StartCoroutine(Map.Instance.CheckReverse(_activePieces[i],false));
                 }
+                
+                // スキルフラグ初期化
+                _isSkillBlack = false;
+                _isSkillWhite = false;
                 break;
 
             case GameState.interval:// 強引スキル連打でバグが出るので時間を取る(応急処置)

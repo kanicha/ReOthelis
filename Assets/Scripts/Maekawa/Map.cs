@@ -150,12 +150,10 @@ public class Map : SingletonMonoBehaviour<Map>
                     if (turnPlayerColor == Piece.PieceType.white)
                     {
                         GameDirector.Instance.AddScore(true, GameDirector.Instance.point);
-                        GameDirector.Instance.AddReversedCount(true);
                     }
                     else
                     {
                         GameDirector.Instance.AddScore(false, GameDirector.Instance.point);
-                        GameDirector.Instance.AddReversedCount(false);
                     }
                     break;
                 case false:
