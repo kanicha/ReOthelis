@@ -276,8 +276,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 583, y: -357}
-  m_SizeDelta: {x: 1290, y: 1936}
+  m_AnchoredPosition: {x: 583, y: -255}
+  m_SizeDelta: {x: 1063.5641, y: 1595.7849}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &130320012
 MonoBehaviour:
@@ -2594,7 +2594,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 787a43eb427816346a4f675c1ef9960a, type: 3}
   - {fileID: 21300000, guid: 17bddde5d69e80b4da0ae78c5df4109f, type: 3}
   - {fileID: 21300000, guid: fe1e81ffb50ec154da2ce2f37929603e, type: 3}
-  _standChara: {fileID: 130320012}
+  _standChara: {fileID: 0}
   _standCharaImage:
   - {fileID: 21300000, guid: d9cdd1db83540d4469b778f1349bca3e, type: 3}
   - {fileID: 21300000, guid: ebd6eea1ff87a904aacce9acfd16950b, type: 3}
@@ -2619,7 +2619,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 8533de2d70fe3b04ebf8c6aff698d450, type: 3}
   _playerImage:
   - {fileID: 2031892510}
-  - {fileID: 130320012}
+  - {fileID: 0}
   _winPlayerImageArray1P:
   - {fileID: 21300000, guid: cc59672481b28094a97db6c9c92fad14, type: 3}
   - {fileID: 21300000, guid: d1d5e66d223a8df438bffa211c03c872, type: 3}
@@ -3070,8 +3070,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -552, y: -357}
-  m_SizeDelta: {x: 1290, y: 1936}
+  m_AnchoredPosition: {x: -561.8, y: -255}
+  m_SizeDelta: {x: 1063.5641, y: 1595.7849}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2031892510
 MonoBehaviour:

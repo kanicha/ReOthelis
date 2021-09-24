@@ -5838,10 +5838,10 @@ MonoBehaviour:
   _charactorInfo: {fileID: 1540159299}
   charactorImage1P: {fileID: 1936964424}
   charactorImageArray1P:
-  - {fileID: 21300000, guid: 6804cda90efb29c40a55252eaf06ab92, type: 3}
-  - {fileID: 21300000, guid: 33406fdbccc450a4e9836d962f782915, type: 3}
-  - {fileID: 21300000, guid: abdf42b0056f431409e4711d4c508bfe, type: 3}
-  - {fileID: 21300000, guid: b1943ffd00de4ff45bf21fb765e77496, type: 3}
+  - {fileID: 21300000, guid: 020145bb634dc244abc159c66b44d1e8, type: 3}
+  - {fileID: 21300000, guid: e8778beca2974ca45a7f69e158482d01, type: 3}
+  - {fileID: 21300000, guid: 980d3dc7c6b849b44b5b87ebc47f02ae, type: 3}
+  - {fileID: 21300000, guid: 803c5f3e134db394d9c1a34da9674845, type: 3}
   charactorButtonWhite1P:
   - {fileID: 629646310}
   - {fileID: 1474418322}
