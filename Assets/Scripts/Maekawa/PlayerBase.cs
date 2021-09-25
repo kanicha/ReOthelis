@@ -639,7 +639,7 @@ public class PlayerBase : MonoBehaviour
         {
             for (int x = px; x < px + 3; x++)
             {
-                // 一番下の変更できないコマが来た場合スルー
+                // 一番下変更できないコマが来た場合スルー
                 if (z >= 10)
                 {
                     continue;
