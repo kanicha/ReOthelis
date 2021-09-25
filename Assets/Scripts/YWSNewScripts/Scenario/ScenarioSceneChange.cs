@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ScenarioSceneChange : Player1Base
 {
@@ -20,7 +19,8 @@ public class ScenarioSceneChange : Player1Base
 
         if (_repeatHit)
             return;
-        else if (ScenarioControl._isScenarioEnd == true && _gameSceneManager.IsChanged == true && _DS4_circle_value || ScenarioControl._isScenarioEnd == true && _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space))
+        else if (ScenarioControl._isScenarioEnd == true && _gameSceneManager.IsChanged == true && _DS4_circle_value || ScenarioControl._isScenarioEnd == true && _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space) ||
+                _gameSceneManager.IsChanged == true && _DS4_cross_value || _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.X))
         {
             _repeatHit = true;
             SceneChange(_gameSceneManager);
