@@ -365,8 +365,9 @@ MonoBehaviour:
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 0}
   gaugeController: {fileID: 0}
+  skillCutinControl: {fileID: 0}
+  skillWindowControl: {fileID: 0}
   isMyTurn: 0
-  isPreurn: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -415,7 +416,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
