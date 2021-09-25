@@ -30,6 +30,10 @@ public class ScenarioControl : Player1Base
     [SerializeField] private Sprite[] _backgroundImage; //背景を入れる配列
     private int _part = 0;
     private bool _isPartEnd = false;
+    [SerializeField] private Image _pageFeed;
+    public RectTransform _feedMove;
+    private int counter = 0;
+    private float move = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +47,7 @@ public class ScenarioControl : Player1Base
         _textNum = 0;
         _isScenarioEnd = false;
         _click = false;
+        _pageFeed.color = new Color(255,255,255,0);
     }
 
     // Update is called once per frame
@@ -50,6 +55,7 @@ public class ScenarioControl : Player1Base
     {
         base.SaveKeyValue();
         base.KeyInput();
+        PageFeedMove();
         
         if (_gameSceneManager.IsChanged == true && _isScenarioEnd == false)
         {
@@ -110,6 +116,7 @@ public class ScenarioControl : Player1Base
                     }
                     else
                     {
+                        _pageFeed.color = new Color(255,255,255,1);
                         //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
                         if (_textNum != _mainStory_Text.Length - 1)
                         {
@@ -117,6 +124,7 @@ public class ScenarioControl : Player1Base
                             {
                                 SoundManager.Instance.PlaySE(10);
                                 
+                                _pageFeed.color = new Color(255,255,255,0);
                                 _displayText = "";
                                 _textCharNum = 0;
                                 _textNum += 1;
@@ -133,7 +141,7 @@ public class ScenarioControl : Player1Base
                             }
                         }
                         else
-                        { 
+                        {
                             //最後のセリフが全部表示し切ったら、シナリオ終了判定を出す
                             if (_textCharNum == _mainStory_Text[_textNum].Length)
                             { 
@@ -158,5 +166,16 @@ public class ScenarioControl : Player1Base
                 }
             }
         } 
+    }
+
+    private void PageFeedMove()
+    {
+        _feedMove.position += new Vector3(0,move,0);
+        counter++;
+        if (counter == 100)
+        {
+            counter = 0;
+            move *= -1;
+        }
     }
 }

@@ -52,6 +52,10 @@ public class PartA : Player1Base
     [SerializeField] private Sprite[] _lumina_BackgroundImage;
     private int _part = 0;
     private bool _isPartEnd = false;
+    [SerializeField] private Image _pageFeed;
+    public RectTransform _feedMove;
+    private int counter = 0;
+    private float move = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -87,6 +91,7 @@ public class PartA : Player1Base
         _rightCharacter.color = new Color(255,255,255,0);
         _textNum = 0;
         _isScenarioEnd = false;
+        _pageFeed.color = new Color(255,255,255,0);
     }
 
     // Update is called once per frame
@@ -94,6 +99,7 @@ public class PartA : Player1Base
     {
         base.SaveKeyValue();
         base.KeyInput();
+        PageFeedMove();
         
         if (_gameSceneManager.IsChanged == true && _isScenarioEnd == false)
         {
@@ -171,6 +177,7 @@ public class PartA : Player1Base
                         }
                         else
                         {
+                            _pageFeed.color = new Color(255,255,255,1);
                             //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
                             if (_textNum != _kurotoStory_Text.Length - 1)
                             {
@@ -178,6 +185,7 @@ public class PartA : Player1Base
                                 {
                                     SoundManager.Instance.PlaySE(10);
                                     
+                                    _pageFeed.color = new Color(255,255,255,0);
                                     _displayText = "";
                                     _textCharNum = 0;
                                     _textNum += 1;
@@ -262,6 +270,7 @@ public class PartA : Player1Base
                         }
                         else
                         {
+                            _pageFeed.color = new Color(255,255,255,1);
                             //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
                             if (_textNum != _seasteyStory_Text.Length - 1)
                             {
@@ -269,6 +278,7 @@ public class PartA : Player1Base
                                 {
                                     SoundManager.Instance.PlaySE(10);
                                     
+                                    _pageFeed.color = new Color(255,255,255,0);
                                     _displayText = "";
                                     _textCharNum = 0;
                                     _textNum += 1;
@@ -348,6 +358,7 @@ public class PartA : Player1Base
                         }
                         else
                         {
+                            _pageFeed.color = new Color(255,255,255,1);
                             //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
                             if (_textNum != _luminaStory_Text.Length - 1)
                             {
@@ -355,6 +366,7 @@ public class PartA : Player1Base
                                 {
                                     SoundManager.Instance.PlaySE(10);
                                     
+                                    _pageFeed.color = new Color(255,255,255,0);
                                     _displayText = "";
                                     _textCharNum = 0;
                                     _textNum += 1;
@@ -434,6 +446,7 @@ public class PartA : Player1Base
                         }
                         else
                         {
+                            _pageFeed.color = new Color(255,255,255,1);
                             //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
                             if (_textNum != _luiceStory_Text.Length - 1)
                             {
@@ -441,6 +454,7 @@ public class PartA : Player1Base
                                 {
                                     SoundManager.Instance.PlaySE(10);
                                     
+                                    _pageFeed.color = new Color(255,255,255,0);
                                     _displayText = "";
                                     _textCharNum = 0;
                                     _textNum += 1;
@@ -477,5 +491,16 @@ public class PartA : Player1Base
                 }
             }
         } 
+    }
+
+    private void PageFeedMove()
+    {
+        _feedMove.position += new Vector3(0,move,0);
+        counter++;
+        if (counter == 100)
+        {
+            counter = 0;
+            move *= -1;
+        }
     }
 }
