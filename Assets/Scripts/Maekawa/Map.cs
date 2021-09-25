@@ -182,7 +182,7 @@ public class Map : SingletonMonoBehaviour<Map>
         // スキル効果なら準備時間に戻る
         if (isSkillActivate)
         {
-            GameDirector.Instance.intervalTime = 0.5f;
+            GameDirector.Instance.intervalTime = 1f;
             GameDirector.Instance.gameState = GameDirector.GameState.interval;
             GameDirector.Instance.nextStateCue = GameDirector.GameState.preActive;
             isSkillActivate = false;
