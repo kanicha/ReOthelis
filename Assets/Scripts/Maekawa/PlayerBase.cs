@@ -67,7 +67,6 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _timeCount = 0.0f;
     public bool isMyTurn = false;
-    public bool isPreurn = false;
     public int reverseScore = 0;
     public int preScore = 0;
     public int reversedCount = 0;
@@ -544,6 +543,7 @@ public class PlayerBase : MonoBehaviour
         if (CheckColor(enemyColorfixity))
         {
             Debug.Log("打ち消し");
+            SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
 
             bool isCheck = false;
