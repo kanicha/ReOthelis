@@ -31,13 +31,13 @@ public class CharacterSelectSceneChange : SingletonMonoBehaviour<CharacterSelect
     //次のシーンに進む
     public void SceneChange(GameSceneManager gameSceneManager)
     {
-        //if (ModeSelect._selectCount == 0)
-        //{
-            //gameSceneManager.SceneNextCall("CharacterScenario_PA");
-        //}
-        //else
-        //{
+        if (ModeSelect._selectCount == 0)
+        {
+            gameSceneManager.SceneNextCall("CharacterScenario_PA");
+        }
+        else
+        {
             gameSceneManager.SceneNextCall("GameSceme");
-        //}
+        }
     }
 }
