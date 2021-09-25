@@ -50,6 +50,10 @@ public class PartB : Player1Base
     [SerializeField] private Sprite[] _seastey_BackgroundImage;
     [SerializeField] private Sprite[] _luice_BackgroundImage;
     [SerializeField] private Sprite[] _lumina_BackgroundImage;
+    [SerializeField] private Image _pageFeed;
+    public RectTransform _feedMove;
+    private int counter = 0;
+    private float move = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -85,6 +89,7 @@ public class PartB : Player1Base
         _rightCharacter.color = new Color(255,255,255,0);
         _textNum = 0;
         _isScenarioEnd = false;
+        _pageFeed.color = new Color(255,255,255,0);
     }
 
     // Update is called once per frame
@@ -92,363 +97,383 @@ public class PartB : Player1Base
     {
         base.SaveKeyValue();
         base.KeyInput();
+        PageFeedMove();
         
         if (_gameSceneManager.IsChanged == true && _isScenarioEnd == false)
         {
             if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger)
+            {
+                //キャラ名を出す
+                _charaName.text = _kurotoStory_Name[_textNum];
+                //立ち絵を出す
+                _leftCharacter.sprite = _kuroto_LeftCharacterImage[_textNum];
+                _rightCharacter.sprite = _kuroto_RightCharacterImage[_textNum];
+                //キャラが一人しか居ない（＝もう片方の配列が空欄）の場合、そのもう片方を透明にする
+                if (_kuroto_LeftCharacterImage[_textNum] == null)
                 {
-                    //キャラ名を出す
-                    _charaName.text = _kurotoStory_Name[_textNum];
-                    //立ち絵を出す
-                    _leftCharacter.sprite = _kuroto_LeftCharacterImage[_textNum];
-                    _rightCharacter.sprite = _kuroto_RightCharacterImage[_textNum];
-                    //キャラが一人しか居ない（＝もう片方の配列が空欄）の場合、そのもう片方を透明にする
-                    if (_kuroto_LeftCharacterImage[_textNum] == null)
-                    {
-                        _leftCharacter.color = new Color(255,255,255,0);
-                    }
-                    else
-                    {
-                        _leftCharacter.color = new Color(255,255,255,1);
-                    }
-                    if (_kuroto_RightCharacterImage[_textNum] == null)
-                    {
-                        _rightCharacter.color = new Color(255,255,255,0);
-                    }
-                    else
-                    {
-                        _rightCharacter.color = new Color(255,255,255,1);
-                    }
-                    //左側のキャラが喋ってる場合、右側のキャラを暗くする
-                    if (_kuroto_WhoIsTalking[_textNum] == 1)
-                    {
-                        if (_kuroto_RightCharacterImage[_textNum] != null)
-                        {
-                            _rightCharacter.color = new Color(0.5f,0.5f,0.5f,1);
-                        }
-                        _leftCharacter.color = new Color(255,255,255,1);
-                    }
-                    //右側のキャラが喋ってる場合、左側のキャラを暗くする
-                    else if (_kuroto_WhoIsTalking[_textNum] == 2)
-                    {
-                        if (_kuroto_LeftCharacterImage[_textNum] != null)
-                        {
-                            _leftCharacter.color = new Color(0.5f,0.5f,0.5f,1);
-                        }
-                        _rightCharacter.color = new Color(255,255,255,1);
-                    }
-                    //セリフの表示
-                    _displayTextSpeed++;
-                    //_interval回に一回行う
-                    if (_displayTextSpeed % _interval == 0)
-                    {
-                        //一文字ずつセリフを足していく
-                        if (_textCharNum != _kurotoStory_Text[_textNum].Length)
-                        {
-                            _displayText = _displayText + _kurotoStory_Text[_textNum][_textCharNum];
-                            _textCharNum += 1;
-                            //セリフが25文字以上の場合、改行させる
-                            if (_textCharNum == 25)
-                            {
-                                _displayText = _displayText + "\n";
-                            }
-                        }
-                        else
-                        {
-                            //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
-                            if (_textNum != _kurotoStory_Text.Length - 1)
-                            {
-                                if (_click == true)
-                                {
-                                    SoundManager.Instance.PlaySE(10);
-                                    
-                                    _displayText = "";
-                                    _textCharNum = 0;
-                                    _textNum += 1;
-                                }
-                            }
-                            else
-                            {
-                                //最後のセリフが全部表示し切ったら、シナリオ終了判定を出す
-                                if (_textCharNum == _kurotoStory_Text[_textNum].Length)
-                                { 
-                                    _isScenarioEnd = true;
-                                } 
-                            }
-                        }
-                        _word.text = _displayText;
-                        _repeatHit = false;
-                        _click = false;
-                    }
+                    _leftCharacter.color = new Color(255,255,255,0);
                 }
-                else if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow)
+                else
                 {
-                    //キャラ名を出す
-                    _charaName.text = _seasteyStory_Name[_textNum];
-                    //立ち絵を出す
-                    _leftCharacter.sprite = _seastey_LeftCharacterImage[_textNum];
-                    _rightCharacter.sprite = _seastey_RightCharacterImage[_textNum];
-                    //キャラが一人しか居ない（＝もう片方の配列が空欄）の場合、そのもう片方を透明にする
-                    if (_seastey_LeftCharacterImage[_textNum] == null)
-                    {
-                        _leftCharacter.color = new Color(255,255,255,0);
-                    }
-                    else
-                    {
-                        _leftCharacter.color = new Color(255,255,255,1);
-                    }
-                    if (_seastey_RightCharacterImage[_textNum] == null)
-                    {
-                        _rightCharacter.color = new Color(255,255,255,0);
-                    }
-                    else
-                    {
-                        _rightCharacter.color = new Color(255,255,255,1);
-                    }
-                    //左側のキャラが喋ってる場合、右側のキャラを暗くする
-                    if (_seastey_WhoIsTalking[_textNum] == 1)
-                    {
-                        if (_seastey_RightCharacterImage[_textNum] != null)
-                        {
-                            _rightCharacter.color = new Color(0.5f,0.5f,0.5f,1);
-                        }
-                        _leftCharacter.color = new Color(255,255,255,1);
-                    }
-                    //右側のキャラが喋ってる場合、左側のキャラを暗くする
-                    else if (_seastey_WhoIsTalking[_textNum] == 2)
-                    {
-                        if (_seastey_LeftCharacterImage[_textNum] != null)
-                        {
-                            _leftCharacter.color = new Color(0.5f,0.5f,0.5f,1);
-                        }
-                        _rightCharacter.color = new Color(255,255,255,1);
-                    }
-                    //セリフの表示
-                    _displayTextSpeed++;
-                    //_interval回に一回行う
-                    if (_displayTextSpeed % _interval == 0)
-                    {
-                        //一文字ずつセリフを足していく
-                        if (_textCharNum != _seasteyStory_Text[_textNum].Length)
-                        {
-                            _displayText = _displayText + _seasteyStory_Text[_textNum][_textCharNum];
-                            _textCharNum += 1;
-                            //セリフが25文字以上の場合、改行させる
-                            if (_textCharNum == 25)
-                            {
-                                _displayText = _displayText + "\n";
-                            }
-                        }
-                        else
-                        {
-                            //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
-                            if (_textNum != _seasteyStory_Text.Length - 1)
-                            {
-                                if (_click == true)
-                                {
-                                    SoundManager.Instance.PlaySE(10);
-                                    
-                                    _displayText = "";
-                                    _textCharNum = 0;
-                                    _textNum += 1;
-                                }
-                            }
-                            else
-                            {
-                                //最後のセリフが全部表示し切ったら、シナリオ終了判定を出す
-                                if (_textCharNum == _seasteyStory_Text[_textNum].Length)
-                                { 
-                                    _isScenarioEnd = true;
-                                } 
-                            }
-                        }
-                        _word.text = _displayText;
-                        _repeatHit = false;
-                        _click = false;
-                    }
+                    _leftCharacter.color = new Color(255,255,255,1);
                 }
-                else if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit)
+                if (_kuroto_RightCharacterImage[_textNum] == null)
                 {
-                    //キャラ名を出す
-                    _charaName.text = _luminaStory_Name[_textNum];
-                    //立ち絵を出す
-                    _leftCharacter.sprite = _lumina_LeftCharacterImage[_textNum];
-                    _rightCharacter.sprite = _lumina_RightCharacterImage[_textNum];
-                    //キャラが一人しか居ない（＝もう片方の配列が空欄）の場合、そのもう片方を透明にする
-                    if (_lumina_LeftCharacterImage[_textNum] == null)
-                    {
-                        _leftCharacter.color = new Color(255,255,255,0);
-                    }
-                    else
-                    {
-                        _leftCharacter.color = new Color(255,255,255,1);
-                    }
-                    if (_lumina_RightCharacterImage[_textNum] == null)
-                    {
-                        _rightCharacter.color = new Color(255,255,255,0);
-                    }
-                    else
-                    {
-                        _rightCharacter.color = new Color(255,255,255,1);
-                    }
-                    //左側のキャラが喋ってる場合、右側のキャラを暗くする
-                    if (_lumina_WhoIsTalking[_textNum] == 1)
-                    {
-                        if (_lumina_RightCharacterImage[_textNum] != null)
-                        {
-                            _rightCharacter.color = new Color(0.5f,0.5f,0.5f,1);
-                        }
-                        _leftCharacter.color = new Color(255,255,255,1);
-                    }
-                    //右側のキャラが喋ってる場合、左側のキャラを暗くする
-                    else if (_lumina_WhoIsTalking[_textNum] == 2)
-                    {
-                        if (_lumina_LeftCharacterImage[_textNum] != null)
-                        {
-                            _leftCharacter.color = new Color(0.5f,0.5f,0.5f,1);
-                        }
-                        _rightCharacter.color = new Color(255,255,255,1);
-                    }
-                    //セリフの表示
-                    _displayTextSpeed++;
-                    //_interval回に一回行う
-                    if (_displayTextSpeed % _interval == 0)
-                    {
-                        //一文字ずつセリフを足していく
-                        if (_textCharNum != _luminaStory_Text[_textNum].Length)
-                        {
-                            _displayText = _displayText + _luminaStory_Text[_textNum][_textCharNum];
-                            _textCharNum += 1;
-                            //セリフが25文字以上の場合、改行させる
-                            if (_textCharNum == 25)
-                            {
-                                _displayText = _displayText + "\n";
-                            }
-                        }
-                        else
-                        {
-                            //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
-                            if (_textNum != _luminaStory_Text.Length - 1)
-                            {
-                                if (_click == true)
-                                {
-                                    SoundManager.Instance.PlaySE(10);
-                                    
-                                    _displayText = "";
-                                    _textCharNum = 0;
-                                    _textNum += 1;
-                                }
-                            }
-                            else
-                            {
-                                //最後のセリフが全部表示し切ったら、シナリオ終了判定を出す
-                                if (_textCharNum == _luminaStory_Text[_textNum].Length)
-                                { 
-                                    _isScenarioEnd = true;
-                                } 
-                            }
-                        }
-                        _word.text = _displayText;
-                        _repeatHit = false;
-                        _click = false;
-                    }
+                    _rightCharacter.color = new Color(255,255,255,0);
                 }
-                else if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse)
+                else
                 {
-                    //キャラ名を出す
-                    _charaName.text = _luiceStory_Name[_textNum];
-                    //立ち絵を出す
-                    _leftCharacter.sprite = _luice_LeftCharacterImage[_textNum];
-                    _rightCharacter.sprite = _luice_RightCharacterImage[_textNum];
-                    //キャラが一人しか居ない（＝もう片方の配列が空欄）の場合、そのもう片方を透明にする
-                    if (_luice_LeftCharacterImage[_textNum] == null)
-                    {
-                        _leftCharacter.color = new Color(255,255,255,0);
-                    }
-                    else
-                    {
-                        _leftCharacter.color = new Color(255,255,255,1);
-                    }
-                    if (_luice_RightCharacterImage[_textNum] == null)
-                    {
-                        _rightCharacter.color = new Color(255,255,255,0);
-                    }
-                    else
-                    {
-                        _rightCharacter.color = new Color(255,255,255,1);
-                    }
-                    //左側のキャラが喋ってる場合、右側のキャラを暗くする
-                    if (_luice_WhoIsTalking[_textNum] == 1)
-                    {
-                        if (_luice_RightCharacterImage[_textNum] != null)
-                        {
-                            _rightCharacter.color = new Color(0.5f,0.5f,0.5f,1);
-                        }
-                        _leftCharacter.color = new Color(255,255,255,1);
-                    }
-                    //右側のキャラが喋ってる場合、左側のキャラを暗くする
-                    else if (_luice_WhoIsTalking[_textNum] == 2)
-                    {
-                        if (_luice_LeftCharacterImage[_textNum] != null)
-                        {
-                            _leftCharacter.color = new Color(0.5f,0.5f,0.5f,1);
-                        }
-                        _rightCharacter.color = new Color(255,255,255,1);
-                    }
-                    //セリフの表示
-                    _displayTextSpeed++;
-                    //_interval回に一回行う
-                    if (_displayTextSpeed % _interval == 0)
-                    {
-                        //一文字ずつセリフを足していく
-                        if (_textCharNum != _luiceStory_Text[_textNum].Length)
-                        {
-                            _displayText = _displayText + _luiceStory_Text[_textNum][_textCharNum];
-                            _textCharNum += 1;
-                            //セリフが25文字以上の場合、改行させる
-                            if (_textCharNum == 25)
-                            {
-                                _displayText = _displayText + "\n";
-                            }
-                        }
-                        else
-                        {
-                            //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
-                            if (_textNum != _luiceStory_Text.Length - 1)
-                            {
-                                if (_click == true)
-                                {
-                                    SoundManager.Instance.PlaySE(10);
-                                    
-                                    _displayText = "";
-                                    _textCharNum = 0;
-                                    _textNum += 1;
-                                }
-                            }
-                            else
-                            {
-                                //最後のセリフが全部表示し切ったら、シナリオ終了判定を出す
-                                if (_textCharNum == _luiceStory_Text[_textNum].Length)
-                                { 
-                                    _isScenarioEnd = true;
-                                } 
-                            }
-                        }
-                        _word.text = _displayText;
-                        _repeatHit = false;
-                        _click = false;
-                    }
+                    _rightCharacter.color = new Color(255,255,255,1);
                 }
+                //左側のキャラが喋ってる場合、右側のキャラを暗くする
+                if (_kuroto_WhoIsTalking[_textNum] == 1)
+                {
+                    if (_kuroto_RightCharacterImage[_textNum] != null)
+                    {
+                        _rightCharacter.color = new Color(0.5f,0.5f,0.5f,1);
+                    }
+                    _leftCharacter.color = new Color(255,255,255,1);
+                }
+                //右側のキャラが喋ってる場合、左側のキャラを暗くする
+                else if (_kuroto_WhoIsTalking[_textNum] == 2)
+                {
+                    if (_kuroto_LeftCharacterImage[_textNum] != null)
+                    {
+                        _leftCharacter.color = new Color(0.5f,0.5f,0.5f,1);
+                    }
+                    _rightCharacter.color = new Color(255,255,255,1);
+                }
+                //セリフの表示
+                _displayTextSpeed++;
+                //_interval回に一回行う
+                if (_displayTextSpeed % _interval == 0)
+                {
+                    //一文字ずつセリフを足していく
+                    if (_textCharNum != _kurotoStory_Text[_textNum].Length)
+                    {
+                        _displayText = _displayText + _kurotoStory_Text[_textNum][_textCharNum];
+                        _textCharNum += 1;
+                        //セリフが25文字以上の場合、改行させる
+                        if (_textCharNum == 25)
+                        {
+                            _displayText = _displayText + "\n";
+                        }
+                    }
+                    else
+                    {
+                        _pageFeed.color = new Color(255,255,255,1);
+                        //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
+                        if (_textNum != _kurotoStory_Text.Length - 1)
+                        {
+                            if (_click == true)
+                            {
+                                SoundManager.Instance.PlaySE(10);
 
-                if (_repeatHit == true)
-                {
-                    return;
+                                _pageFeed.color = new Color(255,255,255,0);
+                                _displayText = "";
+                                _textCharNum = 0;
+                                _textNum += 1;
+                            }
+                        }
+                        else
+                        {
+                            //最後のセリフが全部表示し切ったら、シナリオ終了判定を出す
+                            if (_textCharNum == _kurotoStory_Text[_textNum].Length)
+                            { 
+                                _isScenarioEnd = true;
+                            } 
+                        }
+                    }
+                    _word.text = _displayText;
+                    _repeatHit = false;
+                    _click = false;
                 }
-                else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space))
+            }
+            else if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow)
+            {
+                //キャラ名を出す
+                _charaName.text = _seasteyStory_Name[_textNum];
+                //立ち絵を出す
+                _leftCharacter.sprite = _seastey_LeftCharacterImage[_textNum];
+                _rightCharacter.sprite = _seastey_RightCharacterImage[_textNum];
+                //キャラが一人しか居ない（＝もう片方の配列が空欄）の場合、そのもう片方を透明にする
+                if (_seastey_LeftCharacterImage[_textNum] == null)
                 {
-                    _repeatHit = true;
-                    _click = true;
+                    _leftCharacter.color = new Color(255,255,255,0);
                 }
+                else
+                {
+                    _leftCharacter.color = new Color(255,255,255,1);
+                }
+                if (_seastey_RightCharacterImage[_textNum] == null)
+                {
+                    _rightCharacter.color = new Color(255,255,255,0);
+                }
+                else
+                {
+                    _rightCharacter.color = new Color(255,255,255,1);
+                }
+                //左側のキャラが喋ってる場合、右側のキャラを暗くする
+                if (_seastey_WhoIsTalking[_textNum] == 1)
+                {
+                    if (_seastey_RightCharacterImage[_textNum] != null)
+                    {
+                        _rightCharacter.color = new Color(0.5f,0.5f,0.5f,1);
+                    }
+                    _leftCharacter.color = new Color(255,255,255,1);
+                }
+                //右側のキャラが喋ってる場合、左側のキャラを暗くする
+                else if (_seastey_WhoIsTalking[_textNum] == 2)
+                {
+                    if (_seastey_LeftCharacterImage[_textNum] != null)
+                    {
+                        _leftCharacter.color = new Color(0.5f,0.5f,0.5f,1);
+                    }
+                    _rightCharacter.color = new Color(255,255,255,1);
+                }
+                //セリフの表示
+                _displayTextSpeed++;
+                //_interval回に一回行う
+                if (_displayTextSpeed % _interval == 0)
+                {
+                    //一文字ずつセリフを足していく
+                    if (_textCharNum != _seasteyStory_Text[_textNum].Length)
+                    {
+                        _displayText = _displayText + _seasteyStory_Text[_textNum][_textCharNum];
+                        _textCharNum += 1;
+                        //セリフが25文字以上の場合、改行させる
+                        if (_textCharNum == 25)
+                        {
+                            _displayText = _displayText + "\n";
+                        }
+                    }
+                    else
+                    {
+                        _pageFeed.color = new Color(255,255,255,1);
+                        //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
+                        if (_textNum != _seasteyStory_Text.Length - 1)
+                        {
+                            if (_click == true)
+                            {
+                                SoundManager.Instance.PlaySE(10);
+
+                                _pageFeed.color = new Color(255,255,255,0);
+                                _displayText = "";
+                                _textCharNum = 0;
+                                _textNum += 1;
+                            }
+                        }
+                        else
+                        {
+                            //最後のセリフが全部表示し切ったら、シナリオ終了判定を出す
+                            if (_textCharNum == _seasteyStory_Text[_textNum].Length)
+                            { 
+                                _isScenarioEnd = true;
+                            } 
+                        }
+                    }
+                    _word.text = _displayText;
+                    _repeatHit = false;
+                    _click = false;
+                }
+            }
+            else if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit)
+            {
+                //キャラ名を出す
+                _charaName.text = _luminaStory_Name[_textNum];
+                //立ち絵を出す
+                _leftCharacter.sprite = _lumina_LeftCharacterImage[_textNum];
+                _rightCharacter.sprite = _lumina_RightCharacterImage[_textNum];
+                //キャラが一人しか居ない（＝もう片方の配列が空欄）の場合、そのもう片方を透明にする
+                if (_lumina_LeftCharacterImage[_textNum] == null)
+                {
+                    _leftCharacter.color = new Color(255,255,255,0);
+                }
+                else
+                {
+                    _leftCharacter.color = new Color(255,255,255,1);
+                }
+                if (_lumina_RightCharacterImage[_textNum] == null)
+                {
+                    _rightCharacter.color = new Color(255,255,255,0);
+                }
+                else
+                {
+                    _rightCharacter.color = new Color(255,255,255,1);
+                }
+                //左側のキャラが喋ってる場合、右側のキャラを暗くする
+                if (_lumina_WhoIsTalking[_textNum] == 1)
+                {
+                    if (_lumina_RightCharacterImage[_textNum] != null)
+                    {
+                        _rightCharacter.color = new Color(0.5f,0.5f,0.5f,1);
+                    }
+                    _leftCharacter.color = new Color(255,255,255,1);
+                }
+                //右側のキャラが喋ってる場合、左側のキャラを暗くする
+                else if (_lumina_WhoIsTalking[_textNum] == 2)
+                {
+                    if (_lumina_LeftCharacterImage[_textNum] != null)
+                    {
+                        _leftCharacter.color = new Color(0.5f,0.5f,0.5f,1);
+                    }
+                    _rightCharacter.color = new Color(255,255,255,1);
+                }
+                //セリフの表示
+                _displayTextSpeed++;
+                //_interval回に一回行う
+                if (_displayTextSpeed % _interval == 0)
+                {
+                    //一文字ずつセリフを足していく
+                    if (_textCharNum != _luminaStory_Text[_textNum].Length)
+                    {
+                        _displayText = _displayText + _luminaStory_Text[_textNum][_textCharNum];
+                        _textCharNum += 1;
+                        //セリフが25文字以上の場合、改行させる
+                        if (_textCharNum == 25)
+                        {
+                            _displayText = _displayText + "\n";
+                        }
+                    }
+                    else
+                    {
+                        _pageFeed.color = new Color(255,255,255,1);
+                        //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
+                        if (_textNum != _luminaStory_Text.Length - 1)
+                        {
+                            if (_click == true)
+                            {
+                                SoundManager.Instance.PlaySE(10);
+                                
+                                _pageFeed.color = new Color(255,255,255,0);
+                                _displayText = "";
+                                _textCharNum = 0;
+                                _textNum += 1;
+                            }
+                        }
+                        else
+                        {
+                            //最後のセリフが全部表示し切ったら、シナリオ終了判定を出す
+                            if (_textCharNum == _luminaStory_Text[_textNum].Length)
+                            { 
+                                _isScenarioEnd = true;
+                            } 
+                        }
+                    }
+                    _word.text = _displayText;
+                    _repeatHit = false;
+                    _click = false;
+                }
+            }
+            else if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse)
+            {
+                //キャラ名を出す
+                _charaName.text = _luiceStory_Name[_textNum];
+                //立ち絵を出す
+                _leftCharacter.sprite = _luice_LeftCharacterImage[_textNum];
+                _rightCharacter.sprite = _luice_RightCharacterImage[_textNum];
+                //キャラが一人しか居ない（＝もう片方の配列が空欄）の場合、そのもう片方を透明にする
+                if (_luice_LeftCharacterImage[_textNum] == null)
+                {
+                    _leftCharacter.color = new Color(255,255,255,0);
+                }
+                else
+                {
+                    _leftCharacter.color = new Color(255,255,255,1);
+                }
+                if (_luice_RightCharacterImage[_textNum] == null)
+                {
+                    _rightCharacter.color = new Color(255,255,255,0);
+                }
+                else
+                {
+                    _rightCharacter.color = new Color(255,255,255,1);
+                }
+                //左側のキャラが喋ってる場合、右側のキャラを暗くする
+                if (_luice_WhoIsTalking[_textNum] == 1)
+                {
+                    if (_luice_RightCharacterImage[_textNum] != null)
+                    {
+                        _rightCharacter.color = new Color(0.5f,0.5f,0.5f,1);
+                    }
+                    _leftCharacter.color = new Color(255,255,255,1);
+                }
+                //右側のキャラが喋ってる場合、左側のキャラを暗くする
+                else if (_luice_WhoIsTalking[_textNum] == 2)
+                {
+                    if (_luice_LeftCharacterImage[_textNum] != null)
+                    {
+                        _leftCharacter.color = new Color(0.5f,0.5f,0.5f,1);
+                    }
+                    _rightCharacter.color = new Color(255,255,255,1);
+                }
+                //セリフの表示
+                _displayTextSpeed++;
+                //_interval回に一回行う
+                if (_displayTextSpeed % _interval == 0)
+                {
+                    //一文字ずつセリフを足していく
+                    if (_textCharNum != _luiceStory_Text[_textNum].Length)
+                    {
+                        _displayText = _displayText + _luiceStory_Text[_textNum][_textCharNum];
+                        _textCharNum += 1;
+                        //セリフが25文字以上の場合、改行させる
+                        if (_textCharNum == 25)
+                        {
+                            _displayText = _displayText + "\n";
+                        }
+                    }
+                    else
+                    {
+                        _pageFeed.color = new Color(255,255,255,1);
+                        //最後のセリフにたどり着いていない場合、ボタン入力に応じて次に進む
+                        if (_textNum != _luiceStory_Text.Length - 1)
+                        {
+                            if (_click == true)
+                            {
+                                SoundManager.Instance.PlaySE(10);
+                                
+                                _pageFeed.color = new Color(255,255,255,0);
+                                _displayText = "";
+                                _textCharNum = 0;
+                                _textNum += 1;
+                            }
+                        }
+                        else
+                        {
+                            //最後のセリフが全部表示し切ったら、シナリオ終了判定を出す
+                            if (_textCharNum == _luiceStory_Text[_textNum].Length)
+                            { 
+                                _isScenarioEnd = true;
+                            } 
+                        }
+                    }
+                    _word.text = _displayText;
+                    _repeatHit = false;
+                    _click = false;
+                }
+            }
+
+            if (_repeatHit == true)
+            {
+                return;
+            }
+            else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space))
+            {
+                _repeatHit = true;
+                _click = true;
+            }
         } 
+    }
+    
+    private void PageFeedMove()
+    {
+        _feedMove.position += new Vector3(0,move,0);
+        counter++;
+        if (counter == 100)
+        {
+            counter = 0;
+            move *= -1;
+        }
     }
 }
