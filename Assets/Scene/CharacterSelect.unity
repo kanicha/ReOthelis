@@ -5797,10 +5797,10 @@ MonoBehaviour:
   _charactorInfo: {fileID: 1540159300}
   charactorImage2P: {fileID: 74797582}
   charactorImageArray2P:
-  - {fileID: 21300000, guid: d9cdd1db83540d4469b778f1349bca3e, type: 3}
-  - {fileID: 21300000, guid: ebd6eea1ff87a904aacce9acfd16950b, type: 3}
-  - {fileID: 21300000, guid: c160ade16c84b7d4f86b5e91230aa5d4, type: 3}
-  - {fileID: 21300000, guid: 125238a2338e06742be588c230084d4d, type: 3}
+  - {fileID: 21300000, guid: 29228b4179b4b274cb810b145f4dfad0, type: 3}
+  - {fileID: 21300000, guid: c1e3e5325ca4d1a499af8d2fa2b58bcc, type: 3}
+  - {fileID: 21300000, guid: ba4a5e35f62f1c4468bbd068fc2c7292, type: 3}
+  - {fileID: 21300000, guid: a93cbe3b6fa2f9c45ab7e4b040c68689, type: 3}
   charactorButtonWhite2P:
   - {fileID: 160395367}
   - {fileID: 1232691586}
