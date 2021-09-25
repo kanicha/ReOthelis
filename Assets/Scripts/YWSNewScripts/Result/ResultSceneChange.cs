@@ -21,7 +21,7 @@ public class ResultSceneChange : Player1Base
 
         if (_repeatHit)
             return;
-        else if (_gameSceneManager.IsChanged == true && _DS4_triangle_value || _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space))
+        else if (_gameSceneManager.IsChanged == true && _DS4_cross_value || _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space))
         {
             _repeatHit = true;
             SoundManager.Instance.PlaySE(7);

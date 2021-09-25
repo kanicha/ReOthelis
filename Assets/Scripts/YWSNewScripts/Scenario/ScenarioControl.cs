@@ -48,6 +48,9 @@ public class ScenarioControl : Player1Base
     // Update is called once per frame
     void Update()
     {
+        base.SaveKeyValue();
+        base.KeyInput();
+        
         if (_gameSceneManager.IsChanged == true && _isScenarioEnd == false)
         {
             if (_isPartEnd == true)
@@ -147,7 +150,8 @@ public class ScenarioControl : Player1Base
                 {
                     return;
                 }
-                else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space))
+                
+                if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space))
                 {
                     _repeatHit = true;
                     _click = true;

@@ -90,6 +90,9 @@ public class PartB : Player1Base
     // Update is called once per frame
     void Update()
     {
+        base.SaveKeyValue();
+        base.KeyInput();
+        
         if (_gameSceneManager.IsChanged == true && _isScenarioEnd == false)
         {
             if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger)

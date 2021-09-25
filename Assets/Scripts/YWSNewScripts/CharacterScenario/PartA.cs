@@ -92,6 +92,9 @@ public class PartA : Player1Base
     // Update is called once per frame
     void Update()
     {
+        base.SaveKeyValue();
+        base.KeyInput();
+        
         if (_gameSceneManager.IsChanged == true && _isScenarioEnd == false)
         {
             if (_isPartEnd == true)

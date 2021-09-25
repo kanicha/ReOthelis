@@ -12,10 +12,6 @@ public class TutorialControl : Player1Base
     
     private void Start()
     {
-        // 初期化
-        base.SaveKeyValue();
-        base.KeyInput();
-
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
         _videoPlayer.loopPointReached += LoopPointReached;
         _videoPlayer.Play();
@@ -24,13 +20,16 @@ public class TutorialControl : Player1Base
     // Update is called once per frame
     private void Update()
     {
+        base.SaveKeyValue();
+        base.KeyInput();
+        
         if (repeatHit)
         {
             return;
         }
 
         // キーが押されたら推移
-        if (_DS4_cross_value || Input.GetKeyDown(KeyCode.Space))
+        if (_DS4_cross_value || Input.GetKeyDown(KeyCode.Space) && _gameSceneManager.IsChanged)
         {
             repeatHit = true;
             
