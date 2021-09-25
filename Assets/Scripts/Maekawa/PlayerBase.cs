@@ -78,7 +78,7 @@ public class PlayerBase : MonoBehaviour
     public int rotationNum = 0;
 
     //
-    private const int _SKILL_1_COST = 3;
+    private const int _SKILL_1_COST = 0;
     private const int _SKILL_2_COST = 5;
     private const int _SKILL_3_COST = 15;
     protected Piece.PieceType playerType = Piece.PieceType.none;
@@ -434,6 +434,7 @@ public class PlayerBase : MonoBehaviour
     public void TakeAway(int cost)
     {
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) ||
+            Map.Instance.isSkillCheck ||
             NormalSkillCheck())
             return;
 

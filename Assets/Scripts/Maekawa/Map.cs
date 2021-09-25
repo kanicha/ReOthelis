@@ -135,6 +135,7 @@ public class Map : SingletonMonoBehaviour<Map>
     public Piece.PieceType turnPlayerColor = Piece.PieceType.none;
     public bool isSkillActivate = false;
     public string ignoreFixityPiece = string.Empty; // 指定した色の固定効果を無視する(基本は空文字)
+    public bool isSkillCheck = false;
 
     /// <summary>
     /// 実際にオブジェクトをひっくり返す関数
@@ -200,6 +201,7 @@ public class Map : SingletonMonoBehaviour<Map>
             _isSecondCheck = true; // 2回目のチェックに入る
 
         _isChecking = false;
+        isSkillCheck = false;
     }
 
     /// <summary>
@@ -221,7 +223,8 @@ public class Map : SingletonMonoBehaviour<Map>
         }
 
         _isChecking = true;
-
+        isSkillCheck = true;
+        
         // 自分の色と相手の色を決定
         Piece.PieceType type = piece.GetComponent<Piece>().pieceType;
         if (type == Piece.PieceType.black || type == Piece.PieceType.fixityBlack)
@@ -262,6 +265,7 @@ public class Map : SingletonMonoBehaviour<Map>
             }
             Debug.Log(s);
         }*/
+        
         if (isSkill)
             StartCoroutine(PieceReverse(true));
         else
