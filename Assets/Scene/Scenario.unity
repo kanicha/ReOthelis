@@ -770,8 +770,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1812466644}
   - component: {fileID: 1812466643}
-  - component: {fileID: 1812466645}
-  - component: {fileID: 1812466646}
+  - component: {fileID: 1812466648}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -821,7 +820,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1812466645
+--- !u!114 &1812466648
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -830,7 +829,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1812466642}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f026e01aaf10ad84aa374a2fe24d5dd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 96e37e5c8bad43e43ace8ac7432d61e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _fallTime: 0
@@ -954,18 +953,6 @@ MonoBehaviour:
   - "\u30B7\u30FC\u30B9\u30C6\u30A3"
   - "   \u30EB\u30DF\u30CA"
   _interval: 5
---- !u!114 &1812466646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1812466642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c0a36617977ad0459bbda2c8b30f43e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   _leftCharacter: {fileID: 1055099386}
   _rightCharacter: {fileID: 1009413763}
   _leftCharacterImage:
@@ -1071,3 +1058,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 83af0dd640e480e449374631a17d1452, type: 3}
   - {fileID: 21300000, guid: 83af0dd640e480e449374631a17d1452, type: 3}
   _whoIsTalking: 0100000001000000010000000200000001000000010000000100000002000000020000000200000001000000020000000100000002000000020000000100000001000000020000000100000001000000020000000100000002000000010000000100000002000000010000000100000002000000010000000200000002000000020000000100000001000000020000000200000001000000020000000200000001000000020000000200000001000000020000000100000002000000020000000100000002000000
+  _background: {fileID: 828199863}
+  _backgroundImage:
+  - {fileID: 21300000, guid: 8fdde4b8dda2cec428e7af9f51eed1f1, type: 3}
+  - {fileID: 21300000, guid: f9cab4fabb8f4d046a605437d5ba5671, type: 3}
+  - {fileID: 21300000, guid: 0399f65e4a938a14e8906e5de7c45a51, type: 3}
