@@ -616,11 +616,15 @@ public class PlayerBase : MonoBehaviour
         int piece2x = (int) piece2.transform.position.x;
 
         GameDirector.Instance.gameState = GameDirector.GameState.idle;
-
+        
+        // 一番上におかれたときに除外
+        Map.Instance.CheckHeightOver(controllPiece1,true);
+        Map.Instance.CheckHeightOver(controllPiece2,true);
+        
         // 関数呼び出し
         ForceConvertionReverse(piece1x, piece1z);
         ForceConvertionReverse(piece2x, piece2z);
-
+        
         GameDirector.Instance.gameState = GameDirector.GameState.reversed;
         yield return null;
     }

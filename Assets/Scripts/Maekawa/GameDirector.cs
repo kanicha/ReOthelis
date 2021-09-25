@@ -116,7 +116,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 // リバース・アニメーション処理
                 for (int i = 0; i < _activePieces.Length; i++)
                 {
-                    if(Map.Instance.CheckHeightOver(_activePieces[i]))
+                    if(Map.Instance.CheckHeightOver(_activePieces[i],false))
                         StartCoroutine(Map.Instance.CheckReverse(_activePieces[i],false));
                 }
                 

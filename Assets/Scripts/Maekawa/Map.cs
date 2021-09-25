@@ -399,7 +399,7 @@ public class Map : SingletonMonoBehaviour<Map>
     /// </summary>
     /// <param name="piece"></param>
     /// <returns>有効なコマか</returns>
-    public bool CheckHeightOver(GameObject piece)
+    public bool CheckHeightOver(GameObject piece, bool isSkill)
     {
         bool isSafeLine = true;
         if ((int) piece.transform.position.z * -1 < _EMPTY_AREAS_HEIGHT)
@@ -408,14 +408,17 @@ public class Map : SingletonMonoBehaviour<Map>
             piece.transform.position = new Vector3(999, 999, 999);
             isSafeLine = false;
 
-            // 2回目のチェックならステートを進める
-            if (_isSecondCheck)
+            if (!isSkill)
             {
-                GameDirector.Instance.gameState = GameDirector.GameState.reversed;
-                _isSecondCheck = false;
+                // 2回目のチェックならステートを進める
+                if (_isSecondCheck)
+                {
+                    GameDirector.Instance.gameState = GameDirector.GameState.reversed;
+                    _isSecondCheck = false;
+                }
+                else
+                    _isSecondCheck = true; // 2回目のチェックに入る
             }
-            else
-                _isSecondCheck = true; // 2回目のチェックに入る
         }
 
         return isSafeLine;
