@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class ResultSceneChange : Player1Base
+public class PartBSceneChange : Player1Base
 {
     private GameSceneManager _gameSceneManager;
     private bool _repeatHit = false;
@@ -13,7 +12,6 @@ public class ResultSceneChange : Player1Base
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         base.SaveKeyValue();
@@ -21,10 +19,10 @@ public class ResultSceneChange : Player1Base
 
         if (_repeatHit)
             return;
-        else if (_gameSceneManager.IsChanged == true && _DS4_triangle_value || _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space))
+        else if (PartB._isScenarioEnd == true && _gameSceneManager.IsChanged == true && _DS4_circle_value || PartB._isScenarioEnd == true && _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space) ||
+                _gameSceneManager.IsChanged == true && _DS4_cross_value || _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.X))
         {
             _repeatHit = true;
-            SoundManager.Instance.PlaySE(7);
             SceneChange(_gameSceneManager);
         }
     }
@@ -32,13 +30,6 @@ public class ResultSceneChange : Player1Base
     //次のシーンに進む
     public void SceneChange(GameSceneManager gameSceneManager)
     {
-        if (ModeSelect._selectCount == 0)
-        {
-            gameSceneManager.SceneNextCall("CharacterScenario_PB");
-        }
-        else
-        {
-            gameSceneManager.SceneNextCall("Title");
-        }
+        gameSceneManager.SceneNextCall("Title");
     }
 }

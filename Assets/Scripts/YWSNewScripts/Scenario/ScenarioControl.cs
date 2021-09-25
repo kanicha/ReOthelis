@@ -11,10 +11,6 @@ public class ScenarioControl : Player1Base
     [SerializeField] private Text _charaName;
     public string[] _mainStory_Text; //基本シナリオのセリフの配列
     public string[] _mainStory_Name; //基本シナリオのキャラ名の配列
-    //public string[] KurotoStory;
-    //public string[] SeasteyStory;
-    //public string[] LuiceStory;
-    //public string[] LuminaStory;
     private int _textNum = 0; //シナリオの進み具合
     private string _displayText; //表示するセリフを入れる変数
     private int _textCharNum = 0; //セリフを一個ずつ追加するための変数
@@ -46,6 +42,7 @@ public class ScenarioControl : Player1Base
         _background.sprite = _backgroundImage[0];
         _textNum = 0;
         _isScenarioEnd = false;
+        _click = false;
     }
 
     // Update is called once per frame

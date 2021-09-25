@@ -8,7 +8,7 @@ public class ModeSelect : Player1Base
 {
     [SerializeField] private RectTransform cursor;
 
-    int _selectCount = 0;
+    public static int _selectCount = 0;
     private bool _repeatHit = false;
     private GameSceneManager _gameSceneManager;
 
