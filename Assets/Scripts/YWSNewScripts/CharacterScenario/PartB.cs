@@ -54,6 +54,8 @@ public class PartB : Player1Base
     // Start is called before the first frame update
     void Start()
     {
+        SoundManager.Instance.PlayBGM(4);
+        
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
         if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger)
         {
@@ -155,6 +157,8 @@ public class PartB : Player1Base
                             {
                                 if (_click == true)
                                 {
+                                    SoundManager.Instance.PlaySE(10);
+                                    
                                     _displayText = "";
                                     _textCharNum = 0;
                                     _textNum += 1;
@@ -239,6 +243,8 @@ public class PartB : Player1Base
                             {
                                 if (_click == true)
                                 {
+                                    SoundManager.Instance.PlaySE(10);
+                                    
                                     _displayText = "";
                                     _textCharNum = 0;
                                     _textNum += 1;
@@ -323,6 +329,8 @@ public class PartB : Player1Base
                             {
                                 if (_click == true)
                                 {
+                                    SoundManager.Instance.PlaySE(10);
+                                    
                                     _displayText = "";
                                     _textCharNum = 0;
                                     _textNum += 1;
@@ -407,6 +415,8 @@ public class PartB : Player1Base
                             {
                                 if (_click == true)
                                 {
+                                    SoundManager.Instance.PlaySE(10);
+                                    
                                     _displayText = "";
                                     _textCharNum = 0;
                                     _textNum += 1;

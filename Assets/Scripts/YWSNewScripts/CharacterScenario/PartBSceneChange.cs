@@ -30,6 +30,9 @@ public class PartBSceneChange : Player1Base
     //次のシーンに進む
     public void SceneChange(GameSceneManager gameSceneManager)
     {
+        SoundManager.Instance.StopBGM();
+        SoundManager.Instance.StopSE();
+        
         gameSceneManager.SceneNextCall("Title");
     }
 }

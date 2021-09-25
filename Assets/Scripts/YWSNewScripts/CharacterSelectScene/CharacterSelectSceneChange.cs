@@ -33,6 +33,8 @@ public class CharacterSelectSceneChange : SingletonMonoBehaviour<CharacterSelect
     {
         if (ModeSelect._selectCount == 0)
         {
+            SoundManager.Instance.StopBGM();
+            
             gameSceneManager.SceneNextCall("CharacterScenario_PA");
         }
         else

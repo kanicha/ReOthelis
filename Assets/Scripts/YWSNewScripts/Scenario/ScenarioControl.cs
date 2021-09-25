@@ -112,6 +112,8 @@ public class ScenarioControl : Player1Base
                         {
                             if (_click == true)
                             {
+                                SoundManager.Instance.PlaySE(10);
+                                
                                 _displayText = "";
                                 _textCharNum = 0;
                                 _textNum += 1;

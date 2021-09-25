@@ -34,6 +34,9 @@ public class ResultSceneChange : Player1Base
     {
         if (ModeSelect._selectCount == 0)
         {
+            SoundManager.Instance.StopBGM();
+            SoundManager.Instance.StopSE();
+            
             gameSceneManager.SceneNextCall("CharacterScenario_PB");
         }
         else
