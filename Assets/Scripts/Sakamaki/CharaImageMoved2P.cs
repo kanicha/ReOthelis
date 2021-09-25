@@ -68,7 +68,7 @@ public class CharaImageMoved2P : Player2Base
         // 入力部分
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0))
         {
-            SoundManager.Instance.PlaySE(8);
+            SoundManager.Instance.PlaySE(3);
             
             charaType2P--;
 
@@ -80,7 +80,7 @@ public class CharaImageMoved2P : Player2Base
         } 
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0))
         {
-            SoundManager.Instance.PlaySE(8);
+            SoundManager.Instance.PlaySE(3);
             
             charaType2P++;
 

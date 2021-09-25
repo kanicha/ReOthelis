@@ -36,6 +36,7 @@ public class ModeSelect : Player1Base
         if (_gameSceneManager.IsChanged && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)) && _selectCount == 0)
         {
             _repeatHit = true;
+            SoundManager.Instance.PlaySE(9);
             ScenarioSceneChange(_gameSceneManager);
         }
         else if (_gameSceneManager.IsChanged && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)) && _selectCount == 1)
@@ -47,16 +48,16 @@ public class ModeSelect : Player1Base
         else if (_gameSceneManager.IsChanged && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)) && _selectCount == 2)
         {
             _repeatHit = true;
+            SoundManager.Instance.PlaySE(9);
             SoundManager.Instance.StopBGM();
-            SoundManager.Instance.StopSE();
-            
+
             TutorialSceneChange(_gameSceneManager);
         }
         
         //下キーの入力に応じてカーソルを動かす
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0))
         {
-            SoundManager.Instance.PlaySE(8);
+            SoundManager.Instance.PlaySE(3);
             
             if (_selectCount == 0)
             {
@@ -78,7 +79,7 @@ public class ModeSelect : Player1Base
         //上キーの入力に応じてカーソルを動かす
         else if ((_DS4_vertical_value > 0 && last_vertical_value == 0))
         {
-            SoundManager.Instance.PlaySE(8);
+            SoundManager.Instance.PlaySE(3);
             
             if (_selectCount == 0)
             {
