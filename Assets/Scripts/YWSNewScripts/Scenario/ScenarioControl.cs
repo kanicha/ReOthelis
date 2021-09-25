@@ -44,6 +44,8 @@ public class ScenarioControl : Player1Base
         _leftCharacter.color = new Color(255,255,255,1);
         _rightCharacter.color = new Color(255,255,255,0);
         _background.sprite = _backgroundImage[0];
+        _textNum = 0;
+        _isScenarioEnd = false;
     }
 
     // Update is called once per frame
