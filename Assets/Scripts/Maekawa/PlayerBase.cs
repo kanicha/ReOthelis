@@ -640,13 +640,20 @@ public class PlayerBase : MonoBehaviour
             for (int x = px; x < px + 3; x++)
             {
                 // 一番下変更できないコマが来た場合スルー
-                if (z >= 10)
+                if (z > 9)
                 {
                     continue;
                 }
-
-                // その座標に相手の駒と相手の固定駒があった場合、自分の色に変更
-                if (Map.Instance.map[z - 1, x - 1] == enemyColor || Map.Instance.map[z - 1, x - 1] == enemyColorfixity)
+                
+                // 固定コマを解除
+                if (Map.Instance.map[z - 1, x - 1] == enemyColorfixity)
+                {
+                    Map.Instance.map[z - 1 , x - 1] = enemyColor;
+                    Map.Instance.pieceMap[z - 1, x - 1].GetComponent<Piece>().ChangeIsFixity();
+                }
+                
+                // その座標に相手の駒があった場合、自分の色に変更
+                if (Map.Instance.map[z - 1, x - 1] == enemyColor)
                 {
                     Map.Instance.map[z - 1, x - 1] = myColor;
                     Map.Instance.pieceMap[z - 1, x - 1].GetComponent<Piece>().SkillReverse(false);
@@ -731,8 +738,14 @@ public class PlayerBase : MonoBehaviour
         // 横軸分ループを回す
         for (int x = 0; x < 9; x++)
         {
+            if (Map.Instance.map[z, x] == enemyColorfixity)
+            {
+                Map.Instance.map[z, x] = enemyColor;
+                Map.Instance.pieceMap[z, x].GetComponent<Piece>().ChangeIsFixity();
+            }
+            
             // 横軸を変える
-            if (Map.Instance.map[z, x] == enemyColor || Map.Instance.map[z, x] == enemyColorfixity)
+            if (Map.Instance.map[z, x] == enemyColor)
             {
                 Map.Instance.map[z, x] = myColor;
                 Map.Instance.pieceMap[z, x].GetComponent<Piece>().SkillReverse(false);
@@ -798,7 +811,14 @@ public class PlayerBase : MonoBehaviour
 
         for (int z = 0; z < 10; z++)
         {
-            if (Map.Instance.map[x, z] == enemyColor || Map.Instance.map[x, z] == enemyColorfixity)
+            // 固定コマ解除
+            if (Map.Instance.map[x, z] == enemyColorfixity)
+            {
+                Map.Instance.map[x, z] = enemyColor;
+                Map.Instance.pieceMap[x, z].GetComponent<Piece>().ChangeIsFixity();
+            }
+            
+            if (Map.Instance.map[x, z] == enemyColor)
             {
                 Map.Instance.map[x, z] = myColor;
                 Map.Instance.pieceMap[x, z].GetComponent<Piece>().SkillReverse(false);
