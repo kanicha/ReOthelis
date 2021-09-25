@@ -2502,7 +2502,6 @@ MonoBehaviour:
   skillCutinControl: {fileID: 0}
   skillWindowControl: {fileID: 0}
   isMyTurn: 0
-  isPreurn: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -2559,8 +2558,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: 1
-  _preScoreText: {fileID: 1938966218}
-  _reverseScoreText: {fileID: 744966102}
+  _preScoreText: {fileID: 744966102}
+  _reverseScoreText: {fileID: 1938966218}
   _charaName: {fileID: 1610275036}
   _charaNameImage:
   - {fileID: 21300000, guid: cbffe5be5aec74742b6135bdeee7a2f0, type: 3}
@@ -2586,8 +2585,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: 2
-  _preScoreText: {fileID: 1083006012}
-  _reverseScoreText: {fileID: 1976794247}
+  _preScoreText: {fileID: 1976794247}
+  _reverseScoreText: {fileID: 1083006012}
   _charaName: {fileID: 401628774}
   _charaNameImage:
   - {fileID: 21300000, guid: 5106bb506feb1114da677e649fa9b29c, type: 3}
