@@ -24,11 +24,21 @@ public class GameSceneChange : MonoBehaviour
             SceneChange(_gameSceneManager);
             isGameEnd = true;
         }
+        else if (_gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.G))
+        {
+            SkipGame(_gameSceneManager);
+            isGameEnd = true;
+        }
     }
 
     //次のシーンに進む
-    public void SceneChange(GameSceneManager gameSceneManager)
+    private void SceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("Result");
+    }
+
+    private void SkipGame(GameSceneManager gameSceneManager)
+    {
+        gameSceneManager.SceneNextCall("CharacterScenario_PB");
     }
 }

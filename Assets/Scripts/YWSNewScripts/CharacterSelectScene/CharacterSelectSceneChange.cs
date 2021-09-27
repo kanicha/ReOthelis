@@ -29,7 +29,7 @@ public class CharacterSelectSceneChange : SingletonMonoBehaviour<CharacterSelect
     }
 
     //次のシーンに進む
-    public void SceneChange(GameSceneManager gameSceneManager)
+    private void SceneChange(GameSceneManager gameSceneManager)
     {
         if (ModeSelect._selectCount == 0)
         {
