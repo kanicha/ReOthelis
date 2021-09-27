@@ -317,7 +317,6 @@ public class PartB : Player1Base
                     {
                         _leftCharacter.color = new Color(0.5f,0.5f,0.5f,1);
                     }
-                    _rightCharacter.color = new Color(255,255,255,1);
                 }
                 //セリフの表示
                 _displayTextSpeed++;
