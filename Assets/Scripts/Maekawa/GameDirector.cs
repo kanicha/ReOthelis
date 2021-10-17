@@ -141,7 +141,9 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 else
                 {
                     PieceSet();
+                    //
                     ChangeTurn();
+                    //
                 }
                 break;
 

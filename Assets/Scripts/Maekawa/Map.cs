@@ -125,10 +125,10 @@ public class Map : SingletonMonoBehaviour<Map>
     public GameObject[,] pieceMap = new GameObject[_HEIGHT, _WIDTH];
     private int _setPosX = 0;
     private int _setPosZ = 0;
-    private string _myColor = string.Empty;
-    private string _enemyColor = string.Empty;
-    private string _fixityMyColor = string.Empty;
-    private string _fixityEnemyColor = string.Empty;
+    public static string _myColor = string.Empty;
+    public static string _enemyColor = string.Empty;
+    public static string _fixityMyColor = string.Empty;
+    public static string _fixityEnemyColor = string.Empty;
     private bool _isChecking = false;
     private const string _REVERSED_TAG = "Reversed";
     private bool _isSecondCheck = false;

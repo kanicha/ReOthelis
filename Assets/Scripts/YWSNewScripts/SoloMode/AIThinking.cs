@@ -28,23 +28,8 @@ public class AIThinking : MonoBehaviour
     public readonly string fixityWhite = "☆";
     public static int[,] CheckEmpty = new int [15,5];　//データ保存用の配列
     bool IsAboveExist = false;
-    // ひっくり返す処理
-    private List<GameObject> _reversePiece = new List<GameObject>();// ひっくり返すコマを格納
-    public  GameObject[,] pieceMap = new GameObject[_HEIGHT, _WIDTH];
     private int _setPosX = 0;
     private int _setPosZ = 0;
-    private string type = string.Empty;
-    private string _myColor = string.Empty;
-    private string _enemyColor = string.Empty;
-    private string _fixityMyColor = string.Empty;
-    private string _fixityEnemyColor = string.Empty;
-    private bool _isChecking = false;
-    private const string _REVERSED_TAG = "Reversed";
-    private bool _isSecondCheck = false;
-    public Piece.PieceType turnPlayerColor = Piece.PieceType.none;
-    public bool isSkillActivate = false;
-    public string ignoreFixityPiece = string.Empty;// 指定した色の固定効果を無視する(基本は空文字)
-    private int checkingNum = 0;
 
     //どの座標が一番駒をひっくり返せるかを調べるためのマップを準備
     public void MapPrepare()
@@ -147,179 +132,40 @@ public class AIThinking : MonoBehaviour
 
     private void PatternClassification()
     {
-        for (int num = 0; num < 15; num++)
+        for (int i = 0; i < 15; i++)
         {
-            //黒黒
-            if (PiecePatternGeneretor.type == 1)
-            {
-                type = black;
-                MapData[CheckEmpty[num,0],CheckEmpty[num,1]] = black;
-                MapData[CheckEmpty[num,2],CheckEmpty[num,3]] = black;
-                //座標1
-                StartCoroutine(CheckReverse(Map.Instance.pieceMap[CheckEmpty[num,0],CheckEmpty[num,1]]));
-                //座標2
-                StartCoroutine(CheckReverse(Map.Instance.pieceMap[CheckEmpty[num,2],CheckEmpty[num,3]]));
-            }
-            //白白
-            else if (PiecePatternGeneretor.type == 2)
-            {
-                type = white;
-                MapData[CheckEmpty[num,0],CheckEmpty[num,1]] = white;
-                MapData[CheckEmpty[num,2],CheckEmpty[num,3]] = white;
-                //座標1
-                StartCoroutine(CheckReverse(Map.Instance.pieceMap[CheckEmpty[num,0],CheckEmpty[num,1]]));
-                //座標2
-                StartCoroutine(CheckReverse(Map.Instance.pieceMap[CheckEmpty[num,2],CheckEmpty[num,3]]));
-            }
-            //黒白
-            else if (PiecePatternGeneretor.type == 3)
-            {
-                
-            }
+            //座標1
+            _setPosX = CheckEmpty[i,0];
+            _setPosZ = CheckEmpty[i,1];
+
+            //全方向探索
+
+            //座標2
+
+            //全方向探索
         }
     }
 
-    public IEnumerator CheckReverse(GameObject piece)
+    private void OmnidirectionalSearch(Vector3 dir)
     {
-        while (_isChecking)
-            yield return null;// 2つのコルーチンは片方づつ処理する
+        //
+        int _checkPosX = _setPosX;
+        int _checkPosZ = _setPosZ;
 
-        // このターンに置いたコマがリバースしている or このコマが盤面外に置かれているなら
-        //if (piece.CompareTag(_REVERSED_TAG))
-        //{
-            //_isSecondCheck = false;
-            //yield break;
-        //}
+        //
+        int _dirX = (int) dir.x;
+        int _dirZ = (int) dir.z;
 
-        _isChecking = true;
-
-        // 自分の色と相手の色を決定
-        if (type == black)
+        //
+        while (true)
         {
-            _myColor = black;
-            _fixityMyColor = fixityBlack;
-            _enemyColor = white;
-            _fixityEnemyColor = fixityWhite;
+            //
+            _checkPosX += _dirX;
+            _checkPosZ += _dirZ;
+            string _targetType = MapData[_checkPosZ, _checkPosX];
+
+            //
+
         }
-        else
-        {
-            _myColor = white;
-            _fixityMyColor = fixityWhite;
-            _enemyColor = black;
-            _fixityEnemyColor = fixityBlack;
-        }
-
-        // 置いたマスの座標を取得
-        _setPosX = (int)piece.transform.position.x;
-        _setPosZ = (int)piece.transform.position.z * -1;
-
-        // 7方向にチェック(zは符号が逆転する)
-        CheckInTheDirection(new Vector3(-1, 0, 0));  // ←
-        CheckInTheDirection(new Vector3(1, 0, 0));   // →
-        CheckInTheDirection(new Vector3(0, 0, 1));   // ↓
-        //CheckInTheDirection(new Vector3(0, 0, -1));// ↑
-        CheckInTheDirection(new Vector3(-1, 0, 1));  // ↙
-        CheckInTheDirection(new Vector3(1, 0, 1));   // ↘
-        CheckInTheDirection(new Vector3(-1, 0, -1)); // ↖
-        CheckInTheDirection(new Vector3(1, 0, -1));  // ↗
-
-        StartCoroutine(PieceReverse());
-        ignoreFixityPiece = string.Empty;// スキル効果は1ターンで終了
-    }
-
-    private void CheckInTheDirection(Vector3 dir)
-    {
-        // 調べる座標
-        int checkPosX = _setPosX;
-        int checkPosZ = _setPosZ;
-        // 調べたい方向
-        int dirX = (int)dir.x;
-        int dirZ = (int)dir.z;
-
-        bool isReverse = false;
-        int moveCount = 0;
-
-        // dirの方向に「ひっくり返せるか」探索
-        while(true)
-        {
-            // 調べたい方向に進んでいく
-            checkPosX += dirX;
-            checkPosZ += dirZ;
-            string targetType = MapData[checkPosZ, checkPosX];
-
-            // 壁 or 空白なら終了
-            if (targetType == wall || targetType == empty)
-            {
-                break;
-            }
-            else if (targetType == _myColor || targetType == _fixityMyColor)
-            {
-                isReverse = true;// 自分の色で挟んだ扱い
-                break;
-            }
-            moveCount++;
-        }
-
-        // 裏返しが発生するなら処理(厳密にはmoveCountが0でも処理)
-        if (isReverse)
-        {
-            checkPosX = _setPosX;
-            checkPosZ = _setPosZ;
-
-            // リバースするコマをリストに追加
-            for(int i = 0; i < moveCount; i++)
-            {
-                checkPosX += dirX;
-                checkPosZ += dirZ;
-
-                // 相手の駒が固定コマなら
-                if (MapData[checkPosZ, checkPosX] == _fixityEnemyColor)
-                {
-                    // 固定効果を無視するスキル効果
-                    if (MapData[checkPosZ, checkPosX] == ignoreFixityPiece)
-                    {
-                        pieceMap[checkPosZ, checkPosX].GetComponent<Piece>().ChangeIsFixity();
-                        MapData[checkPosZ, checkPosX] = _myColor;
-                        _reversePiece.Add(pieceMap[checkPosZ, checkPosX]);
-                        pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
-                    }
-                    // スキルが発動していなければスルー
-                }
-                else// 相手色が確定しているので
-                {
-                    MapData[checkPosZ, checkPosX] = _myColor;// ←の都合で探索を分割しなければならない
-                    _reversePiece.Add(pieceMap[checkPosZ, checkPosX]);
-                    pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
-                }
-            }
-        }
-    }
-
-    private IEnumerator PieceReverse()
-    {
-        foreach (GameObject piece in _reversePiece)
-        {
-            CheckEmpty[checkingNum,4] += 1;
-            piece.GetComponent<Piece>().Reverse();
-            yield return new WaitForSeconds(0.3f);
-        }
-        checkingNum++;
-
-        _reversePiece.Clear();
-
-        // スキル効果なら準備時間に戻る
-        if (isSkillActivate)
-        {
-            isSkillActivate = false;
-            _isSecondCheck = false;
-        }
-        if(_isSecondCheck)// 2回目のチェックならステートを進める
-        {
-            _isSecondCheck = false;
-        }
-        else
-            _isSecondCheck = true;// 2回目のチェックに入る
-
-        _isChecking = false;
     }
 }
