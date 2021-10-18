@@ -19,7 +19,8 @@ public class PartASceneChange : Player1Base
 
         if (_repeatHit)
             return;
-        else if (PartA._isScenarioEnd == true && _gameSceneManager.IsChanged == true && _DS4_circle_value || PartA._isScenarioEnd == true && _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space) ||
+        else if (CharacterScenario._isScenarioEnd == true && _gameSceneManager.IsChanged == true && _DS4_circle_value || 
+                CharacterScenario._isScenarioEnd == true && _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space) ||
                 _gameSceneManager.IsChanged == true && _DS4_cross_value || _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.X))
         {
             _repeatHit = true;

@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 
-public class ScenarioControl : Player1Base
+public class CharacterScenario : Player1Base
 {
     //csvファイル用変数
-    public TextAsset _csvFile;
+    public TextAsset _csv_Kuroto;
+    public TextAsset _csv_Seastey;
+    public TextAsset _csv_Luice;
+    public TextAsset _csv_Lumina;
     List<string[]> _scenarioData = new List<string[]>();
-    //並び順
-    //｜番号｜背景｜左立ち絵｜右立ち絵｜キャラ名｜喋っているキャラ｜セリフ｜
     private GameSceneManager _gameSceneManager;
     //セリフ・キャラ名テキスト用変数
     [SerializeField] private Text _word;
@@ -41,6 +42,7 @@ public class ScenarioControl : Player1Base
     // Start is called before the first frame update
     void Start()
     {
+        SoundManager.Instance.PlayBGM(4);
         Init();
     }
 
@@ -67,8 +69,7 @@ public class ScenarioControl : Player1Base
             {
                 return;
             }
-                
-            if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space))
+            else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space))
             {
                 _repeatHit = true;
                 _click = true;
@@ -78,8 +79,24 @@ public class ScenarioControl : Player1Base
 
     private void Init()
     {
+        StringReader reader = null;
         //_csvFile = Resources.Load("csv/Oseris_01") as TextAsset;
-        StringReader reader = new StringReader(_csvFile.text);
+        if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger)
+        {
+            reader = new StringReader(_csv_Kuroto.text);
+        }
+        else if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow)
+        {
+            reader = new StringReader(_csv_Seastey.text);
+        }
+        else if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit)
+        {
+            reader = new StringReader(_csv_Lumina.text);
+        }
+        else if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse)
+        {
+            reader = new StringReader(_csv_Luice.text);
+        }
 
         while (reader.Peek() != -1)
         {
