@@ -20,7 +20,7 @@ public class CharacterScenario : Player1Base
     private string _displayText; //表示するセリフを入れる変数
     private int _textCharNum = 0; //セリフを一個ずつ追加するための変数
     private int _displayTextSpeed = 0; //全体のフレームレートを落とす変数
-    public int _interval = 5; //Inspector上でセリフの速さを調節できる変数
+    [SerializeField, Header("セリフ送りの速さ")] int _interval = 5; 
     private bool _click = false;
     private bool _repeatHit = false;
     public static bool _isScenarioEnd = false; //シナリオが終了したかどうかのフラグ
