@@ -2022,7 +2022,6 @@ MonoBehaviour:
   skillCutinControl: {fileID: 326221986}
   skillWindowControl: {fileID: 2133164097}
   isMyTurn: 0
-  isPreurn: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -2313,6 +2312,7 @@ MonoBehaviour:
   turnPlayerColor: 0
   isSkillActivate: 0
   ignoreFixityPiece: 
+  isSkillCheck: 0
 --- !u!4 &576250715
 Transform:
   m_ObjectHideFlags: 0
@@ -4654,7 +4654,6 @@ MonoBehaviour:
   skillCutinControl: {fileID: 326221986}
   skillWindowControl: {fileID: 200742603}
   isMyTurn: 0
-  isPreurn: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
