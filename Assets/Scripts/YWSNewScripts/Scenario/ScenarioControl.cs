@@ -8,10 +8,10 @@ public class ScenarioControl : Player1Base
 {
     //csvファイル用変数
     public TextAsset _csvFile;
-    List<string[]> _scenarioData = new List<string[]>();
+    public List<string[]> _scenarioData = new List<string[]>();
     //並び順
     //｜番号｜背景｜左立ち絵｜右立ち絵｜キャラ名｜喋っているキャラ｜セリフ｜
-    private GameSceneManager _gameSceneManager;
+    protected GameSceneManager _gameSceneManager;
     //セリフ・キャラ名テキスト用変数
     [SerializeField] private Text _word;
     [SerializeField] private Text _charaName;
@@ -20,8 +20,8 @@ public class ScenarioControl : Player1Base
     private int _textCharNum = 0; //セリフを一個ずつ追加するための変数
     private int _displayTextSpeed = 0; //全体のフレームレートを落とす変数
     [SerializeField, Header("セリフ送りの速さ")] int _interval = 5; 
-    private bool _click = false;
-    private bool _repeatHit = false;
+    protected bool _click = false;
+    protected bool _repeatHit = false;
     public static bool _isScenarioEnd = false; //シナリオが終了したかどうかのフラグ
     //キャラ立ち絵用変数
     [SerializeField] private Image _leftCharacter;
@@ -39,13 +39,14 @@ public class ScenarioControl : Player1Base
     private float move = 0.5f;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        SetCsv();
         Init();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         base.SaveKeyValue();
         base.KeyInput();
@@ -54,8 +55,7 @@ public class ScenarioControl : Player1Base
         if (_gameSceneManager.IsChanged == true && _isScenarioEnd == false)
         {
             //背景の表示
-            _bgNum = int.Parse(_scenarioData[_textNum][1]);
-            _background.sprite = _backgroundImage[_bgNum];
+            ShowBackground();
 
             //キャラクターの表示
             ShowCharacter();
@@ -76,7 +76,7 @@ public class ScenarioControl : Player1Base
         } 
     }
 
-    private void Init()
+    private void SetCsv()
     {
         //_csvFile = Resources.Load("csv/Oseris_01") as TextAsset;
         StringReader reader = new StringReader(_csvFile.text);
@@ -86,7 +86,10 @@ public class ScenarioControl : Player1Base
             string line = reader.ReadLine();
             _scenarioData.Add(line.Split(','));
         }
+    }
 
+    public void Init()
+    {
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
         _textNum = 1;
         _leftCharacterNum = int.Parse(_scenarioData[_textNum][2]);
@@ -102,7 +105,13 @@ public class ScenarioControl : Player1Base
         _pageFeed.color = new Color(255,255,255,0);
     }
 
-    private void ShowCharacter()
+    public void ShowBackground()
+    {
+        _bgNum = int.Parse(_scenarioData[_textNum][1]);
+        _background.sprite = _backgroundImage[_bgNum];
+    }
+
+    public void ShowCharacter()
     {
         //キャラ名を出す
         _charaName.text = _scenarioData[_textNum][4];
@@ -150,7 +159,7 @@ public class ScenarioControl : Player1Base
         }
     }
 
-    private void ShowText()
+    public void ShowText()
     {
         int _itemNum = _scenarioData.Count;
         _displayTextSpeed++;
@@ -199,7 +208,7 @@ public class ScenarioControl : Player1Base
         }
     }
 
-    private void PageFeedMove()
+    public void PageFeedMove()
     {
         _feedMove.position += new Vector3(0,move,0);
         counter++;
