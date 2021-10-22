@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 public class PlayerBase : MonoBehaviour
 {
@@ -214,24 +217,38 @@ public class PlayerBase : MonoBehaviour
 
         // 初期値0 左から 1,2,3
         rotationNum %= 4;
-
+        Debug.Log(rotationNum);
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
         Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
 
-
+        // 壁にあたってない時
         if (Map.Instance.CheckWall(rotatedPos))
         {
+            // 回転Posが-1かつ下のコマが壁にあたっている時
             if ((int) rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
                 rotationNum = lastNum;
             else
             {
+                // 回転番号と前の値が違う時 
                 if (rotationNum != lastNum)
                     SoundManager.Instance.PlaySE(2);
                 controllPiece2.transform.position = rotatedPos;
             }
         }
+        // 壁にあたってる時
         else
+        {
+            Debug.Log("WallHit");
+            
             rotationNum = lastNum;
+            
+            if (rotationNum != lastNum)
+                SoundManager.Instance.PlaySE(2);
+            
+            // コマが飛び出す処理
+            
+            
+        }
     }
 
     protected void PrePieceMove()
@@ -289,7 +306,7 @@ public class PlayerBase : MonoBehaviour
     protected void ShowSkillWindow(KeyCode inputKey)
     {
         if (Input.GetKeyDown(inputKey) || _DS4_option_value)
-        skillWindowControl.ShowSkillWindow();
+            skillWindowControl.ShowSkillWindow();
     }
 
     /// <summary>
@@ -303,6 +320,7 @@ public class PlayerBase : MonoBehaviour
             GameDirector.Instance.gameState = GameDirector.GameState.end;
         }
     }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected void SetSkills(int charaType)
     {
@@ -377,7 +395,7 @@ public class PlayerBase : MonoBehaviour
         else
             return false;
     }
-    
+
     /// <summary>
     /// プレイヤーが1Pか2P判別 黒 = 1P
     /// </summary>
@@ -415,13 +433,13 @@ public class PlayerBase : MonoBehaviour
             _isSkillWhite = true;
         }
     }
-    
+
     /// <summary>
     /// 通常スキルを使用したかどうか管理関数
     /// </summary>
     private void NormalSkillFlag()
     {
-        if(PlayerCheck())
+        if (PlayerCheck())
         {
             GameDirector.Instance._isSkillBlack = true;
         }
@@ -459,8 +477,8 @@ public class PlayerBase : MonoBehaviour
                     Map.Instance.TagClear();
                     Map.Instance.isSkillActivate = true;
                     GameDirector.Instance.gameState = GameDirector.GameState.idle;
-                    StartCoroutine(Map.Instance.CheckReverse(Map.Instance.pieceMap[z, x],true));
-                    
+                    StartCoroutine(Map.Instance.CheckReverse(Map.Instance.pieceMap[z, x], true));
+
                     NormalSkillFlag();
                     break;
                 }
@@ -474,7 +492,7 @@ public class PlayerBase : MonoBehaviour
     public void RandomLock(int cost)
     {
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost) || 
+            !ActivateCheck(GameDirector.GameState.active, cost) ||
             NormalSkillCheck())
             return;
 
@@ -494,7 +512,7 @@ public class PlayerBase : MonoBehaviour
                 {
                     Map.Instance.map[z, x] = myColorfixity;
                     Map.Instance.pieceMap[z, x].GetComponent<Piece>().ChangeIsFixity();
-                    
+
                     NormalSkillFlag();
                     break;
                 }
@@ -508,7 +526,7 @@ public class PlayerBase : MonoBehaviour
     public void MyPieceLock(int cost)
     {
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost) || 
+            !ActivateCheck(GameDirector.GameState.active, cost) ||
             NormalSkillCheck())
             return;
 
@@ -527,7 +545,7 @@ public class PlayerBase : MonoBehaviour
                 piece1.ChangeIsFixity();
             if (piece2.pieceType == playerType)
                 piece2.ChangeIsFixity();
-            
+
             NormalSkillFlag();
         }
         else
@@ -565,7 +583,7 @@ public class PlayerBase : MonoBehaviour
                             // 色を戻す
                             Map.Instance.map[z, x] = enemyColor;
                             Map.Instance.pieceMap[z, x].GetComponent<Piece>().ChangeIsFixity();
-                            
+
                             NormalSkillFlag();
                         }
                     }
@@ -619,15 +637,15 @@ public class PlayerBase : MonoBehaviour
         int piece2x = (int) piece2.transform.position.x;
 
         GameDirector.Instance.gameState = GameDirector.GameState.idle;
-        
+
         // 一番上におかれたときに除外
-        Map.Instance.CheckHeightOver(controllPiece1,true);
-        Map.Instance.CheckHeightOver(controllPiece2,true);
-        
+        Map.Instance.CheckHeightOver(controllPiece1, true);
+        Map.Instance.CheckHeightOver(controllPiece2, true);
+
         // 関数呼び出し
         ForceConvertionReverse(piece1x, piece1z);
         ForceConvertionReverse(piece2x, piece2z);
-        
+
         GameDirector.Instance.gameState = GameDirector.GameState.reversed;
         yield return null;
     }
@@ -651,14 +669,14 @@ public class PlayerBase : MonoBehaviour
                 {
                     continue;
                 }
-                
+
                 // 固定コマを解除
                 if (Map.Instance.map[z - 1, x - 1] == enemyColorfixity)
                 {
-                    Map.Instance.map[z - 1 , x - 1] = enemyColor;
+                    Map.Instance.map[z - 1, x - 1] = enemyColor;
                     Map.Instance.pieceMap[z - 1, x - 1].GetComponent<Piece>().ChangeIsFixity();
                 }
-                
+
                 // その座標に相手の駒があった場合、自分の色に変更
                 if (Map.Instance.map[z - 1, x - 1] == enemyColor)
                 {
@@ -710,9 +728,9 @@ public class PlayerBase : MonoBehaviour
         int piece1z = (int) piece1.transform.position.z * -1;
         int piece2z = (int) piece2.transform.position.z * -1;
 
-        Map.Instance.CheckHeightOver(controllPiece1,true);
-        Map.Instance.CheckHeightOver(controllPiece2,true);
-        
+        Map.Instance.CheckHeightOver(controllPiece1, true);
+        Map.Instance.CheckHeightOver(controllPiece2, true);
+
         // コマの座標を比較して1個目と2個目の座標が同じだった場合
         if (piece1z == piece2z)
         {
@@ -753,7 +771,7 @@ public class PlayerBase : MonoBehaviour
                 Map.Instance.map[z, x] = enemyColor;
                 Map.Instance.pieceMap[z, x].GetComponent<Piece>().ChangeIsFixity();
             }
-            
+
             // 横軸を変える
             if (Map.Instance.map[z, x] == enemyColor)
             {
@@ -827,7 +845,7 @@ public class PlayerBase : MonoBehaviour
                 Map.Instance.map[x, z] = enemyColor;
                 Map.Instance.pieceMap[x, z].GetComponent<Piece>().ChangeIsFixity();
             }
-            
+
             if (Map.Instance.map[x, z] == enemyColor)
             {
                 Map.Instance.map[x, z] = myColor;
