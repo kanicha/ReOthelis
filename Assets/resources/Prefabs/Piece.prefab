@@ -285,6 +285,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Aula Control
       objectReference: {fileID: 0}
+    - target: {fileID: 1927467924151134270, guid: ff308b4d08067a147867b2a9f6f4229b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff308b4d08067a147867b2a9f6f4229b, type: 3}
 --- !u!1 &6471929384696550568 stripped
