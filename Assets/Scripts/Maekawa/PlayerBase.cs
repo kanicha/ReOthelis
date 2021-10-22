@@ -178,6 +178,7 @@ public class PlayerBase : MonoBehaviour
         else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
                  (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
+            // カウントを初期化
             _timeCount = 0f;
             isDown = true;
             move.z = -1;
@@ -709,6 +710,9 @@ public class PlayerBase : MonoBehaviour
         int piece1z = (int) piece1.transform.position.z * -1;
         int piece2z = (int) piece2.transform.position.z * -1;
 
+        Map.Instance.CheckHeightOver(controllPiece1,true);
+        Map.Instance.CheckHeightOver(controllPiece2,true);
+        
         // コマの座標を比較して1個目と2個目の座標が同じだった場合
         if (piece1z == piece2z)
         {
