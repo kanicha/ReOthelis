@@ -1220,7 +1220,6 @@ GameObject:
   - component: {fileID: 874266675}
   - component: {fileID: 874266677}
   - component: {fileID: 874266676}
-  - component: {fileID: 874266678}
   m_Layer: 5
   m_Name: JudgeImage2P
   m_TagString: Untagged
@@ -1285,25 +1284,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 874266674}
   m_CullTransparentMesh: 1
---- !u!95 &874266678
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 874266674}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 776fd5eb52820f346aa53800aa3bd0a2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &896903842
 GameObject:
   m_ObjectHideFlags: 0

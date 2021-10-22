@@ -144,7 +144,6 @@ public class Map : SingletonMonoBehaviour<Map>
     {
         foreach (GameObject piece in _reversePiece)
         {
-
             switch (isSkill)
             {
                 case true:
@@ -156,6 +155,7 @@ public class Map : SingletonMonoBehaviour<Map>
                     {
                         GameDirector.Instance.AddScore(false, GameDirector.Instance.point);
                     }
+
                     break;
                 case false:
                     if (turnPlayerColor == Piece.PieceType.black)
@@ -168,11 +168,12 @@ public class Map : SingletonMonoBehaviour<Map>
                         GameDirector.Instance.AddScore(false, GameDirector.Instance.point);
                         GameDirector.Instance.AddReversedCount(false);
                     }
+
                     break;
                 default:
                     break;
             }
-            
+
             piece.transform.SetAsLastSibling();
             piece.GetComponent<Piece>().Reverse();
             yield return new WaitForSeconds(0.3f);
@@ -224,7 +225,7 @@ public class Map : SingletonMonoBehaviour<Map>
 
         _isChecking = true;
         isSkillCheck = true;
-        
+
         // 自分の色と相手の色を決定
         Piece.PieceType type = piece.GetComponent<Piece>().pieceType;
         if (type == Piece.PieceType.black || type == Piece.PieceType.fixityBlack)
@@ -247,10 +248,13 @@ public class Map : SingletonMonoBehaviour<Map>
         _setPosZ = (int) piece.transform.position.z * -1;
 
         // 7方向にチェック(zは符号が逆転する)
+        // 強引は縦も検索する
+        if (isSkill)
+            CheckInTheDirection(new Vector3(0, 0, -1)); //↑
+
         CheckInTheDirection(new Vector3(-1, 0, 0)); // ←
         CheckInTheDirection(new Vector3(1, 0, 0)); // →
         CheckInTheDirection(new Vector3(0, 0, 1)); // ↓
-        //CheckInTheDirection(new Vector3(0, 0, -1));// ↑
         CheckInTheDirection(new Vector3(-1, 0, 1)); // ↙
         CheckInTheDirection(new Vector3(1, 0, 1)); // ↘
         CheckInTheDirection(new Vector3(-1, 0, -1)); // ↖
@@ -265,13 +269,13 @@ public class Map : SingletonMonoBehaviour<Map>
             }
             Debug.Log(s);
         }*/
-        
+
         if (isSkill)
             StartCoroutine(PieceReverse(true));
         else
             StartCoroutine(PieceReverse(false));
-        
-            ignoreFixityPiece = string.Empty; // スキル効果は1ターンで終了
+
+        ignoreFixityPiece = string.Empty; // スキル効果は1ターンで終了
     }
 
     /// <summary>
