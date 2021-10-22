@@ -2014,7 +2014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2cd0cd44b3c054aa72bb74210f99ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fallTime: 2
+  _fallTime: 1
   scoreText: {fileID: 1165668146}
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 2114198659}
@@ -4646,7 +4646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff4890c30099c147be9c6a942e8663e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fallTime: 2
+  _fallTime: 1
   scoreText: {fileID: 1122938205}
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 1873248609}
