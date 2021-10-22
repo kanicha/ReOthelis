@@ -217,7 +217,7 @@ public class PlayerBase : MonoBehaviour
 
         // 初期値0 左から 1,2,3
         rotationNum %= 4;
-        Debug.Log(rotationNum);
+        /*Debug.Log(rotationNum);*/
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
         Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
 
@@ -238,7 +238,7 @@ public class PlayerBase : MonoBehaviour
         // 壁にあたってる時
         else
         {
-            Debug.Log("WallHit");
+            /*Debug.Log("WallHit");*/
             
             rotationNum = lastNum;
             
