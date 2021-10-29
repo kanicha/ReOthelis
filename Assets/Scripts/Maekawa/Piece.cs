@@ -102,16 +102,27 @@ public class Piece : MonoBehaviour
                 break;
         }
 
-        if (pieceType == PieceType.fixityBlack || pieceType == PieceType.fixityWhite)
+        if (pieceType == PieceType.fixityBlack)
         {
-            _renderer[0].sharedMaterial = _fixedMaterial[0];
-            _renderer[1].sharedMaterial = _fixedMaterial[1];
+            /*_renderer[0].sharedMaterial = _fixedMaterial[0];
+            _renderer[1].sharedMaterial = _fixedMaterial[1];*/
+            
+            _particalObj.SetActive(true);
+        }
+        else if (pieceType == PieceType.fixityWhite)
+        {
+            // 白コマはエフェクトの座標が反転してしまうため y の値を増加させる
+            Vector3 pos = _particalObj.transform.position;
+            pos.y = 1f;
+            _particalObj.transform.position = pos;
+            
             _particalObj.SetActive(true);
         }
         else
         {
-            _renderer[0].sharedMaterial = _material[(int) CharaImageMoved.charaType1P];
-            _renderer[1].sharedMaterial = _material[(int) CharaImageMoved2P.charaType2P + 4];
+            /*_renderer[0].sharedMaterial = _material[(int) CharaImageMoved.charaType1P];
+            _renderer[1].sharedMaterial = _material[(int) CharaImageMoved2P.charaType2P + 4];*/
+            
             _particalObj.SetActive(false);
         }
     }

@@ -2022,7 +2022,6 @@ MonoBehaviour:
   skillCutinControl: {fileID: 326221986}
   skillWindowControl: {fileID: 2133164097}
   isMyTurn: 0
-  isPreurn: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -2313,6 +2312,7 @@ MonoBehaviour:
   turnPlayerColor: 0
   isSkillActivate: 0
   ignoreFixityPiece: 
+  isSkillCheck: 0
 --- !u!4 &576250715
 Transform:
   m_ObjectHideFlags: 0
@@ -4365,6 +4365,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DefaultPieceWhite
       objectReference: {fileID: 0}
+    - target: {fileID: 7015376282941952240, guid: 9bcc26cce6217d641bfa3ab17886eca4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9bcc26cce6217d641bfa3ab17886eca4, type: 3}
 --- !u!4 &1228194839 stripped
@@ -4654,7 +4658,6 @@ MonoBehaviour:
   skillCutinControl: {fileID: 326221986}
   skillWindowControl: {fileID: 200742603}
   isMyTurn: 0
-  isPreurn: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
