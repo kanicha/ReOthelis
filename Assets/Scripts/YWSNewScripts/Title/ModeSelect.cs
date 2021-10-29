@@ -17,7 +17,7 @@ public class ModeSelect : Player1Base
     {
         SoundManager.Instance.PlayBGM(1);
 
-        cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -171, 0);
+        cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-220, -171, 0);
         _selectCount = 0;
 
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
@@ -61,18 +61,18 @@ public class ModeSelect : Player1Base
             
             if (_selectCount == 0)
             {
-                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -272, 0);
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-220, -272, 0);
                 _selectCount++;
             }
             else if (_selectCount == 1)
             {
-                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -373, 0);
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-280, -373, 0);
                 _selectCount++;
             }
             else if (_selectCount == 2)
             {
-                //カーソルがTUTORIALにある場合で下キーが入力されたら、一番上のSTORYに戻す
-                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -171, 0);
+                //カーソルが一番下にある場合で下キーが入力されたら、一番上に戻す
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-220, -171, 0);
                 _selectCount = 0;
             }
         }
@@ -83,18 +83,18 @@ public class ModeSelect : Player1Base
             
             if (_selectCount == 0)
             {
-                //カーソルがSTORYにある場合で上キーが入力されたら、一番下のONLINEに戻す
-                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -373, 0);
+                //カーソルが一番上にある場合で上キーが入力されたら、一番下のに戻す
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-280, -373, 0);
                 _selectCount = 2;
             }
             else if (_selectCount == 1)
             {
-                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -171, 0);
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-220, -171, 0);
                 _selectCount--;
             }
             else if (_selectCount == 2)
             {
-                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-196, -272, 0);
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-220, -272, 0);
                 _selectCount--;
             }
         }

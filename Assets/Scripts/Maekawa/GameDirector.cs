@@ -40,8 +40,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         idle,
         end,
         ended,
-    }
-    private AIThinking _aiThinking; 
+    } 
 
     void Start()
     {
@@ -49,7 +48,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
         _player1.isMyTurn = false;
         _player2.isMyTurn = false;
-        //_aiThinking = GetComponent<AIThinking>();
 
         // 最初は2セット生成
         PieceSet();
@@ -224,8 +222,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             _player2.controllPiece1 = _activePieces[0];
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
-            //_aiThinking.MapPrepare();
-            //_aiThinking.CheckVertical();
         }
         gameState = GameState.preActive;
     }

@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -196, y: -171}
+  m_AnchoredPosition: {x: -220, y: -171}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &440305712
@@ -373,7 +373,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: OFFLINE
+  m_Text: "\u30AA\u30D5\u30E9\u30A4\u30F3"
 --- !u!222 &720150900
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -452,9 +452,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'TUTORIAL
-
-'
+  m_Text: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\n"
 --- !u!222 &1207142068
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -533,7 +531,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: STORY
+  m_Text: "\u30B9\u30C8\u30FC\u30EA\u30FC"
 --- !u!222 &1350474460
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -676,8 +674,9 @@ MonoBehaviour:
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 0}
   gaugeController: {fileID: 0}
+  skillCutinControl: {fileID: 0}
+  skillWindowControl: {fileID: 0}
   isMyTurn: 0
-  isPreurn: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
