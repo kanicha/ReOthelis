@@ -48,7 +48,7 @@ public class Map : SingletonMonoBehaviour<Map>
 
         return isBlank;
     }
-
+    
     /// <summary>
     /// コマの１つ下のマスが空いていないかを調べる
     /// </summary>
@@ -328,7 +328,6 @@ public class Map : SingletonMonoBehaviour<Map>
                 checkPosX += dirX;
                 checkPosZ += dirZ;
 
-                
                 // 相手の駒が固定コマなら
                 if (map[checkPosZ, checkPosX] == _fixityEnemyColor)
                 {
