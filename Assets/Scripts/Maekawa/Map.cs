@@ -328,9 +328,13 @@ public class Map : SingletonMonoBehaviour<Map>
                 checkPosX += dirX;
                 checkPosZ += dirZ;
 
+                
                 // 相手の駒が固定コマなら
                 if (map[checkPosZ, checkPosX] == _fixityEnemyColor)
                 {
+                    // 探索中固定コマがあったら裏返しをストップ
+                    break;
+                    
                     // 固定効果を無視するスキル効果
                     if (map[checkPosZ, checkPosX] == ignoreFixityPiece)
                     {
@@ -340,6 +344,8 @@ public class Map : SingletonMonoBehaviour<Map>
                         pieceMap[checkPosZ, checkPosX].tag = _REVERSED_TAG;
                     }
                     // スキルが発動していなければスルー
+                    
+
                 }
                 else // 相手色が確定しているので
                 {

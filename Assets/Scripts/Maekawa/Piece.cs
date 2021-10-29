@@ -5,7 +5,6 @@ using UnityEngine;
 public class Piece : MonoBehaviour
 {
     [SerializeField] private Renderer[] _renderer = new Renderer[2];
-    [SerializeField] private Material[] _fixedMaterial = new Material[2];
     [SerializeField] GameObject _particalObj = default(GameObject);
     public Material[] _material;
     private Animator _anim = null;
@@ -104,9 +103,6 @@ public class Piece : MonoBehaviour
 
         if (pieceType == PieceType.fixityBlack)
         {
-            /*_renderer[0].sharedMaterial = _fixedMaterial[0];
-            _renderer[1].sharedMaterial = _fixedMaterial[1];*/
-            
             _particalObj.SetActive(true);
         }
         else if (pieceType == PieceType.fixityWhite)
@@ -120,9 +116,7 @@ public class Piece : MonoBehaviour
         }
         else
         {
-            /*_renderer[0].sharedMaterial = _material[(int) CharaImageMoved.charaType1P];
-            _renderer[1].sharedMaterial = _material[(int) CharaImageMoved2P.charaType2P + 4];*/
-            
+            // 解除
             _particalObj.SetActive(false);
         }
     }
