@@ -165,7 +165,14 @@ public class AIThinking : MonoBehaviour
             string _targetType = MapData[_checkPosZ, _checkPosX];
 
             //
-
+            if (_targetType == wall || _targetType == empty)
+            {
+                break;
+            }
+            else if (_targetType == Map._myColor)
+            {
+                
+            }
         }
     }
 }
