@@ -77,7 +77,7 @@ public class CharaImageMoved2P : Player2Base
             {
                 charactorButtonWhite2P[i].SetActive(false);
             }
-        } 
+        }
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0))
         {
             SoundManager.Instance.PlaySE(3);

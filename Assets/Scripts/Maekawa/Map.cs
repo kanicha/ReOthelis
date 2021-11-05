@@ -250,8 +250,7 @@ public class Map : SingletonMonoBehaviour<Map>
         // 7方向にチェック(zは符号が逆転する)
         // 強引は縦も検索する
         if (isSkill)
-            CheckInTheDirection(new Vector3(0, 0, -1)); //↑
-
+        CheckInTheDirection(new Vector3(0, 0, -1)); //↑
         CheckInTheDirection(new Vector3(-1, 0, 0)); // ←
         CheckInTheDirection(new Vector3(1, 0, 0)); // →
         CheckInTheDirection(new Vector3(0, 0, 1)); // ↓

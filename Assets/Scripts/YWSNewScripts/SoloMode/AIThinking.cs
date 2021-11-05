@@ -30,6 +30,10 @@ public class AIThinking : MonoBehaviour
     bool IsAboveExist = false;
     private int _setPosX = 0;
     private int _setPosZ = 0;
+    public static string _myColor = string.Empty;
+    public static string _enemyColor = string.Empty;
+    public static string _fixityMyColor = string.Empty;
+    public static string _fixityEnemyColor = string.Empty;
 
     //どの座標が一番駒をひっくり返せるかを調べるためのマップを準備
     public void MapPrepare()
@@ -43,16 +47,7 @@ public class AIThinking : MonoBehaviour
             }
         }
         //マップ確認用
-        string printMapData = "";
-		for (int i = 0; i < _HEIGHT; i++)
-		{
-			for (int j = 0; j < _WIDTH; j++)
-			{
-				printMapData += MapData[i, j].ToString() + ",";
-			}
-			printMapData += "\n";
-		}
-		Debug.Log("CPU用マップ" + printMapData);
+        CheckMap();
     }
 
     public void CheckVertical()
@@ -113,11 +108,207 @@ public class AIThinking : MonoBehaviour
                 }
             }
         }
-
-        //取得した座標データの検索を行う
-        PatternClassification();
         
         //データ確認用
+        CheckData();
+    }
+
+    //取得した座標データの検索を行う
+    public void PatternClassification()
+    {
+        for (int i = 0; i < 15; i++)
+        {
+            //座標1
+            _setPosX = CheckEmpty[i,0];
+            _setPosZ = CheckEmpty[i,1];
+            if (PiecePatternGeneretor.type == 1)
+            {
+                _myColor = black;
+                _fixityMyColor = fixityBlack;
+                _enemyColor = white;
+                _fixityEnemyColor = fixityWhite;
+
+                //該当座標にコマを置く
+                MapData[CheckEmpty[i,1],CheckEmpty[i,0]] = black;
+            }
+            else if (PiecePatternGeneretor.type == 2 || PiecePatternGeneretor.type == 3)
+            {
+                _myColor = white;
+                _fixityMyColor = fixityWhite;
+                _enemyColor = black;
+                _fixityEnemyColor = fixityBlack;
+
+                //該当座標にコマを置く
+                MapData[CheckEmpty[i,1],CheckEmpty[i,0]] = white;
+            }
+            //全方向探索
+            CheckInTheDirection(new Vector3(0, 0, -1),i); //↑
+            CheckInTheDirection(new Vector3(-1, 0, 0),i); // ←
+            CheckInTheDirection(new Vector3(1, 0, 0),i); // →
+            CheckInTheDirection(new Vector3(0, 0, 1),i); // ↓
+            CheckInTheDirection(new Vector3(-1, 0, 1),i); // ↙
+            CheckInTheDirection(new Vector3(1, 0, 1),i); // ↘
+            CheckInTheDirection(new Vector3(-1, 0, -1),i); // ↖
+            CheckInTheDirection(new Vector3(1, 0, -1),i); // ↗
+
+            //マップ確認用
+            CheckMap();
+            //データ確認用
+            CheckData();
+
+            //座標2
+            _setPosX = CheckEmpty[i,2];
+            _setPosZ = CheckEmpty[i,3];
+            if (PiecePatternGeneretor.type == 3)
+            {
+                _myColor = black;
+                _fixityMyColor = fixityBlack;
+                _enemyColor = white;
+                _fixityEnemyColor = fixityWhite;
+
+                //該当座標にコマを置く
+                MapData[CheckEmpty[i,3],CheckEmpty[i,2]] = black;
+            }
+            else
+            {
+                MapData[CheckEmpty[i,3],CheckEmpty[i,2]] = _myColor;
+            }
+            //全方向探索
+            CheckInTheDirection(new Vector3(0, 0, -1),i); //↑
+            CheckInTheDirection(new Vector3(-1, 0, 0),i); // ←
+            CheckInTheDirection(new Vector3(1, 0, 0),i); // →
+            CheckInTheDirection(new Vector3(0, 0, 1),i); // ↓
+            CheckInTheDirection(new Vector3(-1, 0, 1),i); // ↙
+            CheckInTheDirection(new Vector3(1, 0, 1),i); // ↘
+            CheckInTheDirection(new Vector3(-1, 0, -1),i); // ↖
+            CheckInTheDirection(new Vector3(1, 0, -1),i); // ↗
+
+            //マップ確認用
+            CheckMap();
+            //データ確認用
+            CheckData();
+
+            //探索後にコマを消去する
+            MapData[CheckEmpty[i,1],CheckEmpty[i,0]] = empty;
+            MapData[CheckEmpty[i,3],CheckEmpty[i,2]] = empty;
+
+            //マップ確認用
+            CheckMap();
+        }
+    }
+
+    private void CheckInTheDirection(Vector3 dir, int ItemNum)
+    {
+        // 調べる座標
+        int checkPosX = _setPosX;
+        int checkPosZ = _setPosZ;
+        // 調べたい方向
+        int dirX = (int) dir.x;
+        int dirZ = (int) dir.z;
+
+        bool isReverse = false;
+        int moveCount = 0;
+
+        // dirの方向に「ひっくり返せるか」探索
+        while (true)
+        {
+            // 調べたい方向に進んでいく
+            checkPosX += dirX;
+            checkPosZ += dirZ;
+            string targetType = MapData[checkPosZ, checkPosX];
+
+            // 壁 or 空白なら終了
+            if (targetType == wall || targetType == empty)
+            {
+                break;
+            }
+            else if (targetType == _myColor || targetType == _fixityMyColor)
+            {
+                isReverse = true; // 自分の色で挟んだ扱い
+                CheckEmpty[ItemNum,4] += moveCount;
+                break;
+            }
+
+            moveCount++;
+        }
+
+        // 裏返しが発生するなら処理(厳密にはmoveCountが0でも処理)
+        if (isReverse)
+        {
+            checkPosX = _setPosX;
+            checkPosZ = _setPosZ;
+
+            // リバースするコマをリストに追加
+            for (int i = 0; i < moveCount; i++)
+            {
+                checkPosX += dirX;
+                checkPosZ += dirZ;
+
+                if (MapData[checkPosZ, checkPosX] != _fixityEnemyColor)
+                {
+                    MapData[checkPosZ, checkPosX] = _myColor;
+                    CheckEmpty[ItemNum,4] += 1;
+                }
+            }
+        }
+    }
+
+    public List<int> SameReverseNum = new List<int>();
+    public void PatternChoice()
+    {
+        int MaxReverseNum = 0;
+
+        //ひっくり返せるコマの最大数をデータ配列から探す
+        for (int i = 0; i < 15; i++)
+        {
+            if (CheckEmpty[i,4] > MaxReverseNum)
+            {
+                MaxReverseNum = CheckEmpty[i,4];
+            }
+        }
+
+        //同じ数のコマをひっくり返せるパターンがあるかをデータ配列から探す
+        for (int i = 0; i < 15; i++)
+        {
+            if (CheckEmpty[i,4] == MaxReverseNum)
+            {
+                SameReverseNum.Add(i);
+            }
+        }
+
+        //データ確認用
+        Debug.Log("最大数=" + MaxReverseNum);
+        for(int i = 0; i < SameReverseNum.Count; i++)
+        {
+            Debug.Log(SameReverseNum[i]);
+        }
+    }
+
+    public void MovePiece()
+    {
+        int P1X = (int) GameDirector.Instance._activePieces[0].transform.position.x;
+        int P1Z = (int) GameDirector.Instance._activePieces[0].transform.position.z;
+        int P2X = (int) GameDirector.Instance._activePieces[1].transform.position.x;
+        int P2Z = (int) GameDirector.Instance._activePieces[1].transform.position.z;
+        Debug.Log("p1x=" + P1X + "\np1z=" + P1Z + "\np2x=" + P2X + "\np2z" + P2Z);
+
+        int choiceNum = Random.Range(0,SameReverseNum.Count);
+        int patternNum = SameReverseNum[choiceNum];
+        Vector3 P1FinalPos = new Vector3 (AIThinking.CheckEmpty[patternNum,0], 0, AIThinking.CheckEmpty[patternNum,1]*-1);
+        Vector3 P2FinalPos = new Vector3 (AIThinking.CheckEmpty[patternNum,2], 0, AIThinking.CheckEmpty[patternNum,3]*-1);
+        Debug.Log("1x=" + AIThinking.CheckEmpty[patternNum,0] + "\n1z=" + AIThinking.CheckEmpty[patternNum,1] + "\n2x" + AIThinking.CheckEmpty[patternNum,2] + "\n2z" + AIThinking.CheckEmpty[patternNum,3]);
+
+        GameDirector.Instance._activePieces[0].transform.position = P1FinalPos;
+        GameDirector.Instance._activePieces[1].transform.position = P2FinalPos;
+        int FinalP1X = (int) GameDirector.Instance._activePieces[0].transform.position.x;
+        int FinalP1Z = (int) GameDirector.Instance._activePieces[0].transform.position.z;
+        int FinalP2X = (int) GameDirector.Instance._activePieces[1].transform.position.x;
+        int FinalP2Z = (int) GameDirector.Instance._activePieces[1].transform.position.z;
+        Debug.Log("Finalp1x=" + FinalP1X + "\nFinalp1z=" + FinalP1Z + "\nFinalp2x=" + FinalP2X + "\nFinalp2z" + FinalP2Z);
+    }
+
+    private void CheckData()
+    {
         string printData = "";
 		for (int i = 0; i < 15; i++)
 		{
@@ -130,49 +321,17 @@ public class AIThinking : MonoBehaviour
 		Debug.Log(printData);
     }
 
-    private void PatternClassification()
+    public void CheckMap()
     {
-        for (int i = 0; i < 15; i++)
-        {
-            //座標1
-            _setPosX = CheckEmpty[i,0];
-            _setPosZ = CheckEmpty[i,1];
-
-            //全方向探索
-
-            //座標2
-
-            //全方向探索
-        }
-    }
-
-    private void OmnidirectionalSearch(Vector3 dir)
-    {
-        //
-        int _checkPosX = _setPosX;
-        int _checkPosZ = _setPosZ;
-
-        //
-        int _dirX = (int) dir.x;
-        int _dirZ = (int) dir.z;
-
-        //
-        while (true)
-        {
-            //
-            _checkPosX += _dirX;
-            _checkPosZ += _dirZ;
-            string _targetType = MapData[_checkPosZ, _checkPosX];
-
-            //
-            if (_targetType == wall || _targetType == empty)
-            {
-                break;
-            }
-            else if (_targetType == Map._myColor)
-            {
-                
-            }
-        }
+        string printMapData = "";
+		for (int i = 0; i < _HEIGHT; i++)
+		{
+			for (int j = 0; j < _WIDTH; j++)
+			{
+				printMapData += MapData[i, j].ToString() + ",";
+			}
+			printMapData += "\n";
+		}
+		Debug.Log("CPU用マップ\n" + printMapData);
     }
 }
