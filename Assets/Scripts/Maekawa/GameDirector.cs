@@ -64,12 +64,13 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 _isLanding = false;
                 _isDown = true;
                 _timeCount += Time.deltaTime;
-                if (_timeCount > _preActiveTime)
-                {
+                /*if (_timeCount > _preActiveTime)
+                {*/
                     intervalTime = 0;
+                    
                     gameState = GameState.interval;
                     nextStateCue = GameState.active;
-                }
+                /*}*/
                 break;
 
             case GameState.active:
