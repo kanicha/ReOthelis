@@ -185,12 +185,11 @@ public class PlayerBase : MonoBehaviour
         {
             // カウントを初期化
             _timeCount = 0f;
-            isDown = true;
             move.z = -1;
         }
         else if (_timeCount >= _fallTime) // 時間落下
         {
-            _timeCount = 0;
+            _timeCount = 0f;
             move.z = -1;
         }
 
@@ -204,8 +203,6 @@ public class PlayerBase : MonoBehaviour
             controllPiece1.transform.position = movedPos;
             controllPiece2.transform.position = rotMovedPos;
         }
-        else if (isDown)
-            GameDirector.Instance.gameState = GameDirector.GameState.confirmed; // 下入力をし、障害物があるなら確定
     }
 
     protected void PieceRotate()

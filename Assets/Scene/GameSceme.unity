@@ -708,6 +708,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _skillWindowObj: {fileID: 1195277679}
+  _skillText: {fileID: 0}
+  _skill2Text: {fileID: 0}
+  _skillSpText: {fileID: 0}
 --- !u!4 &200742604
 Transform:
   m_ObjectHideFlags: 0
@@ -1288,7 +1291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   point: 100
-  _marginTime: 0.5
+  _marginTime: 0.2
   _preActiveTime: 3
   _DEFAULT_POSITION: {x: 4, y: 0, z: -1}
   _generator: {fileID: 1559426143}
@@ -2022,6 +2025,8 @@ MonoBehaviour:
   skillCutinControl: {fileID: 326221986}
   skillWindowControl: {fileID: 2133164097}
   isMyTurn: 0
+  isSkillActive: 0
+  isSpSkillActive: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -4658,6 +4663,8 @@ MonoBehaviour:
   skillCutinControl: {fileID: 326221986}
   skillWindowControl: {fileID: 200742603}
   isMyTurn: 0
+  isSkillActive: 0
+  isSpSkillActive: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -6963,6 +6970,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _skillWindowObj: {fileID: 2068463960}
+  _skillText: {fileID: 0}
+  _skill2Text: {fileID: 0}
+  _skillSpText: {fileID: 0}
 --- !u!4 &2133164098
 Transform:
   m_ObjectHideFlags: 0

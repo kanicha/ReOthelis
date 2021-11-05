@@ -69,9 +69,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     intervalTime = 0;
                     gameState = GameState.interval;
                     nextStateCue = GameState.active;
-                    // 本操作開始にあたり1マス下げる
-                    _activePieces[0].transform.position += Vector3.back;
-                    _activePieces[1].transform.position += Vector3.back;
                 }
                 break;
 
@@ -98,7 +95,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     _activePieces[0] = _activePieces[1];
                     _activePieces[1] = tempPiece;
                 }
-
+                
                 Map.Instance.FallPiece(_activePieces[0]);
                 Map.Instance.FallPiece(_activePieces[1]);
                 _isLanding = true;
