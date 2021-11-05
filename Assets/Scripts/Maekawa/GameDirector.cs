@@ -29,6 +29,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     public bool _isSkillWhite = false;
     public GameState gameState = GameState.none;
     public GameState nextStateCue = GameState.none;
+    [SerializeField, Header("AIの起動")]
+    public bool IsAIOn = false;
 
     public enum GameState
     {
@@ -79,7 +81,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 break;
 
             case GameState.active:
-                if (ModeSelect._selectCount == 0 && _player2.isMyTurn == true)
+                if (ModeSelect._selectCount == 0 && _player2.isMyTurn == true && IsAIOn == true)
                 {
                     _ai.MovePiece();
                 }
@@ -227,11 +229,14 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             _player2.controllPiece1 = _activePieces[0];
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
-            _ai.MapPrepare();
-            _ai.CheckVertical();
-            _ai.PatternClassification();
-            _ai.CheckMap();
-            _ai.PatternChoice();
+            if (IsAIOn == true)
+            {
+                _ai.MapPrepare();
+                _ai.CheckVertical();
+                _ai.PatternClassification();
+                _ai.CheckMap();
+                _ai.PatternChoice();
+            }
         }
         gameState = GameState.preActive;
     }

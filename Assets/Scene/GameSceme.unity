@@ -708,6 +708,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _skillWindowObj: {fileID: 1195277679}
+  _skillText: {fileID: 0}
+  _skill2Text: {fileID: 0}
+  _skillSpText: {fileID: 0}
 --- !u!4 &200742604
 Transform:
   m_ObjectHideFlags: 0
@@ -1304,6 +1307,7 @@ MonoBehaviour:
   _isSkillWhite: 0
   gameState: 0
   nextStateCue: 0
+  IsAIOn: 0
 --- !u!114 &326221982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1408,6 +1412,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d170ee4e76f7e804fa4d6d2549b953fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SameReverseNum: 
 --- !u!1 &333692196
 GameObject:
   m_ObjectHideFlags: 0
@@ -2035,6 +2040,8 @@ MonoBehaviour:
   skillCutinControl: {fileID: 326221986}
   skillWindowControl: {fileID: 2133164097}
   isMyTurn: 0
+  isSkillActive: 0
+  isSpSkillActive: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -4671,6 +4678,8 @@ MonoBehaviour:
   skillCutinControl: {fileID: 326221986}
   skillWindowControl: {fileID: 200742603}
   isMyTurn: 0
+  isSkillActive: 0
+  isSpSkillActive: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -6976,6 +6985,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _skillWindowObj: {fileID: 2068463960}
+  _skillText: {fileID: 0}
+  _skill2Text: {fileID: 0}
+  _skillSpText: {fileID: 0}
 --- !u!4 &2133164098
 Transform:
   m_ObjectHideFlags: 0
