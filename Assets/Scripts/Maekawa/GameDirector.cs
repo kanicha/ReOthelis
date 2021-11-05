@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class GameDirector : SingletonMonoBehaviour<GameDirector>    
 {
+    private AIThinking _ai; 
     [SerializeField, Header("基本スコア")]
     public int point = 0;
     [SerializeField, Header("接地中に配置を確定するまでの時間")]
@@ -28,6 +29,9 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     public bool _isSkillWhite = false;
     public GameState gameState = GameState.none;
     public GameState nextStateCue = GameState.none;
+    [SerializeField, Header("AIの起動")]
+    public bool IsAIOn = false;
+
     public enum GameState
     {
         none,
@@ -44,6 +48,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     void Start()
     {
+        _ai = GetComponent<AIThinking>();
         SoundManager.Instance.PlayBGM(0);
 
         _player1.isMyTurn = false;
@@ -74,6 +79,10 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 break;
 
             case GameState.active:
+                if (ModeSelect._selectCount == 0 && _player2.isMyTurn == true && IsAIOn == true)
+                {
+                    _ai.MovePiece();
+                }
                 if (Map.Instance.CheckLanding(_activePieces[0].transform.position) || Map.Instance.CheckLanding(_activePieces[1].transform.position))
                 {
                     // 接地時にカウント
@@ -137,9 +146,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 else
                 {
                     PieceSet();
-                    //
                     ChangeTurn();
-                    //
                 }
                 break;
 
@@ -220,6 +227,14 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             _player2.controllPiece1 = _activePieces[0];
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
+            if (IsAIOn == true)
+            {
+                _ai.MapPrepare();
+                _ai.CheckVertical();
+                _ai.PatternClassification();
+                _ai.CheckMap();
+                _ai.PatternChoice();
+            }
         }
         gameState = GameState.preActive;
     }
