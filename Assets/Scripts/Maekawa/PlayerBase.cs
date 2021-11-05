@@ -69,7 +69,6 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected SkillCutinControl skillCutinControl = null;
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _timeCount = 0.0f;
-    private float _preActiveTime = 0.0f;
     private bool _firstFall = false;
     private float _tempFallTime = 0f;
     public bool isMyTurn = false;
@@ -305,15 +304,8 @@ public class PlayerBase : MonoBehaviour
             }
         }
 
-        _timeCount += Time.deltaTime;
-        if (_timeCount > _preActiveTime)
-        {
-            GameDirector.Instance.intervalTime = 0;
-            GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
-            GameDirector.Instance.gameState = GameDirector.GameState.interval;
-        }
         // ↓入力したら本操作開始
-        else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
+        if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
             (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
             GameDirector.Instance.intervalTime = 0;

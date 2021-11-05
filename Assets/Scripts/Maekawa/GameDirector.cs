@@ -1,18 +1,22 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameDirector : SingletonMonoBehaviour<GameDirector>
+public class GameDirector : SingletonMonoBehaviour<GameDirector>    
 {
-    [SerializeField, Header("基本スコア")] public int point = 0;
-
+    [SerializeField, Header("基本スコア")]
+    public int point = 0;
     [SerializeField, Header("接地中に配置を確定するまでの時間")]
     private float _marginTime = 0;
-
-    [SerializeField, Header("事前に操作できる時間")] private float _preActiveTime = 0;
-    [SerializeField, Header("ミノの初期位置")] public Vector3 _DEFAULT_POSITION = Vector3.zero;
-    [SerializeField] PiecePatternGeneretor _generator = null;
-    [SerializeField] private Player_1 _player1 = null;
-    [SerializeField] private Player_2 _player2 = null;
+    [SerializeField, Header("事前に操作できる時間")]
+    private float _preActiveTime = 0;
+    [SerializeField, Header("ミノの初期位置")]
+    public Vector3 _DEFAULT_POSITION = Vector3.zero;
+    [SerializeField]
+    PiecePatternGeneretor _generator = null;
+    [SerializeField]
+    private Player_1 _player1 = null;
+    [SerializeField]
+    private Player_2 _player2 = null;
 
     private int _turnCount = 0;
     private float _timeCount = 0;
@@ -24,7 +28,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     public bool _isSkillWhite = false;
     public GameState gameState = GameState.none;
     public GameState nextStateCue = GameState.none;
-
     public enum GameState
     {
         none,
@@ -37,7 +40,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         idle,
         end,
         ended,
-    }
+    } 
 
     void Start()
     {
@@ -60,11 +63,18 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             case GameState.preActive:
                 _isLanding = false;
                 _isDown = true;
+                _timeCount += Time.deltaTime;
+                /*if (_timeCount > _preActiveTime)
+                {*/
+                    intervalTime = 0;
+                    
+                    gameState = GameState.interval;
+                    nextStateCue = GameState.active;
+                /*}*/
                 break;
 
             case GameState.active:
-                if (Map.Instance.CheckLanding(_activePieces[0].transform.position) ||
-                    Map.Instance.CheckLanding(_activePieces[1].transform.position))
+                if (Map.Instance.CheckLanding(_activePieces[0].transform.position) || Map.Instance.CheckLanding(_activePieces[1].transform.position))
                 {
                     // 接地時にカウント
                     _timeCount += Time.deltaTime;
@@ -76,7 +86,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 }
                 else
                     _timeCount = 0;
-
                 break;
 
             case GameState.confirmed:
@@ -87,7 +96,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     _activePieces[0] = _activePieces[1];
                     _activePieces[1] = tempPiece;
                 }
-
+                
                 Map.Instance.FallPiece(_activePieces[0]);
                 Map.Instance.FallPiece(_activePieces[1]);
                 _isLanding = true;
@@ -103,23 +112,22 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 // リバース・アニメーション処理
                 for (int i = 0; i < _activePieces.Length; i++)
                 {
-                    if (Map.Instance.CheckHeightOver(_activePieces[i], false))
-                        StartCoroutine(Map.Instance.CheckReverse(_activePieces[i], false));
+                    if(Map.Instance.CheckHeightOver(_activePieces[i],false))
+                        StartCoroutine(Map.Instance.CheckReverse(_activePieces[i],false));
                 }
-
+                
                 // スキルフラグ初期化
                 _isSkillBlack = false;
                 _isSkillWhite = false;
                 break;
 
-            case GameState.interval: // 強引スキル連打でバグが出るので時間を取る(応急処置)
+            case GameState.interval:// 強引スキル連打でバグが出るので時間を取る(応急処置)
                 _timeCount += Time.deltaTime;
                 if (_timeCount > intervalTime)
                 {
                     gameState = nextStateCue;
                     _timeCount = 0;
-                }
-
+                }                
                 break;
 
             case GameState.reversed:
@@ -133,14 +141,13 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     ChangeTurn();
                     //
                 }
-
                 break;
 
             case GameState.end:
                 if (_player1.reverseScore > _player2.reverseScore)
                     Debug.Log("<color=red>1Pの勝ち</color>");
                 else if (_player1.reverseScore == _player2.reverseScore)
-                    Debug.Log("<color=orange>引き分け</color>");
+                        Debug.Log("<color=orange>引き分け</color>");
                 else
                     Debug.Log("<color=blue>2Pの勝ち</color>");
                 SoundManager.Instance.StopBGM();
@@ -170,8 +177,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         Piece piece2 = _activePieces[1].GetComponent<Piece>();
 
         // [色を比較]  どちらも自分の色 or どちらも相手の色ならポジションで判断する
-        if ((piece1.pieceType == playersType && piece2.pieceType == playersType) ||
-            (piece1.pieceType != playersType && piece2.pieceType != playersType))
+        if ((piece1.pieceType == playersType && piece2.pieceType == playersType) || (piece1.pieceType != playersType && piece2.pieceType != playersType))
         {
             // [0]が上ならソート
             if ((int)_activePieces[0].transform.position.z > (int)_activePieces[1].transform.position.z)
@@ -208,14 +214,13 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             _player1.controllPiece2 = _activePieces[1];
             _player1.isMyTurn = true;
         }
-        else // 白ターン
+        else// 白ターン
         {
             _player2.rotationNum = 0;
             _player2.controllPiece1 = _activePieces[0];
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
         }
-
         gameState = GameState.preActive;
     }
 
@@ -224,7 +229,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         // 生成位置の1マス下が空いていれば生成
         Vector3 generatePos = _DEFAULT_POSITION + Vector3.back;
         int x = 0;
-        while (true)
+        while(true)
         {
             Vector3 checkPos = generatePos + new Vector3(x, 0);
             if (Map.Instance.CheckWall(checkPos))
@@ -241,7 +246,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     break;
                 }
             }
-
             x++;
             if (x > 4)
                 Debug.LogError("生成できるマスがありません");
@@ -250,7 +254,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     public void AddScore(bool isBlack, int point)
     {
-        if (isBlack)
+        if(isBlack)
         {
             _player1.reverseScore += point;
         }
@@ -274,7 +278,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     public void AddReversedCount(bool isBlack)
     {
-        if (isBlack)
+        if(isBlack)
             _player1.reversedCount++;
         else
             _player2.reversedCount++;
