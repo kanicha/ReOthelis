@@ -196,6 +196,7 @@ public class PlayerBase : MonoBehaviour
         {
             // カウントを初期化
             _timeCount = 0f;
+            isDown = true;
             move.z = -1;
         }
         else if (_timeCount >= _fallTime) // 時間落下
@@ -217,9 +218,9 @@ public class PlayerBase : MonoBehaviour
             controllPiece1.transform.position = movedPos;
             controllPiece2.transform.position = rotMovedPos;
         }
-        else
+        else if (isDown)
         {
-            return;
+            GameDirector.Instance.gameState = GameDirector.GameState.confirmed;
         }
     }
 
