@@ -1292,7 +1292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   point: 100
-  _marginTime: 0.5
+  _marginTime: 0.3
   _preActiveTime: 3
   _DEFAULT_POSITION: {x: 4, y: 0, z: -1}
   _generator: {fileID: 1559426143}

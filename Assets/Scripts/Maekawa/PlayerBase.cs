@@ -69,6 +69,8 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected SkillCutinControl skillCutinControl = null;
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _timeCount = 0.0f;
+    private bool _firstFall = false;
+    private float _tempFallTime = 0f;
     public bool isMyTurn = false;
     public bool isSkillActive = false;
     public bool isSpSkillActive = false;
@@ -173,6 +175,15 @@ public class PlayerBase : MonoBehaviour
 
         _timeCount += Time.deltaTime;
 
+        // 初回落下は3秒止める
+        if (!_firstFall)
+        {
+            _firstFall = true;
+            
+            _tempFallTime = _fallTime;
+            _fallTime = 3f;
+        }
+
         // 移動
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
             (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
@@ -185,13 +196,15 @@ public class PlayerBase : MonoBehaviour
         {
             // カウントを初期化
             _timeCount = 0f;
-            isDown = true;
             move.z = -1;
         }
         else if (_timeCount >= _fallTime) // 時間落下
         {
-            _timeCount = 0;
+            _timeCount = 0f;
             move.z = -1;
+            
+            // 2回目以降規定の落下スピードにもどす
+            _fallTime = _tempFallTime;
         }
 
         // 移動後の座標を計算
@@ -204,8 +217,10 @@ public class PlayerBase : MonoBehaviour
             controllPiece1.transform.position = movedPos;
             controllPiece2.transform.position = rotMovedPos;
         }
-        else if (isDown)
-            GameDirector.Instance.gameState = GameDirector.GameState.confirmed; // 下入力をし、障害物があるなら確定
+        else
+        {
+            return;
+        }
     }
 
     protected void PieceRotate()
