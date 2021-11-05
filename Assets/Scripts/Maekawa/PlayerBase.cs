@@ -70,6 +70,8 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _timeCount = 0.0f;
     public bool isMyTurn = false;
+    public bool isSkillActive = false;
+    public bool isSpSkillActive = false;
     public int reverseScore = 0;
     public int preScore = 0;
     public int reversedCount = 0;
@@ -453,14 +455,20 @@ public class PlayerBase : MonoBehaviour
     //  強引
     public void TakeAway(int cost)
     {
+        // スキルが発動できない時
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) ||
             Map.Instance.isSkillCheck ||
             NormalSkillCheck())
+        {
+            isSkillActive = false;
             return;
-
+        }
+        
         // 最下段を除くマップに相手の色があるなら(固定コマは対象外)
         if (CheckColor(enemyColor))
         {
+            isSkillActive = true;
+            
             Debug.Log("強引");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
@@ -494,11 +502,17 @@ public class PlayerBase : MonoBehaviour
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
             !ActivateCheck(GameDirector.GameState.active, cost) ||
             NormalSkillCheck())
+        {
+            isSkillActive = false;
             return;
+        }
+            
 
         // 最下段を除くマップに自分の色があるなら(固定コマは対象外)
         if (CheckColor(myColor))
         {
+            isSkillActive = true;
+            
             Debug.Log("固定");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
@@ -528,14 +542,19 @@ public class PlayerBase : MonoBehaviour
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
             !ActivateCheck(GameDirector.GameState.active, cost) ||
             NormalSkillCheck())
+        {
+            isSkillActive = false;
             return;
-
+        }
+        
         Piece piece1 = controllPiece1.GetComponent<Piece>();
         Piece piece2 = controllPiece2.GetComponent<Piece>();
 
         // 自分の色があれば処理
         if (piece1.pieceType == playerType || piece2.pieceType == playerType)
         {
+            isSkillActive = true;
+            
             Debug.Log("残影");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
@@ -558,11 +577,17 @@ public class PlayerBase : MonoBehaviour
         // 自分の色のコマを操作していなくても発動できる(意味はない)ので要相談
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) ||
             NormalSkillCheck())
+        {
+            isSkillActive = false;
+            
             return;
+        }
 
         // フィールドに相手の色の固定こまがあった時発動
         if (CheckColor(enemyColorfixity))
         {
+            isSkillActive = true;
+            
             Debug.Log("打ち消し");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
@@ -608,8 +633,13 @@ public class PlayerBase : MonoBehaviour
         if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
             SpacialSkillCheck())
+        {
+            isSpSkillActive = false;
+            
             return;
+        }
 
+        isSpSkillActive = true;
         Debug.Log("強制変換");
         skillCutinControl.ShowSkillCutin(3);
         reversedCount -= cost;
@@ -699,8 +729,12 @@ public class PlayerBase : MonoBehaviour
         if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
             SpacialSkillCheck())
+        {
+            isSpSkillActive = false;
             return;
+        }
 
+        isSpSkillActive = true;
         Debug.Log("一列一式");
         skillCutinControl.ShowSkillCutin(1);
         reversedCount -= cost;
@@ -799,8 +833,13 @@ public class PlayerBase : MonoBehaviour
         if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
             SpacialSkillCheck())
+        {
+            isSpSkillActive = false;
             return;
+        }
 
+
+        isSpSkillActive = true;
         Debug.Log("優先頂戴");
         skillCutinControl.ShowSkillCutin(2);
         reversedCount -= cost;
@@ -877,10 +916,14 @@ public class PlayerBase : MonoBehaviour
         if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
             SpacialSkillCheck())
+        {
+            isSpSkillActive = false;
             return;
-
+        }
+        
         int myColorCount = 0;
 
+        isSpSkillActive = true;
         Debug.Log("強奪一瞬");
         skillCutinControl.ShowSkillCutin(0);
         reversedCount -= cost;
