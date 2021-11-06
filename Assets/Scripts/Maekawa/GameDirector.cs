@@ -69,6 +69,14 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             case GameState.preActive:
                 _isLanding = false;
                 _isDown = true;
+                _timeCount += Time.deltaTime;
+                // 初回の時間落下を超えたらステートをすすめる(自動落下の処理はPieceMove()で管理)
+                if (_timeCount > _preActiveTime)
+                {
+                    intervalTime = 0;
+                    nextStateCue = GameState.active;
+                    gameState = GameState.interval;
+                }
                 break;
 
             case GameState.active:

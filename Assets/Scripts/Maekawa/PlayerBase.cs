@@ -271,7 +271,6 @@ public class PlayerBase : MonoBehaviour
     protected void PrePieceMove()
     {
         Vector3 move = Vector3.zero;
-
         // 左右移動
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
             (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
@@ -279,6 +278,16 @@ public class PlayerBase : MonoBehaviour
         else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) ||
                  (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
             move.x = 1;
+        else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
+            (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+        {
+            move.z = -1;
+
+            // した入力時ステート変更
+            GameDirector.Instance.intervalTime = 0;
+            GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
+            GameDirector.Instance.gameState = GameDirector.GameState.interval;
+        }
 
         // 左右に入力したなら移動
         if (move != Vector3.zero)
@@ -303,29 +312,6 @@ public class PlayerBase : MonoBehaviour
                 }
             }
         }
-
-        _timeCount += Time.deltaTime;
-        // 初回の時間落下(3秒)を超えたらステートをすすめる(自動落下の処理はPieceMove()で管理)
-        if (_timeCount > _fallTime)
-        {
-            GameDirector.Instance.intervalTime = 0;
-            GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
-            GameDirector.Instance.gameState = GameDirector.GameState.interval;
-
-        }
-        // 時間落下前に下の入力を行われた時ステートを進める
-        else if (_timeCount <= _fallTime &&
-            ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
-            (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0)))
-        {
-            GameDirector.Instance.intervalTime = 0;
-            GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
-            GameDirector.Instance.gameState = GameDirector.GameState.interval;
-            controllPiece1.transform.position += Vector3.back;
-            controllPiece2.transform.position += Vector3.back;
-        }
-        else
-            return;
     }
 
     /// <summary>
