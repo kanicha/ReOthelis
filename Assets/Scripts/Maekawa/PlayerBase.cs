@@ -180,7 +180,7 @@ public class PlayerBase : MonoBehaviour
             GameDirector.Instance._isFistFall = true;
 
             _tempFallTime = _fallTime;
-            _fallTime = GameDirector.Instance._preActiveTime;
+            _fallTime = 3f;
         }
 
         // 移動

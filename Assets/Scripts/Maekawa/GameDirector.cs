@@ -9,7 +9,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     [SerializeField, Header("接地中に配置を確定するまでの時間")]
     private float _marginTime = 0;
     [SerializeField, Header("事前に操作できる時間")]
-    public float _preActiveTime = 0;
+    private float _preActiveTime = 0;
     [SerializeField, Header("ミノの初期位置")]
     public Vector3 _DEFAULT_POSITION = Vector3.zero;
     [SerializeField]
