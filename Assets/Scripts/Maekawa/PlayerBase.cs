@@ -69,7 +69,6 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected SkillCutinControl skillCutinControl = null;
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _timeCount = 0.0f;
-    private bool _firstFall = false;
     private float _tempFallTime = 0f;
     public bool isMyTurn = false;
     public bool isSkillActive = false;
@@ -176,12 +175,12 @@ public class PlayerBase : MonoBehaviour
         _timeCount += Time.deltaTime;
 
         // 初回落下は3秒止める
-        if (!_firstFall)
+        if (!GameDirector.Instance._isFistFall)
         {
-            _firstFall = true;
+            GameDirector.Instance._isFistFall = true;
 
             _tempFallTime = _fallTime;
-            _fallTime = 3f;
+            _fallTime = GameDirector.Instance._preActiveTime;
         }
 
         // 移動
