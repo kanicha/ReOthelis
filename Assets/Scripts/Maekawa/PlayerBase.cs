@@ -179,7 +179,7 @@ public class PlayerBase : MonoBehaviour
         if (!_firstFall)
         {
             _firstFall = true;
-            
+
             _tempFallTime = _fallTime;
             _fallTime = 3f;
         }
@@ -203,7 +203,7 @@ public class PlayerBase : MonoBehaviour
         {
             _timeCount = 0f;
             move.z = -1;
-            
+
             // 2回目以降規定の落下スピードにもどす
             _fallTime = _tempFallTime;
         }
@@ -243,7 +243,7 @@ public class PlayerBase : MonoBehaviour
         if (Map.Instance.CheckWall(rotatedPos))
         {
             // 回転Posが-1かつ下のコマが壁にあたっている時
-            if ((int) rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
+            if ((int)rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
                 rotationNum = lastNum;
             else
             {
@@ -257,15 +257,15 @@ public class PlayerBase : MonoBehaviour
         else
         {
             /*Debug.Log("WallHit");*/
-            
+
             rotationNum = lastNum;
-            
+
             if (rotationNum != lastNum)
                 SoundManager.Instance.PlaySE(2);
-            
+
             // コマが飛び出す処理
-            
-            
+
+
         }
     }
 
@@ -292,7 +292,7 @@ public class PlayerBase : MonoBehaviour
                 Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
 
                 // 壁まで行ったらスルー
-                if ((int) movedPos.x < 1 || (int) movedPos.x > 8)
+                if ((int)movedPos.x < 1 || (int)movedPos.x > 8)
                     break;
 
                 // 移動後の座標の1つ下に障害物がなければ
@@ -305,9 +305,19 @@ public class PlayerBase : MonoBehaviour
             }
         }
 
-        // ↓入力したら本操作開始
-        if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
-            (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+        _timeCount += Time.deltaTime;
+        // 初回の時間落下(3秒)を超えたらステートをすすめる(自動落下の処理はPieceMove()で管理)
+        if (_timeCount > _fallTime)
+        {
+            GameDirector.Instance.intervalTime = 0;
+            GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
+            GameDirector.Instance.gameState = GameDirector.GameState.interval;
+
+        }
+        // 時間落下前に下の入力を行われた時ステートを進める
+        else if (_timeCount <= _fallTime &&
+            ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
+            (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0)))
         {
             GameDirector.Instance.intervalTime = 0;
             GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
@@ -315,6 +325,8 @@ public class PlayerBase : MonoBehaviour
             controllPiece1.transform.position += Vector3.back;
             controllPiece2.transform.position += Vector3.back;
         }
+        else
+            return;
     }
 
     /// <summary>
@@ -343,7 +355,7 @@ public class PlayerBase : MonoBehaviour
     protected void SetSkills(int charaType)
     {
         // 同じ意味のenumが1Pと2Pで2つあるのでenum→int→enumにキャスト 
-        CharaImageMoved.CharaType1P type = (CharaImageMoved.CharaType1P) charaType;
+        CharaImageMoved.CharaType1P type = (CharaImageMoved.CharaType1P)charaType;
 
         switch (type)
         {
@@ -377,11 +389,11 @@ public class PlayerBase : MonoBehaviour
         bool isThere = false;
         // 下一行を除いたコマが置かれる可能性のあるマスを探索
         for (int i = 2; i < 9; i++)
-        for (int j = 1; j < 9; j++)
-        {
-            if (Map.Instance.map[i, j] == type)
-                isThere = true;
-        }
+            for (int j = 1; j < 9; j++)
+            {
+                if (Map.Instance.map[i, j] == type)
+                    isThere = true;
+            }
 
         return isThere;
     }
@@ -479,12 +491,12 @@ public class PlayerBase : MonoBehaviour
             isSkillActive = false;
             return;
         }
-        
+
         // 最下段を除くマップに相手の色があるなら(固定コマは対象外)
         if (CheckColor(enemyColor))
         {
             isSkillActive = true;
-            
+
             Debug.Log("強引");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
@@ -522,13 +534,13 @@ public class PlayerBase : MonoBehaviour
             isSkillActive = false;
             return;
         }
-            
+
 
         // 最下段を除くマップに自分の色があるなら(固定コマは対象外)
         if (CheckColor(myColor))
         {
             isSkillActive = true;
-            
+
             Debug.Log("固定");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
@@ -562,7 +574,7 @@ public class PlayerBase : MonoBehaviour
             isSkillActive = false;
             return;
         }
-        
+
         Piece piece1 = controllPiece1.GetComponent<Piece>();
         Piece piece2 = controllPiece2.GetComponent<Piece>();
 
@@ -570,7 +582,7 @@ public class PlayerBase : MonoBehaviour
         if (piece1.pieceType == playerType || piece2.pieceType == playerType)
         {
             isSkillActive = true;
-            
+
             Debug.Log("残影");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
@@ -595,7 +607,7 @@ public class PlayerBase : MonoBehaviour
             NormalSkillCheck())
         {
             isSkillActive = false;
-            
+
             return;
         }
 
@@ -603,7 +615,7 @@ public class PlayerBase : MonoBehaviour
         if (CheckColor(enemyColorfixity))
         {
             isSkillActive = true;
-            
+
             Debug.Log("打ち消し");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
@@ -651,7 +663,7 @@ public class PlayerBase : MonoBehaviour
             SpacialSkillCheck())
         {
             isSpSkillActive = false;
-            
+
             return;
         }
 
@@ -677,10 +689,10 @@ public class PlayerBase : MonoBehaviour
         // コマの座標を習得
         Piece piece1 = controllPiece1.GetComponent<Piece>();
         Piece piece2 = controllPiece2.GetComponent<Piece>();
-        int piece1z = (int) piece1.transform.position.z * -1;
-        int piece2z = (int) piece2.transform.position.z * -1;
-        int piece1x = (int) piece1.transform.position.x;
-        int piece2x = (int) piece2.transform.position.x;
+        int piece1z = (int)piece1.transform.position.z * -1;
+        int piece2z = (int)piece2.transform.position.z * -1;
+        int piece1x = (int)piece1.transform.position.x;
+        int piece2x = (int)piece2.transform.position.x;
 
         GameDirector.Instance.gameState = GameDirector.GameState.idle;
 
@@ -775,8 +787,8 @@ public class PlayerBase : MonoBehaviour
         // コマの座標を習得
         Piece piece1 = controllPiece1.GetComponent<Piece>();
         Piece piece2 = controllPiece2.GetComponent<Piece>();
-        int piece1z = (int) piece1.transform.position.z * -1;
-        int piece2z = (int) piece2.transform.position.z * -1;
+        int piece1z = (int)piece1.transform.position.z * -1;
+        int piece2z = (int)piece2.transform.position.z * -1;
 
         Map.Instance.CheckHeightOver(controllPiece1, true);
         Map.Instance.CheckHeightOver(controllPiece2, true);
@@ -936,7 +948,7 @@ public class PlayerBase : MonoBehaviour
             isSpSkillActive = false;
             return;
         }
-        
+
         int myColorCount = 0;
 
         isSpSkillActive = true;

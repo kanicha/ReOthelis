@@ -18,6 +18,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     private Player_1 _player1 = null;
     [SerializeField]
     private Player_2 _player2 = null;
+    [SerializeField, Header("AIの起動")]
+    private bool IsAIOn = false;
 
     private int _turnCount = 0;
     private float _timeCount = 0;
@@ -29,8 +31,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     public bool _isSkillWhite = false;
     public GameState gameState = GameState.none;
     public GameState nextStateCue = GameState.none;
-    [SerializeField, Header("AIの起動")]
-    public bool IsAIOn = false;
 
     public enum GameState
     {
@@ -68,14 +68,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             case GameState.preActive:
                 _isLanding = false;
                 _isDown = true;
-                _timeCount += Time.deltaTime;
-                /*if (_timeCount > _preActiveTime)
-                {*/
-                    intervalTime = 0;
-                    
-                    gameState = GameState.interval;
-                    nextStateCue = GameState.active;
-                /*}*/
                 break;
 
             case GameState.active:
