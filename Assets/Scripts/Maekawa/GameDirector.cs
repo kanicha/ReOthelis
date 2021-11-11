@@ -29,7 +29,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     public bool _isLanding = false;
     public bool _isSkillBlack = false;
     public bool _isSkillWhite = false;
-    public bool _isFistFall = false;
     public GameState gameState = GameState.none;
     public GameState nextStateCue = GameState.none;
 
@@ -129,8 +128,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 // スキルフラグ初期化
                 _isSkillBlack = false;
                 _isSkillWhite = false;
-                // 初期落下初期化
-                _isFistFall = false;
                 break;
 
             case GameState.interval:// 強引スキル連打でバグが出るので時間を取る(応急処置)

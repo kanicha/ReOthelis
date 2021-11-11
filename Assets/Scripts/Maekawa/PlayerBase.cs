@@ -69,8 +69,6 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected SkillCutinControl skillCutinControl = null;
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _timeCount = 0.0f;
-    private float _tempFallTime = 0f;
-    private float _marginTime = 0.3f;
     public bool isMyTurn = false;
     public bool isSkillActive = false;
     public bool isSpSkillActive = false;
@@ -175,15 +173,6 @@ public class PlayerBase : MonoBehaviour
 
         _timeCount += Time.deltaTime;
 
-        // 初回落下は3秒止める
-        if (!GameDirector.Instance._isFistFall)
-        {
-            GameDirector.Instance._isFistFall = true;
-
-            _tempFallTime = _fallTime;
-            _fallTime = _marginTime;
-        }
-
         // 移動
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
             (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
@@ -203,9 +192,6 @@ public class PlayerBase : MonoBehaviour
         {
             _timeCount = 0f;
             move.z = -1;
-
-            // 2回目以降規定の落下スピードにもどす
-            _fallTime = _tempFallTime;
         }
 
         // 移動後の座標を計算
@@ -272,6 +258,7 @@ public class PlayerBase : MonoBehaviour
     protected void PrePieceMove()
     {
         Vector3 move = Vector3.zero;
+        
         // 左右移動
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
             (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
@@ -288,6 +275,11 @@ public class PlayerBase : MonoBehaviour
             GameDirector.Instance.intervalTime = 0;
             GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
             GameDirector.Instance.gameState = GameDirector.GameState.interval;
+        }
+        else if (_timeCount >= _fallTime) // 時間落下
+        {
+            _timeCount = 0f;
+            move.z = -1;
         }
 
         // 左右に入力したなら移動
