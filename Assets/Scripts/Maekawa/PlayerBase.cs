@@ -70,6 +70,7 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _timeCount = 0.0f;
     private float _tempFallTime = 0f;
+    private float _marginTime = 0.3f;
     public bool isMyTurn = false;
     public bool isSkillActive = false;
     public bool isSpSkillActive = false;
@@ -180,7 +181,7 @@ public class PlayerBase : MonoBehaviour
             GameDirector.Instance._isFistFall = true;
 
             _tempFallTime = _fallTime;
-            _fallTime = 0.3f;
+            _fallTime = _marginTime;
         }
 
         // 移動
