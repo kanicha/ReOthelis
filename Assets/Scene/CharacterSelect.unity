@@ -492,7 +492,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -82.235, y: 0}
+  m_AnchoredPosition: {x: -88, y: 0}
   m_SizeDelta: {x: 164.4693, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &85069486
@@ -2088,7 +2088,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -82.235, y: 0}
+  m_AnchoredPosition: {x: -88, y: 0}
   m_SizeDelta: {x: 164.4693, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &449294784
@@ -2981,7 +2981,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -82.235, y: 0}
+  m_AnchoredPosition: {x: -88, y: 0}
   m_SizeDelta: {x: 164.4693, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &679398730
@@ -5786,7 +5786,8 @@ MonoBehaviour:
   skillCutinControl: {fileID: 0}
   skillWindowControl: {fileID: 0}
   isMyTurn: 0
-  isPreurn: 0
+  isSkillActive: 0
+  isSpSkillActive: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -5827,7 +5828,8 @@ MonoBehaviour:
   skillCutinControl: {fileID: 0}
   skillWindowControl: {fileID: 0}
   isMyTurn: 0
-  isPreurn: 0
+  isSkillActive: 0
+  isSpSkillActive: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -6666,7 +6668,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -82.235, y: 0}
+  m_AnchoredPosition: {x: -88, y: 0}
   m_SizeDelta: {x: 164.4693, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1820335727
