@@ -1298,6 +1298,7 @@ MonoBehaviour:
   _generator: {fileID: 1559426143}
   _player1: {fileID: 1435816371}
   _player2: {fileID: 533350509}
+  IsAIOn: 0
   _activePieces:
   - {fileID: 0}
   - {fileID: 0}
@@ -1305,9 +1306,9 @@ MonoBehaviour:
   _isLanding: 0
   _isSkillBlack: 0
   _isSkillWhite: 0
+  _isFistFall: 0
   gameState: 0
   nextStateCue: 0
-  IsAIOn: 0
 --- !u!114 &326221982
 MonoBehaviour:
   m_ObjectHideFlags: 0
