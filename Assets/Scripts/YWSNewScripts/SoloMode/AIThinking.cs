@@ -26,7 +26,7 @@ public class AIThinking : MonoBehaviour
     public readonly string white = "〇";
     public readonly string fixityBlack = "★";
     public readonly string fixityWhite = "☆";
-    public static int[,] CheckEmpty = new int [15,5];　//データ保存用の配列
+    public static int[,] CheckEmpty = new int [15,6];　//データ保存用の配列
     bool IsAboveExist = false;
     private int _setPosX = 0;
     private int _setPosZ = 0;
@@ -69,6 +69,7 @@ public class AIThinking : MonoBehaviour
                     //2 x座標2
                     //3 z座標2
                     //4 ひっくり返せる駒の数の合計
+                    //5 
 
                     //前の座標で上に空きが存在した場合、新しい座標を二個目の座標として取得
                     if (IsAboveExist == true)
@@ -182,6 +183,59 @@ public class AIThinking : MonoBehaviour
             CheckInTheDirection(new Vector3(1, 0, 1),i); // ↘
             CheckInTheDirection(new Vector3(-1, 0, -1),i); // ↖
             CheckInTheDirection(new Vector3(1, 0, -1),i); // ↗
+
+            //マップ確認用
+            CheckMap();
+            //データ確認用
+            CheckData();
+
+            //探索後にコマを消去する
+            MapData[CheckEmpty[i,1],CheckEmpty[i,0]] = empty;
+            MapData[CheckEmpty[i,3],CheckEmpty[i,2]] = empty;
+
+            //コマパターンが二色の時、もう一度検索を行う
+            if (PiecePatternGeneretor.type == 3)
+            {
+                _setPosX = CheckEmpty[i,0];
+                _setPosZ = CheckEmpty[i,1];
+                _myColor = black;
+                _fixityMyColor = fixityBlack;
+                _enemyColor = white;
+                _fixityEnemyColor = fixityWhite;
+
+                //該当座標にコマを置く
+                MapData[CheckEmpty[i,1],CheckEmpty[i,0]] = black;
+
+                //全方向探索
+                CheckInTheDirection(new Vector3(0, 0, -1),i); //↑
+                CheckInTheDirection(new Vector3(-1, 0, 0),i); // ←
+                CheckInTheDirection(new Vector3(1, 0, 0),i); // →
+                CheckInTheDirection(new Vector3(0, 0, 1),i); // ↓
+                CheckInTheDirection(new Vector3(-1, 0, 1),i); // ↙
+                CheckInTheDirection(new Vector3(1, 0, 1),i); // ↘
+                CheckInTheDirection(new Vector3(-1, 0, -1),i); // ↖
+                CheckInTheDirection(new Vector3(1, 0, -1),i); // ↗
+
+                _setPosX = CheckEmpty[i,2];
+                _setPosZ = CheckEmpty[i,3];
+                _myColor = white;
+                _fixityMyColor = fixityWhite;
+                _enemyColor = black;
+                _fixityEnemyColor = fixityBlack;
+
+                //該当座標にコマを置く
+                MapData[CheckEmpty[i,3],CheckEmpty[i,2]] = white;
+
+                //全方向探索
+                CheckInTheDirection(new Vector3(0, 0, -1),i); //↑
+                CheckInTheDirection(new Vector3(-1, 0, 0),i); // ←
+                CheckInTheDirection(new Vector3(1, 0, 0),i); // →
+                CheckInTheDirection(new Vector3(0, 0, 1),i); // ↓
+                CheckInTheDirection(new Vector3(-1, 0, 1),i); // ↙
+                CheckInTheDirection(new Vector3(1, 0, 1),i); // ↘
+                CheckInTheDirection(new Vector3(-1, 0, -1),i); // ↖
+                CheckInTheDirection(new Vector3(1, 0, -1),i); // ↗
+            }
 
             //マップ確認用
             CheckMap();
