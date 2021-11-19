@@ -166,6 +166,9 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// state Active時のコマ移動関数
+    /// </summary>
     protected void PieceMove()
     {
         Vector3 move = Vector3.zero;
@@ -210,6 +213,9 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// コマ回転関数
+    /// </summary>
     protected void PieceRotate()
     {
         int lastNum = rotationNum;
@@ -255,6 +261,9 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 待機中の移動関数
+    /// </summary>
     protected void PrePieceMove()
     {
         Vector3 move = Vector3.zero;
