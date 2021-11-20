@@ -255,9 +255,8 @@ public class PlayerBase : MonoBehaviour
             if (rotationNum != lastNum)
                 SoundManager.Instance.PlaySE(2);
 
+            rotationNum = 2;
             // コマが飛び出す処理
-
-
         }
     }
 
