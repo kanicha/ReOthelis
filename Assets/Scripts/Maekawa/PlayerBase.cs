@@ -253,9 +253,21 @@ public class PlayerBase : MonoBehaviour
             rotationNum = lastNum;
 
             if (rotationNum != lastNum)
+            {
                 SoundManager.Instance.PlaySE(2);
+            }
 
-            rotationNum = 2;
+            switch (rotationNum)
+            {
+                case 2:
+                    rotationNum = 0;
+                    break;
+                case 0:
+                    rotationNum = 2;
+                    break;
+                default:
+                    break;
+            }
             // コマが飛び出す処理
         }
     }
@@ -266,7 +278,7 @@ public class PlayerBase : MonoBehaviour
     protected void PrePieceMove()
     {
         Vector3 move = Vector3.zero;
-        
+
         // 左右移動
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
             (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
