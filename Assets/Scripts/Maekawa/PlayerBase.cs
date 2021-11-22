@@ -106,6 +106,7 @@ public class PlayerBase : MonoBehaviour
 
     protected readonly Vector3[] rotationPos = new Vector3[]
     {
+        // 0, 1, 2, 3
         new Vector3(0, 0, 1),
         new Vector3(-1, 0, 0),
         new Vector3(0, 0, -1),
@@ -228,7 +229,10 @@ public class PlayerBase : MonoBehaviour
         // 初期値0 左から 1,2,3
         rotationNum %= 4;
         /*Debug.Log(rotationNum);*/
+        
+        // 軸のコマ + 回転後の座標 変数
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
+        // 回転後の座標の一つ下の座標
         Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
 
         // 壁にあたってない時
