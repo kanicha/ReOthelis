@@ -260,8 +260,7 @@ public class PlayerBase : MonoBehaviour
             {
                 SoundManager.Instance.PlaySE(2);
             }
-
-            switch (rotationNum)
+            /*switch (rotationNum)
             {
                 case 2:
                     rotationNum = 0;
@@ -271,8 +270,32 @@ public class PlayerBase : MonoBehaviour
                     break;
                 default:
                     break;
-            }
+            }*/
             // コマが飛び出す処理
+        }
+    }
+
+    /// <summary>
+    /// 2回素早く回転を押したときにコマの色を変える関数
+    /// </summary>
+    protected void QuickRotate()
+    {
+        // 入力面
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            // 処理面
+            // コマの色情報をもってくる
+            Piece piece1 = controllPiece1.GetComponent<Piece>();
+            Piece piece2 = controllPiece2.GetComponent<Piece>();
+
+            // ピース1が黒 and ピース2が白の時 or ピース1が白 and ピース1が黒の時
+            if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white　||
+                piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
+            {
+                // ピースの情報をいれかえる
+                piece1.SkillReverse(false);
+                piece2.SkillReverse(false);
+            }   
         }
     }
 
