@@ -229,7 +229,7 @@ public class PlayerBase : MonoBehaviour
         // 初期値0 左から 1,2,3
         rotationNum %= 4;
         /*Debug.Log(rotationNum);*/
-        
+
         // 軸のコマ + 回転後の座標 変数
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
         // 回転後の座標の一つ下の座標
@@ -260,6 +260,11 @@ public class PlayerBase : MonoBehaviour
             {
                 SoundManager.Instance.PlaySE(2);
             }
+
+            // 壁にあたってる時 + 素早く2回押しでクイックローテート
+            QuickRotate();
+            // 壁にあたってる時 + 回転ボタン押しで回転
+
             /*switch (rotationNum)
             {
                 case 2:
@@ -281,21 +286,19 @@ public class PlayerBase : MonoBehaviour
     protected void QuickRotate()
     {
         // 入力面
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            // 処理面
-            // コマの色情報をもってくる
-            Piece piece1 = controllPiece1.GetComponent<Piece>();
-            Piece piece2 = controllPiece2.GetComponent<Piece>();
 
-            // ピース1が黒 and ピース2が白の時 or ピース1が白 and ピース1が黒の時
-            if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white　||
-                piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
-            {
-                // ピースの情報をいれかえる
-                piece1.SkillReverse(false);
-                piece2.SkillReverse(false);
-            }   
+        // 処理面
+        // コマの色情報をもってくる
+        Piece piece1 = controllPiece1.GetComponent<Piece>();
+        Piece piece2 = controllPiece2.GetComponent<Piece>();
+
+        // ピース1が黒 and ピース2が白の時 or ピース1が白 and ピース1が黒の時
+        if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white ||
+            piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
+        {
+            // ピースの情報をいれかえる
+            piece1.SkillReverse(false);
+            piece2.SkillReverse(false);
         }
     }
 
@@ -314,7 +317,7 @@ public class PlayerBase : MonoBehaviour
                  (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
             move.x = 1;
         else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
-            (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+                 (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
             move.z = -1;
 
@@ -414,11 +417,11 @@ public class PlayerBase : MonoBehaviour
         bool isThere = false;
         // 下一行を除いたコマが置かれる可能性のあるマスを探索
         for (int i = 2; i < 9; i++)
-            for (int j = 1; j < 9; j++)
-            {
-                if (Map.Instance.map[i, j] == type)
-                    isThere = true;
-            }
+        for (int j = 1; j < 9; j++)
+        {
+            if (Map.Instance.map[i, j] == type)
+                isThere = true;
+        }
 
         return isThere;
     }
