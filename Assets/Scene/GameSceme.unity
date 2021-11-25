@@ -1306,7 +1306,6 @@ MonoBehaviour:
   _isLanding: 0
   _isSkillBlack: 0
   _isSkillWhite: 0
-  _isFistFall: 0
   gameState: 0
   nextStateCue: 0
 --- !u!114 &326221982
@@ -2034,6 +2033,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fallTime: 1
+  _nextButtonTime: 0.3
   scoreText: {fileID: 1165668146}
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 2114198659}
@@ -4672,6 +4672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fallTime: 1
+  _nextButtonTime: 0.3
   scoreText: {fileID: 1122938205}
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 1873248609}
