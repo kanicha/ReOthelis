@@ -310,13 +310,7 @@ public class PlayerBase : MonoBehaviour
         else
         {
             /*Debug.Log("WallHit");*/
-
             rotationNum = lastNum;
-
-            if (rotationNum != lastNum)
-            {
-                SoundManager.Instance.PlaySE(2);
-            }
 
             // 壁にあたってる時 かつ 右の壁と左の壁に挟まれている時
             if (!Map.Instance.CheckWall(rotatedLeftPos) && !Map.Instance.CheckWall(rotatedRightPos))
@@ -328,7 +322,7 @@ public class PlayerBase : MonoBehaviour
             // 壁にあたってる時 + 素早く2回押しでクイックローテート
             QuickRotate();
             // 壁にあたってる時 + 回転ボタン押しで回転
-
+            AnotherTurn();
 
             /*switch (rotationNum)
             {
@@ -347,7 +341,7 @@ public class PlayerBase : MonoBehaviour
     /// <summary>
     /// 2回素早く回転を押したときにコマの色を変える関数
     /// </summary>
-    protected void QuickRotate()
+    private void QuickRotate()
     {
         // 入力面
         // 2回目押されるのを検知
@@ -362,6 +356,8 @@ public class PlayerBase : MonoBehaviour
             if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white ||
                 piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
             {
+                SoundManager.Instance.PlaySE(2);
+
                 // ピースの情報をいれかえる
                 piece1.SkillReverse(false);
                 piece2.SkillReverse(false);
@@ -371,6 +367,13 @@ public class PlayerBase : MonoBehaviour
             _isPush = false;
             _isSecondPush = false;
         }
+    }
+
+    /// <summary>
+    /// 壁にあたっている時の回転処理関数
+    /// </summary>
+    private void AnotherTurn()
+    {
     }
 
     /// <summary>
