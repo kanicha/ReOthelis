@@ -278,6 +278,10 @@ public class PlayerBase : MonoBehaviour
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
         // 回転後の座標の一つ下の座標
         Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
+        // 回転後の座標の一つ右の座標
+        Vector3 rotatedRightPos = controllPiece1.transform.position + rotationPos[1];
+        // 回転後の座標の一つ左の座標
+        Vector3 rotatedLeftPos = controllPiece1.transform.position + rotationPos[3];
 
         // 壁にあたってない時
         if (Map.Instance.CheckWall(rotatedPos))
@@ -291,7 +295,7 @@ public class PlayerBase : MonoBehaviour
                 if (rotationNum != lastNum)
                     SoundManager.Instance.PlaySE(2);
                 controllPiece2.transform.position = rotatedPos;
-                
+
                 if (_isSecondPush)
                 {
                     // 壁にあたってないときにタブルタップをしたのでフラグを解除
@@ -314,9 +318,17 @@ public class PlayerBase : MonoBehaviour
                 SoundManager.Instance.PlaySE(2);
             }
 
+            // 壁にあたってる時 かつ 右の壁と左の壁に挟まれている時
+            if (!Map.Instance.CheckWall(rotatedLeftPos) && !Map.Instance.CheckWall(rotatedRightPos))
+            {
+                // SecondPushをtrueにすることで 両方の壁に挟まれている時1回の入力で反転
+                _isSecondPush = true;
+            }
+
             // 壁にあたってる時 + 素早く2回押しでクイックローテート
             QuickRotate();
             // 壁にあたってる時 + 回転ボタン押しで回転
+
 
             /*switch (rotationNum)
             {
@@ -329,7 +341,6 @@ public class PlayerBase : MonoBehaviour
                 default:
                     break;
             }*/
-            // コマが飛び出す処理
         }
     }
 
@@ -339,30 +350,26 @@ public class PlayerBase : MonoBehaviour
     protected void QuickRotate()
     {
         // 入力面
-        // 一回目のボタンを受け取る (この時点でコマが壁にあたっていることが確定)
-        if (_isPush)
+        // 2回目押されるのを検知
+        if (_isSecondPush)
         {
-            // 2回目押されるのを検知
-            if (_isSecondPush)
-            {
-                // 処理面
-                // コマの色情報をもってくる
-                Piece piece1 = controllPiece1.GetComponent<Piece>();
-                Piece piece2 = controllPiece2.GetComponent<Piece>();
+            // 処理面
+            // コマの色情報をもってくる
+            Piece piece1 = controllPiece1.GetComponent<Piece>();
+            Piece piece2 = controllPiece2.GetComponent<Piece>();
 
-                // ピース1が黒 and ピース2が白の時 or ピース1が白 and ピース1が黒の時
-                if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white ||
-                    piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
-                {
-                    // ピースの情報をいれかえる
-                    piece1.SkillReverse(false);
-                    piece2.SkillReverse(false);
-                }
-                
-                // クイックローテート処理を行ったのでフラグを初期化
-                _isPush = false;
-                _isSecondPush = false;
+            // ピース1が黒 and ピース2が白の時 or ピース1が白 and ピース1が黒の時
+            if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white ||
+                piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
+            {
+                // ピースの情報をいれかえる
+                piece1.SkillReverse(false);
+                piece2.SkillReverse(false);
             }
+
+            // クイックローテート処理を行ったのでフラグを初期化
+            _isPush = false;
+            _isSecondPush = false;
         }
     }
 
