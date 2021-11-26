@@ -62,7 +62,10 @@ public class PlayerBase : MonoBehaviour
 
     //
     [SerializeField, Header("1マス落下する時間")] private float _fallTime = 0.0f;
-    [SerializeField, Header("2回目の連続回転入力受付時間")] private float _nextButtonTime = 0;
+
+    [SerializeField, Header("2回目の連続回転入力受付時間")]
+    private float _nextButtonTime = 0.0f;
+
     [SerializeField] protected Text scoreText = null;
     [SerializeField] protected Text myPieceCountText = null;
     [SerializeField] protected Image charactorImage = null;
@@ -256,6 +259,16 @@ public class PlayerBase : MonoBehaviour
             }
         }
 
+        // ボタンが押された(flagがtrueになったら時間を計算)
+        if (_isPush)
+            _rotateTimeCount += Time.deltaTime;
+
+        // 一回目のボタンの入力が次の受付時間を超えたらフラグをオフと計測時間を消す
+        if (_rotateTimeCount > _nextButtonTime && !_isSecondPush)
+        {
+            _isPush = false;
+            _rotateTimeCount = 0.0f;
+        }
 
         // 初期値0 左から 1,2,3
         rotationNum %= 4;
@@ -278,6 +291,15 @@ public class PlayerBase : MonoBehaviour
                 if (rotationNum != lastNum)
                     SoundManager.Instance.PlaySE(2);
                 controllPiece2.transform.position = rotatedPos;
+                
+                if (_isSecondPush)
+                {
+                    // 壁にあたってないときにタブルタップをしたのでフラグを解除
+                    _isPush = false;
+                    _isSecondPush = false;
+                }
+                else
+                    return;
             }
         }
         // 壁にあたってる時
@@ -293,7 +315,7 @@ public class PlayerBase : MonoBehaviour
             }
 
             // 壁にあたってる時 + 素早く2回押しでクイックローテート
-            QuickRotate(_rotateTimeCount, _rotateSecondTimeCount, _nextButtonTime);
+            QuickRotate();
             // 壁にあたってる時 + 回転ボタン押しで回転
 
             /*switch (rotationNum)
@@ -314,70 +336,34 @@ public class PlayerBase : MonoBehaviour
     /// <summary>
     /// 2回素早く回転を押したときにコマの色を変える関数
     /// </summary>
-    protected void QuickRotate(float _turnTime,float _secondTurnTime, float _nextButtonTime)
+    protected void QuickRotate()
     {
-        // 計算した値
-        float calTime = 0.0f;
-        
         // 入力面
         // 一回目のボタンを受け取る (この時点でコマが壁にあたっていることが確定)
         if (_isPush)
         {
-            // 一回目押されてから時間を計測
-            _turnTime += Time.deltaTime;
-            
-            Debug.Log("1回目のタイム" + _turnTime);
-
-            // 一回目のボタンの入力が次の受付時間を超えたらフラグをオフ
-            if (_turnTime > _nextButtonTime)
-            {
-                Debug.LogWarning("TimeOutCancel");
-                _isPush = false;
-            }
-                
-            
             // 2回目押されるのを検知
             if (_isSecondPush)
             {
-                // 二回目の時間計測を開始
-                _secondTurnTime += Time.deltaTime;
-                
-                Debug.Log("2回目のタイム" + _secondTurnTime);
-                
-                // 1回目押された時間と2回目を押された時間を計算する
-                if (_turnTime >= _secondTurnTime)
-                    calTime = _turnTime - _secondTurnTime;
-                else
-                    calTime = _secondTurnTime - _turnTime;
-                
-                // _nextButtonTime の値より少なかったらクイックローテート処理
-                if (calTime >= _nextButtonTime)
+                // 処理面
+                // コマの色情報をもってくる
+                Piece piece1 = controllPiece1.GetComponent<Piece>();
+                Piece piece2 = controllPiece2.GetComponent<Piece>();
+
+                // ピース1が黒 and ピース2が白の時 or ピース1が白 and ピース1が黒の時
+                if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white ||
+                    piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
                 {
-                    Debug.LogWarning("Quick");
+                    // ピースの情報をいれかえる
+                    piece1.SkillReverse(false);
+                    piece2.SkillReverse(false);
                 }
-                // 少なくなかったら各bool変数をfalseにする
-                else
-                {
-                    Debug.LogWarning("Cancel");
-                    _isPush = false;
-                    _isSecondPush = false;
-                }
+                
+                // クイックローテート処理を行ったのでフラグを初期化
+                _isPush = false;
+                _isSecondPush = false;
             }
         }
-        
-        /*// 処理面
-        // コマの色情報をもってくる
-        Piece piece1 = controllPiece1.GetComponent<Piece>();
-        Piece piece2 = controllPiece2.GetComponent<Piece>();
-
-        // ピース1が黒 and ピース2が白の時 or ピース1が白 and ピース1が黒の時
-        if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white ||
-            piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
-        {
-            // ピースの情報をいれかえる
-            piece1.SkillReverse(false);
-            piece2.SkillReverse(false);
-        }*/
     }
 
     /// <summary>
