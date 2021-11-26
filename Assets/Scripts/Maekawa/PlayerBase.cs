@@ -62,18 +62,13 @@ public class PlayerBase : MonoBehaviour
 
     //
     [SerializeField, Header("1マス落下する時間")] private float _fallTime = 0.0f;
-    [SerializeField, Header("2回目の連続回転入力受付時間")] private float _nextButtonTime = 0;
     [SerializeField] protected Text scoreText = null;
     [SerializeField] protected Text myPieceCountText = null;
     [SerializeField] protected Image charactorImage = null;
     [SerializeField] protected GaugeController gaugeController = null;
     [SerializeField] protected SkillCutinControl skillCutinControl = null;
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
-    private float _moveTimeCount = 0.0f;
-    private float _rotateTimeCount = 0.0f;
-    private float _rotateSecondTimeCount = 0.0f;
-    bool _isPush = false;
-    bool _isSecondPush = false;
+    private float _timeCount = 0.0f;
     public bool isMyTurn = false;
     public bool isSkillActive = false;
     public bool isSpSkillActive = false;
@@ -180,7 +175,7 @@ public class PlayerBase : MonoBehaviour
         Vector3 move = Vector3.zero;
         bool isDown = false;
 
-        _moveTimeCount += Time.deltaTime;
+        _timeCount += Time.deltaTime;
 
         // 移動
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
@@ -193,13 +188,13 @@ public class PlayerBase : MonoBehaviour
                  (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
             // カウントを初期化
-            _moveTimeCount = 0f;
+            _timeCount = 0f;
             isDown = true;
             move.z = -1;
         }
-        else if (_moveTimeCount >= _fallTime) // 時間落下
+        else if (_timeCount >= _fallTime) // 時間落下
         {
-            _moveTimeCount = 0f;
+            _timeCount = 0f;
             move.z = -1;
         }
 
@@ -226,36 +221,10 @@ public class PlayerBase : MonoBehaviour
     {
         int lastNum = rotationNum;
 
-        if (!_isPush)
-        {
-            if (_DS4_L1_value || _keyBoardLeft)
-            {
-                rotationNum++; // 左回転
-                // クリックした情報
-                _isPush = true;
-            }
-            else if (_DS4_R1_value || _keyBoardRight)
-            {
-                rotationNum += 3; // 右回転(=左に3回転)
-                _isPush = true;
-            }
-        }
-        // 2回目のプッシュ
-        else
-        {
-            if (_DS4_L1_value || _keyBoardLeft)
-            {
-                rotationNum++; // 左回転
-                // クリックした情報
-                _isSecondPush = true;
-            }
-            else if (_DS4_R1_value || _keyBoardRight)
-            {
-                rotationNum += 3; // 右回転(=左に3回転)
-                _isSecondPush = true;
-            }
-        }
-
+        if (_DS4_L1_value || _keyBoardLeft)
+            rotationNum++; // 左回転
+        else if (_DS4_R1_value || _keyBoardRight)
+            rotationNum += 3; // 右回転(=左に3回転)
 
         // 初期値0 左から 1,2,3
         rotationNum %= 4;
@@ -293,7 +262,7 @@ public class PlayerBase : MonoBehaviour
             }
 
             // 壁にあたってる時 + 素早く2回押しでクイックローテート
-            QuickRotate(_rotateTimeCount, _rotateSecondTimeCount, _nextButtonTime);
+            QuickRotate();
             // 壁にあたってる時 + 回転ボタン押しで回転
 
             /*switch (rotationNum)
@@ -314,58 +283,11 @@ public class PlayerBase : MonoBehaviour
     /// <summary>
     /// 2回素早く回転を押したときにコマの色を変える関数
     /// </summary>
-    protected void QuickRotate(float _turnTime,float _secondTurnTime, float _nextButtonTime)
+    protected void QuickRotate()
     {
-        // 計算した値
-        float calTime = 0.0f;
-        
         // 入力面
-        // 一回目のボタンを受け取る (この時点でコマが壁にあたっていることが確定)
-        if (_isPush)
-        {
-            // 一回目押されてから時間を計測
-            _turnTime += Time.deltaTime;
-            
-            Debug.Log("1回目のタイム" + _turnTime);
 
-            // 一回目のボタンの入力が次の受付時間を超えたらフラグをオフ
-            if (_turnTime > _nextButtonTime)
-            {
-                Debug.LogWarning("TimeOutCancel");
-                _isPush = false;
-            }
-                
-            
-            // 2回目押されるのを検知
-            if (_isSecondPush)
-            {
-                // 二回目の時間計測を開始
-                _secondTurnTime += Time.deltaTime;
-                
-                Debug.Log("2回目のタイム" + _secondTurnTime);
-                
-                // 1回目押された時間と2回目を押された時間を計算する
-                if (_turnTime >= _secondTurnTime)
-                    calTime = _turnTime - _secondTurnTime;
-                else
-                    calTime = _secondTurnTime - _turnTime;
-                
-                // _nextButtonTime の値より少なかったらクイックローテート処理
-                if (calTime >= _nextButtonTime)
-                {
-                    Debug.LogWarning("Quick");
-                }
-                // 少なくなかったら各bool変数をfalseにする
-                else
-                {
-                    Debug.LogWarning("Cancel");
-                    _isPush = false;
-                    _isSecondPush = false;
-                }
-            }
-        }
-        
-        /*// 処理面
+        // 処理面
         // コマの色情報をもってくる
         Piece piece1 = controllPiece1.GetComponent<Piece>();
         Piece piece2 = controllPiece2.GetComponent<Piece>();
@@ -377,7 +299,7 @@ public class PlayerBase : MonoBehaviour
             // ピースの情報をいれかえる
             piece1.SkillReverse(false);
             piece2.SkillReverse(false);
-        }*/
+        }
     }
 
     /// <summary>
@@ -404,9 +326,9 @@ public class PlayerBase : MonoBehaviour
             GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
             GameDirector.Instance.gameState = GameDirector.GameState.interval;
         }
-        else if (_moveTimeCount >= _fallTime) // 時間落下
+        else if (_timeCount >= _fallTime) // 時間落下
         {
-            _moveTimeCount = 0f;
+            _timeCount = 0f;
             move.z = -1;
         }
 
