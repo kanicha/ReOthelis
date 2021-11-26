@@ -279,9 +279,9 @@ public class PlayerBase : MonoBehaviour
         // 回転後の座標の一つ下の座標
         Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
         // 回転後の座標の一つ右の座標
-        Vector3 rotatedRightPos = controllPiece1.transform.position + rotationPos[1];
+        Vector3 rotatedRightPos = controllPiece1.transform.position + rotationPos[3];
         // 回転後の座標の一つ左の座標
-        Vector3 rotatedLeftPos = controllPiece1.transform.position + rotationPos[3];
+        Vector3 rotatedLeftPos = controllPiece1.transform.position + rotationPos[1];
 
         // 壁にあたってない時
         if (Map.Instance.CheckWall(rotatedPos))
@@ -318,23 +318,11 @@ public class PlayerBase : MonoBehaviour
                 // SecondPushをtrueにすることで 両方の壁に挟まれている時1回の入力で反転
                 _isSecondPush = true;
             }
-
+            
+            // 壁にあたってる時 + 回転ボタン押しで回転
+            AnotherTurn(rotatedLeftPos, rotatedRightPos);
             // 壁にあたってる時 + 素早く2回押しでクイックローテート
             QuickRotate();
-            // 壁にあたってる時 + 回転ボタン押しで回転
-            AnotherTurn();
-
-            /*switch (rotationNum)
-            {
-                case 2:
-                    rotationNum = 0;
-                    break;
-                case 0:
-                    rotationNum = 2;
-                    break;
-                default:
-                    break;
-            }*/
         }
     }
 
@@ -372,8 +360,37 @@ public class PlayerBase : MonoBehaviour
     /// <summary>
     /// 壁にあたっている時の回転処理関数
     /// </summary>
-    private void AnotherTurn()
+    private void AnotherTurn(Vector3 rotatedLeftPos, Vector3 rotatedRightPos)
     {
+        Vector3 move = Vector3.zero;
+
+        // 回転番号が0 or 2(コマが縦の状態) かつ 左側に壁がある時
+        if ((rotationNum == 0 || rotationNum == 2) && !Map.Instance.CheckWall(rotatedLeftPos))
+        {
+            Debug.LogWarning("LeftWall");
+            rotationNum = 1;
+            move.x = 1;
+        }
+        // 回転番号が0 or 2(コマが縦の状態) かつ 右側に壁がある時
+        else if ((rotationNum == 0 || rotationNum == 2) && !Map.Instance.CheckWall(rotatedRightPos))
+        {
+            Debug.LogWarning("RightWall");
+            rotationNum = 3;
+            move.x = -1;
+        }
+        else
+            return;
+
+        // 移動させたあとの座標
+        Vector3 movedPos = controllPiece1.transform.position + move;
+        Vector3 rotMovedPos = movedPos + rotationPos[rotationNum];
+
+        // 移動後座標に壁がなければ代入
+        if (Map.Instance.CheckWall(movedPos) && Map.Instance.CheckWall(rotMovedPos))
+        {
+            controllPiece1.transform.position = movedPos;
+            controllPiece2.transform.position = rotMovedPos;
+        }
     }
 
     /// <summary>
