@@ -73,10 +73,6 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected SkillCutinControl skillCutinControl = null;
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _moveTimeCount = 0.0f;
-    private float _rotateTimeCount = 0.0f;
-    private float _rotateSecondTimeCount = 0.0f;
-    bool _isPush = false;
-    bool _isSecondPush = false;
     public bool isMyTurn = false;
     public bool isSkillActive = false;
     public bool isSpSkillActive = false;
@@ -229,50 +225,17 @@ public class PlayerBase : MonoBehaviour
     {
         int lastNum = rotationNum;
 
-        if (!_isPush)
+        if (_DS4_L1_value || _keyBoardLeft)
         {
-            if (_DS4_L1_value || _keyBoardLeft)
-            {
-                rotationNum++; // 左回転
-                // クリックした情報
-                _isPush = true;
-            }
-            else if (_DS4_R1_value || _keyBoardRight)
-            {
-                rotationNum += 3; // 右回転(=左に3回転)
-                _isPush = true;
-            }
+            rotationNum++; // 左回転
         }
-        // 2回目のプッシュ
-        else
+        else if (_DS4_R1_value || _keyBoardRight)
         {
-            if (_DS4_L1_value || _keyBoardLeft)
-            {
-                rotationNum++; // 左回転
-                // クリックした情報
-                _isSecondPush = true;
-            }
-            else if (_DS4_R1_value || _keyBoardRight)
-            {
-                rotationNum += 3; // 右回転(=左に3回転)
-                _isSecondPush = true;
-            }
-        }
-
-        // ボタンが押された(flagがtrueになったら時間を計算)
-        if (_isPush)
-            _rotateTimeCount += Time.deltaTime;
-
-        // 一回目のボタンの入力が次の受付時間を超えたらフラグをオフと計測時間を消す
-        if (_rotateTimeCount > _nextButtonTime && !_isSecondPush)
-        {
-            _isPush = false;
-            _rotateTimeCount = 0.0f;
+            rotationNum += 3; // 右回転(=左に3回転)
         }
 
         // 初期値0 左から 1,2,3
         rotationNum %= 4;
-        /*Debug.Log(rotationNum);*/
 
         // 軸のコマ + 回転後の座標 変数
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
@@ -295,15 +258,6 @@ public class PlayerBase : MonoBehaviour
                 if (rotationNum != lastNum)
                     SoundManager.Instance.PlaySE(2);
                 controllPiece2.transform.position = rotatedPos;
-
-                if (_isSecondPush)
-                {
-                    // 壁にあたってないときにタブルタップをしたのでフラグを解除
-                    _isPush = false;
-                    _isSecondPush = false;
-                }
-                else
-                    return;
             }
         }
         // 壁にあたってる時
@@ -314,15 +268,11 @@ public class PlayerBase : MonoBehaviour
 
             // 壁にあたってる時 かつ 右の壁と左の壁に挟まれている時
             if (!Map.Instance.CheckWall(rotatedLeftPos) && !Map.Instance.CheckWall(rotatedRightPos))
-            {
-                // SecondPushをtrueにすることで 両方の壁に挟まれている時1回の入力で反転
-                _isSecondPush = true;
-            }
-            
-            // 壁にあたってる時 + 回転ボタン押しで回転
-            AnotherTurn(rotatedLeftPos, rotatedRightPos);
-            // 壁にあたってる時 + 素早く2回押しでクイックローテート
-            QuickRotate();
+                // 回転入力でクイックローテート
+                QuickRotate();
+            else
+                // 壁にあたってる時 かつ 片方の壁に当たっている時 回転ボタン押しで回転
+                AnotherTurn(rotatedLeftPos, rotatedRightPos);
         }
     }
 
@@ -331,29 +281,20 @@ public class PlayerBase : MonoBehaviour
     /// </summary>
     private void QuickRotate()
     {
-        // 入力面
-        // 2回目押されるのを検知
-        if (_isSecondPush)
+        // 処理面
+        // コマの色情報をもってくる
+        Piece piece1 = controllPiece1.GetComponent<Piece>();
+        Piece piece2 = controllPiece2.GetComponent<Piece>();
+
+        // ピース1が黒 and ピース2が白の時 or ピース1が白 and ピース1が黒の時
+        if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white ||
+            piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
         {
-            // 処理面
-            // コマの色情報をもってくる
-            Piece piece1 = controllPiece1.GetComponent<Piece>();
-            Piece piece2 = controllPiece2.GetComponent<Piece>();
+            SoundManager.Instance.PlaySE(2);
 
-            // ピース1が黒 and ピース2が白の時 or ピース1が白 and ピース1が黒の時
-            if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white ||
-                piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
-            {
-                SoundManager.Instance.PlaySE(2);
-
-                // ピースの情報をいれかえる
-                piece1.SkillReverse(false);
-                piece2.SkillReverse(false);
-            }
-
-            // クイックローテート処理を行ったのでフラグを初期化
-            _isPush = false;
-            _isSecondPush = false;
+            // ピースの情報をいれかえる
+            piece1.SkillReverse(false);
+            piece2.SkillReverse(false);
         }
     }
 
@@ -388,6 +329,8 @@ public class PlayerBase : MonoBehaviour
         // 移動後座標に壁がなければ代入
         if (Map.Instance.CheckWall(movedPos) && Map.Instance.CheckWall(rotMovedPos))
         {
+            SoundManager.Instance.PlaySE(2);
+
             controllPiece1.transform.position = movedPos;
             controllPiece2.transform.position = rotMovedPos;
         }
