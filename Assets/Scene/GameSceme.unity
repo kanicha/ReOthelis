@@ -1271,6 +1271,7 @@ GameObject:
   - component: {fileID: 326221982}
   - component: {fileID: 326221983}
   - component: {fileID: 326221986}
+  - component: {fileID: 326221988}
   - component: {fileID: 326221987}
   m_Layer: 0
   m_Name: GameDirector
@@ -1299,6 +1300,7 @@ MonoBehaviour:
   _player1: {fileID: 1435816371}
   _player2: {fileID: 533350509}
   IsAIOn: 0
+  _effectController: {fileID: 326221988}
   _activePieces:
   - {fileID: 0}
   - {fileID: 0}
@@ -1413,6 +1415,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SameReverseNum: 
+--- !u!114 &326221988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326221980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb61c4fefb48d8e469bb0bc377983b99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _highLightTime: 0.3
 --- !u!1 &333692196
 GameObject:
   m_ObjectHideFlags: 0
@@ -4385,6 +4400,10 @@ PrefabInstance:
     - target: {fileID: 2386452990182717790, guid: 9bcc26cce6217d641bfa3ab17886eca4, type: 3}
       propertyPath: m_Name
       value: DefaultPieceWhite
+      objectReference: {fileID: 0}
+    - target: {fileID: 4553159969901662864, guid: 9bcc26cce6217d641bfa3ab17886eca4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7015376282941952240, guid: 9bcc26cce6217d641bfa3ab17886eca4, type: 3}
       propertyPath: m_LocalPosition.y

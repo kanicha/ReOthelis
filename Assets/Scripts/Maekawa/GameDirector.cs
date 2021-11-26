@@ -20,6 +20,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     private Player_2 _player2 = null;
     [SerializeField, Header("AIの起動")]
     private bool IsAIOn = false;
+    [SerializeField, Header("エフェクトコントローラー")] private EffectController _effectController = null;
 
     private int _turnCount = 0;
     private float _timeCount = 0;
@@ -66,6 +67,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         switch (gameState)
         {
             case GameState.preActive:
+                _effectController.FallPieceHighLight(true);
+                
                 _isLanding = false;
                 _isDown = true;
                 _timeCount += Time.deltaTime;
@@ -79,6 +82,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 break;
 
             case GameState.active:
+                _effectController.FallPieceHighLight(true);
+                
                 if (ModeSelect._selectCount == 0 && _player2.isMyTurn == true && IsAIOn == true)
                 {
                     _ai.MovePiece();
@@ -98,6 +103,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 break;
 
             case GameState.confirmed:
+                _effectController.FallPieceHighLight(false);
                 if (_activePieces[0].transform.position.z > _activePieces[1].transform.position.z)
                 {
                     // 下側のコマがインデックス0になるようソート
