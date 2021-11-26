@@ -1308,6 +1308,7 @@ MonoBehaviour:
   _isLanding: 0
   _isSkillBlack: 0
   _isSkillWhite: 0
+  _isTurn: 0
   gameState: 0
   nextStateCue: 0
 --- !u!114 &326221982

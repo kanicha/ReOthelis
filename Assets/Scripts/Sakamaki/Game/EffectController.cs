@@ -7,7 +7,7 @@ public class EffectController : MonoBehaviour
 {
     [SerializeField, Header("どれぐらいの間隔で点滅するか")]
     private float _highLightTime = 0.0f;
-    
+
     private float _time = 0.0f;
 
     /// <summary>
@@ -26,29 +26,23 @@ public class EffectController : MonoBehaviour
         {
             // コンポーネント習得
             Piece piece = controlPiece.GetComponent<Piece>();
-            
+
             // 時間計測
             _time += Time.deltaTime;
 
-            // 黒だった場合座標をずらして表示をおこなう
-            if (piece.pieceType == Piece.PieceType.black)
+            // 黒だった場合座標かクイックローテートを使った場合 ずらして表示をおこなう
+            if (piece.pieceType == Piece.PieceType.black || GameDirector.Instance._isTurn)
             {
                 // 黒コマはエフェクトの座標が反転してしまうため y の値を増加させる
                 Vector3 pos = controlPieceHighLightObj.transform.position;
                 pos.y = -0.1f;
                 controlPieceHighLightObj.transform.position = pos;
+
+                if (GameDirector.Instance._isTurn)
+                    // フラグを初期化
+                    GameDirector.Instance._isTurn = false;
             }
 
-            // クイックローテートを使用したらエフェクトを戻す
-            if (GameDirector.Instance._isTurn)
-            {
-                // 黒コマはエフェクトの座標が反転してしまうため y の値を増加させる
-                Vector3 pos = controlPieceHighLightObj.transform.position;
-                pos.y = -0.05f;
-                controlPieceHighLightObj.transform.position = pos;
-                
-                GameDirector.Instance._isTurn = false;
-            }
 
             // 時間がハイライトの時間より大きくなったら
             if (_time > _highLightTime)
