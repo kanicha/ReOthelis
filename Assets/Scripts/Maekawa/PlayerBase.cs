@@ -290,6 +290,7 @@ public class PlayerBase : MonoBehaviour
         if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white ||
             piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
         {
+            GameDirector.Instance._isTurn = true;
             SoundManager.Instance.PlaySE(2);
 
             // ピースの情報をいれかえる

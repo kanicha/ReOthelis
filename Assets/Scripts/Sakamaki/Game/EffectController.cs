@@ -7,7 +7,7 @@ public class EffectController : MonoBehaviour
 {
     [SerializeField, Header("どれぐらいの間隔で点滅するか")]
     private float _highLightTime = 0.0f;
-
+    
     private float _time = 0.0f;
 
     /// <summary>
@@ -21,12 +21,12 @@ public class EffectController : MonoBehaviour
         // 軸のコマ情報の子についてあるハイライトするためのオブジェクトを参照
         GameObject controlPieceHighLightObj = controlPiece.transform.Find("highLightObj").gameObject;
 
-        // コンポーネント習得
-        Piece piece = controlPiece.GetComponent<Piece>();
-
         // エフェクトのオン
         if (active)
         {
+            // コンポーネント習得
+            Piece piece = controlPiece.GetComponent<Piece>();
+            
             // 時間計測
             _time += Time.deltaTime;
 
@@ -37,6 +37,17 @@ public class EffectController : MonoBehaviour
                 Vector3 pos = controlPieceHighLightObj.transform.position;
                 pos.y = -0.1f;
                 controlPieceHighLightObj.transform.position = pos;
+            }
+
+            // クイックローテートを使用したらエフェクトを戻す
+            if (GameDirector.Instance._isTurn)
+            {
+                // 黒コマはエフェクトの座標が反転してしまうため y の値を増加させる
+                Vector3 pos = controlPieceHighLightObj.transform.position;
+                pos.y = -0.05f;
+                controlPieceHighLightObj.transform.position = pos;
+                
+                GameDirector.Instance._isTurn = false;
             }
 
             // 時間がハイライトの時間より大きくなったら

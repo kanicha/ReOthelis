@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 3298152268055681799}
   - component: {fileID: 5693342849186339466}
   - component: {fileID: 1738530456532382621}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: highLightObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -316,9 +316,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 726538719939279359}
     m_Modifications:
+    - target: {fileID: 5781434089497086541, guid: bbba129c093020c4b821bbaa9bf93751, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5781434090104295009, guid: bbba129c093020c4b821bbaa9bf93751, type: 3}
       propertyPath: m_Name
       value: Effect_Aula_Reversible
+      objectReference: {fileID: 0}
+    - target: {fileID: 5781434090104295009, guid: bbba129c093020c4b821bbaa9bf93751, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5781434090104295009, guid: bbba129c093020c4b821bbaa9bf93751, type: 3}
       propertyPath: m_IsActive

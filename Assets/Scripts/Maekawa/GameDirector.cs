@@ -30,6 +30,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     public bool _isLanding = false;
     public bool _isSkillBlack = false;
     public bool _isSkillWhite = false;
+    public bool _isTurn = false;
     public GameState gameState = GameState.none;
     public GameState nextStateCue = GameState.none;
 
