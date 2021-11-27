@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class ResultSceneChange : Player1Base
 {
@@ -20,7 +19,9 @@ public class ResultSceneChange : Player1Base
         base.KeyInput();
 
         if (_repeatHit)
+        {
             return;
+        }
         else if (_gameSceneManager.IsChanged == true && _DS4_cross_value || _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space))
         {
             _repeatHit = true;

@@ -1050,6 +1050,7 @@ MonoBehaviour:
   _player1: {fileID: 1435816371}
   _player2: {fileID: 0}
   IsAIOn: 0
+  _effectController: {fileID: 0}
   _activePieces:
   - {fileID: 0}
   - {fileID: 0}
@@ -1057,6 +1058,7 @@ MonoBehaviour:
   _isLanding: 0
   _isSkillBlack: 0
   _isSkillWhite: 0
+  _isTurn: 0
   gameState: 0
   nextStateCue: 0
 --- !u!114 &326221982
@@ -3177,8 +3179,8 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6091143235498661368, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
   m_PrefabInstance: {fileID: 6091143236286489298}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_GameObject: {fileID: 6091143236286489299}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d18dff2092a9f344390a141738a4bd2d, type: 3}
   m_Name: 
@@ -3292,6 +3294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fallTime: 1
+  _nextButtonTime: 0
   scoreText: {fileID: 1122938205}
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 1873248609}
@@ -4829,6 +4832,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 1178489358839879789, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 195e3a53e2a0d564bbc5ad6a1f64c80a, type: 3}
     - target: {fileID: 1520967071185567795, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.1900009
@@ -4888,6 +4895,10 @@ PrefabInstance:
     - target: {fileID: 6091143235498661368, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
       propertyPath: _player
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091143235498661368, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6091143235498661368, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
       propertyPath: _komaImage.Array.data[0]
@@ -4977,6 +4988,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6091143235886330327, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fd7026bbbc239704f9dbf2ada7ef50d0, type: 3}
     - target: {fileID: 6091143236735003770, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
       propertyPath: m_Layer
       value: 5
@@ -5003,3 +5018,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
+--- !u!1 &6091143236286489299 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6091143235498661365, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
+  m_PrefabInstance: {fileID: 6091143236286489298}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6091143236286489300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6091143236286489299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be425872ab8368e4b8c814246f1c775a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gauge: {fileID: 2045121285}
