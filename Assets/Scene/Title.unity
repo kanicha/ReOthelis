@@ -670,6 +670,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fallTime: 0
+  _nextButtonTime: 0
   scoreText: {fileID: 0}
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 0}
@@ -687,6 +688,7 @@ MonoBehaviour:
   controllPiece2: {fileID: 0}
   rotationNum: 0
   cursor: {fileID: 440305711}
+  _demoPlayTime: 10
 --- !u!4 &1708304457
 Transform:
   m_ObjectHideFlags: 0

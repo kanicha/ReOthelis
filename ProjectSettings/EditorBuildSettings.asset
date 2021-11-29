@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scene/CharacterScenario_PB.unity
     guid: 46b6e7af2851df640ad0545ffdbb56de
+  - enabled: 1
+    path: Assets/Scene/DemoPlay.unity
+    guid: 8e38103a1b8b5764e97e24d04f2e1be9
   m_configObjects: {}

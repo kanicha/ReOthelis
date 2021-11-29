@@ -7,11 +7,13 @@ using UnityEngine.Events;
 public class ModeSelect : Player1Base
 {
     [SerializeField] private RectTransform cursor;
-
+    [SerializeField, Header("デモプレイ画面に推移するまでの時間")] private float _demoPlayTime = 0.0f;
+    
     public static int _selectCount = 0;
+    private float _timeCount = 0.0f;
     private bool _repeatHit = false;
     private GameSceneManager _gameSceneManager;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -32,9 +34,25 @@ public class ModeSelect : Player1Base
         //選択ボタンが押されたらカーソルが指しているモードに応じて遷移を行う
         if (_repeatHit)
             return;
+
+        // 時間計測開始
+        _timeCount += Time.deltaTime;
+
+        // デモプレイの再生時間よりタイムのカウント(計測)がおおかったら推移
+        if (_timeCount > _demoPlayTime)
+        {
+            SoundManager.Instance.StopBGM();
+            
+            // デモプレイにシーンを推移
+            DemoPlayScemeChange(_gameSceneManager);
+            // すでに推移したのでタイマーを初期化
+            _timeCount = 0.0f;
+        }
         
         if (_gameSceneManager.IsChanged && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)) && _selectCount == 0)
         {
+            _timeCount = 0.0f;
+            
             _repeatHit = true;
             SoundManager.Instance.PlaySE(9);
             ScenarioSceneChange(_gameSceneManager);
@@ -57,6 +75,9 @@ public class ModeSelect : Player1Base
         //下キーの入力に応じてカーソルを動かす
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0))
         {
+            // タイムを初期化
+            _timeCount = 0.0f;
+            
             SoundManager.Instance.PlaySE(3);
             
             if (_selectCount == 0)
@@ -79,6 +100,8 @@ public class ModeSelect : Player1Base
         //上キーの入力に応じてカーソルを動かす
         else if ((_DS4_vertical_value > 0 && last_vertical_value == 0))
         {
+            // タイムを初期化
+            _timeCount = 0.0f;
             SoundManager.Instance.PlaySE(3);
             
             if (_selectCount == 0)
@@ -112,5 +135,13 @@ public class ModeSelect : Player1Base
     private void TutorialSceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("Tutorial");
+    }
+    /// <summary>
+    /// デモシーンに推移する関数
+    /// </summary>
+    /// <param name="gameSceneManager"></param>
+    private void DemoPlayScemeChange(GameSceneManager gameSceneManager)
+    {
+        gameSceneManager.SceneNextCall("DemoPlay");
     }
 }
