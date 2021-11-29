@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TutorialDemoTextFade : MonoBehaviour
+public class DemoTextFade : MonoBehaviour
 {
     [SerializeField, Header("点滅させるオブジェクト")] private Text _demoPlayText;
     [SerializeField, Header("点滅させるスピード")] private float _blinkSpeed = 0.0f;
