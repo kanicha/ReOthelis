@@ -12,6 +12,7 @@ public class ModeSelect : Player1Base
     public static int _selectCount = 0;
     private float _timeCount = 0.0f;
     private bool _repeatHit = false;
+    private bool _isDemoChange = false;
     private GameSceneManager _gameSceneManager;
     
     // Start is called before the first frame update
@@ -21,7 +22,8 @@ public class ModeSelect : Player1Base
 
         cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-220, -171, 0);
         _selectCount = 0;
-
+        _isDemoChange = false;
+        
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
     }
 
@@ -39,14 +41,15 @@ public class ModeSelect : Player1Base
         _timeCount += Time.deltaTime;
 
         // デモプレイの再生時間よりタイムのカウント(計測)がおおかったら推移
-        if (_timeCount > _demoPlayTime)
+        if (_timeCount > _demoPlayTime && !_isDemoChange)
         {
             SoundManager.Instance.StopBGM();
             
             // デモプレイにシーンを推移
             DemoPlayScemeChange(_gameSceneManager);
-            // すでに推移したのでタイマーを初期化
+            // すでに推移したのでタイマーとフラグを初期化
             _timeCount = 0.0f;
+            _isDemoChange = false;
         }
         
         if (_gameSceneManager.IsChanged && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)) && _selectCount == 0)
@@ -56,12 +59,16 @@ public class ModeSelect : Player1Base
             _repeatHit = true;
             SoundManager.Instance.PlaySE(9);
             ScenarioSceneChange(_gameSceneManager);
+            
+            _isDemoChange = true;
         }
         else if (_gameSceneManager.IsChanged && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)) && _selectCount == 1)
         {
             _repeatHit = true;
             SoundManager.Instance.PlaySE(9);
             CharacterSelectSceneChange(_gameSceneManager);
+            
+            _isDemoChange = true;
         }
         else if (_gameSceneManager.IsChanged && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)) && _selectCount == 2)
         {
@@ -70,6 +77,8 @@ public class ModeSelect : Player1Base
             SoundManager.Instance.StopBGM();
 
             TutorialSceneChange(_gameSceneManager);
+            
+            _isDemoChange = true;
         }
         
         //下キーの入力に応じてカーソルを動かす
