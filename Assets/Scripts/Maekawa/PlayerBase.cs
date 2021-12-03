@@ -618,7 +618,6 @@ public class PlayerBase : MonoBehaviour
             !ActivateCheck(GameDirector.GameState.active, cost) ||
             NormalSkillCheck())
         {
-            Debug.LogWarning("false");
             return;
         }
 
@@ -628,8 +627,6 @@ public class PlayerBase : MonoBehaviour
         // 自分の色があれば処理
         if (piece1.pieceType == playerType || piece2.pieceType == playerType)
         {
-            Debug.LogWarning("true");
-            
             Debug.Log("残影");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
