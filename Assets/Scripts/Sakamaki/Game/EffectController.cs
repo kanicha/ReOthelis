@@ -3,13 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EffectController : MonoBehaviour
+public class EffectController : SingletonMonoBehaviour<EffectController>
 {
     [SerializeField, Header("どれぐらいの間隔で点滅するか")]
     private float _highLightTime = 0.0f;
 
     private float _time = 0.0f;
+    
+    // クイックローテートを使用したかどうかの変数
+    public bool _isTurn = false;
 
+    // スキルエフェクト関連変数
+    
+    
     /// <summary>
     /// 落下中のコマハイライト表示する関数
     /// </summary>
@@ -31,16 +37,16 @@ public class EffectController : MonoBehaviour
             _time += Time.deltaTime;
 
             // 黒だった場合座標かクイックローテートを使った場合 ずらして表示をおこなう
-            if (piece.pieceType == Piece.PieceType.black || GameDirector.Instance._isTurn)
+            if (piece.pieceType == Piece.PieceType.black || _isTurn)
             {
                 // 黒コマはエフェクトの座標が反転してしまうため y の値を増加させる
                 Vector3 pos = controlPieceHighLightObj.transform.position;
                 pos.y = -0.1f;
                 controlPieceHighLightObj.transform.position = pos;
 
-                if (GameDirector.Instance._isTurn)
+                if (_isTurn)
                     // フラグを初期化
-                    GameDirector.Instance._isTurn = false;
+                    _isTurn = false;
             }
 
 

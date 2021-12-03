@@ -62,10 +62,6 @@ public class PlayerBase : MonoBehaviour
 
     //
     [SerializeField, Header("1マス落下する時間")] private float _fallTime = 0.0f;
-
-    [SerializeField, Header("2回目の連続回転入力受付時間")]
-    private float _nextButtonTime = 0.0f;
-
     [SerializeField] protected Text scoreText = null;
     [SerializeField] protected Text myPieceCountText = null;
     [SerializeField] protected Image charactorImage = null;
@@ -74,8 +70,6 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _moveTimeCount = 0.0f;
     public bool isMyTurn = false;
-    public bool isSkillActive = false;
-    public bool isSpSkillActive = false;
     public int reverseScore = 0;
     public int preScore = 0;
     public int reversedCount = 0;
@@ -290,7 +284,7 @@ public class PlayerBase : MonoBehaviour
         if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white ||
             piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
         {
-            GameDirector.Instance._isTurn = true;
+            EffectController.Instance._isTurn = true;
             SoundManager.Instance.PlaySE(2);
 
             // ピースの情報をいれかえる
@@ -546,15 +540,12 @@ public class PlayerBase : MonoBehaviour
             Map.Instance.isSkillCheck ||
             NormalSkillCheck())
         {
-            isSkillActive = false;
             return;
         }
 
         // 最下段を除くマップに相手の色があるなら(固定コマは対象外)
         if (CheckColor(enemyColor))
         {
-            isSkillActive = true;
-
             Debug.Log("強引");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
@@ -589,7 +580,6 @@ public class PlayerBase : MonoBehaviour
             !ActivateCheck(GameDirector.GameState.active, cost) ||
             NormalSkillCheck())
         {
-            isSkillActive = false;
             return;
         }
 
@@ -597,7 +587,6 @@ public class PlayerBase : MonoBehaviour
         // 最下段を除くマップに自分の色があるなら(固定コマは対象外)
         if (CheckColor(myColor))
         {
-            isSkillActive = true;
 
             Debug.Log("固定");
             SoundManager.Instance.PlaySE(5);
@@ -629,7 +618,7 @@ public class PlayerBase : MonoBehaviour
             !ActivateCheck(GameDirector.GameState.active, cost) ||
             NormalSkillCheck())
         {
-            isSkillActive = false;
+            Debug.LogWarning("false");
             return;
         }
 
@@ -639,8 +628,8 @@ public class PlayerBase : MonoBehaviour
         // 自分の色があれば処理
         if (piece1.pieceType == playerType || piece2.pieceType == playerType)
         {
-            isSkillActive = true;
-
+            Debug.LogWarning("true");
+            
             Debug.Log("残影");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
@@ -664,15 +653,12 @@ public class PlayerBase : MonoBehaviour
         if (!ActivateCheck(GameDirector.GameState.preActive, cost) ||
             NormalSkillCheck())
         {
-            isSkillActive = false;
-
             return;
         }
 
         // フィールドに相手の色の固定こまがあった時発動
         if (CheckColor(enemyColorfixity))
         {
-            isSkillActive = true;
 
             Debug.Log("打ち消し");
             SoundManager.Instance.PlaySE(5);
@@ -720,12 +706,9 @@ public class PlayerBase : MonoBehaviour
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
             SpacialSkillCheck())
         {
-            isSpSkillActive = false;
-
             return;
         }
 
-        isSpSkillActive = true;
         Debug.Log("強制変換");
         skillCutinControl.ShowSkillCutin(3);
         reversedCount -= cost;
@@ -816,11 +799,9 @@ public class PlayerBase : MonoBehaviour
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
             SpacialSkillCheck())
         {
-            isSpSkillActive = false;
             return;
         }
-
-        isSpSkillActive = true;
+        
         Debug.Log("一列一式");
         skillCutinControl.ShowSkillCutin(1);
         reversedCount -= cost;
@@ -920,12 +901,9 @@ public class PlayerBase : MonoBehaviour
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
             SpacialSkillCheck())
         {
-            isSpSkillActive = false;
             return;
         }
-
-
-        isSpSkillActive = true;
+        
         Debug.Log("優先頂戴");
         skillCutinControl.ShowSkillCutin(2);
         reversedCount -= cost;
@@ -1003,13 +981,11 @@ public class PlayerBase : MonoBehaviour
              !ActivateCheck(GameDirector.GameState.active, cost)) ||
             SpacialSkillCheck())
         {
-            isSpSkillActive = false;
             return;
         }
 
         int myColorCount = 0;
-
-        isSpSkillActive = true;
+        
         Debug.Log("強奪一瞬");
         skillCutinControl.ShowSkillCutin(0);
         reversedCount -= cost;
