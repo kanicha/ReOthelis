@@ -361,11 +361,6 @@ public class PlayerBase : MonoBehaviour
             GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
             GameDirector.Instance.gameState = GameDirector.GameState.interval;
         }
-        else if (_moveTimeCount >= _fallTime) // 時間落下
-        {
-            _moveTimeCount = 0f;
-            move.z = -1;
-        }
 
         // 左右に入力したなら移動
         if (move != Vector3.zero)

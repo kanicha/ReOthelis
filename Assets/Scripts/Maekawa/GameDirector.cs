@@ -73,9 +73,16 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 _isLanding = false;
                 _isDown = true;
                 _timeCount += Time.deltaTime;
+                
+                Debug.Log(_timeCount);
                 // 初回の時間落下を超えたらステートをすすめる(自動落下の処理はPieceMove()で管理)
                 if (_timeCount > _preActiveTime)
                 {
+                    // 時間経過によりコマを一個下げる
+                    _activePieces[0].transform.position += new Vector3(0, 0, -1);
+                    _activePieces[1].transform.position += new Vector3(0, 0, -1);
+                    
+                    // さげたら推移
                     intervalTime = 0;
                     nextStateCue = GameState.active;
                     gameState = GameState.interval;
