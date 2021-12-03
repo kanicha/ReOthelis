@@ -143,7 +143,7 @@ public class ModeSelect : Player1Base
     }
     private void TutorialSceneChange(GameSceneManager gameSceneManager)
     {
-        gameSceneManager.SceneNextCall("Tutorial");
+        gameSceneManager.SceneNextCall("TutorialGame");
     }
     /// <summary>
     /// デモシーンに推移する関数

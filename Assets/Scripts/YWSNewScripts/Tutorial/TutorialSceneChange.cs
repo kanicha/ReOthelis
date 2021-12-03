@@ -21,10 +21,10 @@ public class TutorialSceneChange : Player1Base
         {
             return;
         }
-        else if (/*TutorialDirector._isTutorialEnd == true &&*/ _gameSceneManager.IsChanged == true && _DS4_circle_value || 
-                 /*TutorialDirector._isTutorialEnd == true &&*/ _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space) ||
-                 /*TutorialDirector._isTutorialEnd == true &&*/ _gameSceneManager.IsChanged == true && _DS4_cross_value || 
-                 /*TutorialDirector._isTutorialEnd == true &&*/ _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.X))
+        else if (TutorialDirector._isTutorialEnd == true && _gameSceneManager.IsChanged == true && _DS4_circle_value || 
+                 TutorialDirector._isTutorialEnd == true && _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.Space) ||
+                 TutorialDirector._isTutorialEnd == true && _gameSceneManager.IsChanged == true && _DS4_cross_value || 
+                 TutorialDirector._isTutorialEnd == true && _gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.X))
         {
             _repeatHit = true;
             SceneChange(_gameSceneManager);

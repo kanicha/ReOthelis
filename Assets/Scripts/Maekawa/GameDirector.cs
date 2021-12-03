@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameDirector : SingletonMonoBehaviour<GameDirector>    
+public class GameDirector : SingletonMonoBehaviour<GameDirector>
 {
     private AIThinking _ai; 
     [SerializeField, Header("基本スコア")]
