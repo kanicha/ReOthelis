@@ -760,7 +760,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 144.1, y: 0}
+  m_AnchoredPosition: {x: 144.10156, y: 0}
   m_SizeDelta: {x: 60, y: 222}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &234595101
@@ -980,7 +980,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -1075.7, y: 281}
-  m_SizeDelta: {x: 255, y: 138.01}
+  m_SizeDelta: {x: 254.99994, y: 138.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &319565537
 MonoBehaviour:
@@ -995,15 +995,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.76862746}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: d69df5c7fa0d9d94282ff98822f10849, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1308,7 +1308,6 @@ MonoBehaviour:
   _isLanding: 0
   _isSkillBlack: 0
   _isSkillWhite: 0
-  _isTurn: 0
   gameState: 0
   nextStateCue: 0
 --- !u!114 &326221982
@@ -1429,6 +1428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _highLightTime: 0.3
+  _isTurn: 0
 --- !u!1 &333692196
 GameObject:
   m_ObjectHideFlags: 0
@@ -1694,7 +1694,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -31.7, y: 0}
+  m_AnchoredPosition: {x: -31.703125, y: 0}
   m_SizeDelta: {x: 291.6, y: 222}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &455720741
@@ -2049,7 +2049,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fallTime: 1
-  _nextButtonTime: 0.3
   scoreText: {fileID: 1165668146}
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 2114198659}
@@ -2057,8 +2056,6 @@ MonoBehaviour:
   skillCutinControl: {fileID: 326221986}
   skillWindowControl: {fileID: 2133164097}
   isMyTurn: 0
-  isSkillActive: 0
-  isSpSkillActive: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -2647,15 +2644,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.76862746}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.5882353}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 05f2040812b9fe0428d3ef0fa67288b6, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2707,7 +2704,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -31.7, y: 0}
+  m_AnchoredPosition: {x: -31.703125, y: 0}
   m_SizeDelta: {x: 291.6, y: 222}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &793512828
@@ -4692,7 +4689,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fallTime: 1
-  _nextButtonTime: 0.3
   scoreText: {fileID: 1122938205}
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 1873248609}
@@ -4700,8 +4696,6 @@ MonoBehaviour:
   skillCutinControl: {fileID: 326221986}
   skillWindowControl: {fileID: 200742603}
   isMyTurn: 0
-  isSkillActive: 0
-  isSpSkillActive: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -5662,7 +5656,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -31.7, y: 0}
+  m_AnchoredPosition: {x: -31.703125, y: 0}
   m_SizeDelta: {x: 291.6, y: 222}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1873248607
@@ -7154,7 +7148,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -31.7, y: 0}
+  m_AnchoredPosition: {x: -31.703125, y: 0}
   m_SizeDelta: {x: 291.6, y: 222}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &6091143236286489298
