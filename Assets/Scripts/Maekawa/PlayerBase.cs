@@ -864,6 +864,7 @@ public class PlayerBase : MonoBehaviour
         // 横軸分ループを回す
         for (int x = 0; x < 9; x++)
         {
+            // 固定駒を一回解除する
             if (Map.Instance.map[z, x] == enemyColorfixity)
             {
                 Map.Instance.map[z, x] = enemyColor;
@@ -883,6 +884,7 @@ public class PlayerBase : MonoBehaviour
             }
         }
 
+        // スコア追加
         AddSkillScore(100, myColorCount);
 
         // ゲームステートを変更
