@@ -930,10 +930,10 @@ public class PlayerBase : MonoBehaviour
         switch (black)
         {
             case true:
-                x = 1;
+                x = 10;
                 break;
             case false:
-                x = 10;
+                x = 1;
                 break;
             default:
                 return;
@@ -958,10 +958,10 @@ public class PlayerBase : MonoBehaviour
             switch (black)
             {
                 case true:
-                    x++;
+                    x--;
                     break;
                 case false:
-                    x--;
+                    x++;
                     break;
                 default:
                     return;
