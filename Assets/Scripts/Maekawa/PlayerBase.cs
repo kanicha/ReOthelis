@@ -14,7 +14,9 @@ public class PlayerBase : MonoBehaviour
     protected string DS4_square_name = "";
     protected string DS4_triangle_name = "";
     protected string DS4_L1_name = "";
+    protected string DS4_L2_name = "";
     protected string DS4_R1_name = "";
+    protected string DS4_R2_name = "";
     protected string DS4_option_name = "";
     protected string DS4_horizontal_name = "";
     protected string DS4_vertical_name = "";
@@ -35,7 +37,9 @@ public class PlayerBase : MonoBehaviour
     protected bool _DS4_square_value = false;
     protected bool _DS4_triangle_value = false;
     protected bool _DS4_L1_value = false;
+    protected bool _DS4_L2_value = false;
     protected bool _DS4_R1_value = false;
+    protected bool _DS4_R2_value = false;
     protected bool _DS4_option_value = false;
     protected float _DS4_horizontal_value = 0.0f;
     protected float _DS4_vertical_value = 0.0f;
@@ -118,7 +122,9 @@ public class PlayerBase : MonoBehaviour
         _DS4_square_value = Input.GetButtonDown(DS4_square_name);
         _DS4_triangle_value = Input.GetButtonDown(DS4_triangle_name);
         _DS4_L1_value = Input.GetButtonDown(DS4_L1_name);
+        /*_DS4_L2_value = Input.GetButtonDown(DS4_L2_name);*/
         _DS4_R1_value = Input.GetButtonDown(DS4_R1_name);
+        /*_DS4_R2_value = Input.GetButtonDown(DS4_R2_name);*/
         _DS4_option_value = Input.GetButtonDown(DS4_option_name);
         _DS4_horizontal_value = Input.GetAxis(DS4_horizontal_name);
         _DS4_vertical_value = Input.GetAxis(DS4_vertical_name);

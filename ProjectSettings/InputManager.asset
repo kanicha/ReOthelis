@@ -553,7 +553,7 @@ InputManager:
     m_Name: Fire_L2
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
+    negativeButton: q
     positiveButton: joystick 1 button 6
     altNegativeButton: 
     altPositiveButton: 
@@ -569,7 +569,7 @@ InputManager:
     m_Name: Fire_L2_2
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
+    negativeButton: u
     positiveButton: joystick 2 button 6
     altNegativeButton: 
     altPositiveButton: 
@@ -585,7 +585,7 @@ InputManager:
     m_Name: Fire_R2
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
+    negativeButton: e
     positiveButton: joystick 1 button 7
     altNegativeButton: 
     altPositiveButton: 
@@ -601,7 +601,7 @@ InputManager:
     m_Name: Fire_R2_2
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
+    negativeButton: o
     positiveButton: joystick 2 button 7
     altNegativeButton: 
     altPositiveButton: 
