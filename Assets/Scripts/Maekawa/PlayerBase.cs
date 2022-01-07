@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -5,9 +6,12 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
+using Random = UnityEngine.Random;
 
 public class PlayerBase : MonoBehaviour
 {
+    #region キーボード用変数
+
     // キーネーム
     protected string DS4_circle_name = "";
     protected string DS4_cross_name = "";
@@ -64,7 +68,10 @@ public class PlayerBase : MonoBehaviour
     private bool _keyBoardLeft = false;
     private bool _keyBoardRight = false;
 
-    //
+    #endregion
+
+    #region ゲーム内部変数等
+
     [SerializeField, Header("1マス落下する時間")] private float _fallTime = 0.0f;
     [SerializeField] protected Text scoreText = null;
     [SerializeField] protected Text myPieceCountText = null;
@@ -84,10 +91,13 @@ public class PlayerBase : MonoBehaviour
 
     public int rotationNum = 0;
 
-    //
-    private const int _SKILL_1_COST = 3;
-    private const int _SKILL_2_COST = 5;
-    private const int _SKILL_3_COST = 15;
+    #endregion
+
+    #region スキル変数
+
+    protected const int _SKILL_1_COST = 3;
+    protected const int _SKILL_2_COST = 5;
+    protected const int _SKILL_3_COST = 15;
     protected Piece.PieceType playerType = Piece.PieceType.none;
     private bool _isSkillBlack;
     private bool _isSkillWhite;
@@ -96,17 +106,26 @@ public class PlayerBase : MonoBehaviour
     protected string enemyColor = "";
     protected string enemyColorfixity = "";
 
-    protected delegate void Skill_1(int cost);
+    protected delegate void Skill(int cost);
 
-    protected delegate void Skill_2(int cost);
+    protected Skill skill_1;
+    protected Skill skill_2;
+    protected Skill skill_3;
 
-    protected delegate void Skill_3(int cost);
+    public enum _skillNumber
+    {
+        skill_1,
+        skill_2,
+        skill_3
+    }
+    
+    // ディクショナリー宣言
+    protected Dictionary<string, Func<int, bool>>
+        _skillDictionary = new Dictionary<string, Func<int, bool>>();
 
-    protected Skill_1 skill_1;
-    protected Skill_2 skill_2;
-    protected Skill_3 skill_3;
+    #endregion
 
-    protected readonly Vector3[] rotationPos = new Vector3[]
+    private readonly Vector3[] rotationPos = new Vector3[]
     {
         // 0, 1, 2, 3
         new Vector3(0, 0, 1),
@@ -114,6 +133,27 @@ public class PlayerBase : MonoBehaviour
         new Vector3(0, 0, -1),
         new Vector3(1, 0, 0)
     };
+
+    protected virtual void Awake()
+    {
+        _skillDictionary = new Dictionary <string, Func<int, bool>>()
+        {
+            { "TakeAway", TakeAwayCheck },
+            { "RandomLock", RandomRockCheck },
+            { "MyPieceLock", RandomRockCheck },
+            { "Cancellation", CancellationCheck },
+            { "ForceConvertion", SpecialSkillCheck },
+            { "OneRowSet", SpecialSkillCheck },
+            { "PriorityGet", SpecialSkillCheck },
+            { "RobberyMoment", SpecialSkillCheck }
+        };
+    }
+
+    private List<(Skill, int)> _skillActiveList = new List<(Skill, int)>()
+    {
+    };
+    
+    #region キーボード処理
 
     protected void KeyInput()
     {
@@ -154,6 +194,8 @@ public class PlayerBase : MonoBehaviour
         last_Rstick_vertical_value = _DS4_Rstick_vertical_value;
     }
 
+    #endregion
+
     protected void InputSkill()
     {
         // スキル1...× スキル2...△ スキル3...□
@@ -170,6 +212,8 @@ public class PlayerBase : MonoBehaviour
             skill_3(_SKILL_3_COST);
         }
     }
+
+    #region 移動、回転処理
 
     /// <summary>
     /// state Active時のコマ移動関数
@@ -387,6 +431,8 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
+    #endregion
+
     /// <summary>
     /// スキルウィンドウ関数呼び出し
     /// </summary>
@@ -408,6 +454,8 @@ public class PlayerBase : MonoBehaviour
             GameDirector.Instance.gameState = GameDirector.GameState.end;
         }
     }
+
+    #region スキル内部処理
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected void SetSkills(int charaType)
@@ -440,6 +488,10 @@ public class PlayerBase : MonoBehaviour
             default:
                 break;
         }
+        
+        _skillActiveList.Add((skill_1,  _SKILL_1_COST));
+        _skillActiveList.Add((skill_2, _SKILL_2_COST));
+        _skillActiveList.Add((skill_3, _SKILL_3_COST));
     }
 
     private bool CheckColor(string type)
@@ -468,7 +520,7 @@ public class PlayerBase : MonoBehaviour
     /// そのスキルをすでに使用しているかどうかのチェック関数
     /// </summary>
     /// <returns></returns>
-    private bool SpacialSkillCheck()
+    private bool SpacialSkillUseCheck()
     {
         if (_isSkillBlack == true || _isSkillWhite == true)
             return true;
@@ -476,7 +528,7 @@ public class PlayerBase : MonoBehaviour
             return false;
     }
 
-    private bool NormalSkillCheck()
+    private bool NormalSkillUseCheck()
     {
         if (GameDirector.Instance._isSkillBlack || GameDirector.Instance._isSkillWhite)
             return true;
@@ -542,9 +594,7 @@ public class PlayerBase : MonoBehaviour
     public void TakeAway(int cost)
     {
         // スキルが発動できない時
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) ||
-            Map.Instance.isSkillCheck ||
-            NormalSkillCheck())
+        if (!TakeAwayCheck(cost))
         {
             return;
         }
@@ -582,9 +632,7 @@ public class PlayerBase : MonoBehaviour
     // 固定
     public void RandomLock(int cost)
     {
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost) ||
-            NormalSkillCheck())
+        if (!RandomRockCheck(cost))
         {
             return;
         }
@@ -593,7 +641,6 @@ public class PlayerBase : MonoBehaviour
         // 最下段を除くマップに自分の色があるなら(固定コマは対象外)
         if (CheckColor(myColor))
         {
-
             Debug.Log("固定");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
@@ -620,9 +667,7 @@ public class PlayerBase : MonoBehaviour
     // 残影
     public void MyPieceLock(int cost)
     {
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-            !ActivateCheck(GameDirector.GameState.active, cost) ||
-            NormalSkillCheck())
+        if (!RandomRockCheck(cost))
         {
             return;
         }
@@ -653,8 +698,7 @@ public class PlayerBase : MonoBehaviour
     public void Cancellation(int cost)
     {
         // 自分の色のコマを操作していなくても発動できる(意味はない)ので要相談
-        if (!ActivateCheck(GameDirector.GameState.preActive, cost) ||
-            NormalSkillCheck())
+        if (!CancellationCheck(cost))
         {
             return;
         }
@@ -662,7 +706,6 @@ public class PlayerBase : MonoBehaviour
         // フィールドに相手の色の固定こまがあった時発動
         if (CheckColor(enemyColorfixity))
         {
-
             Debug.Log("打ち消し");
             SoundManager.Instance.PlaySE(5);
             reversedCount -= cost;
@@ -705,9 +748,7 @@ public class PlayerBase : MonoBehaviour
     public void ForceConvertion(int cost)
     {
         // ゲームステートがpreActive(自動落下前) と active(操作中)の時コストがある時 発動可能
-        if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-             !ActivateCheck(GameDirector.GameState.active, cost)) ||
-            SpacialSkillCheck())
+        if (!SpecialSkillCheck(cost))
         {
             return;
         }
@@ -798,13 +839,11 @@ public class PlayerBase : MonoBehaviour
     // 横一列をすべて自分の色に変える(固定駒も適用)
     public void OneRowSet(int cost)
     {
-        if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-             !ActivateCheck(GameDirector.GameState.active, cost)) ||
-            SpacialSkillCheck())
+        if (!SpecialSkillCheck(cost))
         {
             return;
         }
-        
+
         Debug.Log("一列一式");
         skillCutinControl.ShowSkillCutin(1);
         reversedCount -= cost;
@@ -902,13 +941,11 @@ public class PlayerBase : MonoBehaviour
     // 下一番端の自分の色の駒からナナメに全て自分の色に置き換える
     public void PriorityGet(int cost)
     {
-        if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-             !ActivateCheck(GameDirector.GameState.active, cost)) ||
-            SpacialSkillCheck())
+        if (!SpecialSkillCheck(cost))
         {
             return;
         }
-        
+
         Debug.Log("優先頂戴");
         skillCutinControl.ShowSkillCutin(2);
         reversedCount -= cost;
@@ -982,15 +1019,13 @@ public class PlayerBase : MonoBehaviour
     // 盤面のコマを自分の駒と相手の駒を入れ替える
     public void RobberyMoment(int cost)
     {
-        if ((!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-             !ActivateCheck(GameDirector.GameState.active, cost)) ||
-            SpacialSkillCheck())
+        if (!SpecialSkillCheck(cost))
         {
             return;
         }
 
         int myColorCount = 0;
-        
+
         Debug.Log("強奪一瞬");
         skillCutinControl.ShowSkillCutin(0);
         reversedCount -= cost;
@@ -1019,4 +1054,77 @@ public class PlayerBase : MonoBehaviour
 
         AddSkillScore(25, myColorCount);
     }
+
+    /// <summary>
+    /// 強引のスキル発動可能チェック関数
+    /// </summary>
+    /// <param name="cost">コスト</param>
+    /// <returns></returns>
+    private bool TakeAwayCheck(int cost)
+    {
+        bool isCheck = !(!ActivateCheck(GameDirector.GameState.preActive, cost) ||
+                        Map.Instance.isSkillCheck ||
+                        NormalSkillUseCheck());
+
+        return isCheck;
+    }
+
+    /// <summary>
+    /// 固定、残影のスキル発動可能チェック関数
+    /// </summary>
+    /// <param name="cost">コスト</param>
+    /// <returns></returns>
+    private bool RandomRockCheck(int cost)
+    {
+        bool isCheck =
+            !(!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+             !ActivateCheck(GameDirector.GameState.active, cost) ||
+             NormalSkillUseCheck());
+
+        return isCheck;
+    }
+
+    /// <summary>
+    /// 打ち消しのスキル発動可能チェック関数
+    /// </summary>
+    /// <param name="cost">コスト</param>
+    /// <returns></returns>
+    private bool CancellationCheck(int cost)
+    {
+        bool isCheck = !(!ActivateCheck(GameDirector.GameState.preActive, cost) ||
+                        NormalSkillUseCheck());
+
+        return isCheck;
+    }
+
+    /// <summary>
+    /// 必殺技の発動可能チェック関数
+    /// </summary>
+    /// <param name="cost"></param>
+    /// <returns></returns>
+    private bool SpecialSkillCheck(int cost)
+    {
+        bool isCheck = !(!ActivateCheck(GameDirector.GameState.preActive, cost) &&
+                        !ActivateCheck(GameDirector.GameState.active, cost) ||
+                        SpacialSkillUseCheck());
+
+        return isCheck;
+    }
+
+    /// <summary>
+    /// スキルが発動可能かを別クラスにわたすpublicクラス
+    /// </summary>
+    /// <param name="skillNum">スキルの番号 0,1,2</param>
+    public bool SkillActiveChecker(_skillNumber skillnum)
+    {
+        int sn = (int)skillnum;
+
+        // tupleで値を習得
+        (Skill　skillName, int costNum) tupleContainer = _skillActiveList[sn];
+
+        // skillDictionary[tupleの1個目(string型).Invoke(実行する)](tupleの2個目(int型))
+        return _skillDictionary[tupleContainer.skillName.Method.Name](tupleContainer.costNum);
+    }
+
+    #endregion
 }

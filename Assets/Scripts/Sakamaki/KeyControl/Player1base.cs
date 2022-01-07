@@ -20,8 +20,10 @@ public class Player1Base : PlayerBase
     private const string _PLAYER1_RSTICK_HORIZONTAL_NAME = "Horizontal Stick-R";
     private const string _PLAYER1_RSTICK_VERTICAL_NAME = "Vertical Stick-R";
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         base.DS4_circle_name = _PLAYER1_CIRCLE_NAME;
         base.DS4_cross_name = _PLAYER1_CROSS_NAME;
         base.DS4_square_name = _PLAYER1_SQUARE_NAME;

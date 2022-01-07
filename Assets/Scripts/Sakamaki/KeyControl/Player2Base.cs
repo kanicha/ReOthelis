@@ -21,8 +21,10 @@ public class Player2Base : PlayerBase
     private const string _PLAYER2_RSTICK_VERTICAL_NAME = "Vertical Stick-R_2";
 
     // Start is called before the first frame update
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         base.DS4_circle_name = _PLAYER2_CIRCLE_NAME;
         base.DS4_cross_name = _PLAYER2_CROSS_NAME;
         base.DS4_square_name = _PLAYER2_SQUARE_NAME;

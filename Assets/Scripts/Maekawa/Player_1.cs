@@ -71,7 +71,10 @@ public class Player_1 : PlayerBase
         
         DebugGameEnd();
         base.ShowSkillWindow(KeyCode.N);
-        
+
+        if (SkillActiveChecker(_skillNumber.skill_2))
+            Debug.LogWarning("hoge");
+
         if (isMyTurn)
         {
             base.InputSkill();
