@@ -1025,6 +1025,7 @@ GameObject:
   - component: {fileID: 326221986}
   - component: {fileID: 326221985}
   - component: {fileID: 326221983}
+  - component: {fileID: 326221989}
   m_Layer: 0
   m_Name: GameDirector
   m_TagString: Untagged
@@ -1048,7 +1049,7 @@ MonoBehaviour:
   _marginTime: 0.5
   _preActiveTime: 3
   _DEFAULT_POSITION: {x: 4, y: 0, z: -1}
-  _generator: {fileID: 1559426143}
+  _generator: {fileID: 0}
   _player1: {fileID: 1435816371}
   _player2: {fileID: 0}
   IsAIOn: 0
@@ -1060,7 +1061,6 @@ MonoBehaviour:
   _isLanding: 0
   _isSkillBlack: 0
   _isSkillWhite: 0
-  _isTurn: 0
   gameState: 0
   nextStateCue: 0
 --- !u!114 &326221982
@@ -1094,7 +1094,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fallTime: 0
-  _nextButtonTime: 0
   scoreText: {fileID: 0}
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 0}
@@ -1102,8 +1101,6 @@ MonoBehaviour:
   skillCutinControl: {fileID: 0}
   skillWindowControl: {fileID: 0}
   isMyTurn: 0
-  isSkillActive: 0
-  isSpSkillActive: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -1137,32 +1134,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f65d1d9e9effa440ba60763ed47692a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fallTime: 0
-  _nextButtonTime: 0
-  scoreText: {fileID: 0}
-  myPieceCountText: {fileID: 0}
-  charactorImage: {fileID: 0}
-  gaugeController: {fileID: 0}
-  skillCutinControl: {fileID: 0}
-  skillWindowControl: {fileID: 0}
-  isMyTurn: 0
-  isSkillActive: 0
-  isSpSkillActive: 0
-  reverseScore: 0
-  preScore: 0
-  reversedCount: 0
-  myPieceCount: 0
-  controllPiece1: {fileID: 0}
-  controllPiece2: {fileID: 0}
-  rotationNum: 0
-  blackOutImage: {fileID: 1075792639}
-  _DEFAULT_POSITION: {x: 0, y: 0, z: 0}
+  point: 100
+  _marginTime: 0.5
+  _preActiveTime: 3
+  _DEFAULT_POSITION: {x: 4, y: 0, z: -1}
+  _generator: {fileID: 1559426142}
+  _player1: {fileID: 1435816373}
+  _effectController: {fileID: 326221989}
   _activePieces:
   - {fileID: 0}
   - {fileID: 0}
-  _explanText: {fileID: 664542749}
-  _explanImage: {fileID: 0}
-  _showImage: []
+  intervalTime: 0
+  _isLanding: 0
+  _isSkillBlack: 0
+  gameState: 0
+  nextStateCue: 0
+  isFadeIn: 0
+  isFadeOut: 0
+  isTutorialWaiting: 0
+  blackOutImage: {fileID: 1075792639}
+  explanText: {fileID: 664542749}
+  explanImage: {fileID: 0}
+  showImage: []
+  skillUsed: 0
   tutorialPhase: 0
 --- !u!114 &326221986
 MonoBehaviour:
@@ -1182,6 +1176,20 @@ MonoBehaviour:
   - {fileID: 21300000, guid: a6cc7f63350a838419d0f9ae97c7f180, type: 3}
   - {fileID: 21300000, guid: f22a2dbed8e065c44ab8f81bf6396773, type: 3}
   - {fileID: 21300000, guid: f53e73b3644c4a54a99d81f14efe4d9b, type: 3}
+--- !u!114 &326221989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326221980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 929ce7d80bb24f547aeb2aa068e02f06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _highLightTime: 0
+  _isTurn: 0
 --- !u!1 &368930345
 GameObject:
   m_ObjectHideFlags: 0
@@ -1568,7 +1576,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 576250713}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17515d32eb93c7f429e8633f0aaff978, type: 3}
+  m_Script: {fileID: 11500000, guid: 9796e4e69319c81488ace51202b7c85f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   turnPlayerColor: 0
@@ -3425,6 +3433,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1435816372}
   - component: {fileID: 1435816371}
+  - component: {fileID: 1435816373}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Untagged
@@ -3439,13 +3448,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1435816370}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ff4890c30099c147be9c6a942e8663e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _fallTime: 1
-  _nextButtonTime: 0
   scoreText: {fileID: 1122938205}
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 1873248609}
@@ -3453,8 +3461,6 @@ MonoBehaviour:
   skillCutinControl: {fileID: 326221986}
   skillWindowControl: {fileID: 200742603}
   isMyTurn: 0
-  isSkillActive: 0
-  isSpSkillActive: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -3476,6 +3482,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1435816373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435816370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd4f1fea8481ad54c9a3702c9179c06f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fallTime: 1
+  scoreText: {fileID: 1122938205}
+  myPieceCountText: {fileID: 0}
+  charactorImage: {fileID: 1873248609}
+  gaugeController: {fileID: 1359673130}
+  skillCutinControl: {fileID: 326221986}
+  skillWindowControl: {fileID: 200742603}
+  isMyTurn: 0
+  reverseScore: 0
+  preScore: 0
+  reversedCount: 0
+  myPieceCount: 0
+  controllPiece1: {fileID: 0}
+  controllPiece2: {fileID: 0}
+  rotationNum: 0
 --- !u!1 &1442513408
 GameObject:
   m_ObjectHideFlags: 0
@@ -3630,7 +3663,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1559426141}
-  - component: {fileID: 1559426143}
+  - component: {fileID: 1559426142}
   m_Layer: 0
   m_Name: PieceGenerator
   m_TagString: Untagged
@@ -3652,7 +3685,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1559426143
+--- !u!114 &1559426142
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3661,7 +3694,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1559426140}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7a6f5739635e1347a74986f9d5866eb, type: 3}
+  m_Script: {fileID: 11500000, guid: 16c9a0745dc028c4d8158f12362418b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   root: {fileID: 1824669614}

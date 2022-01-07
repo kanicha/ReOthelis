@@ -3,23 +3,56 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TutorialDirector : Player1Base
+public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
 {
-    private GameSceneManager _gameSceneManager;
-    private bool _isFadeIn = false;
-    private bool _isFadeOut = false;
-    private bool _isTutorialStart = false;
-    public static bool _isTutorialEnd = false;
-    public Image blackOutImage; //画面を暗くする用のイメージ
-    PiecePatternGeneretor _generator = null;
-    public Vector3 _DEFAULT_POSITION = Vector3.zero;
+    [SerializeField, Header("基本スコア")]
+    public int point = 0;
+    [SerializeField, Header("接地中に配置を確定するまでの時間")]
     private float _marginTime = 0;
+    [SerializeField, Header("事前に操作できる時間")]
+    private float _preActiveTime = 0;
+    [SerializeField, Header("ミノの初期位置")]
+    public Vector3 _DEFAULT_POSITION = Vector3.zero;
+    [SerializeField]
+    PiecePatternGeneretorForT _generator = null;
+    [SerializeField]
+    private Player_T1 _player1 = null;
+    [SerializeField, Header("エフェクトコントローラー")] private EffectControllerForT _effectController = null;
     private float _timeCount = 0;
+    private bool _isDown = true;
     public GameObject[] _activePieces = new GameObject[2];
-    [SerializeField] private Text _explanText;
+    public float intervalTime = 0;
+    public bool _isLanding = false;
+    public bool _isSkillBlack = false;
+    public GameState gameState = GameState.none;
+    public GameState nextStateCue = GameState.none;
+    private GameSceneManager _gameSceneManager;
+    public bool isFadeIn = false;
+    public bool isFadeOut = false;
+    public bool isTutorialWaiting = false;
+    public static bool isTutorialEnd = false;
+    public Image blackOutImage; //画面を暗くする用のイメージ
+    [SerializeField] private Text explanText;
     private string _showText;
-    [SerializeField] private Image _explanImage;
-    [SerializeField] private Sprite[] _showImage;
+    [SerializeField] private Image explanImage;
+    [SerializeField] private Sprite[] showImage;
+    public static bool ReverseFin = false;
+    public bool skillUsed = false;
+
+    public enum GameState
+    {
+        none,
+        preActive,
+        active,
+        confirmed,
+        falled,
+        interval,
+        reversed,
+        idle,
+        end,
+        ended,
+    }
+
     public TutorialPhase tutorialPhase = TutorialPhase.none;
     public enum TutorialPhase
     {
@@ -30,185 +63,238 @@ public class TutorialDirector : Player1Base
         MoveLeft,
         MoveRight,
         Reverse,
-        SkillIntro,
         SkillPanel,
         SkillActive,
         End,
     }
 
-    // Start is called before the first frame update
     void Start()
     {
+        SoundManager.Instance.PlayBGM(0);
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
-        _isFadeIn = false;
-        _isFadeOut = false;
-        _isTutorialEnd = false;
+        _player1.isMyTurn = false;
+        isFadeIn = false;
+        isFadeOut = false;
+        isTutorialEnd = false;
+
+        // 最初は2セット生成
+        PieceSet();
+        gameState = GameState.preActive;
+        ChangeTurn();
+        tutorialPhase = TutorialPhase.Intro;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        base.SaveKeyValue();
-        base.KeyInput();
+        TutorialMap.Instance.CheckMap();
+        Debug.Log(tutorialPhase);
 
-        if (_gameSceneManager.IsChanged == true && _isTutorialStart == false)
+        switch (gameState)
         {
-            tutorialPhase = TutorialPhase.Intro;
-            _isTutorialStart = true;
-        }
-
-        switch(tutorialPhase)
-        {
-            case TutorialPhase.Intro:
-            FadeIn();
-            _explanText.text = "導入パート";
-            //_explanImage.sprite = _showImage[0];
-            if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space) || _DS4_cross_value || Input.GetKeyDown(KeyCode.X))
-            {
-                FadeOut();
-                Debug.Log("Intro End");
-                //PieceSet();
-                tutorialPhase = TutorialPhase.SpinLeft;
-            }
-            break;
-
-            case TutorialPhase.SpinLeft:
-            _explanText.text = "L1キーを押してください。";
-            if (_DS4_L1_value || Input.GetKeyDown(KeyCode.P))
-            {
-                Debug.Log("L1 Key Input");
-                //base.PieceRotate();
-                tutorialPhase = TutorialPhase.SpinRight;
-            }
-            break;
-
-            case TutorialPhase.SpinRight:
-            _explanText.text = "R1キーを押してください。";
-            if (_DS4_R1_value || Input.GetKeyDown(KeyCode.L))
-            {
-                Debug.Log("R1 Key Input");
-                //base.PieceRotate();
-                tutorialPhase = TutorialPhase.MoveLeft;
-            }
-            break;
-
-            case TutorialPhase.MoveLeft:
-            _explanText.text = "左キーを押してください。";
-            if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
-                (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
-            {
-                Debug.Log("Left Key Input");
-                /*Vector3 move = Vector3.zero;
-                move.x = -1;
-
-                // 移動後の座標を計算
-                Vector3 movedPos = controllPiece1.transform.position + move;
-                Vector3 rotMovedPos = movedPos + rotationPos[rotationNum];
-
-                // 移動後の座標に障害物がなければ
-                if (Map.Instance.CheckWall(movedPos) && Map.Instance.CheckWall(rotMovedPos))
-                {
-                    controllPiece1.transform.position = movedPos;
-                    controllPiece2.transform.position = rotMovedPos;
-                }*/
-                tutorialPhase = TutorialPhase.MoveRight;
-            }
-            break;
-
-            case TutorialPhase.MoveRight:
-            _explanText.text = "右キーを押してください。";
-            if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) ||
-                (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
-            {
-                Debug.Log("Right Key Input");
-                /*Vector3 move = Vector3.zero;
-                move.x = 1;
-
-                // 移動後の座標を計算
-                Vector3 movedPos = controllPiece1.transform.position + move;
-                Vector3 rotMovedPos = movedPos + rotationPos[rotationNum];
-
-                // 移動後の座標に障害物がなければ
-                if (Map.Instance.CheckWall(movedPos) && Map.Instance.CheckWall(rotMovedPos))
-                {
-                    controllPiece1.transform.position = movedPos;
-                    controllPiece2.transform.position = rotMovedPos;
-                }*/
-                tutorialPhase = TutorialPhase.Reverse;
-            }
-            break;
-
-            case TutorialPhase.Reverse:
-            FadeIn();
-            _explanText.text = "ひっくり返しパート";
-            if (_isFadeIn == true && Input.GetKeyDown(KeyCode.Space) || _isFadeIn == true && _DS4_circle_value)
-            {
-                FadeOut();
-                tutorialPhase = TutorialPhase.SkillIntro;
-            }
-            /*if (Map.Instance.CheckLanding(_activePieces[0].transform.position) || Map.Instance.CheckLanding(_activePieces[1].transform.position))
-            {
-                // 接地時にカウント
+            case GameState.preActive:
+                _effectController.FallPieceHighLight(true);
+                
+                _isLanding = false;
+                _isDown = true;
                 _timeCount += Time.deltaTime;
-                if (_timeCount > _marginTime)
+
+                if (tutorialPhase == TutorialPhase.Intro && _gameSceneManager.IsChanged == true && isTutorialWaiting == false)
                 {
-                    _timeCount = 0;
+                    blackOutImage.color = new Color(0,0,0,0.5f);
+                    isFadeIn = true;
+                    explanText.text = "〇ボタンを押して次に進む。";
+                    //explanImage.sprite = showImage[0];
+                    isTutorialWaiting = true;
                 }
-            }
-            else
-                _timeCount = 0;*/
-            break;
 
-            case TutorialPhase.SkillIntro:
-            FadeIn();
-            _explanText.text = "スキルパート";
-            if (Input.GetKeyDown(KeyCode.Space) || _DS4_circle_value)
-            {
-                FadeOut();
-                tutorialPhase = TutorialPhase.SkillPanel;
-            }
-            break;
+                else if (tutorialPhase == TutorialPhase.MoveLeft)
+                {
+                    explanText.text = "左キーでコマを左端まで移動してください。";
+                    //explanImage.sprite = showImage[1];
+                }
 
-            case TutorialPhase.SkillPanel:
-            _explanText.text = "スキルパネルを開いてください。";
-            if (Input.GetKeyDown(KeyCode.N) || _DS4_option_value)
-            {
-                Debug.Log("Skill Panel On");
-                tutorialPhase = TutorialPhase.SkillActive;
-            }
-            break;
+                else if (tutorialPhase == TutorialPhase.MoveRight)
+                {
+                    explanText.text = "右キーでコマを右端まで移動してください。";
+                    //explanImage.sprite = showImage[2];
+                }
 
-            case TutorialPhase.SkillActive:
-            _explanText.text = "必殺技を使ってください。";
-            if (_DS4_square_value)
-            {
-                Debug.Log("Skill Active");
-                tutorialPhase = TutorialPhase.End;
-            }
-            break;
+                else if (tutorialPhase == TutorialPhase.SpinLeft)
+                {
+                    explanText.text = "L1キーでコマを回転してください。";
+                    //explanImage.sprite = showImage[3];
+                }
 
-            case TutorialPhase.End:
-            _explanText.text = "終了";
-            _isTutorialEnd = true;
-            break;
+                else if (tutorialPhase == TutorialPhase.SpinRight)
+                {
+                    explanText.text = "R1キーでコマを回転してください。";
+                    //explanImage.sprite = showImage[4];
+                }
+
+                else if (tutorialPhase == TutorialPhase.SkillPanel)
+                {
+                    explanText.text = "optionボタンを押してスキル効果の詳細を表示する。";
+                    //explanImage.sprite = showImage[];
+                }
+
+                else if (tutorialPhase == TutorialPhase.SkillActive)
+                {
+                    explanText.text = "△ボタンを押して必殺技を発動する。";
+                    //explanImage.sprite = showImage[];
+                    if (skillUsed == true)
+                    {
+                        explanText.text = "必殺技を使用しました。\nこれにてチュートリアルを終了します。\n〇ボタンでタイトル画面に戻ります。";
+                        tutorialPhase = TutorialPhase.End;
+                    }
+                }
+
+                // 待機時間を超えたらステートをすすめる(自動落下の処理はPieceMove()で管理)
+                else if (tutorialPhase == TutorialPhase.Reverse && _timeCount > _preActiveTime)
+                {
+                    // 時間経過によりコマを一個下げる
+                    _activePieces[0].transform.position += new Vector3(0, 0, -1);
+                    _activePieces[1].transform.position += new Vector3(0, 0, -1);
+                    
+                    explanText.text = "コマは自動で落下し、一番下で着地したら、\nオセロみたいに同じ色で挟んだコマをひっくり返します。";
+                    //explanImage.sprite = showImage[5];
+
+                    // さげたら推移
+                    intervalTime = 0;
+                    nextStateCue = GameState.active;
+                    gameState = GameState.interval;
+                }
+                break;
+
+            case GameState.active:
+                _effectController.FallPieceHighLight(true);
+                
+                if (TutorialMap.Instance.CheckLanding(_activePieces[0].transform.position) || TutorialMap.Instance.CheckLanding(_activePieces[1].transform.position))
+                {
+                    // 接地時にカウント
+                    _timeCount += Time.deltaTime;
+                    if (_timeCount > _marginTime)
+                    {
+                        _timeCount = 0;
+                        gameState = GameState.confirmed;
+                    }
+                }
+                else
+                    _timeCount = 0;
+                break;
+
+            case GameState.confirmed:
+                _effectController.FallPieceHighLight(false);
+                if (_activePieces[0].transform.position.z > _activePieces[1].transform.position.z)
+                {
+                    // 下側のコマがインデックス0になるようソート
+                    GameObject tempPiece = _activePieces[0];
+                    _activePieces[0] = _activePieces[1];
+                    _activePieces[1] = tempPiece;
+                }
+                
+                TutorialMap.Instance.FallPiece(_activePieces[0]);
+                TutorialMap.Instance.FallPiece(_activePieces[1]);
+                _isLanding = true;
+                gameState = GameState.falled;
+                break;
+
+            case GameState.falled:
+                SoundManager.Instance.PlaySE(3);
+                CheckPriority();
+                TutorialMap.Instance.TagClear();
+
+                gameState = GameState.idle;
+                // リバース・アニメーション処理
+                for (int i = 0; i < _activePieces.Length; i++)
+                {
+                    if(TutorialMap.Instance.CheckHeightOver(_activePieces[i],false))
+                        StartCoroutine(TutorialMap.Instance.CheckReverse(_activePieces[i],false));
+                }
+                
+                // スキルフラグ初期化
+                _isSkillBlack = false;
+                break;
+
+            case GameState.interval:// 強引スキル連打でバグが出るので時間を取る(応急処置)
+                _timeCount += Time.deltaTime;
+                if (_timeCount > intervalTime)
+                {
+                    gameState = nextStateCue;
+                    _timeCount = 0;
+                }                
+                break;
+
+            case GameState.reversed:
+                // ゲーム終了判定
+                if (TutorialMap.Instance.CheckEnd())
+                    gameState = GameState.end;
+                else
+                {
+                    tutorialPhase = TutorialPhase.Intro;
+                    ReverseFin = true;
+                    PieceSet();
+                    gameState = GameState.preActive;
+                    ChangeTurn();
+                }
+                break;
+
+            case GameState.end:
+                SoundManager.Instance.StopBGM();
+                gameState = GameState.ended;
+                break;
 
             default:
                 break;
         }
     }
 
-    public void FadeIn()
+    private void CheckPriority()
     {
-        blackOutImage.color = new Color(0,0,0,0.5f);
-        _isFadeIn = true;
-        _isFadeOut = false;
+        // ターンプレイヤーの色を判定
+        Piece.PieceType playersType;
+
+        if (_player1.isMyTurn)
+            playersType = Piece.PieceType.black;
+        else
+            playersType = Piece.PieceType.white;
+
+        TutorialMap.Instance.turnPlayerColor = playersType;
+
+        // どちらのコマからひっくり返すか判定
+        GameObject tempPiece = _activePieces[0];
+        Piece piece1 = _activePieces[0].GetComponent<Piece>();
+        Piece piece2 = _activePieces[1].GetComponent<Piece>();
+
+        // [色を比較]  どちらも自分の色 or どちらも相手の色ならポジションで判断する
+        if ((piece1.pieceType == playersType && piece2.pieceType == playersType) || (piece1.pieceType != playersType && piece2.pieceType != playersType))
+        {
+            // [0]が上ならソート
+            if ((int)_activePieces[0].transform.position.z > (int)_activePieces[1].transform.position.z)
+            {
+                _activePieces[0] = _activePieces[1];
+                _activePieces[1] = tempPiece;
+            }
+            // [0]が右ならソート
+            else if (_activePieces[0].transform.position.x > _activePieces[1].transform.position.x)
+            {
+                _activePieces[0] = _activePieces[1];
+                _activePieces[1] = tempPiece;
+            }
+        }
+        else if (piece2.pieceType == playersType)
+        {
+            _activePieces[0] = _activePieces[1];
+            _activePieces[1] = tempPiece;
+        }
     }
 
-    public void FadeOut()
+    private void ChangeTurn()
     {
-        blackOutImage.color = new Color(0,0,0,0);
-        _isFadeOut = true;
-        _isFadeIn = false;
+        _player1.rotationNum = 0;
+        _player1.controllPiece1 = _activePieces[0];
+        _player1.controllPiece2 = _activePieces[1];
+        _player1.isMyTurn = true;
+        gameState = GameState.preActive;
     }
 
     private void PieceSet()
@@ -219,7 +305,7 @@ public class TutorialDirector : Player1Base
         while(true)
         {
             Vector3 checkPos = generatePos + new Vector3(x, 0);
-            if (Map.Instance.CheckWall(checkPos))
+            if (TutorialMap.Instance.CheckWall(checkPos))
             {
                 _generator.Generate(checkPos + Vector3.forward);
                 break;
@@ -227,7 +313,7 @@ public class TutorialDirector : Player1Base
             else
             {
                 checkPos = generatePos + new Vector3(x * -1, 0);
-                if (Map.Instance.CheckWall(checkPos))
+                if (TutorialMap.Instance.CheckWall(checkPos))
                 {
                     _generator.Generate(checkPos + Vector3.forward);
                     break;
@@ -237,5 +323,32 @@ public class TutorialDirector : Player1Base
             if (x > 4)
                 Debug.LogError("生成できるマスがありません");
         }
+    }
+
+    public void AddScore(bool isBlack, int point)
+    {
+        if(isBlack)
+        {
+            _player1.reverseScore += point;
+        }
+    }
+
+    public void AddPreScore(bool isBlack, int point)
+    {
+        if (isBlack)
+        {
+            _player1.preScore += point;
+        }
+    }
+
+    public void AddReversedCount(bool isBlack)
+    {
+        if(isBlack)
+            _player1.reversedCount++;
+    }
+
+    public void AddPieceCount(int blackCount, int whiteCount)
+    {
+        _player1.myPieceCount = blackCount;
     }
 }
