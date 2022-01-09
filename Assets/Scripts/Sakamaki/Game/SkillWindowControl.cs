@@ -21,6 +21,6 @@ public class SkillWindowControl : MonoBehaviour
     public void ShowSkillWindow()
     {
         _animator.SetTrigger("skillWindow");
-        
+        TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SkillActive;
     }
 }

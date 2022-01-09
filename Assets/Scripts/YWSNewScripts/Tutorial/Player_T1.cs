@@ -70,7 +70,10 @@ public class Player_T1 : PlayerBaseForT
         base.KeyInput();
         
         DebugGameEnd();
-        base.ShowSkillWindow(KeyCode.N);
+        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SkillPanel)
+        {
+            base.ShowSkillWindow(KeyCode.N);
+        }
         
         if (isMyTurn)
         {
@@ -87,12 +90,16 @@ public class Player_T1 : PlayerBaseForT
                 base.PrePieceMove();
                 base.PieceRotate();
             }
-            else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Intro)
-            {
-                base.TutorialPhaseChange();
-            }
         }
-        else
-            base.charactorImage.color = new UnityEngine.Color(0.5f, 0.5f, 0.5f);
+
+        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Intro)
+        {
+            base.TutorialPhaseChange();
+        }
+
+        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SkillActive)
+        {
+            base.gaugeController.DrawGauge(20);
+        }
     }
 }

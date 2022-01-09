@@ -226,17 +226,27 @@ public class PlayerBaseForT : MonoBehaviour
     {
         int lastNum = rotationNum;
 
-        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SpinLeft && _DS4_L1_value || TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SpinLeft && _keyBoardLeft)
+        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SpinLeft && (_DS4_L1_value || _keyBoardLeft))
+        {
+            rotationNum++; // 左回転
+            TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinRight;
+        }
+        else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SpinRight && (_DS4_R1_value || _keyBoardRight))
+        {
+            rotationNum += 3; // 右回転(=左に3回転)
+            TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.Intro;
+        }
+        else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Reverse && (_DS4_L1_value || _keyBoardLeft))
         {
             rotationNum++; // 左回転
         }
-        else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SpinRight && _DS4_R1_value || TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SpinRight && _keyBoardRight)
+        else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Reverse && (_DS4_R1_value || _keyBoardRight))
         {
             rotationNum += 3; // 右回転(=左に3回転)
         }
 
-        // 初期値0 左から 1,2,3
-        rotationNum %= 4;
+            // 初期値0 左から 1,2,3
+            rotationNum %= 4;
 
         // 軸のコマ + 回転後の座標 変数
         Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
@@ -274,16 +284,6 @@ public class PlayerBaseForT : MonoBehaviour
             else
                 // 壁にあたってる時 かつ 片方の壁に当たっている時 回転ボタン押しで回転
                 AnotherTurn(rotatedLeftPos, rotatedRightPos);
-        }
-
-        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SpinLeft)
-        {
-            TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinRight;
-        }
-
-        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SpinRight)
-        {
-            TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.Intro;
         }
     }
 
@@ -349,7 +349,6 @@ public class PlayerBaseForT : MonoBehaviour
     }
 
     public static bool isPieceArrivalLeft = false;
-    public static bool isPieceArrivalRight = false;
 
     /// <summary>
     /// 待機中の移動関数
@@ -359,17 +358,18 @@ public class PlayerBaseForT : MonoBehaviour
         Vector3 move = Vector3.zero;
 
         // 左右移動
-        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
-            (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
+        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.MoveLeft &&
+            ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
+            (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0)))
             move.x = -1;
-        else if ((isPieceArrivalLeft == true && _DS4_horizontal_value > 0 && last_horizontal_value == 0) ||
-                 (isPieceArrivalLeft == true && _DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
+        else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.MoveRight &&
+                ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) ||
+                (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0)))
             move.x = 1;
         /*else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
                  (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
             move.z = -1;
-
             // した入力時ステート変更
             TutorialDirector.Instance.intervalTime = 0;
             TutorialDirector.Instance.nextStateCue = TutorialDirector.GameState.active;
@@ -387,18 +387,19 @@ public class PlayerBaseForT : MonoBehaviour
                 Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
 
                 // 壁まで行ったらスルー
-                if ((int)movedPos.x < 1)
+                if ((int)movedPos.x < 1 || (int)movedPos.x > 8)
+                {
+                    break;
+                }
+                else if ((int)movedPos.x - 1 < 1)
                 {
                     isPieceArrivalLeft = true;
                     MoveLeftFin = true;
                     TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.MoveRight;
-                    break;
                 }
-                else if ((int)movedPos.x > 8)
+                else if ((int)movedPos.x + 1 > 8)
                 {
-                    isPieceArrivalRight = true;
                     TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinLeft;
-                    break;
                 }
 
                 // 移動後の座標の1つ下に障害物がなければ
@@ -418,9 +419,8 @@ public class PlayerBaseForT : MonoBehaviour
     /// <param name="inputKey"></param>
     protected void ShowSkillWindow(KeyCode inputKey)
     {
-        if (/*TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SkillPanel && Input.GetKeyDown(inputKey) ||*/ TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SkillPanel && _DS4_option_value)
+        if (Input.GetKeyDown(inputKey) || _DS4_option_value)
             skillWindowControl.ShowSkillWindow();
-            TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SkillActive;
     }
 
     /// <summary>
@@ -1045,7 +1045,7 @@ public class PlayerBaseForT : MonoBehaviour
     private bool MoveLeftFin = false;
     public void TutorialPhaseChange()
     {
-        if (TutorialDirector.Instance.isFadeIn == true && _DS4_circle_value || TutorialDirector.Instance.isFadeIn == true && Input.GetKeyDown(KeyCode.Space))
+        if (TutorialDirector.Instance.isFadeIn == true && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)))
         {
             TutorialDirector.Instance.blackOutImage.color = new Color(0,0,0,0);
             TutorialDirector.Instance.isFadeOut = true;
@@ -1062,7 +1062,6 @@ public class PlayerBaseForT : MonoBehaviour
             {
                 TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SkillPanel;
             }
-            TutorialDirector.Instance.isTutorialWaiting = false;
         }
     }
 }

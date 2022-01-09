@@ -29,8 +29,16 @@ public class Piece : MonoBehaviour
 
     public void Init()
     {
-        _renderer[0].GetComponent<Renderer>().sharedMaterial = _material[(int) CharaImageMoved.charaType1P];
-        _renderer[1].GetComponent<Renderer>().sharedMaterial = _material[(int) CharaImageMoved2P.charaType2P + 4];
+        if (ModeSelect._selectCount == 2)
+        {
+            _renderer[0].GetComponent<Renderer>().sharedMaterial = _material[2];
+            _renderer[1].GetComponent<Renderer>().sharedMaterial = _material[6];
+        }
+        else
+        {
+            _renderer[0].GetComponent<Renderer>().sharedMaterial = _material[(int)CharaImageMoved.charaType1P];
+            _renderer[1].GetComponent<Renderer>().sharedMaterial = _material[(int)CharaImageMoved2P.charaType2P + 4];
+        }
     }
 
     public void Reverse()

@@ -12,9 +12,9 @@ public class PiecePatternGeneretorForT : MonoBehaviour
     // シャッフルされた数値格納する変数
     int num = 0;
     public static int type = 0;
-    bool whiteChecker = false;
-    bool blackChecker = false;
-    
+    private int PieceGenerated = 0;
+
+
     public GameObject Generate(Vector3 GeneratePos)
     {
         // コマタイプ
@@ -22,27 +22,17 @@ public class PiecePatternGeneretorForT : MonoBehaviour
         // ランダム
         num = Random.Range(0, SHUFFLE_NUM);
 
-        // 50% で別色
-        if (num < 50 || (blackChecker && whiteChecker))
+        // 別色
+        if (PieceGenerated == 0)
         {
             type = 3;
-
-            blackChecker = false;
-            whiteChecker = false;
+            PieceGenerated++;
         }
-        // 25% で同色 (白)
-        else if ((num < 75 && !whiteChecker) || blackChecker)
-        {
-            type = 2;
-            
-            whiteChecker = true;
-        }
-        // 余りの25%　(黒)
-        else
+        // (黒)
+        else if (PieceGenerated == 1)
         {
             type = 1;
-            
-            blackChecker = true;
+            PieceGenerated = 0;
         }
 
         // コマ1つ目処理
