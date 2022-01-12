@@ -119,7 +119,7 @@ public class PlayerBase : MonoBehaviour
         skill_2,
         skill_3
     }
-    
+
     // ディクショナリー宣言
     protected Dictionary<string, Func<int, bool>>
         _skillDictionary = new Dictionary<string, Func<int, bool>>();
@@ -137,7 +137,7 @@ public class PlayerBase : MonoBehaviour
 
     protected virtual void Awake()
     {
-        _skillDictionary = new Dictionary <string, Func<int, bool>>()
+        _skillDictionary = new Dictionary<string, Func<int, bool>>()
         {
             { "TakeAway", TakeAwayCheck },
             { "RandomLock", RandomRockCheck },
@@ -153,7 +153,7 @@ public class PlayerBase : MonoBehaviour
     private List<(Skill, int)> _skillActiveList = new List<(Skill, int)>()
     {
     };
-    
+
     #region キーボード処理
 
     protected void KeyInput()
@@ -414,7 +414,7 @@ public class PlayerBase : MonoBehaviour
             while (true)
             {
                 movedPos += move;
-                Vector3 movedUnderPos = movedPos + Vector3.back;
+                Vector3 movedUnderPos = movedPos + new Vector3(0, 0, -1);
                 Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
 
                 // 壁まで行ったらスルー
@@ -429,6 +429,10 @@ public class PlayerBase : MonoBehaviour
                     break;
                 }
             }
+            
+            // エラーの原因は z 軸を増加させてしまうと、 moveが増えたことにより ifに入ってしまい
+            // ifの中でUnderの計算をしているため zが 2 増えてしまいOutOfRangeになってしまう
+            // 近いうちに直したい
         }
     }
 
@@ -489,8 +493,8 @@ public class PlayerBase : MonoBehaviour
             default:
                 break;
         }
-        
-        _skillActiveList.Add((skill_1,  _SKILL_1_COST));
+
+        _skillActiveList.Add((skill_1, _SKILL_1_COST));
         _skillActiveList.Add((skill_2, _SKILL_2_COST));
         _skillActiveList.Add((skill_3, _SKILL_3_COST));
     }
@@ -1064,8 +1068,8 @@ public class PlayerBase : MonoBehaviour
     private bool TakeAwayCheck(int cost)
     {
         bool isCheck = !(!ActivateCheck(GameDirector.GameState.preActive, cost) ||
-                        Map.Instance.isSkillCheck ||
-                        NormalSkillUseCheck());
+                         Map.Instance.isSkillCheck ||
+                         NormalSkillUseCheck());
 
         return isCheck;
     }
@@ -1079,8 +1083,8 @@ public class PlayerBase : MonoBehaviour
     {
         bool isCheck =
             !(!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-             !ActivateCheck(GameDirector.GameState.active, cost) ||
-             NormalSkillUseCheck());
+              !ActivateCheck(GameDirector.GameState.active, cost) ||
+              NormalSkillUseCheck());
 
         return isCheck;
     }
@@ -1093,7 +1097,7 @@ public class PlayerBase : MonoBehaviour
     private bool CancellationCheck(int cost)
     {
         bool isCheck = !(!ActivateCheck(GameDirector.GameState.preActive, cost) ||
-                        NormalSkillUseCheck());
+                         NormalSkillUseCheck());
 
         return isCheck;
     }
@@ -1106,8 +1110,8 @@ public class PlayerBase : MonoBehaviour
     private bool SpecialSkillCheck(int cost)
     {
         bool isCheck = !(!ActivateCheck(GameDirector.GameState.preActive, cost) &&
-                        !ActivateCheck(GameDirector.GameState.active, cost) ||
-                        SpacialSkillUseCheck());
+                         !ActivateCheck(GameDirector.GameState.active, cost) ||
+                         SpacialSkillUseCheck());
 
         return isCheck;
     }
@@ -1121,7 +1125,7 @@ public class PlayerBase : MonoBehaviour
         int sn = (int)skillnum;
 
         // tupleで値を習得
-        (Skill　skillName, int costNum) tupleContainer = _skillActiveList[sn];
+        (Skill skillName, int costNum) tupleContainer = _skillActiveList[sn];
 
         // skillDictionary[tupleの1個目(string型).Invoke(実行する)](tupleの2個目(int型))
         return _skillDictionary[tupleContainer.skillName.Method.Name](tupleContainer.costNum);
