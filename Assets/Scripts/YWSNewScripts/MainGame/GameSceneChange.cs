@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,27 +8,34 @@ public class GameSceneChange : MonoBehaviour
 {
     private GameSceneManager _gameSceneManager;
     private GameDirector _gameDirector;
-    bool isGameEnd = false;
+    private bool _isGameEnd = false;
 
     void Start()
     {
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
         _gameDirector = FindObjectOfType<GameDirector>();
-        isGameEnd = false;
+        _isGameEnd = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_gameDirector.gameState == GameDirector.GameState.ended && isGameEnd == false)
+        try
         {
-            SceneChange(_gameSceneManager);
-            isGameEnd = true;
+            if (_gameDirector.gameState == GameDirector.GameState.ended && _isGameEnd == false)
+            {
+                SceneChange(_gameSceneManager);
+                _isGameEnd = true;
+            }
+            else if (_gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.G))
+            {
+                SkipGame(_gameSceneManager);
+                _isGameEnd = true;
+            }
         }
-        else if (_gameSceneManager.IsChanged == true && Input.GetKeyDown(KeyCode.G))
+        catch (Exception e)
         {
-            SkipGame(_gameSceneManager);
-            isGameEnd = true;
+            return;
         }
     }
 

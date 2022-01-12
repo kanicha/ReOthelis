@@ -79,6 +79,7 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] protected GaugeController gaugeController = null;
     [SerializeField] protected SkillCutinControl skillCutinControl = null;
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
+    [SerializeField] protected SkillGageEffect _skillGageEffect = null;
     private float _moveTimeCount = 0.0f;
     public bool isMyTurn = false;
     public int reverseScore = 0;
