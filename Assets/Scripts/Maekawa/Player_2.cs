@@ -66,11 +66,14 @@ public class Player_2 : PlayerBase
         base.KeyInput();
 
         base.ShowSkillWindow(KeyCode.M);
-        
+
         if (isMyTurn)
         {
             base.InputSkill();
-
+            
+            base._skillGageEffect.CheckSkillGageEffect();
+            base._skillGageEffect.StartSkillGageEffect();
+            
             base.charactorImage.color = new UnityEngine.Color(1, 1, 1);
             if (GameDirector.Instance.gameState == GameDirector.GameState.active)
             {
