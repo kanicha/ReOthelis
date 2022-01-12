@@ -408,7 +408,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 74797580}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -417,8 +417,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 696.2, y: -270}
-  m_SizeDelta: {x: 1635.915, y: 2379.5}
+  m_AnchoredPosition: {x: 732, y: -353}
+  m_SizeDelta: {x: 1311, y: 2160.0388}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &74797582
 MonoBehaviour:
@@ -440,7 +440,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d9cdd1db83540d4469b778f1349bca3e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b61bf5a085948a84786b6b1b5882d33b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5786,8 +5786,6 @@ MonoBehaviour:
   skillCutinControl: {fileID: 0}
   skillWindowControl: {fileID: 0}
   isMyTurn: 0
-  isSkillActive: 0
-  isSpSkillActive: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -5798,10 +5796,10 @@ MonoBehaviour:
   _charactorInfo: {fileID: 1540159300}
   charactorImage2P: {fileID: 74797582}
   charactorImageArray2P:
-  - {fileID: 21300000, guid: 29228b4179b4b274cb810b145f4dfad0, type: 3}
-  - {fileID: 21300000, guid: c1e3e5325ca4d1a499af8d2fa2b58bcc, type: 3}
-  - {fileID: 21300000, guid: ba4a5e35f62f1c4468bbd068fc2c7292, type: 3}
-  - {fileID: 21300000, guid: a93cbe3b6fa2f9c45ab7e4b040c68689, type: 3}
+  - {fileID: 21300000, guid: b61bf5a085948a84786b6b1b5882d33b, type: 3}
+  - {fileID: 21300000, guid: b0cf8c613de787645a95c7ccf0200618, type: 3}
+  - {fileID: 21300000, guid: e9201e60e17caa34a8d9f911cde419f9, type: 3}
+  - {fileID: 21300000, guid: 2c4c306f5698d62439a6803b0ce51cf8, type: 3}
   charactorButtonWhite2P:
   - {fileID: 160395367}
   - {fileID: 1232691586}
@@ -5828,8 +5826,6 @@ MonoBehaviour:
   skillCutinControl: {fileID: 0}
   skillWindowControl: {fileID: 0}
   isMyTurn: 0
-  isSkillActive: 0
-  isSpSkillActive: 0
   reverseScore: 0
   preScore: 0
   reversedCount: 0
@@ -5840,10 +5836,10 @@ MonoBehaviour:
   _charactorInfo: {fileID: 1540159299}
   charactorImage1P: {fileID: 1936964424}
   charactorImageArray1P:
-  - {fileID: 21300000, guid: 6804cda90efb29c40a55252eaf06ab92, type: 3}
-  - {fileID: 21300000, guid: 33406fdbccc450a4e9836d962f782915, type: 3}
-  - {fileID: 21300000, guid: abdf42b0056f431409e4711d4c508bfe, type: 3}
-  - {fileID: 21300000, guid: b1943ffd00de4ff45bf21fb765e77496, type: 3}
+  - {fileID: 21300000, guid: c0770b2cf0042ce468f7912b4addc97c, type: 3}
+  - {fileID: 21300000, guid: 9ec23710c50771a489d7619ff606d2c7, type: 3}
+  - {fileID: 21300000, guid: 137e030a9ada23d47bf3c9f70b5411b9, type: 3}
+  - {fileID: 21300000, guid: a6d332f9c30e0974d9ed4d7f5e9d767c, type: 3}
   charactorButtonWhite1P:
   - {fileID: 629646310}
   - {fileID: 1474418322}
@@ -7246,8 +7242,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -696.2, y: -270}
-  m_SizeDelta: {x: 1635.915, y: 2379.5}
+  m_AnchoredPosition: {x: -732, y: -353}
+  m_SizeDelta: {x: 1311, y: 2160.0388}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1936964424
 MonoBehaviour:
@@ -7269,7 +7265,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 020145bb634dc244abc159c66b44d1e8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a6d332f9c30e0974d9ed4d7f5e9d767c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

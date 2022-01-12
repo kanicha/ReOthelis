@@ -84,6 +84,7 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
         gameState = GameState.preActive;
         ChangeTurn();
         tutorialPhase = TutorialPhase.Intro;
+
     }
 
     void Update()

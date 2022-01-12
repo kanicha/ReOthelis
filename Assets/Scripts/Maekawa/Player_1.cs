@@ -71,11 +71,14 @@ public class Player_1 : PlayerBase
         
         DebugGameEnd();
         base.ShowSkillWindow(KeyCode.N);
-        
+
         if (isMyTurn)
         {
             base.InputSkill();
 
+            base._skillGageEffect.CheckSkillGageEffect();
+            base._skillGageEffect.StartSkillGageEffect();
+            
             base.charactorImage.color = new UnityEngine.Color(1, 1, 1);
             if (GameDirector.Instance.gameState == GameDirector.GameState.active)
             {
