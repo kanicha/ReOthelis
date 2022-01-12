@@ -27,6 +27,8 @@ public class TutorialMap : SingletonMonoBehaviour<TutorialMap>
     public readonly string empty = "□";
     public readonly string black = "●";
     public readonly string white = "〇";
+    public readonly string fixityBlack = "★";
+    public readonly string fixityWhite = "☆";
 
     /// <summary>
     /// 移動後のコマが障害物に当たるかを調べる
@@ -223,12 +225,16 @@ public class TutorialMap : SingletonMonoBehaviour<TutorialMap>
         if (type == Piece.PieceType.black || type == Piece.PieceType.fixityBlack)
         {
             _myColor = black;
+            _fixityMyColor = fixityBlack;
             _enemyColor = white;
+            _fixityEnemyColor = fixityWhite;
         }
         else
         {
             _myColor = white;
+            _fixityMyColor = fixityWhite;
             _enemyColor = black;
+            _fixityEnemyColor = fixityBlack;
         }
 
         // 置いたマスの座標を取得

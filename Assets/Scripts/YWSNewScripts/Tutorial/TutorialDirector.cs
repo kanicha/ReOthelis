@@ -18,6 +18,7 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
     [SerializeField]
     private Player_T1 _player1 = null;
     [SerializeField, Header("エフェクトコントローラー")] private EffectControllerForT _effectController = null;
+
     private float _timeCount = 0;
     private bool _isDown = true;
     public GameObject[] _activePieces = new GameObject[2];
@@ -26,6 +27,7 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
     public bool _isSkillBlack = false;
     public GameState gameState = GameState.none;
     public GameState nextStateCue = GameState.none;
+
     private GameSceneManager _gameSceneManager;
     public bool isFadeIn = false;
     public bool isFadeOut = false;
@@ -87,7 +89,6 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
     void Update()
     {
         TutorialMap.Instance.CheckMap();
-        Debug.Log(tutorialPhase);
 
         switch (gameState)
         {
@@ -148,56 +149,6 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                     default:
                         break;
                 }
-
-                /*if (tutorialPhase == TutorialPhase.Intro && _gameSceneManager.IsChanged == true)
-                {
-                    blackOutImage.color = new Color(0,0,0,0.5f);
-                    isFadeIn = true;
-                    explanText.text = "〇ボタンを押して次に進む。";
-                    
-                    //explanImage.sprite = showImage[0];
-                }
-
-                else if (tutorialPhase == TutorialPhase.MoveLeft)
-                {
-                    explanText.text = "左キーでコマを左端まで移動してください。";
-                    //explanImage.sprite = showImage[1];
-                }
-
-                else if (tutorialPhase == TutorialPhase.MoveRight)
-                {
-                    explanText.text = "右キーでコマを右端まで移動してください。";
-                    //explanImage.sprite = showImage[2];
-                }
-
-                else if (tutorialPhase == TutorialPhase.SpinLeft)
-                {
-                    explanText.text = "L1キーでコマを回転してください。";
-                    //explanImage.sprite = showImage[3];
-                }
-
-                else if (tutorialPhase == TutorialPhase.SpinRight)
-                {
-                    explanText.text = "R1キーでコマを回転してください。";
-                    //explanImage.sprite = showImage[4];
-                }
-
-                else if (tutorialPhase == TutorialPhase.SkillPanel)
-                {
-                    explanText.text = "optionボタンを押してスキル効果の詳細を表示する。";
-                    //explanImage.sprite = showImage[];
-                }
-
-                else if (tutorialPhase == TutorialPhase.SkillActive)
-                {
-                    explanText.text = "□ボタンを押して必殺技を発動する。";
-                    //explanImage.sprite = showImage[];
-                    if (skillUsed == true)
-                    {
-                        explanText.text = "必殺技を使用しました。\nこれにてチュートリアルを終了します。\n〇ボタンでタイトル画面に戻ります。";
-                        tutorialPhase = TutorialPhase.End;
-                    }
-                }*/
 
                 // 待機時間を超えたらステートをすすめる(自動落下の処理はPieceMove()で管理)
                 if (tutorialPhase == TutorialPhase.Reverse && _timeCount > _preActiveTime)
