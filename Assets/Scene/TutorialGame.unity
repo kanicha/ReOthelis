@@ -1008,6 +1008,7 @@ MonoBehaviour:
   _generator: {fileID: 1559426142}
   _player1: {fileID: 1435816373}
   _effectController: {fileID: 326221989}
+  _gaugeController: {fileID: 6091143236286489300}
   _activePieces:
   - {fileID: 0}
   - {fileID: 0}

@@ -46,7 +46,7 @@ public class Player_T1 : PlayerBaseForT
         //base.myColorfixity = TutorialMap.Instance.fixityBlack;
         base.enemyColor = TutorialMap.Instance.white;
         //base.enemyColorfixity = TutorialMap.Instance.fixityWhite;
-        SetSkills((int) CharaImageMoved.charaType1P);
+        SetSkills(2);
     }
 
     private void Update()

@@ -17,7 +17,10 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
     PiecePatternGeneretorForT _generator = null;
     [SerializeField]
     private Player_T1 _player1 = null;
-    [SerializeField, Header("エフェクトコントローラー")] private EffectControllerForT _effectController = null;
+    [SerializeField, Header("エフェクトコントローラー")]
+    private EffectControllerForT _effectController = null;
+    [SerializeField, Header("ゲージコントローラー")]
+    private TutorialGaugeControl _gaugeController = null;
 
     private float _timeCount = 0;
     private bool _isDown = true;
@@ -141,6 +144,8 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                     case TutorialPhase.SkillActive:
                         explanText.text = "□ボタンを押して必殺技を発動する。";
                         //explanImage.sprite = showImage[];
+                        _gaugeController.DrawGauge(20);
+                        _player1.reversedCount = 20;
                         if (skillUsed == true)
                         {
                             explanText.text = "必殺技を使用しました。\nこれにてチュートリアルを終了します。\n〇ボタンでタイトル画面に戻ります。";
