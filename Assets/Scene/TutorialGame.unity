@@ -886,8 +886,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 326221984}
-  - component: {fileID: 326221981}
-  - component: {fileID: 326221982}
   - component: {fileID: 326221986}
   - component: {fileID: 326221985}
   - component: {fileID: 326221983}
@@ -899,54 +897,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &326221981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 326221980}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 480bb82aad4094743b36bbaaa6d0d7ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  point: 100
-  _marginTime: 0.5
-  _preActiveTime: 3
-  _DEFAULT_POSITION: {x: 4, y: 0, z: -1}
-  _generator: {fileID: 0}
-  _player1: {fileID: 1435816371}
-  _player2: {fileID: 0}
-  IsAIOn: 0
-  _effectController: {fileID: 0}
-  _activePieces:
-  - {fileID: 0}
-  - {fileID: 0}
-  intervalTime: 0
-  _isLanding: 0
-  _isSkillBlack: 0
-  _isSkillWhite: 0
-  gameState: 0
-  nextStateCue: 0
---- !u!114 &326221982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 326221980}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2faf270e37dd3a4e97d7b7fdadc4de8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _player: 1
-  _charaName: {fileID: 1873248609}
-  _charaImage:
-  - {fileID: 21300000, guid: 980d3dc7c6b849b44b5b87ebc47f02ae, type: 3}
-  _skillObject:
-  - {fileID: 781245130}
 --- !u!114 &326221983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1008,7 +958,6 @@ MonoBehaviour:
   _generator: {fileID: 1559426142}
   _player1: {fileID: 1435816373}
   _effectController: {fileID: 326221989}
-  _gaugeController: {fileID: 6091143236286489300}
   _activePieces:
   - {fileID: 0}
   - {fileID: 0}
@@ -3608,17 +3557,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6091143235498661371, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
   m_PrefabInstance: {fileID: 6091143236286489298}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1359673130 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6091143235498661368, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
-  m_PrefabInstance: {fileID: 6091143236286489298}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6091143236286489299}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d18dff2092a9f344390a141738a4bd2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1378787663
 GameObject:
   m_ObjectHideFlags: 0
@@ -3707,7 +3645,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1435816372}
-  - component: {fileID: 1435816371}
   - component: {fileID: 1435816373}
   m_Layer: 0
   m_Name: Player1
@@ -3716,34 +3653,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1435816371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1435816370}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ff4890c30099c147be9c6a942e8663e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _fallTime: 1
-  scoreText: {fileID: 1122938205}
-  myPieceCountText: {fileID: 0}
-  charactorImage: {fileID: 1873248609}
-  gaugeController: {fileID: 1359673130}
-  skillCutinControl: {fileID: 326221986}
-  skillWindowControl: {fileID: 200742603}
-  _skillGageEffect: {fileID: 0}
-  isMyTurn: 0
-  reverseScore: 0
-  preScore: 0
-  reversedCount: 0
-  myPieceCount: 0
-  controllPiece1: {fileID: 0}
-  controllPiece2: {fileID: 0}
-  rotationNum: 0
 --- !u!4 &1435816372
 Transform:
   m_ObjectHideFlags: 0
