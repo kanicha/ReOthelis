@@ -115,32 +115,32 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                         break;
 
                     case TutorialPhase.MoveLeft:
-                        explanText.text = "左キーでコマを左端まで移動してください。";
+                        explanText.text = "左キーで駒を左に動かせます、\n駒を左端まで移動してください。";
                         //explanImage.sprite = showImage[1];
                         break;
 
                     case TutorialPhase.MoveRight:
-                        explanText.text = "右キーでコマを右端まで移動してください。";
+                        explanText.text = "右キーで駒を右に動かせます、\n駒を元の場所に戻してください。";
                         //explanImage.sprite = showImage[2];
                         break;
 
                     case TutorialPhase.SpinLeft:
-                        explanText.text = "L1キーでコマを回転してください。";
+                        explanText.text = "L1キーで駒が左回転します、\n駒を一回転してください。";
                         //explanImage.sprite = showImage[3];
                         break;
 
                     case TutorialPhase.SpinRight:
-                        explanText.text = "R1キーでコマを回転してください。";
+                        explanText.text = "R1キーで駒が右回転します、\n駒を一回転してください。";
                         //explanImage.sprite = showImage[4];
                         break;
 
                     case TutorialPhase.SkillPanel:
-                        explanText.text = "optionボタンを押してスキル効果の詳細を表示する。";
+                        explanText.text = "optionボタンを押して、\nスキル効果の詳細を表示してください。";
                         //explanImage.sprite = showImage[];
                         break;
 
                     case TutorialPhase.SkillActive:
-                        explanText.text = "□ボタンを押して必殺技を発動する。";
+                        explanText.text = "□ボタンを押して、\n必殺技を発動してください。";
                         //explanImage.sprite = showImage[];
                         if (skillUsed == true)
                         {
@@ -160,7 +160,7 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                     _activePieces[0].transform.position += new Vector3(0, 0, -1);
                     _activePieces[1].transform.position += new Vector3(0, 0, -1);
                     
-                    explanText.text = "コマは自動で落下し、一番下で着地したら、\nオセロみたいに同じ色で挟んだコマをひっくり返します。";
+                    explanText.text = "コマは自動で落下します、\n一番下に着地したら、\nオセロのように、\n同じ色で挟んだ駒をひっくり返します。";
                     //explanImage.sprite = showImage[5];
 
                     // さげたら推移

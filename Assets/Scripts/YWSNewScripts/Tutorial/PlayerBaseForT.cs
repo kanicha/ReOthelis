@@ -219,6 +219,7 @@ public class PlayerBaseForT : MonoBehaviour
         }
     }
 
+    private int rotateTimes = 0;
     /// <summary>
     /// コマ回転関数
     /// </summary>
@@ -229,12 +230,22 @@ public class PlayerBaseForT : MonoBehaviour
         if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SpinLeft && (_DS4_L1_value || _keyBoardLeft))
         {
             rotationNum++; // 左回転
-            TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinRight;
+            rotateTimes++;
+            if (rotateTimes == 4)
+            {
+                TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinRight;
+                rotateTimes = 0;
+            }
         }
         else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SpinRight && (_DS4_R1_value || _keyBoardRight))
         {
             rotationNum += 3; // 右回転(=左に3回転)
-            TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.Intro;
+            rotateTimes++;
+            if (rotateTimes == 4)
+            {
+                TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.Intro;
+                rotateTimes = 0;
+            }
         }
         else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Reverse && (_DS4_L1_value || _keyBoardLeft))
         {
@@ -397,7 +408,7 @@ public class PlayerBaseForT : MonoBehaviour
                     MoveLeftFin = true;
                     TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.MoveRight;
                 }
-                else if ((int)movedPos.x + 1 > 8)
+                else if ((int)movedPos.x + 1 > 4)
                 {
                     TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinLeft;
                 }
