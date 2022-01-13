@@ -92,7 +92,7 @@ public class Player_1 : PlayerBase
             else if (GameDirector.Instance.gameState == GameDirector.GameState.preActive)
             {
                 base.PrePieceMove();
-                base.PieceRotate();
+                base.PrePieceRotate();
             }
         }
         else

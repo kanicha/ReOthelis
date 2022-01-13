@@ -270,7 +270,7 @@ public class PlayerBase : MonoBehaviour
     {
         int lastNum = rotationNum;
 
-        if (_DS4_L1_value || _DS4_L2_value|| _keyBoardLeft)
+        if (_DS4_L1_value || _DS4_L2_value || _keyBoardLeft)
         {
             rotationNum++; // 左回転
         }
@@ -319,6 +319,62 @@ public class PlayerBase : MonoBehaviour
                 // 壁にあたってる時 かつ 片方の壁に当たっている時 回転ボタン押しで回転
                 AnotherTurn(rotatedLeftPos, rotatedRightPos);
         }
+    }
+
+    /// <summary>
+    /// コマ回転関数
+    /// </summary>
+    protected void PrePieceRotate()
+    {
+        int lastNum = rotationNum;
+
+        if (_DS4_L1_value || _DS4_L2_value || _keyBoardLeft)
+        {
+            rotationNum++; // 左回転
+        }
+        else if (_DS4_R1_value || _DS4_R2_value || _keyBoardRight)
+        {
+            rotationNum += 3; // 右回転(=左に3回転)
+        }
+
+        // 初期値0 左から 1,2,3
+        rotationNum %= 4;
+
+        // 軸のコマ + 回転後の座標 変数
+        Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
+        // 回転後の座標の一つ下の座標
+        Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
+        // 回転後の座標の一つ右の座標
+        Vector3 rotatedRightPos = controllPiece1.transform.position + rotationPos[3];
+        // 回転後の座標の一つ左の座標
+        Vector3 rotatedLeftPos = controllPiece1.transform.position + rotationPos[1];
+
+        // 壁にあたってない時
+        if (Map.Instance.CheckWall(rotatedPos))
+        {
+            // 回転Posが-1かつ下のコマが壁にあたっている時
+            if ((int)rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
+                rotationNum = lastNum;
+            else
+            {
+                // 回転番号と前の値が違う時 
+                if (rotationNum != lastNum)
+                    SoundManager.Instance.PlaySE(2);
+                controllPiece2.transform.position = rotatedPos;
+            }
+        }
+        // 壁にあたってる時
+        else
+        {
+            /*Debug.Log("WallHit");*/
+            rotationNum = lastNum;
+
+            // 壁方向回転入力でクイックローテート
+            QuickRotate();
+        }
+        // PreActive時の両回転対応をする、
+        // rotatedPos(回転後の座標)をelseしているため 回転後の座標が壁にあたったらって感じ
+        // なのでいい感じにする(?)
     }
 
     /// <summary>
@@ -389,7 +445,7 @@ public class PlayerBase : MonoBehaviour
     {
         Vector3 move = Vector3.zero;
         bool isDown = false;
-        
+
         // 左右移動
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
             (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
@@ -434,15 +490,15 @@ public class PlayerBase : MonoBehaviour
             // 移動後座標
             Vector3 movedUnderPos = piecePos + new Vector3(0, 0, -1);
             Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
-            
+
             // 移動後の座標の1つ下に障害物がなければ
             if (Map.Instance.CheckWall(movedUnderPos) && Map.Instance.CheckWall(rotMovedPos))
             {
                 // 異合後の座標を代入する
                 controllPiece1.transform.position = movedUnderPos;
                 controllPiece2.transform.position = rotMovedPos;
-            } 
-            
+            }
+
             // ステート変更
             GameDirector.Instance.intervalTime = 0;
             GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
