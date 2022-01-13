@@ -7,7 +7,9 @@ public class Player_1 : PlayerBase
     private const string _PLAYER1_SQUARE_NAME = "Fire_0";
     private const string _PLAYER1_TRIANGLE_NAME = "Fire_3";
     private const string _PLAYER1_L1_NAME = "Fire_L1";
+    private const string _PLAYER1_L2_NAME = "Fire_L2";
     private const string _PLAYER1_R1_NAME = "Fire_R1";
+    private const string _PLAYER1_R2_NAME = "Fire_R2";
     private const string _PLAYER1_OPTION_NAME = "Fire_Option";
     private const string _PLAYER1_HORIZONTAL_NAME = "Horizontal D-Pad";
     private const string _PLAYER1_VERTICAL_NAME = "Vertical D-Pad";
@@ -28,7 +30,9 @@ public class Player_1 : PlayerBase
         base.DS4_square_name = _PLAYER1_SQUARE_NAME;
         base.DS4_triangle_name = _PLAYER1_TRIANGLE_NAME;
         base.DS4_L1_name = _PLAYER1_L1_NAME;
+        base.DS4_L2_name = _PLAYER1_L2_NAME;
         base.DS4_R1_name = _PLAYER1_R1_NAME;
+        base.DS4_R2_name = _PLAYER1_R2_NAME;
         base.DS4_option_name = _PLAYER1_OPTION_NAME;
         base.DS4_horizontal_name = _PLAYER1_HORIZONTAL_NAME;
         base.DS4_vertical_name = _PLAYER1_VERTICAL_NAME;
@@ -88,7 +92,7 @@ public class Player_1 : PlayerBase
             else if (GameDirector.Instance.gameState == GameDirector.GameState.preActive)
             {
                 base.PrePieceMove();
-                base.PieceRotate();
+                base.PrePieceRotate();
             }
         }
         else

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5297069010567659952}
   - component: {fileID: 5297069010567659966}
   - component: {fileID: 5297069010567659967}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Skill_Gage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,7 +48,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -4873,7 +4873,7 @@ GameObject:
   - component: {fileID: 5297069010867894651}
   - component: {fileID: 5297069010867894649}
   - component: {fileID: 5297069010867894650}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Skill_Gage_Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4910,7 +4910,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 0
   useRigidbodyForVelocity: 1
@@ -9735,7 +9735,7 @@ GameObject:
   - component: {fileID: 5297069011657006730}
   - component: {fileID: 5297069011657006731}
   - component: {fileID: 5297069011657006732}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Skill_Gage_Efe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9772,9 +9772,9 @@ ParticleSystem:
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
-  looping: 1
+  looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
