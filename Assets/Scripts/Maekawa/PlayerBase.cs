@@ -163,9 +163,9 @@ public class PlayerBase : MonoBehaviour
         _DS4_square_value = Input.GetButtonDown(DS4_square_name);
         _DS4_triangle_value = Input.GetButtonDown(DS4_triangle_name);
         _DS4_L1_value = Input.GetButtonDown(DS4_L1_name);
-        /*_DS4_L2_value = Input.GetButtonDown(DS4_L2_name);*/
+        _DS4_L2_value = Input.GetButtonDown(DS4_L2_name);
         _DS4_R1_value = Input.GetButtonDown(DS4_R1_name);
-        /*_DS4_R2_value = Input.GetButtonDown(DS4_R2_name);*/
+        _DS4_R2_value = Input.GetButtonDown(DS4_R2_name);
         _DS4_option_value = Input.GetButtonDown(DS4_option_name);
         _DS4_horizontal_value = Input.GetAxis(DS4_horizontal_name);
         _DS4_vertical_value = Input.GetAxis(DS4_vertical_name);
@@ -270,11 +270,11 @@ public class PlayerBase : MonoBehaviour
     {
         int lastNum = rotationNum;
 
-        if (_DS4_L1_value || _keyBoardLeft)
+        if (_DS4_L1_value || _DS4_L2_value|| _keyBoardLeft)
         {
             rotationNum++; // 左回転
         }
-        else if (_DS4_R1_value || _keyBoardRight)
+        else if (_DS4_R1_value || _DS4_R2_value || _keyBoardRight)
         {
             rotationNum += 3; // 右回転(=左に3回転)
         }
