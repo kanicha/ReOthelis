@@ -7,20 +7,13 @@ public class PiecePatternGeneretorForT : MonoBehaviour
     [SerializeField]
     private GameObject piecePrefab = null;
 
-    // 数値シャッフルするための変数
-    static int SHUFFLE_NUM = 100;
-    // シャッフルされた数値格納する変数
-    int num = 0;
     public static int type = 0;
     private int PieceGenerated = 0;
-
 
     public GameObject Generate(Vector3 GeneratePos)
     {
         // コマタイプ
         type = 0;
-        // ランダム
-        num = Random.Range(0, SHUFFLE_NUM);
 
         // 別色
         if (PieceGenerated == 0)
@@ -83,5 +76,33 @@ public class PiecePatternGeneretorForT : MonoBehaviour
         TutorialDirector.Instance._activePieces[1] = piece2;
 
         return null;
+    }
+
+    public void InitPieceMap()
+    {
+        for (int i = 1; i < 9; i++)
+        {
+            if (i % 2 == 0)
+            {
+                GameObject blackPiece = Instantiate(piecePrefab);
+                blackPiece.transform.parent = root.transform;
+                blackPiece.transform.position = new Vector3(i, 0, -8);
+                Piece bp = blackPiece.GetComponent<Piece>();
+                blackPiece.name = "black";
+                bp.pieceType = Piece.PieceType.black;
+                TutorialMap.Instance.pieceMap[8, i] = blackPiece;
+            }
+            else if (i % 2 == 1)
+            {
+                GameObject whitePiece = Instantiate(piecePrefab);
+                whitePiece.transform.parent = root.transform;
+                whitePiece.transform.position = new Vector3(i, 0, -8);
+                Piece wp = whitePiece.GetComponent<Piece>();
+                whitePiece.name = "white";
+                wp.pieceType = Piece.PieceType.white;
+                whitePiece.transform.rotation = Quaternion.Euler(0, 0, 180);
+                TutorialMap.Instance.pieceMap[8, i] = whitePiece;
+            }
+        }
     }
 }

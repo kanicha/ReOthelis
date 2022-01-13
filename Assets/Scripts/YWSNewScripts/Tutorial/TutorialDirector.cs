@@ -78,13 +78,14 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
         isFadeIn = true;
         isFadeOut = false;
         isTutorialEnd = false;
+        ReverseFin = false;
 
         // 最初は2セット生成
         PieceSet();
         gameState = GameState.preActive;
         ChangeTurn();
         tutorialPhase = TutorialPhase.Intro;
-
+        _generator.InitPieceMap();
     }
 
     void Update()
