@@ -3774,7 +3774,7 @@ MonoBehaviour:
   scoreText: {fileID: 1122938205}
   myPieceCountText: {fileID: 0}
   charactorImage: {fileID: 1873248609}
-  gaugeController: {fileID: 1359673130}
+  gaugeController: {fileID: 6091143236286489300}
   skillCutinControl: {fileID: 326221986}
   skillWindowControl: {fileID: 200742603}
   isMyTurn: 0

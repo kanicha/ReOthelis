@@ -97,9 +97,10 @@ public class Player_T1 : PlayerBaseForT
             base.TutorialPhaseChange();
         }
 
-        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SkillActive)
+        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SkillActive && TutorialDirector.Instance.skillUsed == false)
         {
-            base.gaugeController.DrawGauge(20);
+            reversedCount = 20;
+            base.gaugeController.DrawGauge(reversedCount);
         }
     }
 }

@@ -69,7 +69,7 @@ public class PlayerBaseForT : MonoBehaviour
     [SerializeField] protected Text scoreText = null;
     [SerializeField] protected Text myPieceCountText = null;
     [SerializeField] protected Image charactorImage = null;
-    [SerializeField] protected GaugeController gaugeController = null;
+    [SerializeField] protected TutorialGaugeControl gaugeController = null;
     [SerializeField] protected SkillCutinControl skillCutinControl = null;
     [SerializeField] protected SkillWindowControl skillWindowControl = null;
     private float _moveTimeCount = 0.0f;
