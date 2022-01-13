@@ -388,7 +388,8 @@ public class PlayerBase : MonoBehaviour
     protected void PrePieceMove()
     {
         Vector3 move = Vector3.zero;
-
+        bool isDown = false;
+        
         // 左右移動
         if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
             (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
@@ -400,15 +401,11 @@ public class PlayerBase : MonoBehaviour
                  (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
         {
             move.z = -1;
-
-            // した入力時ステート変更
-            GameDirector.Instance.intervalTime = 0;
-            GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
-            GameDirector.Instance.gameState = GameDirector.GameState.interval;
+            isDown = true;
         }
 
         // 左右に入力したなら移動
-        if (move != Vector3.zero)
+        if (move != Vector3.zero && !isDown)
         {
             Vector3 movedPos = controllPiece1.transform.position;
             while (true)
@@ -429,10 +426,27 @@ public class PlayerBase : MonoBehaviour
                     break;
                 }
             }
+        }
+        // 移動後 かつ 下に入力されたとき
+        else if (move != Vector3.zero && isDown)
+        {
+            Vector3 piecePos = controllPiece1.transform.position;
+            // 移動後座標
+            Vector3 movedUnderPos = piecePos + new Vector3(0, 0, -1);
+            Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
             
-            // エラーの原因は z 軸を増加させてしまうと、 moveが増えたことにより ifに入ってしまい
-            // ifの中でUnderの計算をしているため zが 2 増えてしまいOutOfRangeになってしまう
-            // 近いうちに直したい
+            // 移動後の座標の1つ下に障害物がなければ
+            if (Map.Instance.CheckWall(movedUnderPos) && Map.Instance.CheckWall(rotMovedPos))
+            {
+                // 異合後の座標を代入する
+                controllPiece1.transform.position = movedUnderPos;
+                controllPiece2.transform.position = rotMovedPos;
+            } 
+            
+            // ステート変更
+            GameDirector.Instance.intervalTime = 0;
+            GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
+            GameDirector.Instance.gameState = GameDirector.GameState.interval;
         }
     }
 
