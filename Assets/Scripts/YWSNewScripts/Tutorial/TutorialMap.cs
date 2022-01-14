@@ -441,6 +441,16 @@ public class TutorialMap : SingletonMonoBehaviour<TutorialMap>
             }
         }
     }
+
+    public void DestroyPiece()
+    {
+        for (int i = 1; i < 9; i++)
+        {
+            Destroy(pieceMap[7, i]);
+            pieceMap[7, i] = null;
+            map[7, i] = empty;
+        }
+    }
 }
 
 // map確認用

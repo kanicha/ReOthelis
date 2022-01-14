@@ -247,7 +247,7 @@ public class PlayerBaseForT : MonoBehaviour
                 rotateTimes = 0;
             }
         }
-        else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Reverse && (_DS4_L1_value || _keyBoardLeft))
+        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Reverse && (_DS4_L1_value || _keyBoardLeft))
         {
             rotationNum++; // 左回転
         }
@@ -377,15 +377,16 @@ public class PlayerBaseForT : MonoBehaviour
                 ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) ||
                 (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0)))
             move.x = 1;
-        /*else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
-                 (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+        else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Reverse &&
+                ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
+                (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0)))
         {
             move.z = -1;
             // した入力時ステート変更
             TutorialDirector.Instance.intervalTime = 0;
             TutorialDirector.Instance.nextStateCue = TutorialDirector.GameState.active;
             TutorialDirector.Instance.gameState = TutorialDirector.GameState.interval;
-        }*/
+        }
 
         // 左右に入力したなら移動
         if (move != Vector3.zero)
