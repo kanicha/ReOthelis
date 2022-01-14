@@ -1,7 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+
 public class CharacterSelectSceneChange : SingletonMonoBehaviour<CharacterSelectSceneChange>
 {
     private GameSceneManager _gameSceneManager;
+    [SerializeField, Header("二人が確定してから遷移する時間")] float _waitTime = 0f;
+
     [SerializeField]
     private CharaImageMoved _CIM1 = null;
     [SerializeField]
@@ -24,8 +29,17 @@ public class CharacterSelectSceneChange : SingletonMonoBehaviour<CharacterSelect
         if (_gameSceneManager.IsChanged == true && _CIM1.isConfirm && _CIM2.isConfirm)
         {
             isLoading = true;
-            SceneChange(_gameSceneManager);
+
+            StartCoroutine(WaitChange());
         }
+    }
+
+    IEnumerator WaitChange()
+    {
+        // 秒数まつ
+        yield return new WaitForSeconds(_waitTime);
+
+        SceneChange(_gameSceneManager);
     }
 
     //次のシーンに進む
@@ -42,4 +56,6 @@ public class CharacterSelectSceneChange : SingletonMonoBehaviour<CharacterSelect
             gameSceneManager.SceneNextCall("GameSceme");
         }
     }
+
+    
 }
