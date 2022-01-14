@@ -247,7 +247,7 @@ public class PlayerBaseForT : MonoBehaviour
                 rotateTimes = 0;
             }
         }
-        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Reverse && (_DS4_L1_value || _keyBoardLeft))
+        else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Reverse && (_DS4_L1_value || _keyBoardLeft))
         {
             rotationNum++; // 左回転
         }
@@ -403,13 +403,13 @@ public class PlayerBaseForT : MonoBehaviour
                 {
                     break;
                 }
-                else if ((int)movedPos.x - 1 < 1)
+                else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.MoveLeft && (int)movedPos.x - 1 < 1)
                 {
                     isPieceArrivalLeft = true;
                     MoveLeftFin = true;
                     TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.MoveRight;
                 }
-                else if ((int)movedPos.x + 1 > 4)
+                else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.MoveRight && (int)movedPos.x + 1 > 4)
                 {
                     TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinLeft;
                 }
