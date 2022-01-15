@@ -92,7 +92,7 @@ public class Player_T1 : PlayerBaseForT
             }
         }
 
-        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Intro)
+        if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Intro && TutorialDirector.Instance.isFadeIn == true)
         {
             base.TutorialPhaseChange();
         }
@@ -103,6 +103,6 @@ public class Player_T1 : PlayerBaseForT
             base.gaugeController.DrawGauge(reversedCount);
         }
 
-
+        base.TutorialPhaseSkip();
     }
 }

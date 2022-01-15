@@ -1057,7 +1057,7 @@ public class PlayerBaseForT : MonoBehaviour
     private bool MoveLeftFin = false;
     public void TutorialPhaseChange()
     {
-        if (TutorialDirector.Instance.isFadeIn == true && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)))
+        if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space) || _DS4_cross_value || Input.GetKeyDown(KeyCode.Backspace))
         {
             TutorialDirector.Instance.blackOutImage.color = new Color(0,0,0,0);
             TutorialDirector.Instance.isFadeOut = true;
@@ -1077,8 +1077,62 @@ public class PlayerBaseForT : MonoBehaviour
         }
     }
 
-    private void TutorialPhaseSkip()
+    public void TutorialPhaseSkip()
     {
-        
+        Vector3 FinalLeftPos = new Vector3(1, 0, -1);
+        Vector3 MiddlePos = new Vector3(4, 0, -1);
+        if (_DS4_cross_value || Input.GetKeyDown(KeyCode.Backspace))
+        {
+            switch (TutorialDirector.Instance.tutorialPhase)
+            {
+                case TutorialDirector.TutorialPhase.Intro:
+                    TutorialPhaseChange();
+                    break;
+
+                case TutorialDirector.TutorialPhase.MoveLeft:
+                    controllPiece1.transform.position = FinalLeftPos;
+                    controllPiece2.transform.position = FinalLeftPos + rotationPos[rotationNum];
+                    MoveLeftFin = true;
+                    TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.MoveRight;
+                    break;
+
+                case TutorialDirector.TutorialPhase.MoveRight:
+                    controllPiece1.transform.position = MiddlePos;
+                    controllPiece2.transform.position = MiddlePos + rotationPos[rotationNum];
+                    TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinLeft;
+                    break;
+
+                case TutorialDirector.TutorialPhase.SpinLeft:
+                    controllPiece1.transform.position = MiddlePos;
+                    controllPiece2.transform.position = MiddlePos + rotationPos[rotationNum];
+                    TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinRight;
+                    break;
+
+                case TutorialDirector.TutorialPhase.SpinRight:
+                    controllPiece1.transform.position = MiddlePos;
+                    controllPiece2.transform.position = MiddlePos + rotationPos[rotationNum];
+                    TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.Reverse;
+                    break;
+
+                case TutorialDirector.TutorialPhase.Reverse:
+                    Destroy(controllPiece1);
+                    Destroy(controllPiece2);
+                    TutorialDirector.Instance.gameState = TutorialDirector.GameState.reversed;
+                    TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SkillPanel;
+                    break;
+
+                case TutorialDirector.TutorialPhase.SkillPanel:
+                    ShowSkillWindow(KeyCode.N);
+                    TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SkillActive;
+                    break;
+
+                case TutorialDirector.TutorialPhase.SkillActive:
+                    TutorialDirector.Instance.skillUsed = true;
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 }

@@ -21,7 +21,7 @@ public class TutorialSceneChange : Player1Base
         {
             return;
         }
-        else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.End && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space) || _DS4_cross_value || Input.GetKeyDown(KeyCode.X)))
+        else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.End && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space) || _DS4_cross_value || Input.GetKeyDown(KeyCode.Backspace)))
         {
             _repeatHit = true;
             SceneChange(_gameSceneManager);
