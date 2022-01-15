@@ -1076,4 +1076,9 @@ public class PlayerBaseForT : MonoBehaviour
             }
         }
     }
+
+    private void TutorialPhaseSkip()
+    {
+        
+    }
 }

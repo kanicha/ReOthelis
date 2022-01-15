@@ -102,5 +102,7 @@ public class Player_T1 : PlayerBaseForT
             reversedCount = 20;
             base.gaugeController.DrawGauge(reversedCount);
         }
+
+
     }
 }

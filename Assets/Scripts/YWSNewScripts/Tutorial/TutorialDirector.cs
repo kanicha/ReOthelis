@@ -60,10 +60,10 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
     {
         none,
         Intro,
-        SpinLeft,
-        SpinRight,
         MoveLeft,
         MoveRight,
+        SpinLeft,
+        SpinRight,
         Reverse,
         SkillPanel,
         SkillActive,
@@ -245,6 +245,7 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                         TutorialMap.Instance.DestroyPiece();
                         TutorialMap.Instance.DestroyPiece();
                         _generator.PieceGenerated = 0;
+                        explanText.text = "駒をひっくり返せなかった、\nもう一回やってみよう。";
                     }
                     PieceSet();
                     gameState = GameState.preActive;
