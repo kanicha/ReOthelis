@@ -225,6 +225,7 @@ public class PlayerBaseForT : MonoBehaviour
     /// </summary>
     protected void PieceRotate()
     {
+        
         int lastNum = rotationNum;
 
         if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SpinLeft && (_DS4_L1_value || _keyBoardLeft))
@@ -1080,7 +1081,7 @@ public class PlayerBaseForT : MonoBehaviour
     public void TutorialPhaseSkip()
     {
         Vector3 FinalLeftPos = new Vector3(1, 0, -1);
-        Vector3 MiddlePos = new Vector3(4, 0, -1);
+        Vector3 StartPos = new Vector3(4, 0, -1);
         if (_DS4_cross_value || Input.GetKeyDown(KeyCode.Backspace))
         {
             switch (TutorialDirector.Instance.tutorialPhase)
@@ -1097,21 +1098,25 @@ public class PlayerBaseForT : MonoBehaviour
                     break;
 
                 case TutorialDirector.TutorialPhase.MoveRight:
-                    controllPiece1.transform.position = MiddlePos;
-                    controllPiece2.transform.position = MiddlePos + rotationPos[rotationNum];
+                    controllPiece1.transform.position = StartPos;
+                    controllPiece2.transform.position = StartPos + rotationPos[rotationNum];
                     TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinLeft;
                     break;
 
                 case TutorialDirector.TutorialPhase.SpinLeft:
-                    controllPiece1.transform.position = MiddlePos;
-                    controllPiece2.transform.position = MiddlePos + rotationPos[rotationNum];
+                    controllPiece1.transform.position = StartPos;
+                    rotationNum = 0;
+                    controllPiece2.transform.position = StartPos + rotationPos[rotationNum];
                     TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinRight;
+                    rotateTimes = 0;
                     break;
 
                 case TutorialDirector.TutorialPhase.SpinRight:
-                    controllPiece1.transform.position = MiddlePos;
-                    controllPiece2.transform.position = MiddlePos + rotationPos[rotationNum];
+                    controllPiece1.transform.position = StartPos;
+                    rotationNum = 0;
+                    controllPiece2.transform.position = StartPos + rotationPos[rotationNum];
                     TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.Reverse;
+                    rotateTimes = 0;
                     break;
 
                 case TutorialDirector.TutorialPhase.Reverse:
