@@ -43,10 +43,10 @@ public class Player_T1 : PlayerBaseForT
         // キャラクターに応じてスキルをセット
         base.playerType = Piece.PieceType.black;
         base.myColor = TutorialMap.Instance.black;
-        //base.myColorfixity = TutorialMap.Instance.fixityBlack;
+        base.myColorfixity = TutorialMap.Instance.fixityBlack;
         base.enemyColor = TutorialMap.Instance.white;
-        //base.enemyColorfixity = TutorialMap.Instance.fixityWhite;
-        SetSkills(2);
+        base.enemyColorfixity = TutorialMap.Instance.fixityWhite;
+        SetSkills(0);
     }
 
     private void Update()

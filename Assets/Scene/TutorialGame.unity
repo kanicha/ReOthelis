@@ -890,6 +890,7 @@ GameObject:
   - component: {fileID: 326221985}
   - component: {fileID: 326221983}
   - component: {fileID: 326221989}
+  - component: {fileID: 326221981}
   m_Layer: 0
   m_Name: GameDirector
   m_TagString: Untagged
@@ -897,6 +898,30 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &326221981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326221980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2faf270e37dd3a4e97d7b7fdadc4de8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _player: 1
+  _charaName: {fileID: 1873248609}
+  _charaImage:
+  - {fileID: 21300000, guid: c0770b2cf0042ce468f7912b4addc97c, type: 3}
+  - {fileID: 21300000, guid: 9ec23710c50771a489d7619ff606d2c7, type: 3}
+  - {fileID: 21300000, guid: 137e030a9ada23d47bf3c9f70b5411b9, type: 3}
+  - {fileID: 21300000, guid: a6d332f9c30e0974d9ed4d7f5e9d767c, type: 3}
+  _skillObject:
+  - {fileID: 2137088594}
+  - {fileID: 1841089838}
+  - {fileID: 781245130}
+  - {fileID: 437311851}
 --- !u!114 &326221983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1826,7 +1851,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &781245131
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3920,6 +3945,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   root: {fileID: 1824669614}
   piecePrefab: {fileID: 2386452990182717790, guid: 9bcc26cce6217d641bfa3ab17886eca4, type: 3}
+  PieceGenerated: 0
 --- !u!1001 &1581233494
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4345,7 +4371,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 980d3dc7c6b849b44b5b87ebc47f02ae, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 020145bb634dc244abc159c66b44d1e8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5051,7 +5077,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f22a2dbed8e065c44ab8f81bf6396773, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5dc9e72cd03cf7b438caad4bacd5d52c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5103,7 +5129,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2137088595
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5144,7 +5170,7 @@ PrefabInstance:
     - target: {fileID: 1178489358839879789, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 195e3a53e2a0d564bbc5ad6a1f64c80a, type: 3}
+      objectReference: {fileID: 21300000, guid: f9ed01a2075b82240835b78d1df0d503, type: 3}
     - target: {fileID: 1520967071185567795, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.1900009
@@ -5300,7 +5326,7 @@ PrefabInstance:
     - target: {fileID: 6091143235886330327, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: fd7026bbbc239704f9dbf2ada7ef50d0, type: 3}
+      objectReference: {fileID: 21300000, guid: 04d0de191659006418221de71b79f551, type: 3}
     - target: {fileID: 6091143236735003770, guid: e7d9187d962ae414ea2933ab508e5903, type: 3}
       propertyPath: m_Layer
       value: 5

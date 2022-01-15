@@ -1515,6 +1515,7 @@ GameObject:
   - component: {fileID: 326221983}
   - component: {fileID: 326221986}
   - component: {fileID: 326221988}
+  - component: {fileID: 326221987}
   m_Layer: 0
   m_Name: GameDirector
   m_TagString: Untagged
@@ -1541,6 +1542,7 @@ MonoBehaviour:
   _generator: {fileID: 1559426143}
   _player1: {fileID: 1435816371}
   _player2: {fileID: 533350509}
+  IsAIOn: 0
   _effectController: {fileID: 326221988}
   _activePieces:
   - {fileID: 0}
@@ -1643,6 +1645,19 @@ MonoBehaviour:
   - {fileID: 21300000, guid: a6cc7f63350a838419d0f9ae97c7f180, type: 3}
   - {fileID: 21300000, guid: f22a2dbed8e065c44ab8f81bf6396773, type: 3}
   - {fileID: 21300000, guid: f53e73b3644c4a54a99d81f14efe4d9b, type: 3}
+--- !u!114 &326221987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326221980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d170ee4e76f7e804fa4d6d2549b953fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SameReverseNum: 
 --- !u!114 &326221988
 MonoBehaviour:
   m_ObjectHideFlags: 0

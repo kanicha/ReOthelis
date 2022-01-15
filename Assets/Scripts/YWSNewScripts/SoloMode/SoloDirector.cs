@@ -1,15 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameDirector : SingletonMonoBehaviour<GameDirector>
+public class SoloDirector : SingletonMonoBehaviour<GameDirector>
 {
-    [SerializeField, Header("åŸºæœ¬ã‚¹ã‚³ã‚¢")]
+    [SerializeField, Header("Šî–{ƒXƒRƒA")]
     public int point = 0;
-    [SerializeField, Header("æ¥åœ°ä¸­ã«é…ç½®ã‚’ç¢ºå®šã™ã‚‹ã¾ã§ã®æ™‚é–“")]
+    [SerializeField, Header("Ú’n’†‚É”z’u‚ğŠm’è‚·‚é‚Ü‚Å‚ÌŠÔ")]
     private float _marginTime = 0;
-    [SerializeField, Header("äº‹å‰ã«æ“ä½œã§ãã‚‹æ™‚é–“")]
+    [SerializeField, Header("–‘O‚É‘€ì‚Å‚«‚éŠÔ")]
     private float _preActiveTime = 0;
-    [SerializeField, Header("ãƒŸãƒã®åˆæœŸä½ç½®")]
+    [SerializeField, Header("ƒ~ƒm‚Ì‰ŠúˆÊ’u")]
     public Vector3 _DEFAULT_POSITION = Vector3.zero;
     [SerializeField]
     PiecePatternGeneretor _generator = null;
@@ -17,7 +17,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     private Player_1 _player1 = null;
     [SerializeField]
     private Player_2 _player2 = null;
-    [SerializeField, Header("ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼")] private EffectController _effectController = null;
+    [SerializeField, Header("ƒGƒtƒFƒNƒgƒRƒ“ƒgƒ[ƒ‰[")] private EffectController _effectController = null;
 
     private int _turnCount = 0;
     private float _timeCount = 0;
@@ -42,7 +42,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         idle,
         end,
         ended,
-    } 
+    }
 
     void Start()
     {
@@ -51,7 +51,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         _player1.isMyTurn = false;
         _player2.isMyTurn = false;
 
-        // æœ€åˆã¯2ã‚»ãƒƒãƒˆç”Ÿæˆ
+        // Å‰‚Í2ƒZƒbƒg¶¬
         PieceSet();
         ChangeTurn();
     }
@@ -64,19 +64,19 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         {
             case GameState.preActive:
                 _effectController.FallPieceHighLight(true);
-                
+
                 _isLanding = false;
                 _isDown = true;
                 _timeCount += Time.deltaTime;
-                
-                // å¾…æ©Ÿæ™‚é–“ã‚’è¶…ãˆãŸã‚‰ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ã™ã™ã‚ã‚‹(è‡ªå‹•è½ä¸‹ã®å‡¦ç†ã¯PieceMove()ã§ç®¡ç†)
+
+                // ‘Ò‹@ŠÔ‚ğ’´‚¦‚½‚çƒXƒe[ƒg‚ğ‚·‚·‚ß‚é(©“®—‰º‚Ìˆ—‚ÍPieceMove()‚ÅŠÇ—)
                 if (_timeCount > _preActiveTime)
                 {
-                    // æ™‚é–“çµŒéã«ã‚ˆã‚Šã‚³ãƒã‚’ä¸€å€‹ä¸‹ã’ã‚‹
+                    // ŠÔŒo‰ß‚É‚æ‚èƒRƒ}‚ğˆêŒÂ‰º‚°‚é
                     _activePieces[0].transform.position += new Vector3(0, 0, -1);
                     _activePieces[1].transform.position += new Vector3(0, 0, -1);
-                    
-                    // ã•ã’ãŸã‚‰æ¨ç§»
+
+                    // ‚³‚°‚½‚ç„ˆÚ
                     intervalTime = 0;
                     nextStateCue = GameState.active;
                     gameState = GameState.interval;
@@ -85,10 +85,14 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
             case GameState.active:
                 _effectController.FallPieceHighLight(true);
-                
+
+                if (ModeSelect._selectCount == 0 && _player2.isMyTurn == true)
+                {
+                    //_ai.MovePiece();
+                }
                 if (Map.Instance.CheckLanding(_activePieces[0].transform.position) || Map.Instance.CheckLanding(_activePieces[1].transform.position))
                 {
-                    // æ¥åœ°æ™‚ã«ã‚«ã‚¦ãƒ³ãƒˆ
+                    // Ú’n‚ÉƒJƒEƒ“ƒg
                     _timeCount += Time.deltaTime;
                     if (_timeCount > _marginTime)
                     {
@@ -104,12 +108,12 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 _effectController.FallPieceHighLight(false);
                 if (_activePieces[0].transform.position.z > _activePieces[1].transform.position.z)
                 {
-                    // ä¸‹å´ã®ã‚³ãƒãŒã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹0ã«ãªã‚‹ã‚ˆã†ã‚½ãƒ¼ãƒˆ
+                    // ‰º‘¤‚ÌƒRƒ}‚ªƒCƒ“ƒfƒbƒNƒX0‚É‚È‚é‚æ‚¤ƒ\[ƒg
                     GameObject tempPiece = _activePieces[0];
                     _activePieces[0] = _activePieces[1];
                     _activePieces[1] = tempPiece;
                 }
-                
+
                 Map.Instance.FallPiece(_activePieces[0]);
                 Map.Instance.FallPiece(_activePieces[1]);
                 _isLanding = true;
@@ -122,29 +126,29 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 Map.Instance.TagClear();
 
                 gameState = GameState.idle;
-                // ãƒªãƒãƒ¼ã‚¹ãƒ»ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å‡¦ç†
+                // ƒŠƒo[ƒXEƒAƒjƒ[ƒVƒ‡ƒ“ˆ—
                 for (int i = 0; i < _activePieces.Length; i++)
                 {
-                    if(Map.Instance.CheckHeightOver(_activePieces[i],false))
-                        StartCoroutine(Map.Instance.CheckReverse(_activePieces[i],false));
+                    if (Map.Instance.CheckHeightOver(_activePieces[i], false))
+                        StartCoroutine(Map.Instance.CheckReverse(_activePieces[i], false));
                 }
-                
-                // ã‚¹ã‚­ãƒ«ãƒ•ãƒ©ã‚°åˆæœŸåŒ–
+
+                // ƒXƒLƒ‹ƒtƒ‰ƒO‰Šú‰»
                 _isSkillBlack = false;
                 _isSkillWhite = false;
                 break;
 
-            case GameState.interval:// å¼·å¼•ã‚¹ã‚­ãƒ«é€£æ‰“ã§ãƒã‚°ãŒå‡ºã‚‹ã®ã§æ™‚é–“ã‚’å–ã‚‹(å¿œæ€¥å‡¦ç½®)
+            case GameState.interval:// ‹­ˆøƒXƒLƒ‹˜A‘Å‚ÅƒoƒO‚ªo‚é‚Ì‚ÅŠÔ‚ğæ‚é(‰‹}ˆ’u)
                 _timeCount += Time.deltaTime;
                 if (_timeCount > intervalTime)
                 {
                     gameState = nextStateCue;
                     _timeCount = 0;
-                }                
+                }
                 break;
 
             case GameState.reversed:
-                // ã‚²ãƒ¼ãƒ çµ‚äº†åˆ¤å®š
+                // ƒQ[ƒ€I—¹”»’è
                 if (Map.Instance.CheckEnd())
                     gameState = GameState.end;
                 else
@@ -156,11 +160,11 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
             case GameState.end:
                 if (_player1.reverseScore > _player2.reverseScore)
-                    Debug.Log("<color=red>1Pã®å‹ã¡</color>");
+                    Debug.Log("<color=red>1P‚ÌŸ‚¿</color>");
                 else if (_player1.reverseScore == _player2.reverseScore)
-                        Debug.Log("<color=orange>å¼•ãåˆ†ã‘</color>");
+                    Debug.Log("<color=orange>ˆø‚«•ª‚¯</color>");
                 else
-                    Debug.Log("<color=blue>2Pã®å‹ã¡</color>");
+                    Debug.Log("<color=blue>2P‚ÌŸ‚¿</color>");
                 SoundManager.Instance.StopBGM();
                 gameState = GameState.ended;
                 break;
@@ -172,7 +176,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     private void CheckPriority()
     {
-        // ã‚¿ãƒ¼ãƒ³ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è‰²ã‚’åˆ¤å®š
+        // ƒ^[ƒ“ƒvƒŒƒCƒ„[‚ÌF‚ğ”»’è
         Piece.PieceType playersType;
 
         if (_player1.isMyTurn)
@@ -182,21 +186,21 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
         Map.Instance.turnPlayerColor = playersType;
 
-        // ã©ã¡ã‚‰ã®ã‚³ãƒã‹ã‚‰ã²ã£ãã‚Šè¿”ã™ã‹åˆ¤å®š
+        // ‚Ç‚¿‚ç‚ÌƒRƒ}‚©‚ç‚Ğ‚Á‚­‚è•Ô‚·‚©”»’è
         GameObject tempPiece = _activePieces[0];
         Piece piece1 = _activePieces[0].GetComponent<Piece>();
         Piece piece2 = _activePieces[1].GetComponent<Piece>();
 
-        // [è‰²ã‚’æ¯”è¼ƒ]  ã©ã¡ã‚‰ã‚‚è‡ªåˆ†ã®è‰² or ã©ã¡ã‚‰ã‚‚ç›¸æ‰‹ã®è‰²ãªã‚‰ãƒã‚¸ã‚·ãƒ§ãƒ³ã§åˆ¤æ–­ã™ã‚‹
+        // [F‚ğ”äŠr]  ‚Ç‚¿‚ç‚à©•ª‚ÌF or ‚Ç‚¿‚ç‚à‘Šè‚ÌF‚È‚çƒ|ƒWƒVƒ‡ƒ“‚Å”»’f‚·‚é
         if ((piece1.pieceType == playersType && piece2.pieceType == playersType) || (piece1.pieceType != playersType && piece2.pieceType != playersType))
         {
-            // [0]ãŒä¸Šãªã‚‰ã‚½ãƒ¼ãƒˆ
+            // [0]‚ªã‚È‚çƒ\[ƒg
             if ((int)_activePieces[0].transform.position.z > (int)_activePieces[1].transform.position.z)
             {
                 _activePieces[0] = _activePieces[1];
                 _activePieces[1] = tempPiece;
             }
-            // [0]ãŒå³ãªã‚‰ã‚½ãƒ¼ãƒˆ
+            // [0]‚ª‰E‚È‚çƒ\[ƒg
             else if (_activePieces[0].transform.position.x > _activePieces[1].transform.position.x)
             {
                 _activePieces[0] = _activePieces[1];
@@ -217,7 +221,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         _player1.isMyTurn = false;
         _player2.isMyTurn = false;
 
-        // é»’ã‚¿ãƒ¼ãƒ³
+        // •ƒ^[ƒ“
         if (_turnCount % 2 == 1)
         {
             _player1.rotationNum = 0;
@@ -225,22 +229,27 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             _player1.controllPiece2 = _activePieces[1];
             _player1.isMyTurn = true;
         }
-        else// ç™½ã‚¿ãƒ¼ãƒ³
+        else// ”’ƒ^[ƒ“
         {
             _player2.rotationNum = 0;
             _player2.controllPiece1 = _activePieces[0];
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
+            //_ai.MapPrepare();
+            //_ai.CheckVertical();
+            //_ai.PatternClassification();
+            //_ai.CheckMap();
+            //_ai.PatternChoice();
         }
         gameState = GameState.preActive;
     }
 
     private void PieceSet()
     {
-        // ç”Ÿæˆä½ç½®ã®1ãƒã‚¹ä¸‹ãŒç©ºã„ã¦ã„ã‚Œã°ç”Ÿæˆ
+        // ¶¬ˆÊ’u‚Ì1ƒ}ƒX‰º‚ª‹ó‚¢‚Ä‚¢‚ê‚Î¶¬
         Vector3 generatePos = _DEFAULT_POSITION + Vector3.back;
         int x = 0;
-        while(true)
+        while (true)
         {
             Vector3 checkPos = generatePos + new Vector3(x, 0);
             if (Map.Instance.CheckWall(checkPos))
@@ -259,13 +268,13 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             }
             x++;
             if (x > 4)
-                Debug.LogError("ç”Ÿæˆã§ãã‚‹ãƒã‚¹ãŒã‚ã‚Šã¾ã›ã‚“");
+                Debug.LogError("¶¬‚Å‚«‚éƒ}ƒX‚ª‚ ‚è‚Ü‚¹‚ñ");
         }
     }
 
     public void AddScore(bool isBlack, int point)
     {
-        if(isBlack)
+        if (isBlack)
         {
             _player1.reverseScore += point;
         }
@@ -289,7 +298,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     public void AddReversedCount(bool isBlack)
     {
-        if(isBlack)
+        if (isBlack)
             _player1.reversedCount++;
         else
             _player2.reversedCount++;

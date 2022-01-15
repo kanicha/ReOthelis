@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIThinking : MonoBehaviour
+/*public class AI_DataBase : MonoBehaviour
 {
     private const byte _WIDTH = 10;
     private const byte _HEIGHT = 11;
@@ -388,4 +388,4 @@ public class AIThinking : MonoBehaviour
 		}
 		Debug.Log("CPU用マップ\n" + printMapData);
     }
-}
+}*/
