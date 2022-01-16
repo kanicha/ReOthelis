@@ -1067,11 +1067,11 @@ public class PlayerBaseForT : MonoBehaviour
             {
                 TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.MoveLeft;
             }
-            else if (MoveLeftFin == true && TutorialDirector.ReverseFin == false)
+            else if (MoveLeftFin == true && TutorialDirector.Instance.ReverseFin == false)
             {
                 TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.Reverse;
             }
-            else if (MoveLeftFin == true && TutorialDirector.ReverseFin == true)
+            else if (MoveLeftFin == true && TutorialDirector.Instance.ReverseFin == true)
             {
                 TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SkillPanel;
             }
@@ -1122,6 +1122,7 @@ public class PlayerBaseForT : MonoBehaviour
                 case TutorialDirector.TutorialPhase.Reverse:
                     Destroy(controllPiece1);
                     Destroy(controllPiece2);
+                    TutorialDirector.Instance.ReverseFin = true;
                     TutorialDirector.Instance.gameState = TutorialDirector.GameState.reversed;
                     TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SkillPanel;
                     break;

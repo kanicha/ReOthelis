@@ -38,7 +38,7 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
     private string _showText;
     [SerializeField] private Image explanImage;
     [SerializeField] private Sprite[] showImage;
-    public static bool ReverseFin = false;
+    public bool ReverseFin = false;
     public bool skillUsed = false;
 
     public enum GameState

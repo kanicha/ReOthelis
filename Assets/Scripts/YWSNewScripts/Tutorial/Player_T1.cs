@@ -92,6 +92,8 @@ public class Player_T1 : PlayerBaseForT
             }
         }
 
+        base.TutorialPhaseSkip();
+
         if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Intro && TutorialDirector.Instance.isFadeIn == true)
         {
             base.TutorialPhaseChange();
@@ -102,7 +104,5 @@ public class Player_T1 : PlayerBaseForT
             reversedCount = 20;
             base.gaugeController.DrawGauge(reversedCount);
         }
-
-        base.TutorialPhaseSkip();
     }
 }

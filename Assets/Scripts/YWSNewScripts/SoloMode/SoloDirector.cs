@@ -17,7 +17,10 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
     private Player_1 _player1 = null;
     [SerializeField]
     private Player_2 _player2 = null;
-    [SerializeField, Header("エフェクトコントローラー")] private EffectController _effectController = null;
+    [SerializeField, Header("エフェクトコントローラー")] 
+    private EffectController _effectController = null;
+    [SerializeField]
+    private AI_DataBase _ai = null;
 
     private int _turnCount = 0;
     private float _timeCount = 0;
@@ -88,7 +91,7 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
 
                 if (ModeSelect._selectCount == 0 && _player2.isMyTurn == true)
                 {
-                    //_ai.MovePiece();
+                    _ai.MovePiece();
                 }
                 if (Map.Instance.CheckLanding(_activePieces[0].transform.position) || Map.Instance.CheckLanding(_activePieces[1].transform.position))
                 {
@@ -235,11 +238,11 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
             _player2.controllPiece1 = _activePieces[0];
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
-            //_ai.MapPrepare();
-            //_ai.CheckVertical();
-            //_ai.PatternClassification();
-            //_ai.CheckMap();
-            //_ai.PatternChoice();
+            _ai.MapPrepare();
+            _ai.CheckVertical();
+            _ai.PatternClassification();
+            _ai.CheckMap();
+            _ai.PatternChoice();
         }
         gameState = GameState.preActive;
     }
