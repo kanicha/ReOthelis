@@ -142,6 +142,7 @@ public class Map : SingletonMonoBehaviour<Map>
     /// </summary>
     private IEnumerator PieceReverse(bool isSkill)
     {
+        CharaImageMoved.CharaType1P type = CharaImageMoved.charaType1P;
         foreach (GameObject piece in _reversePiece)
         {
             switch (isSkill)
@@ -154,6 +155,7 @@ public class Map : SingletonMonoBehaviour<Map>
                     else
                     {
                         GameDirector.Instance.AddScore(false, GameDirector.Instance.point);
+                        type = (CharaImageMoved.CharaType1P)CharaImageMoved2P.charaType2P;
                     }
 
                     break;
@@ -167,6 +169,7 @@ public class Map : SingletonMonoBehaviour<Map>
                     {
                         GameDirector.Instance.AddScore(false, GameDirector.Instance.point);
                         GameDirector.Instance.AddReversedCount(false);
+                        type = (CharaImageMoved.CharaType1P)CharaImageMoved2P.charaType2P;
                     }
 
                     break;

@@ -10,6 +10,8 @@ public class ScoreAnimator : SingletonMonoBehaviour<ScoreAnimator>
     [SerializeField]
     private float _distance = 80;
     [SerializeField]
+    private Material[] _materials = new Material[4];
+    [SerializeField]
     private Text _text = null;
     [SerializeField]
     private Animator _animator = null;
@@ -35,6 +37,7 @@ public class ScoreAnimator : SingletonMonoBehaviour<ScoreAnimator>
 
     public void OnAddScore(CharaImageMoved.CharaType1P type, Vector3 pos, int point)
     {
+        _text.material = _materials[(int)type];
         _text.text = point.ToString();
         _text.rectTransform.anchoredPosition = new Vector2(_PARENT_WIDTH / _CELL_NUM_X * (pos.x - 1), _PARENT_HEIGHT / _CELL_NUM_Y * pos.z);
         Debug.Log(_text.rectTransform.localPosition);
