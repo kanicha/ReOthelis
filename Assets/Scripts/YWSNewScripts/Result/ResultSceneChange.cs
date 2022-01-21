@@ -38,7 +38,7 @@ public class ResultSceneChange : Player1Base
             SoundManager.Instance.StopBGM();
             SoundManager.Instance.StopSE();
             
-            gameSceneManager.SceneNextCall("CharacterScenario_PB");
+            gameSceneManager.SceneNextCall("Scenario");
         }
         else
         {

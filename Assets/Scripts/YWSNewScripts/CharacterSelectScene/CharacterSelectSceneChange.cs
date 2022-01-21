@@ -49,7 +49,7 @@ public class CharacterSelectSceneChange : SingletonMonoBehaviour<CharacterSelect
         {
             SoundManager.Instance.StopBGM();
             
-            gameSceneManager.SceneNextCall("CharacterScenario_PA");
+            gameSceneManager.SceneNextCall("CharacterScenario");
         }
         else
         {

@@ -58,7 +58,7 @@ public class ModeSelect : Player1Base
             
             _repeatHit = true;
             SoundManager.Instance.PlaySE(9);
-            ScenarioSceneChange(_gameSceneManager);
+            CharacterSelectSceneChange(_gameSceneManager);
             
             _isDemoChange = true;
         }

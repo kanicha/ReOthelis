@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PartASceneChange : Player1Base
+public class CharacterScenarioSceneChange : Player1Base
 {
     private GameSceneManager _gameSceneManager;
     private bool _repeatHit = false;

@@ -47,6 +47,6 @@ public class GameSceneChange : MonoBehaviour
 
     private void SkipGame(GameSceneManager gameSceneManager)
     {
-        gameSceneManager.SceneNextCall("CharacterScenario_PB");
+        gameSceneManager.SceneNextCall("Scenario");
     }
 }
