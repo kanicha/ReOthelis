@@ -174,6 +174,7 @@ public class Map : SingletonMonoBehaviour<Map>
                     break;
             }
 
+            ScoreAnimator.Instance.OnAddScore(CharaImageMoved.charaType1P, piece.transform.position, GameDirector.Instance.point);
             piece.transform.SetAsLastSibling();
             piece.GetComponent<Piece>().Reverse();
             yield return new WaitForSeconds(0.3f);
