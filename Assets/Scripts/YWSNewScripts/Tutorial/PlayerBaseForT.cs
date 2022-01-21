@@ -225,6 +225,7 @@ public class PlayerBaseForT : MonoBehaviour
     /// </summary>
     protected void PieceRotate()
     {
+        
         int lastNum = rotationNum;
 
         if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.SpinLeft && (_DS4_L1_value || _keyBoardLeft))
@@ -377,15 +378,16 @@ public class PlayerBaseForT : MonoBehaviour
                 ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) ||
                 (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0)))
             move.x = 1;
-        /*else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
-                 (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+        else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.Reverse &&
+                ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
+                (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0)))
         {
             move.z = -1;
             // した入力時ステート変更
             TutorialDirector.Instance.intervalTime = 0;
             TutorialDirector.Instance.nextStateCue = TutorialDirector.GameState.active;
             TutorialDirector.Instance.gameState = TutorialDirector.GameState.interval;
-        }*/
+        }
 
         // 左右に入力したなら移動
         if (move != Vector3.zero)
@@ -402,13 +404,13 @@ public class PlayerBaseForT : MonoBehaviour
                 {
                     break;
                 }
-                else if ((int)movedPos.x - 1 < 1)
+                else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.MoveLeft && (int)movedPos.x - 1 < 1)
                 {
                     isPieceArrivalLeft = true;
                     MoveLeftFin = true;
                     TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.MoveRight;
                 }
-                else if ((int)movedPos.x + 1 > 4)
+                else if (TutorialDirector.Instance.tutorialPhase == TutorialDirector.TutorialPhase.MoveRight && (int)movedPos.x + 1 > 4)
                 {
                     TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinLeft;
                 }
@@ -1056,7 +1058,7 @@ public class PlayerBaseForT : MonoBehaviour
     private bool MoveLeftFin = false;
     public void TutorialPhaseChange()
     {
-        if (TutorialDirector.Instance.isFadeIn == true && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)))
+        if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space) || _DS4_cross_value || Input.GetKeyDown(KeyCode.Backspace))
         {
             TutorialDirector.Instance.blackOutImage.color = new Color(0,0,0,0);
             TutorialDirector.Instance.isFadeOut = true;
@@ -1065,13 +1067,77 @@ public class PlayerBaseForT : MonoBehaviour
             {
                 TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.MoveLeft;
             }
-            else if (MoveLeftFin == true && TutorialDirector.ReverseFin == false)
+            else if (MoveLeftFin == true && TutorialDirector.Instance.ReverseFin == false)
             {
                 TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.Reverse;
             }
-            else if (MoveLeftFin == true && TutorialDirector.ReverseFin == true)
+            else if (MoveLeftFin == true && TutorialDirector.Instance.ReverseFin == true)
             {
                 TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SkillPanel;
+            }
+        }
+    }
+
+    public void TutorialPhaseSkip()
+    {
+        Vector3 FinalLeftPos = new Vector3(1, 0, -1);
+        Vector3 StartPos = new Vector3(4, 0, -1);
+        if (_DS4_cross_value || Input.GetKeyDown(KeyCode.Backspace))
+        {
+            switch (TutorialDirector.Instance.tutorialPhase)
+            {
+                case TutorialDirector.TutorialPhase.Intro:
+                    TutorialPhaseChange();
+                    break;
+
+                case TutorialDirector.TutorialPhase.MoveLeft:
+                    controllPiece1.transform.position = FinalLeftPos;
+                    controllPiece2.transform.position = FinalLeftPos + rotationPos[rotationNum];
+                    MoveLeftFin = true;
+                    TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.MoveRight;
+                    break;
+
+                case TutorialDirector.TutorialPhase.MoveRight:
+                    controllPiece1.transform.position = StartPos;
+                    controllPiece2.transform.position = StartPos + rotationPos[rotationNum];
+                    TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinLeft;
+                    break;
+
+                case TutorialDirector.TutorialPhase.SpinLeft:
+                    controllPiece1.transform.position = StartPos;
+                    rotationNum = 0;
+                    controllPiece2.transform.position = StartPos + rotationPos[rotationNum];
+                    TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SpinRight;
+                    rotateTimes = 0;
+                    break;
+
+                case TutorialDirector.TutorialPhase.SpinRight:
+                    controllPiece1.transform.position = StartPos;
+                    rotationNum = 0;
+                    controllPiece2.transform.position = StartPos + rotationPos[rotationNum];
+                    TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.Reverse;
+                    rotateTimes = 0;
+                    break;
+
+                case TutorialDirector.TutorialPhase.Reverse:
+                    Destroy(controllPiece1);
+                    Destroy(controllPiece2);
+                    TutorialDirector.Instance.ReverseFin = true;
+                    TutorialDirector.Instance.gameState = TutorialDirector.GameState.reversed;
+                    TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SkillPanel;
+                    break;
+
+                case TutorialDirector.TutorialPhase.SkillPanel:
+                    ShowSkillWindow(KeyCode.N);
+                    TutorialDirector.Instance.tutorialPhase = TutorialDirector.TutorialPhase.SkillActive;
+                    break;
+
+                case TutorialDirector.TutorialPhase.SkillActive:
+                    TutorialDirector.Instance.skillUsed = true;
+                    break;
+
+                default:
+                    break;
             }
         }
     }

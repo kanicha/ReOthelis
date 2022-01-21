@@ -38,7 +38,7 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
     private string _showText;
     [SerializeField] private Image explanImage;
     [SerializeField] private Sprite[] showImage;
-    public static bool ReverseFin = false;
+    public bool ReverseFin = false;
     public bool skillUsed = false;
 
     public enum GameState
@@ -60,10 +60,10 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
     {
         none,
         Intro,
-        SpinLeft,
-        SpinRight,
         MoveLeft,
         MoveRight,
+        SpinLeft,
+        SpinRight,
         Reverse,
         SkillPanel,
         SkillActive,
@@ -160,7 +160,7 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                     _activePieces[0].transform.position += new Vector3(0, 0, -1);
                     _activePieces[1].transform.position += new Vector3(0, 0, -1);
                     
-                    explanText.text = "コマは自動で落下します、\n一番下に着地したら、\nオセロのように、\n同じ色で挟んだ駒をひっくり返します。";
+                    explanText.text = "コマは自動で落下します、\n一番下に着地したら、\nオセロのように、\n同じ色で挟んだ駒をひっくり返します。\n駒を操作して、\n他の駒をひっくり返してみよう。";
                     //explanImage.sprite = showImage[5];
 
                     // さげたら推移
@@ -235,8 +235,18 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                     gameState = GameState.end;
                 else
                 {
-                    tutorialPhase = TutorialPhase.Intro;
-                    ReverseFin = true;
+                    if (_player1.reverseScore != 0)
+                    {
+                        tutorialPhase = TutorialPhase.Intro;
+                        ReverseFin = true;
+                    }
+                    else
+                    {
+                        TutorialMap.Instance.DestroyPiece();
+                        TutorialMap.Instance.DestroyPiece();
+                        _generator.PieceGenerated = 0;
+                        explanText.text = "駒をひっくり返せなかった、\nもう一回やってみよう。";
+                    }
                     PieceSet();
                     gameState = GameState.preActive;
                     ChangeTurn();

@@ -29,9 +29,9 @@ public class Player1Base : PlayerBase
         base.DS4_square_name = _PLAYER1_SQUARE_NAME;
         base.DS4_triangle_name = _PLAYER1_TRIANGLE_NAME;
         base.DS4_L1_name = _PLAYER1_L1_NAME;
-        /*base.DS4_L2_name = _PLAYER1_L2_NAME;*/
+        base.DS4_L2_name = _PLAYER1_L2_NAME;
         base.DS4_R1_name = _PLAYER1_R1_NAME;
-        /*base.DS4_R2_name = _PLAYER1_R2_NAME;*/
+        base.DS4_R2_name = _PLAYER1_R2_NAME;
         base.DS4_option_name = _PLAYER1_OPTION_NAME;
         base.DS4_horizontal_name = _PLAYER1_HORIZONTAL_NAME;
         base.DS4_vertical_name = _PLAYER1_VERTICAL_NAME;

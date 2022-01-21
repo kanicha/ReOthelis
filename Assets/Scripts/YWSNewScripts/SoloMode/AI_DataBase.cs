@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIThinking : MonoBehaviour
+public class AI_DataBase : MonoBehaviour
 {
     private const byte _WIDTH = 10;
     private const byte _HEIGHT = 11;
@@ -348,9 +348,9 @@ public class AIThinking : MonoBehaviour
 
         int choiceNum = Random.Range(0,SameReverseNum.Count);
         int patternNum = SameReverseNum[choiceNum];
-        Vector3 P1FinalPos = new Vector3 (AIThinking.CheckEmpty[patternNum,0], 0, AIThinking.CheckEmpty[patternNum,1]*-1);
-        Vector3 P2FinalPos = new Vector3 (AIThinking.CheckEmpty[patternNum,2], 0, AIThinking.CheckEmpty[patternNum,3]*-1);
-        Debug.Log("1x=" + AIThinking.CheckEmpty[patternNum,0] + "\n1z=" + AIThinking.CheckEmpty[patternNum,1] + "\n2x" + AIThinking.CheckEmpty[patternNum,2] + "\n2z" + AIThinking.CheckEmpty[patternNum,3]);
+        Vector3 P1FinalPos = new Vector3 (CheckEmpty[patternNum,0], 0, CheckEmpty[patternNum,1]*-1);
+        Vector3 P2FinalPos = new Vector3 (CheckEmpty[patternNum,2], 0, CheckEmpty[patternNum,3]*-1);
+        Debug.Log("1x=" + CheckEmpty[patternNum,0] + "\n1z=" + CheckEmpty[patternNum,1] + "\n2x" + CheckEmpty[patternNum,2] + "\n2z" + CheckEmpty[patternNum,3]);
 
         GameDirector.Instance._activePieces[0].transform.position = P1FinalPos;
         GameDirector.Instance._activePieces[1].transform.position = P2FinalPos;

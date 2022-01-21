@@ -8,7 +8,7 @@ public class PiecePatternGeneretorForT : MonoBehaviour
     private GameObject piecePrefab = null;
 
     public static int type = 0;
-    private int PieceGenerated = 0;
+    public int PieceGenerated = 0;
 
     public GameObject Generate(Vector3 GeneratePos)
     {
