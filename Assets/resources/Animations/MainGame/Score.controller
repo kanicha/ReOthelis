@@ -64,8 +64,7 @@ AnimatorStateMachine:
     m_State: {fileID: -5791128824290330674}
     m_Position: {x: 330, y: 120, z: 0}
   m_ChildStateMachines: []
-  m_AnyStateTransitions:
-  - {fileID: -7022656360451866262}
+  m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
