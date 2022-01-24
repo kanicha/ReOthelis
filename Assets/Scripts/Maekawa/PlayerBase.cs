@@ -830,6 +830,7 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("強制変換");
         skillCutinControl.ShowSkillCutin(3);
+        SoundManager.Instance.PlayVoice(11);
         reversedCount -= cost;
 
         StartCoroutine(ForceConvertionCoroutine());
@@ -921,6 +922,7 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("一列一式");
         skillCutinControl.ShowSkillCutin(1);
+        SoundManager.Instance.PlayVoice(9);
         reversedCount -= cost;
 
         // コマが着地したら処理を行う
@@ -1023,6 +1025,7 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("優先頂戴");
         skillCutinControl.ShowSkillCutin(2);
+        SoundManager.Instance.PlayVoice(10);
         reversedCount -= cost;
 
         // プレイヤーが黒プレイヤーか白か判別
@@ -1103,6 +1106,7 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("強奪一瞬");
         skillCutinControl.ShowSkillCutin(0);
+        SoundManager.Instance.PlayVoice(8);
         reversedCount -= cost;
         /*SoundManager.Instance.PlaySE(5);*/
 

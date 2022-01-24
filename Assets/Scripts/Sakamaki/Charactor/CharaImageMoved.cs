@@ -94,6 +94,7 @@ public class CharaImageMoved : Player1Base
         else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.E))
         {
             SoundManager.Instance.PlaySE(7);
+            SoundManager.Instance.PlayVoice((int)charaType1P);
             _charactorInfo.OKButtonAnimControl();
             
             // キャラ決定

@@ -190,6 +190,7 @@ public class SoundManager : MonoBehaviour
         {
             return;
         }
+        
         // Ä¶’†‚Å–³‚¢AudioSouce‚Å–Â‚ç‚·
         foreach (AudioSource source in VoiceSources)
         {
