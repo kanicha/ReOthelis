@@ -101,17 +101,8 @@ public class Piece : MonoBehaviour
                 break;
         }
 
-        if (pieceType == PieceType.fixityBlack)
+        if (pieceType == PieceType.fixityBlack || pieceType == PieceType.fixityWhite)
         {
-            _particalObj.SetActive(true);
-        }
-        else if (pieceType == PieceType.fixityWhite)
-        {
-            // 白コマはエフェクトの座標が反転してしまうため y の値を増加させる
-            Vector3 pos = _particalObj.transform.position;
-            pos.y = 1f;
-            _particalObj.transform.position = pos;
-            
             _particalObj.SetActive(true);
         }
         else

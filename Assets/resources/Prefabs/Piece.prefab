@@ -366,8 +366,16 @@ PrefabInstance:
       value: Piece_Slash
       objectReference: {fileID: 0}
     - target: {fileID: 6340783856234896293, guid: 27aa0d9d41453fa439e4b08a455fb1e6, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6340783856234896293, guid: 27aa0d9d41453fa439e4b08a455fb1e6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6340783856506794486, guid: 27aa0d9d41453fa439e4b08a455fb1e6, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27aa0d9d41453fa439e4b08a455fb1e6, type: 3}
