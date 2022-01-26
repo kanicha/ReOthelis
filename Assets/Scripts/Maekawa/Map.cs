@@ -178,6 +178,7 @@ public class Map : SingletonMonoBehaviour<Map>
             }
 
             ScoreAnimator.Instance.OnAddScore(CharaImageMoved.charaType1P, piece.transform.position, GameDirector.Instance.point);
+            ParticalController.Instance.PlayParticle(piece.transform.position);
             piece.transform.SetAsLastSibling();
             piece.GetComponent<Piece>().Reverse();
             yield return new WaitForSeconds(0.3f);

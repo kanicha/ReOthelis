@@ -25,7 +25,6 @@ public class ScoreAnimator : SingletonMonoBehaviour<ScoreAnimator>
         _root = transform.gameObject;
         for (int i = 0; i < _SIZE; i++)
             _texts[i] = _root.transform.GetChild(i).gameObject.GetComponent<Text>();
-
     }
 
     private void Update()
