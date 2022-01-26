@@ -98,6 +98,8 @@ public class CharaImageMoved : Player1Base
             
             // キャラ決定
             isConfirm = true;
+            SoundManager.Instance.CharacterConfirmVoice(charaType1P);
+            SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.CharaSelect);
         }
 
         // prev と result 変数の中身(int型)が違った場合描画処理

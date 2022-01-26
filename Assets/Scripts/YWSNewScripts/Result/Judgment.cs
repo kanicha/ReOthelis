@@ -147,10 +147,12 @@ public class Judgment : MonoBehaviour
             case 1:
                 _playerImage[0].sprite = _winPlayerImageArray1P[(int) CharaImageMoved.charaType1P];
                 _playerImage[1].sprite = _losePlayerImageArray2P[(int) CharaImageMoved2P.charaType2P];
+                SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Win);
                 break;
             case 2:
                 _playerImage[0].sprite = _losePlayerImageArray1P[(int) CharaImageMoved.charaType1P];
                 _playerImage[1].sprite = _winPlayerImageArray2P[(int) CharaImageMoved2P.charaType2P];
+                SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Win);
                 break;
             default:
                 break;

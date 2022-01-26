@@ -96,6 +96,8 @@ public class CharaImageMoved2P : Player2Base
             
             // キャラ決定
             isConfirm = true;
+            SoundManager.Instance.CharacterConfirmVoice2P(charaType2P);
+            SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.CharaSelect);
         }
 
         // prev と result 変数の中身(int型)が違った場合描画処理
