@@ -61,7 +61,22 @@ public class SoundManager : MonoBehaviour
     public AudioClip[] SE;
     // 音声
     public AudioClip[] Voice;
+    public AudioClip[] Voice2P;
+    public AudioClip[] _seastyVoice;
+    public AudioClip[] _luiceVoice;
+    public AudioClip[] _luminaVoice;
+    public AudioClip[] _kurotoVoice;
 
+
+    public enum VoiceType
+    {
+        Piece5Skill,
+        PieceSpecialSkill,
+        CharaSelect,
+        Win,
+        Scenario
+    }
+    
     // 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void OnBoot()
@@ -184,7 +199,21 @@ public class SoundManager : MonoBehaviour
 
     // ***** 音声再生 *****
     // 音声再生
-    public void PlayVoice(int index)
+    public void PlayVoice1P(VoiceType voiceType)
+    {
+        PlayVoice((int) voiceType, Voice);
+    }
+    public void PlayVoice2P(VoiceType voiceType)
+    {
+        PlayVoice((int) voiceType, Voice2P);
+    }
+
+    /// <summary>
+    /// 1Pか2Pか分別する関数
+    /// </summary>
+    /// <param name="index">ボイスの配列</param>
+    /// <param name="audioClips">どれを再生するか</param>
+    private void PlayVoice(int index, AudioClip[] audioClips)
     {
         if (0 > index || Voice.Length <= index)
         {
@@ -196,13 +225,42 @@ public class SoundManager : MonoBehaviour
         {
             if (false == source.isPlaying)
             {
-                source.clip = Voice[index];
+                source.clip = audioClips[index];
                 source.Play();
                 return;
             }
         }
     }
 
+    /// <summary>
+    /// キャラクターの番号確定判定関数
+    /// </summary>
+    /// <param name="oneCharaNum">1pのキャラクター番号</param>
+    /// <param name="twoCharaNum">2pのキャラクター番号</param>
+    public void CharacterConfirmVoice(CharaImageMoved.CharaType1P charaType1P)
+    {
+        Voice = charaType1P switch
+        {
+            CharaImageMoved.CharaType1P.Cow => _seastyVoice,
+            CharaImageMoved.CharaType1P.Mouse => _luiceVoice,
+            CharaImageMoved.CharaType1P.Rabbit => _luminaVoice,
+            CharaImageMoved.CharaType1P.Tiger => _kurotoVoice,
+            _ => throw new ArgumentOutOfRangeException(nameof(charaType1P), charaType1P, null)
+        };
+    }
+
+    public void CharacterConfirmVoice2P(CharaImageMoved2P.CharaType2P charaType2P)
+    {
+        Voice2P = charaType2P switch
+        {
+            CharaImageMoved2P.CharaType2P.Cow => _seastyVoice,
+            CharaImageMoved2P.CharaType2P.Mouse => _luiceVoice,
+            CharaImageMoved2P.CharaType2P.Rabbit => _luminaVoice,
+            CharaImageMoved2P.CharaType2P.Tiger => _kurotoVoice,
+            _ => throw new ArgumentOutOfRangeException(nameof(charaType2P), charaType2P, null)
+        };
+    }
+    
     // 音声停止
     public void StopVoice()
     {

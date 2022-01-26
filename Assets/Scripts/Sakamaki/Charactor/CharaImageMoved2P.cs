@@ -92,11 +92,12 @@ public class CharaImageMoved2P : Player2Base
         else if (_DS4_circle_value || Input.GetKeyDown(KeyCode.O))
         {
             SoundManager.Instance.PlaySE(7);
-            SoundManager.Instance.PlayVoice((int)charaType2P);
             _charactorInfo.OKButtonAnimControl();
             
             // キャラ決定
             isConfirm = true;
+            SoundManager.Instance.CharacterConfirmVoice2P(charaType2P);
+            SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.CharaSelect);
         }
 
         // prev と result 変数の中身(int型)が違った場合描画処理
