@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class InitRequest : RequestBase
 {
-    
+    public InitRequest() : base(PacketType.Init) { }
 }

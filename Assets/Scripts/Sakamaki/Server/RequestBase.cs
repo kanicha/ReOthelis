@@ -16,6 +16,8 @@ public class RequestBase
     {
         Init,
         Matching,
+        CharaConfirm,
+        PieceMoved,
         Send,
         Receive,
         End
@@ -30,6 +32,8 @@ public class RequestBase
         if (packetType != null)
             _packetType = packetType.ToString();
 
+        
+        Debug.Log(ServerManager.Instance._myId);
         id = ServerManager.Instance._myId;
     }
 
