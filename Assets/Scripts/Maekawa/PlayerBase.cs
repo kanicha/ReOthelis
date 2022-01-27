@@ -685,6 +685,11 @@ public class PlayerBase : MonoBehaviour
             else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
             
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit)
+                SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit)
+                SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
+            
             reversedCount -= cost;
             while (true)
             {
@@ -730,6 +735,11 @@ public class PlayerBase : MonoBehaviour
             else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
             
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse)
+                SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse)
+                SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
+            
             reversedCount -= cost;
 
             while (true)
@@ -773,6 +783,11 @@ public class PlayerBase : MonoBehaviour
             else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
             
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger)
+                SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger)
+                SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
+            
                 reversedCount -= cost;
 
             // 自分の色を固定化(2つとも自分の色なら両方)
@@ -807,6 +822,11 @@ public class PlayerBase : MonoBehaviour
             else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
 
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow)
+                SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow)
+                SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
+            
             reversedCount -= cost;
 
             bool isCheck = false;

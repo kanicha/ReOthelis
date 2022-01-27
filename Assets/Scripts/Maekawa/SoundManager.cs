@@ -70,6 +70,7 @@ public class SoundManager : MonoBehaviour
 
     public enum VoiceType
     {
+        Piece3Skill,
         Piece5Skill,
         PieceSpecialSkill,
         CharaSelect,
