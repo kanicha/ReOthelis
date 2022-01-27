@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +30,20 @@ public class Map : SingletonMonoBehaviour<Map>
     public readonly string white = "〇";
     public readonly string fixityBlack = "★";
     public readonly string fixityWhite = "☆";
-
+    
+    // マップの要素を返す関数
+    public string _mapElement(Piece.PieceType mapElement)
+    {
+        return mapElement switch
+        {
+            Piece.PieceType.black => black,
+            Piece.PieceType.white => white,
+            Piece.PieceType.fixityBlack => fixityBlack,
+            Piece.PieceType.fixityWhite => fixityWhite,
+            _ => throw new ArgumentOutOfRangeException(nameof(mapElement), mapElement, null)
+        };
+    }
+    
     /// <summary>
     /// 移動後のコマが障害物に当たるかを調べる
     /// </summary>

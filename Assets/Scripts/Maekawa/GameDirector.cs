@@ -1,23 +1,29 @@
+using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameDirector : SingletonMonoBehaviour<GameDirector>
 {
-    [SerializeField, Header("基本スコア")]
-    public int point = 0;
+    [SerializeField, Header("基本スコア")] public int point = 0;
+
     [SerializeField, Header("接地中に配置を確定するまでの時間")]
     private float _marginTime = 0;
-    [SerializeField, Header("事前に操作できる時間")]
-    private float _preActiveTime = 0;
-    [SerializeField, Header("ミノの初期位置")]
-    public Vector3 _DEFAULT_POSITION = Vector3.zero;
-    [SerializeField]
-    PiecePatternGeneretor _generator = null;
-    [SerializeField]
-    private Player_1 _player1 = null;
-    [SerializeField]
-    private Player_2 _player2 = null;
-    [SerializeField, Header("エフェクトコントローラー")] private EffectController _effectController = null;
+
+    [SerializeField, Header("事前に操作できる時間")] private float _preActiveTime = 0;
+    [SerializeField, Header("ミノの初期位置")] public Vector3 _DEFAULT_POSITION = Vector3.zero;
+    [SerializeField] PiecePatternGeneretor _generator = null;
+    [SerializeField] private Player_1 _player1 = null;
+    [SerializeField] private Player_2 _player2 = null;
+
+    // プレイヤー１のゲッタ
+    public Player_1 player1 => _player1;
+
+    // ピース用リストを宣言
+    public List<Piece> pieces = new List<Piece>();
+
+    [SerializeField, Header("エフェクトコントローラー")]
+    private EffectController _effectController = null;
 
     private int _turnCount = 0;
     private float _timeCount = 0;
@@ -42,7 +48,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         idle,
         end,
         ended,
-    } 
+    }
 
     void Start()
     {
@@ -51,9 +57,18 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         _player1.isMyTurn = false;
         _player2.isMyTurn = false;
 
-        // 最初は2セット生成
-        PieceSet();
-        ChangeTurn();
+        if (ServerManager._isConnect)
+        {
+            ServerManager.Instance._onReceived.ObserveOnMainThread().Subscribe(onReceive).AddTo(this);
+        }
+
+        // ネットにつながっていない時 かつ つながっていても2Pのときはスルーを行う
+        if (!(ServerManager._isConnect &&
+              ServerManager.Instance.myPlayerNumber == ServerManager.playerNumber.twoPlayer))
+        {
+            PieceSet();
+            ChangeTurn();
+        }
     }
 
     void Update()
@@ -64,29 +79,31 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         {
             case GameState.preActive:
                 _effectController.FallPieceHighLight(true);
-                
+
                 _isLanding = false;
                 _isDown = true;
                 _timeCount += Time.deltaTime;
-                
+
                 // 待機時間を超えたらステートをすすめる(自動落下の処理はPieceMove()で管理)
                 if (_timeCount > _preActiveTime)
                 {
                     // 時間経過によりコマを一個下げる
                     _activePieces[0].transform.position += new Vector3(0, 0, -1);
                     _activePieces[1].transform.position += new Vector3(0, 0, -1);
-                    
+
                     // さげたら推移
                     intervalTime = 0;
                     nextStateCue = GameState.active;
                     gameState = GameState.interval;
                 }
+
                 break;
 
             case GameState.active:
                 _effectController.FallPieceHighLight(true);
-                
-                if (Map.Instance.CheckLanding(_activePieces[0].transform.position) || Map.Instance.CheckLanding(_activePieces[1].transform.position))
+
+                if (Map.Instance.CheckLanding(_activePieces[0].transform.position) ||
+                    Map.Instance.CheckLanding(_activePieces[1].transform.position))
                 {
                     // 接地時にカウント
                     _timeCount += Time.deltaTime;
@@ -98,6 +115,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 }
                 else
                     _timeCount = 0;
+
                 break;
 
             case GameState.confirmed:
@@ -109,7 +127,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     _activePieces[0] = _activePieces[1];
                     _activePieces[1] = tempPiece;
                 }
-                
+
                 Map.Instance.FallPiece(_activePieces[0]);
                 Map.Instance.FallPiece(_activePieces[1]);
                 _isLanding = true;
@@ -125,22 +143,23 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 // リバース・アニメーション処理
                 for (int i = 0; i < _activePieces.Length; i++)
                 {
-                    if(Map.Instance.CheckHeightOver(_activePieces[i],false))
-                        StartCoroutine(Map.Instance.CheckReverse(_activePieces[i],false));
+                    if (Map.Instance.CheckHeightOver(_activePieces[i], false))
+                        StartCoroutine(Map.Instance.CheckReverse(_activePieces[i], false));
                 }
-                
+
                 // スキルフラグ初期化
                 _isSkillBlack = false;
                 _isSkillWhite = false;
                 break;
 
-            case GameState.interval:// 強引スキル連打でバグが出るので時間を取る(応急処置)
+            case GameState.interval: // 強引スキル連打でバグが出るので時間を取る(応急処置)
                 _timeCount += Time.deltaTime;
                 if (_timeCount > intervalTime)
                 {
                     gameState = nextStateCue;
                     _timeCount = 0;
-                }                
+                }
+
                 break;
 
             case GameState.reversed:
@@ -152,13 +171,14 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     PieceSet();
                     ChangeTurn();
                 }
+
                 break;
 
             case GameState.end:
                 if (_player1.reverseScore > _player2.reverseScore)
                     Debug.Log("<color=red>1Pの勝ち</color>");
                 else if (_player1.reverseScore == _player2.reverseScore)
-                        Debug.Log("<color=orange>引き分け</color>");
+                    Debug.Log("<color=orange>引き分け</color>");
                 else
                     Debug.Log("<color=blue>2Pの勝ち</color>");
                 SoundManager.Instance.StopBGM();
@@ -188,7 +208,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         Piece piece2 = _activePieces[1].GetComponent<Piece>();
 
         // [色を比較]  どちらも自分の色 or どちらも相手の色ならポジションで判断する
-        if ((piece1.pieceType == playersType && piece2.pieceType == playersType) || (piece1.pieceType != playersType && piece2.pieceType != playersType))
+        if ((piece1.pieceType == playersType && piece2.pieceType == playersType) ||
+            (piece1.pieceType != playersType && piece2.pieceType != playersType))
         {
             // [0]が上ならソート
             if ((int)_activePieces[0].transform.position.z > (int)_activePieces[1].transform.position.z)
@@ -225,13 +246,14 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             _player1.controllPiece2 = _activePieces[1];
             _player1.isMyTurn = true;
         }
-        else// 白ターン
+        else // 白ターン
         {
             _player2.rotationNum = 0;
             _player2.controllPiece1 = _activePieces[0];
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
         }
+
         gameState = GameState.preActive;
     }
 
@@ -253,7 +275,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         // 生成位置の1マス下が空いていれば生成
         Vector3 generatePos = _DEFAULT_POSITION + Vector3.back;
         int x = 0;
-        while(true)
+        while (true)
         {
             Vector3 checkPos = generatePos + new Vector3(x, 0);
             if (Map.Instance.CheckWall(checkPos))
@@ -270,6 +292,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     break;
                 }
             }
+
             x++;
             if (x > 4)
                 Debug.LogError("生成できるマスがありません");
@@ -278,7 +301,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     public void AddScore(bool isBlack, int point)
     {
-        if(isBlack)
+        if (isBlack)
         {
             _player1.reverseScore += point;
         }
@@ -302,7 +325,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     public void AddReversedCount(bool isBlack)
     {
-        if(isBlack)
+        if (isBlack)
             _player1.reversedCount++;
         else
             _player2.reversedCount++;
@@ -312,5 +335,59 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     {
         _player1.myPieceCount = blackCount;
         _player2.myPieceCount = whiteCount;
+    }
+
+    /// <summary>
+    /// 通信を受け取ったら処理関数
+    /// </summary>
+    /// <param name="req">通信内容</param>
+    private void onReceive(object req)
+    {
+        RequestBase.PacketType packetType = ServerManager.Instance.ParsePacketType(req);
+
+        switch (packetType)
+        {
+            case RequestBase.PacketType.PieceMoved:
+                PieceMoveRequest pieceMoveRequest = (PieceMoveRequest)req;
+
+                Piece savePiece = null;
+                // 移動したコマのidを探す
+                foreach (var piece in pieces)
+                {
+                    // すでにあるコマのIDと移動したコマのIDを比較して代入
+                    if (piece._pieceId.Equals(pieceMoveRequest.pieceId))
+                    {
+                        savePiece = piece;
+
+                        break;
+                    }
+                }
+
+                Piece.PieceType pieceType = (Piece.PieceType)pieceMoveRequest.pieceColor;
+                GameObject pieceObject = null;
+                // 探したコマがなかった場合は生成を行う
+                if (savePiece == null)
+                {
+                    pieceObject = _generator.Generate(pieceMoveRequest.piecePos, pieceType,
+                        pieceMoveRequest.pieceId);
+                }
+                else
+                {
+                    // 実際にあった場合は代入をおこなう
+                    pieceObject = savePiece.gameObject;
+                    savePiece.transform.position = pieceMoveRequest.piecePos;
+                    savePiece.pieceType = pieceType;
+                }
+
+                int x = (int)pieceMoveRequest.piecePos.x;
+                int z = (int)pieceMoveRequest.piecePos.z * -1; // zはマイナス方向に進むので符号を反転させる
+
+                // Mapの更新処理
+                Map.Instance.map[z, x] = Map.Instance._mapElement(pieceType);
+                Map.Instance.pieceMap[z, x] = pieceObject;
+                break;
+            default:
+                break;
+        }
     }
 }

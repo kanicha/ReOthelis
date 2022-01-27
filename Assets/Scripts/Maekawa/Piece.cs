@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 public class Piece : MonoBehaviour
@@ -7,7 +8,11 @@ public class Piece : MonoBehaviour
     [SerializeField] private Renderer[] _renderer = new Renderer[2];
     [SerializeField] GameObject _particalObj = default(GameObject);
     public Material[] _material;
+
     private Animator _anim = null;
+
+    // コマのID
+    public string _pieceId = "";
 
     public enum PieceType
     {
@@ -25,6 +30,15 @@ public class Piece : MonoBehaviour
     {
         _anim = GetComponent<Animator>();
         Init();
+        
+        // 自分が生成されたときにリストに追加する
+        GameDirector.Instance.pieces.Add(this);
+        if (ServerManager._isConnect)
+        {
+            // 自分の座標が変化した時
+            this.ObserveEveryValueChanged(x => x.transform.position).Where(_ => GameDirector.Instance.player1.isMyTurn)
+                .Subscribe(onMoved).AddTo(this);
+        }
     }
 
     public void Init()
@@ -110,5 +124,16 @@ public class Piece : MonoBehaviour
             // 解除
             _particalObj.SetActive(false);
         }
+    }
+
+    /// <summary>
+    /// コマが移動を行った時
+    /// </summary>
+    public void onMoved(Vector3 movedPos)
+    {
+        // コマのリクエスト生成
+        PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(movedPos, this.pieceType, _pieceId);
+        // 送信を行う
+        ServerManager.Instance.SendMessage(pieceMoveRequest);
     }
 }
