@@ -235,6 +235,19 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         gameState = GameState.preActive;
     }
 
+    /// <summary>
+    /// プレイヤーが1pなのか2pなのか判別関数
+    /// </summary>
+    /// <param name="player">Playerの情報変数</param>
+    /// <returns></returns>
+    public bool PlayerJudge(PlayerBase player)
+    {
+        if (player == _player1)
+            return true;
+        else
+            return false;
+    }
+
     private void PieceSet()
     {
         // 生成位置の1マス下が空いていれば生成

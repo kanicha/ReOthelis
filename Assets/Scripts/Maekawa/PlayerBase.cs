@@ -679,17 +679,17 @@ public class PlayerBase : MonoBehaviour
         {
             Debug.Log("強引");
             SoundManager.Instance.PlaySE(5);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger && isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece5Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger && isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit && isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit && isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
-            
+
             reversedCount -= cost;
             while (true)
             {
@@ -729,17 +729,17 @@ public class PlayerBase : MonoBehaviour
         {
             Debug.Log("固定");
             SoundManager.Instance.PlaySE(5);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit && isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece5Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit && isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse && isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse && isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
-            
+
             reversedCount -= cost;
 
             while (true)
@@ -777,18 +777,18 @@ public class PlayerBase : MonoBehaviour
         {
             Debug.Log("残影");
             SoundManager.Instance.PlaySE(5);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow && isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece5Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow && isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger && isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger && isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
-            
-                reversedCount -= cost;
+
+            reversedCount -= cost;
 
             // 自分の色を固定化(2つとも自分の色なら両方)
             if (piece1.pieceType == playerType)
@@ -816,17 +816,17 @@ public class PlayerBase : MonoBehaviour
         {
             Debug.Log("打ち消し");
             SoundManager.Instance.PlaySE(5);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse && isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece5Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse && isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
 
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow)
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow && isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow && isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
-            
+
             reversedCount -= cost;
 
             bool isCheck = false;
@@ -874,8 +874,13 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("強制変換");
         skillCutinControl.ShowSkillCutin(3);
-        SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
-        reversedCount -= cost;
+
+        if (GameDirector.Instance.PlayerJudge(this))
+            SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        else
+            SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.PieceSpecialSkill);
+        
+            reversedCount -= cost;
 
         StartCoroutine(ForceConvertionCoroutine());
     }
@@ -966,7 +971,12 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("一列一式");
         skillCutinControl.ShowSkillCutin(1);
-        SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        
+        if (GameDirector.Instance.PlayerJudge(this))
+            SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        else
+            SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.PieceSpecialSkill);
+
         reversedCount -= cost;
 
         // コマが着地したら処理を行う
@@ -1069,7 +1079,12 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("優先頂戴");
         skillCutinControl.ShowSkillCutin(2);
-        SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        
+        if (GameDirector.Instance.PlayerJudge(this))
+            SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        else
+            SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.PieceSpecialSkill);
+
         reversedCount -= cost;
 
         // プレイヤーが黒プレイヤーか白か判別
@@ -1150,7 +1165,12 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("強奪一瞬");
         skillCutinControl.ShowSkillCutin(0);
-        SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        
+        if (GameDirector.Instance.PlayerJudge(this))
+            SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        else
+            SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.PieceSpecialSkill);
+
         reversedCount -= cost;
         /*SoundManager.Instance.PlaySE(5);*/
 

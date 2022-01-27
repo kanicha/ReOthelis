@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ParticalController : SingletonMonoBehaviour<ParticalController>
 {
-    // ƒp[ƒeƒBƒNƒ‹‚ÌÄ¶ŠÔ < ƒŠƒo[ƒXƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÀsƒCƒ“ƒ^[ƒoƒ‹ ‚È‚ç1‚Â‚Å‚¢‚¢
+    // ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®å†ç”Ÿæ™‚é–“ < ãƒªãƒãƒ¼ã‚¹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å®Ÿè¡Œã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ« ãªã‚‰1ã¤ã§ã„ã„
     private const int _SIZE = 3;
     private GameObject _root = null;
     private ParticleSystem[] _particles = new ParticleSystem[_SIZE];
