@@ -17,6 +17,9 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     private NetworkStream _streamKey;
     
     private string _message;
+
+    // 自分のユーザーID
+    public string _myId = "";
     
     // Start is called before the first frame update
     void Start()
@@ -27,7 +30,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         _thread = new Thread(ReceiveMessage);
         _thread.Start();
         
-        RequestBase _requestBase = new RequestBase(RequestBase.PacketType.Init);
+        RequestBase _requestBase = new RequestBase(RequestBase.PacketType.Matching);
         
         SendMessage(_requestBase);
     }
@@ -88,7 +91,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                     Array.Copy(buffer, 0, data, 0, count);
 
                     // 送られてきたデータをJson -> Class(文字列) に変換を行う
-                    InitRequest jsonData = RequestBase.JsonToClass<InitRequest>(Encoding.UTF8.GetString(data));
+                    RequestBase jsonData = RequestBase.JsonToClass<RequestBase>(Encoding.UTF8.GetString(data));
                     Debug.Log(jsonData._packetType);
                 }
             }
