@@ -8,6 +8,7 @@ public class ModeSelect : Player1Base
 {
     [SerializeField] private RectTransform cursor;
     [SerializeField, Header("デモプレイ画面に推移するまでの時間")] private float _demoPlayTime = 0.0f;
+    [SerializeField] private Text[] modeText = new Text[4];
     
     public static int _selectCount = 0;
     private float _timeCount = 0.0f;
@@ -76,8 +77,19 @@ public class ModeSelect : Player1Base
             SoundManager.Instance.PlaySE(9);
             SoundManager.Instance.StopBGM();
 
-            TutorialSceneChange(_gameSceneManager);
+            OnlineLobbySceneChange(_gameSceneManager);
             
+            _isDemoChange = true;
+        }
+        else if (_gameSceneManager.IsChanged &&
+                 (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space) && _selectCount == 3))
+        {
+            _repeatHit = true;
+            SoundManager.Instance.PlaySE(9);
+            SoundManager.Instance.StopBGM();
+
+            TutorialSceneChange(_gameSceneManager);
+
             _isDemoChange = true;
         }
         
@@ -103,6 +115,11 @@ public class ModeSelect : Player1Base
             {
                 //カーソルが一番下にある場合で下キーが入力されたら、一番上に戻す
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-220, -171, 0);
+                _selectCount++;
+            }
+            else if (_selectCount == 3)
+            {
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-300, 451, 0);
                 _selectCount = 0;
             }
         }
@@ -129,6 +146,11 @@ public class ModeSelect : Player1Base
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-220, -272, 0);
                 _selectCount--;
             }
+            else if (_selectCount == 3)
+            {
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-300, 451, 0);
+                _selectCount--;
+            }
         }
     }
     
@@ -144,6 +166,10 @@ public class ModeSelect : Player1Base
     private void TutorialSceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("TutorialGame");
+    }
+    private void OnlineLobbySceneChange(GameSceneManager gameSceneManager)
+    {
+        gameSceneManager.SceneNextCall("OnlineLobby");
     }
     /// <summary>
     /// デモシーンに推移する関数
