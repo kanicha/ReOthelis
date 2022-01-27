@@ -12,7 +12,7 @@ public class TitleNameFade : MonoBehaviour
 
     // 時間計測変数
     private float _sceneTime = 0.0f;
-    int _lastnum = 0;
+    public int _lastnum = 0;
     
     private void Start()
     {
@@ -49,7 +49,7 @@ public class TitleNameFade : MonoBehaviour
     }
 
     //Alpha値を更新してColorを返す
-    Color GetAlphaColor(Color color)
+    public Color GetAlphaColor(Color color)
     {
         _sceneTime += Time.deltaTime * 5.0f * _blinkSpeed;
         color.a = Mathf.Sin(_sceneTime) * 0.5f + 0.5f;

@@ -50,6 +50,9 @@ public class AI_DataBase : MonoBehaviour
         CheckMap();
     }
 
+    /// <summary>
+    /// 駒を置けるパターンをリストに入れる
+    /// </summary>
     public void CheckVertical()
     {
         //座標パターンの番号
@@ -66,24 +69,25 @@ public class AI_DataBase : MonoBehaviour
                     //データ保存配列の見方：
                     //0 x座標1
                     //1 z座標1
-                    //2 x座標2
-                    //3 z座標2
-                    //4 ひっくり返せる駒の数の合計
-                    //5 
+                    //2 駒1の色
+                    //3 x座標2
+                    //4 z座標2
+                    //5 駒2の色
+                    //6 ひっくり返せる駒の数の合計
 
                     //前の座標で上に空きが存在した場合、新しい座標を二個目の座標として取得
                     if (IsAboveExist == true)
                     {
-                        CheckEmpty[ItemNum,2] = x;
-                        CheckEmpty[ItemNum,3] = z;
+                        CheckEmpty[ItemNum,3] = x;
+                        CheckEmpty[ItemNum,4] = z;
                         ItemNum++;
                     }
                     //前の座標で上に空きがなかった場合、新しい座標を前の行に入力
                     //1列目は最初なのでこの処理は行わない
                     else if (IsAboveExist == false && x != 1)
                     {
-                        CheckEmpty[ItemNum-1,2] = x;
-                        CheckEmpty[ItemNum-1,3] = z;
+                        CheckEmpty[ItemNum-1,3] = x;
+                        CheckEmpty[ItemNum-1,4] = z;
                         ItemNum++;
                     }
                     CheckEmpty[ItemNum,0] = x;
@@ -93,8 +97,8 @@ public class AI_DataBase : MonoBehaviour
                     //取得した座標の一個上が空いていれば、それを二個目の座標として取得
                     if (MapData[z-1,x] == empty)
                     {
-                        CheckEmpty[ItemNum,2] = x;
-                        CheckEmpty[ItemNum,3] = z-1;
+                        CheckEmpty[ItemNum,3] = x;
+                        CheckEmpty[ItemNum,4] = z-1;
                         ItemNum++;
                         //縦パターンが存在するため、横パターンを想定して次の行に座標を入力
                         //8列目の右は壁なので横パターンは存在しない
@@ -158,8 +162,8 @@ public class AI_DataBase : MonoBehaviour
             CheckData();
 
             //座標2
-            _setPosX = CheckEmpty[i,2];
-            _setPosZ = CheckEmpty[i,3];
+            _setPosX = CheckEmpty[i,3];
+            _setPosZ = CheckEmpty[i,4];
             if (PiecePatternGeneretor.type == 3)
             {
                 _myColor = black;
@@ -168,11 +172,11 @@ public class AI_DataBase : MonoBehaviour
                 _fixityEnemyColor = fixityWhite;
 
                 //該当座標にコマを置く
-                MapData[CheckEmpty[i,3],CheckEmpty[i,2]] = black;
+                MapData[CheckEmpty[i,4],CheckEmpty[i,3]] = black;
             }
             else
             {
-                MapData[CheckEmpty[i,3],CheckEmpty[i,2]] = _myColor;
+                MapData[CheckEmpty[i,4],CheckEmpty[i,3]] = _myColor;
             }
             //全方向探索
             CheckInTheDirection(new Vector3(0, 0, -1),i); //↑
@@ -191,7 +195,7 @@ public class AI_DataBase : MonoBehaviour
 
             //探索後にコマを消去する
             MapData[CheckEmpty[i,1],CheckEmpty[i,0]] = empty;
-            MapData[CheckEmpty[i,3],CheckEmpty[i,2]] = empty;
+            MapData[CheckEmpty[i,4],CheckEmpty[i,3]] = empty;
 
             //コマパターンが二色の時、もう一度検索を行う
             if (PiecePatternGeneretor.type == 3)
@@ -224,7 +228,7 @@ public class AI_DataBase : MonoBehaviour
                 _fixityEnemyColor = fixityBlack;
 
                 //該当座標にコマを置く
-                MapData[CheckEmpty[i,3],CheckEmpty[i,2]] = white;
+                MapData[CheckEmpty[i,4],CheckEmpty[i,3]] = white;
 
                 //全方向探索
                 CheckInTheDirection(new Vector3(0, 0, -1),i); //↑
@@ -244,7 +248,7 @@ public class AI_DataBase : MonoBehaviour
 
             //探索後にコマを消去する
             MapData[CheckEmpty[i,1],CheckEmpty[i,0]] = empty;
-            MapData[CheckEmpty[i,3],CheckEmpty[i,2]] = empty;
+            MapData[CheckEmpty[i,4],CheckEmpty[i,3]] = empty;
 
             //マップ確認用
             CheckMap();
@@ -279,7 +283,7 @@ public class AI_DataBase : MonoBehaviour
             else if (targetType == _myColor || targetType == _fixityMyColor)
             {
                 isReverse = true; // 自分の色で挟んだ扱い
-                CheckEmpty[ItemNum,4] += moveCount;
+                CheckEmpty[ItemNum,6] += moveCount;
                 break;
             }
 
@@ -301,7 +305,7 @@ public class AI_DataBase : MonoBehaviour
                 if (MapData[checkPosZ, checkPosX] != _fixityEnemyColor)
                 {
                     MapData[checkPosZ, checkPosX] = _myColor;
-                    CheckEmpty[ItemNum,4] += 1;
+                    CheckEmpty[ItemNum,6] += 1;
                 }
             }
         }
@@ -315,16 +319,16 @@ public class AI_DataBase : MonoBehaviour
         //ひっくり返せるコマの最大数をデータ配列から探す
         for (int i = 0; i < 15; i++)
         {
-            if (CheckEmpty[i,4] > MaxReverseNum)
+            if (CheckEmpty[i,6] > MaxReverseNum)
             {
-                MaxReverseNum = CheckEmpty[i,4];
+                MaxReverseNum = CheckEmpty[i,6];
             }
         }
 
         //同じ数のコマをひっくり返せるパターンがあるかをデータ配列から探す
         for (int i = 0; i < 15; i++)
         {
-            if (CheckEmpty[i,4] == MaxReverseNum)
+            if (CheckEmpty[i,6] == MaxReverseNum)
             {
                 SameReverseNum.Add(i);
             }
@@ -349,8 +353,8 @@ public class AI_DataBase : MonoBehaviour
         int choiceNum = Random.Range(0,SameReverseNum.Count);
         int patternNum = SameReverseNum[choiceNum];
         Vector3 P1FinalPos = new Vector3 (CheckEmpty[patternNum,0], 0, CheckEmpty[patternNum,1]*-1);
-        Vector3 P2FinalPos = new Vector3 (CheckEmpty[patternNum,2], 0, CheckEmpty[patternNum,3]*-1);
-        Debug.Log("1x=" + CheckEmpty[patternNum,0] + "\n1z=" + CheckEmpty[patternNum,1] + "\n2x" + CheckEmpty[patternNum,2] + "\n2z" + CheckEmpty[patternNum,3]);
+        Vector3 P2FinalPos = new Vector3 (CheckEmpty[patternNum,3], 0, CheckEmpty[patternNum,4]*-1);
+        Debug.Log("1x=" + CheckEmpty[patternNum,0] + "\n1z=" + CheckEmpty[patternNum,1] + "\n2x" + CheckEmpty[patternNum,3] + "\n2z" + CheckEmpty[patternNum,4]);
 
         GameDirector.Instance._activePieces[0].transform.position = P1FinalPos;
         GameDirector.Instance._activePieces[1].transform.position = P2FinalPos;
