@@ -365,17 +365,21 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
                 Piece.PieceType pieceType = (Piece.PieceType)pieceMoveRequest.pieceColor;
                 GameObject pieceObject = null;
+
+                Debug.Log("コマ座標x" + pieceMoveRequest.piecePos.x);
+                Debug.Log("コマ座標z" + pieceMoveRequest.piecePos.z);
+                Debug.Log("コマ座標y" + pieceMoveRequest.piecePos.y);
                 // 探したコマがなかった場合は生成を行う
                 if (savePiece == null)
                 {
-                    pieceObject = _generator.Generate(pieceMoveRequest.piecePos, pieceType,
+                    pieceObject = _generator.Generate(pieceMoveRequest.piecePos.ToVector3(), pieceType,
                         pieceMoveRequest.pieceId);
                 }
                 else
                 {
                     // 実際にあった場合は代入をおこなう
                     pieceObject = savePiece.gameObject;
-                    savePiece.transform.position = pieceMoveRequest.piecePos;
+                    savePiece.transform.position = pieceMoveRequest.piecePos.ToVector3();
                     savePiece.pieceType = pieceType;
                 }
 

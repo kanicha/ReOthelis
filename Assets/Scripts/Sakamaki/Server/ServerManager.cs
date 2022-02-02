@@ -51,6 +51,15 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     }
 
     /// <summary>
+    /// アプリ自身が終了されたときに行うイベント
+    /// </summary>
+    private void OnApplicationQuit()
+    {
+        // 切断
+        Disconnect(true);
+    }
+
+    /// <summary>
     /// サーバーの初期接続 初期化
     /// </summary>
     public void InitServer()
@@ -112,6 +121,8 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                     // 送られてきたデータをJson -> Class(文字列) に変換を行う
                     object jsonData = ParseRequest(Encoding.UTF8.GetString(data));
                     _noticeData.OnNext(jsonData);
+
+                    Debug.Log(Encoding.UTF8.GetString(data));
                 }
             }
         }
@@ -143,19 +154,29 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     {
         RequestBase.PacketType packetType = ParsePacketType(req);
 
-        if (packetType == RequestBase.PacketType.Matching)
+        switch (packetType)
         {
-            MatchingRequest matchingRequest = (MatchingRequest)req;
-
-            // 参加した時にIDと番号を割り当てる
-            if (matchingRequest.isJoined)
+            case RequestBase.PacketType.Matching:
             {
-                myPlayerNumber = (playerNumber)matchingRequest.playerNumber;
-                _myId = matchingRequest.id;
+                MatchingRequest matchingRequest = (MatchingRequest)req;
+
+                switch (matchingRequest.isJoined)
+                {
+                    // 参加した時にIDと番号を割り当てる
+                    case true:
+                        myPlayerNumber = (playerNumber)matchingRequest.playerNumber;
+                        _myId = matchingRequest.id;
+                        break;
+                }
+            
+                // 接続されたのでフラグを建てる
+                _isConnect = true;
+                break;
             }
             
-            // 接続されたのでフラグを建てる
-            _isConnect = true;
+            case RequestBase.PacketType.OpponentDisconnect:
+                Debug.LogWarning("相手が切断されました");
+                break;
         }
     }
 
@@ -169,12 +190,28 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         RequestBase requestBase = RequestBase.JsonToClass<RequestBase>(jsonData);
         RequestBase.PacketType packetType = ParsePacketType(requestBase);
 
+        // パケットタイプの登録
         return packetType switch
         {
             RequestBase.PacketType.Matching => RequestBase.JsonToClass<MatchingRequest>(jsonData),
             RequestBase.PacketType.CharaConfirm => RequestBase.JsonToClass<CharaConfirmRequest>(jsonData),
-
+            RequestBase.PacketType.OpponentDisconnect => RequestBase.JsonToClass<OpponentDisconnectRequest>(jsonData),
+            RequestBase.PacketType.PieceMoved => RequestBase.JsonToClass<PieceMoveRequest>(jsonData),
+            
             _ => throw new ArgumentOutOfRangeException()
         };
+    }
+
+    /// <summary>
+    /// 切断処理
+    /// </summary>
+    /// <param name="isNotifyOpponent">相手に通知するbool型変数</param>
+    public void Disconnect(bool isNotifyOpponent)
+    {
+        DisconnectRequest disconnectRequest = new DisconnectRequest();
+        disconnectRequest.isNotifyOpponent = isNotifyOpponent;
+        
+        // 送信
+        SendMessage(disconnectRequest);
     }
 }

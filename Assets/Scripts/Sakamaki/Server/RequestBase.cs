@@ -20,7 +20,9 @@ public class RequestBase
         PieceMoved,
         Send,
         Receive,
-        End
+        End,
+        Disconnect,
+        OpponentDisconnect
     }
 
     /// <summary>
