@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameDirector : SingletonMonoBehaviour<GameDirector>
 {
+    [SerializeField, Header("初期コマの配列")] private Piece[] _pieceArray = new Piece[8];
     [SerializeField, Header("基本スコア")] public int point = 0;
 
     [SerializeField, Header("接地中に配置を確定するまでの時間")]
@@ -14,6 +15,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     [SerializeField, Header("ミノの初期位置")] public Vector3 _DEFAULT_POSITION = Vector3.zero;
     [SerializeField] PiecePatternGeneretor _generator = null;
     [SerializeField] private Player_1 _player1 = null;
+
     [SerializeField] private Player_2 _player2 = null;
 
     // プレイヤー１のゲッタ
@@ -69,6 +71,24 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             PieceSet();
             ChangeTurn();
         }
+
+        // ネットに繋がっている時 かつ 1Pの時
+        if (ServerManager._isConnect &&
+            ServerManager.Instance.myPlayerNumber == ServerManager.playerNumber.onePlayer)
+        {
+            // InitPieceArrayIdを_pieceArrayの最大値分初期化
+            string[] initPieceArrayId = new string[_pieceArray.Length];
+
+            for (var i = 0; i < _pieceArray.Length; i++)
+            {
+                initPieceArrayId[i] = _pieceArray[i]._pieceId;
+            }
+
+            // Requestの生成
+            InitPieceRequest initPieceRequest = new InitPieceRequest(initPieceArrayId);
+            // 送信
+            ServerManager.Instance.SendMessage(initPieceRequest);
+        }
     }
 
     void Update()
@@ -78,7 +98,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         switch (gameState)
         {
             case GameState.preActive:
-                _effectController.FallPieceHighLight(true);
+                _effectController.FallPieceHighLight(true, _activePieces[0]);
 
                 _isLanding = false;
                 _isDown = true;
@@ -100,7 +120,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 break;
 
             case GameState.active:
-                _effectController.FallPieceHighLight(true);
+                _effectController.FallPieceHighLight(true, _activePieces[0]);
 
                 if (Map.Instance.CheckLanding(_activePieces[0].transform.position) ||
                     Map.Instance.CheckLanding(_activePieces[1].transform.position))
@@ -119,7 +139,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 break;
 
             case GameState.confirmed:
-                _effectController.FallPieceHighLight(false);
+                _effectController.FallPieceHighLight(false, _activePieces[0]);
                 if (_activePieces[0].transform.position.z > _activePieces[1].transform.position.z)
                 {
                     // 下側のコマがインデックス0になるようソート
@@ -168,8 +188,13 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     gameState = GameState.end;
                 else
                 {
-                    PieceSet();
+                    // インターネットに接続されてない時 or 接続されていてプレイヤー1じゃない時
+                    if (!ServerManager._isConnect || ServerManager._isConnect && !_player1.isMyTurn)
+                        PieceSet();
+
                     ChangeTurn();
+
+                    gameState = GameState.preActive;
                 }
 
                 break;
@@ -253,8 +278,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
         }
-
-        gameState = GameState.preActive;
     }
 
     /// <summary>
@@ -389,6 +412,17 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 // Mapの更新処理
                 Map.Instance.map[z, x] = Map.Instance._mapElement(pieceType);
                 Map.Instance.pieceMap[z, x] = pieceObject;
+                break;
+
+            case RequestBase.PacketType.InitPiece:
+                InitPieceRequest initPieceRequest = (InitPieceRequest)req;
+
+                for (var i = 0; i < initPieceRequest._initPieceIdArray.Length; i++)
+                {
+                    // idを代入
+                    _pieceArray[i]._pieceId = initPieceRequest._initPieceIdArray[i];
+                }
+
                 break;
             default:
                 break;
