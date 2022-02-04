@@ -33,7 +33,7 @@ public class Piece : MonoBehaviour
     {
         _anim = GetComponent<Animator>();
         Init();
-        
+
         // 自分が生成されたときにリストに追加する
         GameDirector.Instance.pieces.Add(this);
         if (ServerManager._isConnect)
@@ -41,12 +41,22 @@ public class Piece : MonoBehaviour
             // 自分の座標が変化した時
             this.ObserveEveryValueChanged(x => x.transform.position).Where(_ => GameDirector.Instance.player1.isMyTurn)
                 .Subscribe(onMoved).AddTo(this);
-            
+
             this.ObserveEveryValueChanged(x => x._myVector3).Where(_ => GameDirector.Instance.player1.isMyTurn)
                 .Subscribe(SendOnMoved).AddTo(this);
         }
     }
-    
+
+    private void Awake()
+    {
+        // 自身が1pの時
+        if (ServerManager._isConnect && ServerManager.Instance.myPlayerNumber == ServerManager.playerNumber.onePlayer)
+        {
+            // IDの生成
+            _pieceId = Guid.NewGuid().ToString();
+        }
+    }
+
     public void Init()
     {
         _renderer[0].GetComponent<Renderer>().sharedMaterial = _material[(int)CharaImageMoved.charaType1P];
@@ -146,13 +156,12 @@ public class Piece : MonoBehaviour
     {
         // コマのリクエスト生成
         PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(movedPos, this.pieceType, _pieceId);
-        
+
         Debug.LogWarning("コマの座標x" + pieceMoveRequest.piecePos.x);
         Debug.LogWarning("コマの座標z" + pieceMoveRequest.piecePos.z);
         Debug.LogWarning("コマの座標y" + pieceMoveRequest.piecePos.y);
-        
+
         // 送信を行う
         ServerManager.Instance.SendMessage(pieceMoveRequest);
-        
     }
 }

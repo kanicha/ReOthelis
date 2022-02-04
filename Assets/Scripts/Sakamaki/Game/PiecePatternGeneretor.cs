@@ -52,16 +52,12 @@ public class PiecePatternGeneretor : MonoBehaviour
         piece.transform.parent = root.transform;
         piece.transform.position = GeneratePos;
         Piece p1 = piece.GetComponent<Piece>();
-        // IDの生成
-        p1._pieceId = Guid.NewGuid().ToString();
-        
+
         // 2つ目処理
         GameObject piece2 = Instantiate(piecePrefab);
         piece2.transform.parent = root.transform;
         piece2.transform.position = GameDirector.Instance._DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1);
         Piece p2 = piece2.GetComponent<Piece>();
-        // IDの生成
-        p2._pieceId = Guid.NewGuid().ToString();
 
         switch (type)
         {

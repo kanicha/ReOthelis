@@ -55,6 +55,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     /// </summary>
     private void OnApplicationQuit()
     {
+        if (_isConnect)
         // 切断
         Disconnect(true);
     }
@@ -118,11 +119,11 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                     // data変数にbufferのデータをcount分コピーしてくる
                     Array.Copy(buffer, 0, data, 0, count);
 
+                    Debug.Log(Encoding.UTF8.GetString(data));
+                    
                     // 送られてきたデータをJson -> Class(文字列) に変換を行う
                     object jsonData = ParseRequest(Encoding.UTF8.GetString(data));
                     _noticeData.OnNext(jsonData);
-
-                    Debug.Log(Encoding.UTF8.GetString(data));
                 }
             }
         }
@@ -139,11 +140,20 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     public RequestBase.PacketType ParsePacketType(object packet)
     {
         RequestBase request = (RequestBase)packet;
-        
-        RequestBase.PacketType packetType =
-            (RequestBase.PacketType)Enum.Parse(typeof(RequestBase.PacketType), request._packetType);
 
-        return packetType;
+        try
+        {
+            RequestBase.PacketType packetType =
+                (RequestBase.PacketType)Enum.Parse(typeof(RequestBase.PacketType), request._packetType);
+            
+            return packetType;
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+
+        return RequestBase.PacketType.End;
     }
 
     /// <summary>
@@ -197,7 +207,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
             RequestBase.PacketType.CharaConfirm => RequestBase.JsonToClass<CharaConfirmRequest>(jsonData),
             RequestBase.PacketType.OpponentDisconnect => RequestBase.JsonToClass<OpponentDisconnectRequest>(jsonData),
             RequestBase.PacketType.PieceMoved => RequestBase.JsonToClass<PieceMoveRequest>(jsonData),
-            
+            RequestBase.PacketType.InitPiece => RequestBase.JsonToClass<InitPieceRequest>(jsonData),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -208,6 +218,9 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     /// <param name="isNotifyOpponent">相手に通知するbool型変数</param>
     public void Disconnect(bool isNotifyOpponent)
     {
+        // 接続を外す
+        _isConnect = false;
+        
         DisconnectRequest disconnectRequest = new DisconnectRequest();
         disconnectRequest.isNotifyOpponent = isNotifyOpponent;
         

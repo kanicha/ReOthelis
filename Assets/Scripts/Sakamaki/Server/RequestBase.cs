@@ -15,6 +15,7 @@ public class RequestBase
     public enum PacketType
     {
         Init,
+        InitPiece,
         Matching,
         CharaConfirm,
         PieceMoved,
@@ -33,7 +34,6 @@ public class RequestBase
     {
         if (packetType != null)
             _packetType = packetType.ToString();
-
         
         Debug.Log(ServerManager.Instance._myId);
         id = ServerManager.Instance._myId;
