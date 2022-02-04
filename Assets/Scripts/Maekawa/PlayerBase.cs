@@ -502,6 +502,7 @@ public class PlayerBase : MonoBehaviour
             // ステート変更
             GameDirector.Instance.intervalTime = 0;
             GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
+            PrePieceGauge.Instance.Deactivate();
             GameDirector.Instance.gameState = GameDirector.GameState.interval;
         }
     }

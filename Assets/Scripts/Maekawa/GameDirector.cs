@@ -68,7 +68,10 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 _isLanding = false;
                 _isDown = true;
                 _timeCount += Time.deltaTime;
-                
+
+                PrePieceGauge.Instance.SetGaugeRatio(_timeCount, _preActiveTime);
+                PrePieceGauge.Instance.SetPosition(_activePieces[0].transform.position, _activePieces[1].transform.position);
+
                 // 待機時間を超えたらステートをすすめる(自動落下の処理はPieceMove()で管理)
                 if (_timeCount > _preActiveTime)
                 {
@@ -80,6 +83,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     intervalTime = 0;
                     nextStateCue = GameState.active;
                     gameState = GameState.interval;
+                    PrePieceGauge.Instance.Deactivate();
                 }
                 break;
 
