@@ -19,6 +19,7 @@ public class RequestBase
         Matching,
         CharaConfirm,
         PieceMoved,
+        StateChange,
         Send,
         Receive,
         End,
