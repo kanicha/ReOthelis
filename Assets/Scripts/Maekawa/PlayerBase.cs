@@ -261,181 +261,14 @@ public class PlayerBase : MonoBehaviour
         {
             GameDirector.Instance.gameState = GameDirector.GameState.confirmed;
         }
-    }
 
-    /// <summary>
-    /// コマ回転関数
-    /// </summary>
-    protected void PieceRotate()
-    {
-        int lastNum = rotationNum;
-
-        if (_DS4_L1_value || _DS4_L2_value || _keyBoardLeft)
+        // サーバーに接続されている時
+        if (ServerManager._isConnect)
         {
-            rotationNum++; // 左回転
+            PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(controllPiece1, controllPiece2);
+            ServerManager.Instance.SendMessage(pieceMoveRequest);
         }
-        else if (_DS4_R1_value || _DS4_R2_value || _keyBoardRight)
-        {
-            rotationNum += 3; // 右回転(=左に3回転)
-        }
-
-        // 初期値0 左から 1,2,3
-        rotationNum %= 4;
-
-        // 軸のコマ + 回転後の座標 変数
-        Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
-        // 回転後の座標の一つ下の座標
-        Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
-        // 回転後の座標の一つ右の座標
-        Vector3 rotatedRightPos = controllPiece1.transform.position + rotationPos[3];
-        // 回転後の座標の一つ左の座標
-        Vector3 rotatedLeftPos = controllPiece1.transform.position + rotationPos[1];
-
-        // 壁にあたってない時
-        if (Map.Instance.CheckWall(rotatedPos))
-        {
-            // 回転Posが-1かつ下のコマが壁にあたっている時
-            if ((int)rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
-                rotationNum = lastNum;
-            else
-            {
-                // 回転番号と前の値が違う時 
-                if (rotationNum != lastNum)
-                    SoundManager.Instance.PlaySE(2);
-                controllPiece2.transform.position = rotatedPos;
-            }
-        }
-        // 壁にあたってる時
-        else
-        {
-            /*Debug.Log("WallHit");*/
-            rotationNum = lastNum;
-
-            // 壁にあたってる時 かつ 右の壁と左の壁に挟まれている時
-            if (!Map.Instance.CheckWall(rotatedLeftPos) && !Map.Instance.CheckWall(rotatedRightPos))
-                // 回転入力でクイックローテート
-                QuickRotate();
-            else
-                // 壁にあたってる時 かつ 片方の壁に当たっている時 回転ボタン押しで回転
-                AnotherTurn(rotatedLeftPos, rotatedRightPos);
-        }
-    }
-
-    /// <summary>
-    /// コマ回転関数
-    /// </summary>
-    protected void PrePieceRotate()
-    {
-        int lastNum = rotationNum;
-
-        if (_DS4_L1_value || _DS4_L2_value || _keyBoardLeft)
-        {
-            rotationNum++; // 左回転
-        }
-        else if (_DS4_R1_value || _DS4_R2_value || _keyBoardRight)
-        {
-            rotationNum += 3; // 右回転(=左に3回転)
-        }
-
-        // 初期値0 左から 1,2,3
-        rotationNum %= 4;
-
-        // 軸のコマ + 回転後の座標 変数
-        Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
-        // 回転後の座標の一つ下の座標
-        Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
-        // 回転後の座標の一つ右の座標
-        Vector3 rotatedRightPos = controllPiece1.transform.position + rotationPos[3];
-        // 回転後の座標の一つ左の座標
-        Vector3 rotatedLeftPos = controllPiece1.transform.position + rotationPos[1];
-
-        // 壁にあたってない時
-        if (Map.Instance.CheckWall(rotatedPos))
-        {
-            // 回転Posが-1かつ下のコマが壁にあたっている時
-            if ((int)rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
-                rotationNum = lastNum;
-            else
-            {
-                // 回転番号と前の値が違う時 
-                if (rotationNum != lastNum)
-                    SoundManager.Instance.PlaySE(2);
-                controllPiece2.transform.position = rotatedPos;
-            }
-        }
-        // 壁にあたってる時
-        else
-        {
-            /*Debug.Log("WallHit");*/
-            rotationNum = lastNum;
-
-            // 壁方向回転入力でクイックローテート
-            QuickRotate();
-        }
-        // PreActive時の両回転対応をする、
-        // rotatedPos(回転後の座標)をelseしているため 回転後の座標が壁にあたったらって感じ
-        // なのでいい感じにする(?)
-    }
-
-    /// <summary>
-    /// 2回素早く回転を押したときにコマの色を変える関数
-    /// </summary>
-    private void QuickRotate()
-    {
-        // 処理面
-        // コマの色情報をもってくる
-        Piece piece1 = controllPiece1.GetComponent<Piece>();
-        Piece piece2 = controllPiece2.GetComponent<Piece>();
-
-        // ピース1が黒 and ピース2が白の時 or ピース1が白 and ピース1が黒の時
-        if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white ||
-            piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
-        {
-            EffectController.Instance._isTurn = true;
-            SoundManager.Instance.PlaySE(2);
-
-            // ピースの情報をいれかえる
-            piece1.SkillReverse(false);
-            piece2.SkillReverse(false);
-        }
-    }
-
-    /// <summary>
-    /// 壁にあたっている時の回転処理関数
-    /// </summary>
-    private void AnotherTurn(Vector3 rotatedLeftPos, Vector3 rotatedRightPos)
-    {
-        Vector3 move = Vector3.zero;
-
-        // 回転番号が0 or 2(コマが縦の状態) かつ 左側に壁がある時
-        if ((rotationNum == 0 || rotationNum == 2) && !Map.Instance.CheckWall(rotatedLeftPos))
-        {
-            Debug.LogWarning("LeftWall");
-            rotationNum = 1;
-            move.x = 1;
-        }
-        // 回転番号が0 or 2(コマが縦の状態) かつ 右側に壁がある時
-        else if ((rotationNum == 0 || rotationNum == 2) && !Map.Instance.CheckWall(rotatedRightPos))
-        {
-            Debug.LogWarning("RightWall");
-            rotationNum = 3;
-            move.x = -1;
-        }
-        else
-            return;
-
-        // 移動させたあとの座標
-        Vector3 movedPos = controllPiece1.transform.position + move;
-        Vector3 rotMovedPos = movedPos + rotationPos[rotationNum];
-
-        // 移動後座標に壁がなければ代入
-        if (Map.Instance.CheckWall(movedPos) && Map.Instance.CheckWall(rotMovedPos))
-        {
-            SoundManager.Instance.PlaySE(2);
-
-            controllPiece1.transform.position = movedPos;
-            controllPiece2.transform.position = rotMovedPos;
-        }
+        
     }
 
     /// <summary>
@@ -504,7 +337,202 @@ public class PlayerBase : MonoBehaviour
             GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
             GameDirector.Instance.gameState = GameDirector.GameState.interval;
         }
+        
+        // サーバーに接続されている時
+        if (ServerManager._isConnect)
+        {
+            PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(controllPiece1, controllPiece2);
+            ServerManager.Instance.SendMessage(pieceMoveRequest);
+        }
     }
+    
+    /// <summary>
+    /// コマ回転関数
+    /// </summary>
+    protected void PieceRotate()
+    {
+        int lastNum = rotationNum;
+
+        if (_DS4_L1_value || _DS4_L2_value || _keyBoardLeft)
+        {
+            rotationNum++; // 左回転
+        }
+        else if (_DS4_R1_value || _DS4_R2_value || _keyBoardRight)
+        {
+            rotationNum += 3; // 右回転(=左に3回転)
+        }
+
+        // 初期値0 左から 1,2,3
+        rotationNum %= 4;
+
+        // 軸のコマ + 回転後の座標 変数
+        Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
+        // 回転後の座標の一つ下の座標
+        Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
+        // 回転後の座標の一つ右の座標
+        Vector3 rotatedRightPos = controllPiece1.transform.position + rotationPos[3];
+        // 回転後の座標の一つ左の座標
+        Vector3 rotatedLeftPos = controllPiece1.transform.position + rotationPos[1];
+
+        // 壁にあたってない時
+        if (Map.Instance.CheckWall(rotatedPos))
+        {
+            // 回転Posが-1かつ下のコマが壁にあたっている時
+            if ((int)rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
+                rotationNum = lastNum;
+            else
+            {
+                // 回転番号と前の値が違う時 
+                if (rotationNum != lastNum)
+                    SoundManager.Instance.PlaySE(2);
+                controllPiece2.transform.position = rotatedPos;
+            }
+        }
+        // 壁にあたってる時
+        else
+        {
+            /*Debug.Log("WallHit");*/
+            rotationNum = lastNum;
+
+            // 壁にあたってる時 かつ 右の壁と左の壁に挟まれている時
+            if (!Map.Instance.CheckWall(rotatedLeftPos) && !Map.Instance.CheckWall(rotatedRightPos))
+                // 回転入力でクイックローテート
+                QuickRotate();
+            else
+                // 壁にあたってる時 かつ 片方の壁に当たっている時 回転ボタン押しで回転
+                AnotherTurn(rotatedLeftPos, rotatedRightPos);
+        }
+        
+        // サーバーに接続されている時
+        if (ServerManager._isConnect)
+        {
+            PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(controllPiece1, controllPiece2);
+            ServerManager.Instance.SendMessage(pieceMoveRequest);
+        }
+    }
+
+    /// <summary>
+    /// コマ回転関数
+    /// </summary>
+    protected void PrePieceRotate()
+    {
+        int lastNum = rotationNum;
+
+        if (_DS4_L1_value || _DS4_L2_value || _keyBoardLeft)
+        {
+            rotationNum++; // 左回転
+        }
+        else if (_DS4_R1_value || _DS4_R2_value || _keyBoardRight)
+        {
+            rotationNum += 3; // 右回転(=左に3回転)
+        }
+
+        // 初期値0 左から 1,2,3
+        rotationNum %= 4;
+
+        // 軸のコマ + 回転後の座標 変数
+        Vector3 rotatedPos = controllPiece1.transform.position + rotationPos[rotationNum];
+        // 回転後の座標の一つ下の座標
+        Vector3 rotatedUnderPos = rotatedPos + Vector3.back;
+        // 回転後の座標の一つ右の座標
+        Vector3 rotatedRightPos = controllPiece1.transform.position + rotationPos[3];
+        // 回転後の座標の一つ左の座標
+        Vector3 rotatedLeftPos = controllPiece1.transform.position + rotationPos[1];
+
+        // 壁にあたってない時
+        if (Map.Instance.CheckWall(rotatedPos))
+        {
+            // 回転Posが-1かつ下のコマが壁にあたっている時
+            if ((int)rotatedPos.z == -1 && !Map.Instance.CheckWall(rotatedUnderPos))
+                rotationNum = lastNum;
+            else
+            {
+                // 回転番号と前の値が違う時 
+                if (rotationNum != lastNum)
+                    SoundManager.Instance.PlaySE(2);
+                controllPiece2.transform.position = rotatedPos;
+            }
+        }
+        // 壁にあたってる時
+        else
+        {
+            /*Debug.Log("WallHit");*/
+            rotationNum = lastNum;
+
+            // 壁方向回転入力でクイックローテート
+            QuickRotate();
+        }
+        
+        // サーバーに接続されている時
+        if (ServerManager._isConnect)
+        {
+            PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(controllPiece1, controllPiece2);
+            ServerManager.Instance.SendMessage(pieceMoveRequest);
+        }
+    }
+
+    /// <summary>
+    /// 2回素早く回転を押したときにコマの色を変える関数
+    /// </summary>
+    private void QuickRotate()
+    {
+        // 処理面
+        // コマの色情報をもってくる
+        Piece piece1 = controllPiece1.GetComponent<Piece>();
+        Piece piece2 = controllPiece2.GetComponent<Piece>();
+
+        // ピース1が黒 and ピース2が白の時 or ピース1が白 and ピース1が黒の時
+        if (piece1.pieceType == Piece.PieceType.black && piece2.pieceType == Piece.PieceType.white ||
+            piece1.pieceType == Piece.PieceType.white && piece2.pieceType == Piece.PieceType.black)
+        {
+            EffectController.Instance._isTurn = true;
+            SoundManager.Instance.PlaySE(2);
+
+            // ピースの情報をいれかえる
+            piece1.SkillReverse(false);
+            piece2.SkillReverse(false);
+        }
+    }
+
+    /// <summary>
+    /// 壁にあたっている時の回転処理関数
+    /// </summary>
+    private void AnotherTurn(Vector3 rotatedLeftPos, Vector3 rotatedRightPos)
+    {
+        Vector3 move = Vector3.zero;
+
+        // 回転番号が0 or 2(コマが縦の状態) かつ 左側に壁がある時
+        if ((rotationNum == 0 || rotationNum == 2) && !Map.Instance.CheckWall(rotatedLeftPos))
+        {
+            Debug.LogWarning("LeftWall");
+            rotationNum = 1;
+            move.x = 1;
+        }
+        // 回転番号が0 or 2(コマが縦の状態) かつ 右側に壁がある時
+        else if ((rotationNum == 0 || rotationNum == 2) && !Map.Instance.CheckWall(rotatedRightPos))
+        {
+            Debug.LogWarning("RightWall");
+            rotationNum = 3;
+            move.x = -1;
+        }
+        else
+            return;
+
+        // 移動させたあとの座標
+        Vector3 movedPos = controllPiece1.transform.position + move;
+        Vector3 rotMovedPos = movedPos + rotationPos[rotationNum];
+
+        // 移動後座標に壁がなければ代入
+        if (Map.Instance.CheckWall(movedPos) && Map.Instance.CheckWall(rotMovedPos))
+        {
+            SoundManager.Instance.PlaySE(2);
+
+            controllPiece1.transform.position = movedPos;
+            controllPiece2.transform.position = rotMovedPos;
+        }
+    }
+
+    
 
     #endregion
 

@@ -62,6 +62,9 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         if (ServerManager._isConnect)
         {
             ServerManager.Instance._onReceived.ObserveOnMainThread().Subscribe(onReceive).AddTo(this);
+            // 自分のターンの時ゲームステートが変更加えられたときに相手に通知する、Intervalは無視
+            this.ObserveEveryValueChanged(x => x.gameState).Where(_ => _player1.isMyTurn)
+                .Where(state => state != GameState.interval).Subscribe(OnStateChanged).AddTo(this);
         }
 
         // ネットにつながっていない時 かつ つながっていても2Pのときはスルーを行う
@@ -70,6 +73,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         {
             PieceSet();
             ChangeTurn();
+
+            gameState = GameState.preActive;
         }
 
         // ネットに繋がっている時 かつ 1Pの時
@@ -100,6 +105,13 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             case GameState.preActive:
                 _effectController.FallPieceHighLight(true, _activePieces[0]);
 
+                // インターネットに接続されている かつ 自分のターンではない時
+                if (ServerManager._isConnect && !_player1.isMyTurn)
+                {
+                    // 処理を行いたくないためbreak
+                    break;
+                }
+                
                 _isLanding = false;
                 _isDown = true;
                 _timeCount += Time.deltaTime;
@@ -111,6 +123,15 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     _activePieces[0].transform.position += new Vector3(0, 0, -1);
                     _activePieces[1].transform.position += new Vector3(0, 0, -1);
 
+                    if (ServerManager._isConnect)
+                    {
+                        // Requestの作成
+                        PieceMoveRequest pieceMoveRequest = 
+                            new PieceMoveRequest(_activePieces[0], _activePieces[1]);
+                        
+                        ServerManager.Instance.SendMessage(pieceMoveRequest);
+                    }
+                    
                     // さげたら推移
                     intervalTime = 0;
                     nextStateCue = GameState.active;
@@ -122,6 +143,13 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             case GameState.active:
                 _effectController.FallPieceHighLight(true, _activePieces[0]);
 
+                // インターネットに接続されている かつ 自分のターンではない時
+                if (ServerManager._isConnect && !_player1.isMyTurn)
+                {
+                    // 処理を行いたくないためbreak
+                    break;
+                }
+                
                 if (Map.Instance.CheckLanding(_activePieces[0].transform.position) ||
                     Map.Instance.CheckLanding(_activePieces[1].transform.position))
                 {
@@ -140,6 +168,14 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
             case GameState.confirmed:
                 _effectController.FallPieceHighLight(false, _activePieces[0]);
+                
+                // インターネットに接続されている かつ 自分のターンではない時
+                if (ServerManager._isConnect && !_player1.isMyTurn)
+                {
+                    // 処理を行いたくないためbreak
+                    break;
+                }
+                
                 if (_activePieces[0].transform.position.z > _activePieces[1].transform.position.z)
                 {
                     // 下側のコマがインデックス0になるようソート
@@ -179,7 +215,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     gameState = nextStateCue;
                     _timeCount = 0;
                 }
-
                 break;
 
             case GameState.reversed:
@@ -298,12 +333,16 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         // 生成位置の1マス下が空いていれば生成
         Vector3 generatePos = _DEFAULT_POSITION + Vector3.back;
         int x = 0;
+
+        GameObject piece1 = null;
+        GameObject piece2 = null;
+
         while (true)
         {
             Vector3 checkPos = generatePos + new Vector3(x, 0);
             if (Map.Instance.CheckWall(checkPos))
             {
-                _generator.Generate(checkPos + Vector3.forward);
+                _generator.Generate(checkPos + Vector3.forward, out piece1, out piece2);
                 break;
             }
             else
@@ -311,7 +350,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 checkPos = generatePos + new Vector3(x * -1, 0);
                 if (Map.Instance.CheckWall(checkPos))
                 {
-                    _generator.Generate(checkPos + Vector3.forward);
+                    _generator.Generate(checkPos + Vector3.forward, out piece1, out piece2);
                     break;
                 }
             }
@@ -319,6 +358,23 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             x++;
             if (x > 4)
                 Debug.LogError("生成できるマスがありません");
+        }
+
+        // インターネットに接続されている時
+        if (ServerManager._isConnect)
+        {
+            // インスタンス化と配列の作成
+            Piece p = piece1.GetComponent<Piece>();
+            Piece p2 = piece2.GetComponent<Piece>();
+            PieceInfo[] pieceInfos = new PieceInfo[2]
+            {
+                new PieceInfo(p._myVector3, p.pieceType, p._pieceId), 
+                new PieceInfo(p2._myVector3, p2.pieceType, p2._pieceId)
+            };
+
+            // Requestの作成と送信
+            PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(pieceInfos);
+            ServerManager.Instance.SendMessage(pieceMoveRequest);
         }
     }
 
@@ -372,46 +428,46 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         {
             case RequestBase.PacketType.PieceMoved:
                 PieceMoveRequest pieceMoveRequest = (PieceMoveRequest)req;
-
-                Piece savePiece = null;
-                // 移動したコマのidを探す
-                foreach (var piece in pieces)
+                
+                foreach (PieceInfo pieceInfo in pieceMoveRequest.pieceObjArray)
                 {
-                    // すでにあるコマのIDと移動したコマのIDを比較して代入
-                    if (piece._pieceId.Equals(pieceMoveRequest.pieceId))
+                    Piece savePiece = null;
+                    // 移動したコマのidを探す
+                    foreach (var piece in pieces)
                     {
-                        savePiece = piece;
+                        // すでにあるコマのIDと移動したコマのIDを比較して代入
+                        if (piece._pieceId.Equals(pieceInfo.pieceId))
+                        {
+                            savePiece = piece;
 
-                        break;
+                            break;
+                        }
                     }
+
+                    Piece.PieceType pieceType = (Piece.PieceType)pieceInfo.pieceColor;
+                    GameObject pieceObject = null;
+                    
+                    // 探したコマがなかった場合は生成を行う
+                    if (savePiece == null)
+                    {
+                        pieceObject = _generator.Generate(pieceInfo.piecePos.ToVector3(), pieceType,
+                            pieceInfo.pieceId);
+                    }
+                    else
+                    {
+                        // 実際にあった場合は代入をおこなう
+                        pieceObject = savePiece.gameObject;
+                        savePiece.transform.position = pieceInfo.piecePos.ToVector3();
+                        savePiece.pieceType = pieceType;
+                    }
+
+                    int x = (int)pieceInfo.piecePos.x;
+                    int z = (int)pieceInfo.piecePos.z * -1; // zはマイナス方向に進むので符号を反転させる
+
+                    // Mapの更新処理
+                    Map.Instance.map[z, x] = Map.Instance._mapElement(pieceType);
+                    Map.Instance.pieceMap[z, x] = pieceObject;
                 }
-
-                Piece.PieceType pieceType = (Piece.PieceType)pieceMoveRequest.pieceColor;
-                GameObject pieceObject = null;
-
-                Debug.Log("コマ座標x" + pieceMoveRequest.piecePos.x);
-                Debug.Log("コマ座標z" + pieceMoveRequest.piecePos.z);
-                Debug.Log("コマ座標y" + pieceMoveRequest.piecePos.y);
-                // 探したコマがなかった場合は生成を行う
-                if (savePiece == null)
-                {
-                    pieceObject = _generator.Generate(pieceMoveRequest.piecePos.ToVector3(), pieceType,
-                        pieceMoveRequest.pieceId);
-                }
-                else
-                {
-                    // 実際にあった場合は代入をおこなう
-                    pieceObject = savePiece.gameObject;
-                    savePiece.transform.position = pieceMoveRequest.piecePos.ToVector3();
-                    savePiece.pieceType = pieceType;
-                }
-
-                int x = (int)pieceMoveRequest.piecePos.x;
-                int z = (int)pieceMoveRequest.piecePos.z * -1; // zはマイナス方向に進むので符号を反転させる
-
-                // Mapの更新処理
-                Map.Instance.map[z, x] = Map.Instance._mapElement(pieceType);
-                Map.Instance.pieceMap[z, x] = pieceObject;
                 break;
 
             case RequestBase.PacketType.InitPiece:
@@ -424,8 +480,24 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 }
 
                 break;
+            
+            case RequestBase.PacketType.StateChange:
+                StateChangeRequest stateChangeRequest = (StateChangeRequest)req;
+
+                gameState = (GameState)stateChangeRequest.gameState;
+                break;
             default:
                 break;
         }
+    }
+
+    /// <summary>
+    /// ステート変更された時の処理関数
+    /// </summary>
+    /// <param name="gameState">ゲームステート</param>
+    private void OnStateChanged(GameState gameState)
+    {
+        StateChangeRequest stateChangeRequest = new StateChangeRequest(gameState);
+        ServerManager.Instance.SendMessage(stateChangeRequest);
     }
 }

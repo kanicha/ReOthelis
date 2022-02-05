@@ -15,7 +15,7 @@ public class Piece : MonoBehaviour
     // コマのID
     public string _pieceId = "";
 
-    private MyVector3 _myVector3;
+    public MyVector3 _myVector3;
 
     public enum PieceType
     {
@@ -41,9 +41,6 @@ public class Piece : MonoBehaviour
             // 自分の座標が変化した時
             this.ObserveEveryValueChanged(x => x.transform.position).Where(_ => GameDirector.Instance.player1.isMyTurn)
                 .Subscribe(onMoved).AddTo(this);
-
-            this.ObserveEveryValueChanged(x => x._myVector3).Where(_ => GameDirector.Instance.player1.isMyTurn)
-                .Subscribe(SendOnMoved).AddTo(this);
         }
     }
 
@@ -150,18 +147,5 @@ public class Piece : MonoBehaviour
         _myVector3.x = movedPos.x;
         _myVector3.y = movedPos.y;
         _myVector3.z = movedPos.z;
-    }
-
-    public void SendOnMoved(MyVector3 movedPos)
-    {
-        // コマのリクエスト生成
-        PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(movedPos, this.pieceType, _pieceId);
-
-        Debug.LogWarning("コマの座標x" + pieceMoveRequest.piecePos.x);
-        Debug.LogWarning("コマの座標z" + pieceMoveRequest.piecePos.z);
-        Debug.LogWarning("コマの座標y" + pieceMoveRequest.piecePos.y);
-
-        // 送信を行う
-        ServerManager.Instance.SendMessage(pieceMoveRequest);
     }
 }

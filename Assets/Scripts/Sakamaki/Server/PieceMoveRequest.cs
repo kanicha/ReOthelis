@@ -4,19 +4,30 @@ using UnityEngine;
 
 public class PieceMoveRequest : RequestBase
 {
-    public PieceMoveRequest(MyVector3 movedPos, Piece.PieceType pieceType, string pieceId) : base(RequestBase.PacketType
-        .PieceMoved)
+    public PieceMoveRequest(params PieceInfo[] pieceObjArray) : base(PacketType.PieceMoved)
     {
         // 初期化
-        piecePos = movedPos;
-        pieceColor = (int) pieceType;
-        this.pieceId = pieceId;
+        this.pieceObjArray = pieceObjArray;
+    }
+
+    public PieceMoveRequest(params GameObject[] pieceObjArray) : base(PacketType.PieceMoved)
+    {
+        // リストを宣言
+        List<PieceInfo> pieceList = new List<PieceInfo>();
+
+        foreach (GameObject gameObject in pieceObjArray)
+        {
+            // ピース型の変数を用意してgetComponentでインスタンス化
+            Piece pieces = gameObject.GetComponent<Piece>();
+
+            // リストに追加を行う
+            pieceList.Add(new PieceInfo(pieces._myVector3, pieces.pieceType, pieces._pieceId));
+        }
+
+        this.pieceObjArray = pieceList.ToArray();
     }
     
-    // コマの座標
-    public MyVector3 piecePos;
-    // コマの色
-    public int pieceColor;
-    // コマのID
-    public string pieceId = "";
+
+    // コマの配列
+    public PieceInfo[] pieceObjArray;
 }

@@ -16,8 +16,16 @@ public class PiecePatternGeneretor : MonoBehaviour
     public static int type = 0;
     bool whiteChecker = false;
     bool blackChecker = false;
+
+    public void Generate(Vector3 ganaratePos)
+    {
+        GameObject hoge = null;
+        GameObject piyo = null;
+
+        Generate(ganaratePos, out hoge, out piyo);
+    }
     
-    public void Generate(Vector3 GeneratePos)
+    public void Generate(Vector3 GeneratePos, out GameObject piece1Obj, out GameObject piece2Obj)
     {
         // コマタイプ
         type = 0;
@@ -59,6 +67,10 @@ public class PiecePatternGeneretor : MonoBehaviour
         piece2.transform.position = GameDirector.Instance._DEFAULT_POSITION + Vector3.forward + new Vector3(0, 0, 1);
         Piece p2 = piece2.GetComponent<Piece>();
 
+        // out引数のため代入
+        piece1Obj = piece;
+        piece2Obj = piece2;
+        
         switch (type)
         {
             // 黒同色タイプ
@@ -111,7 +123,7 @@ public class PiecePatternGeneretor : MonoBehaviour
         // idの割当て
         p1._pieceId = pieceId;
         p1.pieceType = pieceType;
-
+        p1.SkillReverse(false);
         return piece;
     }
 }
