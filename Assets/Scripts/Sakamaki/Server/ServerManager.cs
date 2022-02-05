@@ -24,7 +24,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     private int _portNumber = 3359;
     private TcpClient _tcpClient;
     private NetworkStream _streamKey;
-    
+
     private string _message;
 
     // 自分のユーザーID
@@ -37,6 +37,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         onePlayer,
         twoPlayer
     }
+
     public playerNumber myPlayerNumber { get; private set; }
 
     // Start is called before the first frame update
@@ -56,8 +57,8 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     private void OnApplicationQuit()
     {
         if (_isConnect)
-        // 切断
-        Disconnect(true);
+            // 切断
+            Disconnect(true);
     }
 
     /// <summary>
@@ -71,7 +72,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         _tcpClient.Connect(_ipAdress, _portNumber);
         // NetWorkStreamを習得してくる
         _streamKey = _tcpClient.GetStream();
-        
+
         // 並行処理
         _thread = new Thread(ReceiveMessage);
         _thread.Start();
@@ -120,10 +121,31 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                     Array.Copy(buffer, 0, data, 0, count);
 
                     Debug.Log(Encoding.UTF8.GetString(data));
-                    
-                    // 送られてきたデータをJson -> Class(文字列) に変換を行う
-                    object jsonData = ParseRequest(Encoding.UTF8.GetString(data));
-                    _noticeData.OnNext(jsonData);
+
+                    string encodingString = Encoding.UTF8.GetString(data);
+
+                    // jsonの最初と最後のかっこを値として変数に取る
+                    int jsonStartIndex = encodingString.IndexOf('{');
+                    int jsonEndIndex = encodingString.LastIndexOf('}');
+
+                    // 二つの値が存在していたら分岐
+                    if (jsonStartIndex != -1 && jsonEndIndex != -1)
+                    {
+                        encodingString = encodingString.Substring(jsonStartIndex, jsonEndIndex - jsonStartIndex + 1);
+                        // TCPの仕様上パケットが同時に送られてくる可能性があるのでSplitで分割を行う
+                        string[] encodedString = encodingString.Split('$');
+
+                        foreach (string s in encodedString)
+                        {
+                            // 送られてきたデータをJson -> Class(文字列) に変換を行う
+                            object jsonData = ParseRequest(s);
+                            _noticeData.OnNext(jsonData);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Json定義ではありません");
+                    }
                 }
             }
         }
@@ -145,7 +167,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         {
             RequestBase.PacketType packetType =
                 (RequestBase.PacketType)Enum.Parse(typeof(RequestBase.PacketType), request._packetType);
-            
+
             return packetType;
         }
         catch (Exception e)
@@ -178,12 +200,12 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                         _myId = matchingRequest.id;
                         break;
                 }
-            
+
                 // 接続されたのでフラグを建てる
                 _isConnect = true;
                 break;
             }
-            
+
             case RequestBase.PacketType.OpponentDisconnect:
                 Debug.LogWarning("相手が切断されました");
                 break;
@@ -208,6 +230,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
             RequestBase.PacketType.OpponentDisconnect => RequestBase.JsonToClass<OpponentDisconnectRequest>(jsonData),
             RequestBase.PacketType.PieceMoved => RequestBase.JsonToClass<PieceMoveRequest>(jsonData),
             RequestBase.PacketType.InitPiece => RequestBase.JsonToClass<InitPieceRequest>(jsonData),
+            RequestBase.PacketType.StateChange => RequestBase.JsonToClass<StateChangeRequest>(jsonData),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -220,10 +243,10 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     {
         // 接続を外す
         _isConnect = false;
-        
+
         DisconnectRequest disconnectRequest = new DisconnectRequest();
         disconnectRequest.isNotifyOpponent = isNotifyOpponent;
-        
+
         // 送信
         SendMessage(disconnectRequest);
     }
