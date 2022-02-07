@@ -291,6 +291,7 @@ public class PlayerBase : MonoBehaviour
         {
             move.z = -1;
             isDown = true;
+            PrePieceGauge.Instance.Deactivate();
         }
 
         // 左右に入力したなら移動
