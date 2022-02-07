@@ -91,7 +91,7 @@ public class PlayerBase : MonoBehaviour
     public GameObject controllPiece2 = null;
 
     public int rotationNum = 0;
-
+    
     #endregion
 
     #region スキル変数
@@ -708,14 +708,14 @@ public class PlayerBase : MonoBehaviour
             Debug.Log("強引");
             SoundManager.Instance.PlaySE(5);
 
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger && isMyTurn)
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece5Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger && isMyTurn)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
 
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit && isMyTurn)
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit && isMyTurn)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
 
             reversedCount -= cost;
@@ -758,14 +758,14 @@ public class PlayerBase : MonoBehaviour
             Debug.Log("固定");
             SoundManager.Instance.PlaySE(5);
 
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit && isMyTurn)
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece5Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit && isMyTurn)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
 
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse && isMyTurn)
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse && isMyTurn)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
 
             reversedCount -= cost;
@@ -806,14 +806,14 @@ public class PlayerBase : MonoBehaviour
             Debug.Log("残影");
             SoundManager.Instance.PlaySE(5);
 
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow && isMyTurn)
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece5Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow && isMyTurn)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
 
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger && isMyTurn)
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger && isMyTurn)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
 
             reversedCount -= cost;
@@ -845,14 +845,14 @@ public class PlayerBase : MonoBehaviour
             Debug.Log("打ち消し");
             SoundManager.Instance.PlaySE(5);
 
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse && isMyTurn)
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece5Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse && isMyTurn)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
 
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow && isMyTurn)
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow && isMyTurn)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
 
             reversedCount -= cost;

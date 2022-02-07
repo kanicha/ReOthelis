@@ -19,8 +19,9 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     [SerializeField] private Player_2 _player2 = null;
 
-    // プレイヤー１のゲッタ
+    // プレイヤーのゲッタ
     public Player_1 player1 => _player1;
+    public Player_2 player2 => _player2;
 
     // ピース用リストを宣言
     public List<Piece> pieces = new List<Piece>();
