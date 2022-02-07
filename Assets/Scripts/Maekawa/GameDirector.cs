@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
@@ -71,8 +72,18 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         if (!(ServerManager._isConnect &&
               ServerManager.Instance.myPlayerNumber == ServerManager.playerNumber.twoPlayer))
         {
-            PieceSet();
-            ChangeTurn();
+            if (ServerManager._isConnect)
+            {
+                ChangeTurn();
+                PieceSet();
+                _player1.controllPiece1 = _activePieces[0];
+                _player1.controllPiece2 = _activePieces[1];
+            }
+            else
+            {
+                PieceSet();
+                ChangeTurn();
+            }
 
             gameState = GameState.preActive;
         }
@@ -87,6 +98,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             for (var i = 0; i < _pieceArray.Length; i++)
             {
                 initPieceArrayId[i] = _pieceArray[i]._pieceId;
+                pieces.Add(_pieceArray[i]);
             }
 
             // Requestの生成
@@ -111,7 +123,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     // 処理を行いたくないためbreak
                     break;
                 }
-                
+
                 _isLanding = false;
                 _isDown = true;
                 _timeCount += Time.deltaTime;
@@ -126,12 +138,12 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     if (ServerManager._isConnect)
                     {
                         // Requestの作成
-                        PieceMoveRequest pieceMoveRequest = 
+                        PieceMoveRequest pieceMoveRequest =
                             new PieceMoveRequest(_activePieces[0], _activePieces[1]);
-                        
+
                         ServerManager.Instance.SendMessage(pieceMoveRequest);
                     }
-                    
+
                     // さげたら推移
                     intervalTime = 0;
                     nextStateCue = GameState.active;
@@ -149,7 +161,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     // 処理を行いたくないためbreak
                     break;
                 }
-                
+
                 if (Map.Instance.CheckLanding(_activePieces[0].transform.position) ||
                     Map.Instance.CheckLanding(_activePieces[1].transform.position))
                 {
@@ -168,20 +180,20 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
             case GameState.confirmed:
                 _effectController.FallPieceHighLight(false, _activePieces[0]);
-                
-                // インターネットに接続されている かつ 自分のターンではない時
-                if (ServerManager._isConnect && !_player1.isMyTurn)
-                {
-                    // 処理を行いたくないためbreak
-                    break;
-                }
-                
+
                 if (_activePieces[0].transform.position.z > _activePieces[1].transform.position.z)
                 {
                     // 下側のコマがインデックス0になるようソート
                     GameObject tempPiece = _activePieces[0];
                     _activePieces[0] = _activePieces[1];
                     _activePieces[1] = tempPiece;
+                }
+
+                // インターネットに接続されている かつ 自分のターンではない時
+                if (ServerManager._isConnect && !_player1.isMyTurn)
+                {
+                    // 処理を行いたくないためbreak
+                    break;
                 }
 
                 Map.Instance.FallPiece(_activePieces[0]);
@@ -215,6 +227,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     gameState = nextStateCue;
                     _timeCount = 0;
                 }
+
                 break;
 
             case GameState.reversed:
@@ -223,15 +236,37 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     gameState = GameState.end;
                 else
                 {
+                    
                     // インターネットに接続されてない時 or 接続されていてプレイヤー1じゃない時
+                    /*
                     if (!ServerManager._isConnect || ServerManager._isConnect && !_player1.isMyTurn)
                         PieceSet();
-
                     ChangeTurn();
-
+                    // サーバーに接続されている時
+                    if (ServerManager._isConnect)
+                    {
+                        _player1.controllPiece1 = _activePieces[0];
+                        _player1.controllPiece2 = _activePieces[1];
+                    }
+                    */
+                    if (ServerManager._isConnect)
+                    {
+                        ChangeTurn();
+                        if (!_player1.isMyTurn)
+                        {
+                            PieceSet();
+                        }
+                       
+                        _player1.controllPiece1 = _activePieces[0];
+                        _player1.controllPiece2 = _activePieces[1];
+                    }
+                    else
+                    {
+                        PieceSet();
+                        ChangeTurn();
+                    }
                     gameState = GameState.preActive;
                 }
-
                 break;
 
             case GameState.end:
@@ -264,6 +299,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
         // どちらのコマからひっくり返すか判定
         GameObject tempPiece = _activePieces[0];
+        Debug.LogWarning(_activePieces[0]);
         Piece piece1 = _activePieces[0].GetComponent<Piece>();
         Piece piece2 = _activePieces[1].GetComponent<Piece>();
 
@@ -368,12 +404,14 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             Piece p2 = piece2.GetComponent<Piece>();
             PieceInfo[] pieceInfos = new PieceInfo[2]
             {
-                new PieceInfo(p._myVector3, p.pieceType, p._pieceId), 
+                new PieceInfo(p._myVector3, p.pieceType, p._pieceId),
                 new PieceInfo(p2._myVector3, p2.pieceType, p2._pieceId)
             };
 
             // Requestの作成と送信
             PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(pieceInfos);
+            // 生成したら通知するように変数をtrueにする
+            pieceMoveRequest.isCreated = true;
             ServerManager.Instance.SendMessage(pieceMoveRequest);
         }
     }
@@ -428,9 +466,10 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         {
             case RequestBase.PacketType.PieceMoved:
                 PieceMoveRequest pieceMoveRequest = (PieceMoveRequest)req;
-                
-                foreach (PieceInfo pieceInfo in pieceMoveRequest.pieceObjArray)
+
+                for (var i = 0; i < pieceMoveRequest.pieceObjArray.Length; i++)
                 {
+                    PieceInfo pieceInfo = pieceMoveRequest.pieceObjArray[i];
                     Piece savePiece = null;
                     // 移動したコマのidを探す
                     foreach (var piece in pieces)
@@ -446,12 +485,19 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
                     Piece.PieceType pieceType = (Piece.PieceType)pieceInfo.pieceColor;
                     GameObject pieceObject = null;
-                    
+
+                    if (pieceInfo.pieceId.Equals(""))
+                    {
+                        Debug.LogError("hoge");
+                    }
+
                     // 探したコマがなかった場合は生成を行う
                     if (savePiece == null)
                     {
                         pieceObject = _generator.Generate(pieceInfo.piecePos.ToVector3(), pieceType,
                             pieceInfo.pieceId);
+
+                        pieces.Add(pieceObject.GetComponent<Piece>());
                     }
                     else
                     {
@@ -461,13 +507,17 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                         savePiece.pieceType = pieceType;
                     }
 
-                    int x = (int)pieceInfo.piecePos.x;
-                    int z = (int)pieceInfo.piecePos.z * -1; // zはマイナス方向に進むので符号を反転させる
+                    // 相手のコマが生成されたら
+                    if (pieceMoveRequest.isCreated)
+                    {
+                        // 同期を行う
+                        _activePieces[i] = pieceObject;
 
-                    // Mapの更新処理
-                    Map.Instance.map[z, x] = Map.Instance._mapElement(pieceType);
-                    Map.Instance.pieceMap[z, x] = pieceObject;
+                        Debug.LogWarning("indexNum:" + i);
+                        Debug.LogWarning("Object:" + pieceObject);
+                    }
                 }
+
                 break;
 
             case RequestBase.PacketType.InitPiece:
@@ -480,11 +530,27 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 }
 
                 break;
-            
+
             case RequestBase.PacketType.StateChange:
                 StateChangeRequest stateChangeRequest = (StateChangeRequest)req;
-
                 gameState = (GameState)stateChangeRequest.gameState;
+
+                // ゲームステートがfalledの時にMapに書き込みを行う
+                if (gameState == GameState.falled)
+                {
+                    foreach (GameObject activePiece in _activePieces)
+                    {
+                        Piece p = activePiece.GetComponent<Piece>();
+
+                        int x = (int)activePiece.transform.position.x;
+                        int z = (int)activePiece.transform.position.z * -1; // zはマイナス方向に進むので符号を反転させる
+
+                        // Mapの更新処理
+                        Map.Instance.map[z, x] = Map.Instance._mapElement(p.pieceType);
+                        Map.Instance.pieceMap[z, x] = activePiece;
+                    }
+                }
+
                 break;
             default:
                 break;

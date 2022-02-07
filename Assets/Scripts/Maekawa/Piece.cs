@@ -33,9 +33,7 @@ public class Piece : MonoBehaviour
     {
         _anim = GetComponent<Animator>();
         Init();
-
-        // 自分が生成されたときにリストに追加する
-        GameDirector.Instance.pieces.Add(this);
+        
         if (ServerManager._isConnect)
         {
             // 自分の座標が変化した時
@@ -46,8 +44,9 @@ public class Piece : MonoBehaviour
 
     private void Awake()
     {
-        // 自身が1pの時
-        if (ServerManager._isConnect && ServerManager.Instance.myPlayerNumber == ServerManager.playerNumber.onePlayer)
+        // 自分のターンの時
+        if (ServerManager._isConnect && (GameDirector.Instance.player1.isMyTurn 
+              || GameDirector.Instance.gameState == GameDirector.GameState.none && ServerManager.Instance.myPlayerNumber == ServerManager.playerNumber.onePlayer))
         {
             // IDの生成
             _pieceId = Guid.NewGuid().ToString();

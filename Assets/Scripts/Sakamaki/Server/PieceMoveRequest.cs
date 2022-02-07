@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class PieceMoveRequest : RequestBase
     public PieceMoveRequest(params PieceInfo[] pieceObjArray) : base(PacketType.PieceMoved)
     {
         // 初期化
+        // 配列のコピー
         this.pieceObjArray = pieceObjArray;
     }
 
@@ -30,4 +32,6 @@ public class PieceMoveRequest : RequestBase
 
     // コマの配列
     public PieceInfo[] pieceObjArray;
+    // コマが生成されたかどうか変数
+    public bool isCreated　= false;
 }
