@@ -768,6 +768,11 @@ MonoBehaviour:
   rotationNum: 0
   cursor: {fileID: 440305711}
   _demoPlayTime: 10
+  modeText:
+  - {fileID: 1350474459}
+  - {fileID: 720150899}
+  - {fileID: 1207142067}
+  - {fileID: 433330850}
 --- !u!4 &1708304457
 Transform:
   m_ObjectHideFlags: 0
