@@ -109,42 +109,42 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                         {
                             blackOutImage.color = new Color(0, 0, 0, 0.5f);
                             isFadeIn = true;
-                            explanText.text = "〇ボタンを押して次に進む。";
+                            explanText.text = "〇ボタンを押して次に進む";
                             //explanImage.sprite = showImage[0];
                         }
                         break;
 
                     case TutorialPhase.MoveLeft:
-                        explanText.text = "左キーで駒を左に動かせます、\n駒を左端まで移動してください。";
+                        explanText.text = "左キーで駒を左に動かせます\n駒を左端まで移動してください";
                         //explanImage.sprite = showImage[1];
                         break;
 
                     case TutorialPhase.MoveRight:
-                        explanText.text = "右キーで駒を右に動かせます、\n駒を元の場所に戻してください。";
+                        explanText.text = "右キーで駒を右に動かせます\n駒を元の場所に戻してください";
                         //explanImage.sprite = showImage[2];
                         break;
 
                     case TutorialPhase.SpinLeft:
-                        explanText.text = "L1キーで駒が左回転します、\n駒を一回転してください。";
+                        explanText.text = "L1キーで駒が左回転します\n駒を一回転してください";
                         //explanImage.sprite = showImage[3];
                         break;
 
                     case TutorialPhase.SpinRight:
-                        explanText.text = "R1キーで駒が右回転します、\n駒を一回転してください。";
+                        explanText.text = "R1キーで駒が右回転します\n駒を一回転してください";
                         //explanImage.sprite = showImage[4];
                         break;
 
                     case TutorialPhase.SkillPanel:
-                        explanText.text = "optionボタンを押して、\nスキル効果の詳細を表示してください。";
+                        explanText.text = "optionボタンを押して\nスキル効果の詳細を\n表示してください";
                         //explanImage.sprite = showImage[];
                         break;
 
                     case TutorialPhase.SkillActive:
-                        explanText.text = "□ボタンを押して、\n必殺技を発動してください。";
+                        explanText.text = "□ボタンを押して\n必殺技を発動してください";
                         //explanImage.sprite = showImage[];
                         if (skillUsed == true)
                         {
-                            explanText.text = "必殺技を使用しました。\nこれにてチュートリアルを終了します。\n〇ボタンでタイトル画面に戻ります。";
+                            explanText.text = "必殺技を使用しました\nチュートリアルを終了します\n〇ボタンを押して\nタイトル画面に戻ります";
                             tutorialPhase = TutorialPhase.End;
                         }
                         break;
@@ -160,7 +160,7 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                     _activePieces[0].transform.position += new Vector3(0, 0, -1);
                     _activePieces[1].transform.position += new Vector3(0, 0, -1);
                     
-                    explanText.text = "コマは自動で落下します、\n一番下に着地したら、\nオセロのように、\n同じ色で挟んだ駒をひっくり返します。\n駒を操作して、\n他の駒をひっくり返してみよう。";
+                    explanText.text = "コマは自動で落下します\nオセロのように\n同じ色で挟むとひっくり返ります\nさっそくひっくり返してみよう！";
                     //explanImage.sprite = showImage[5];
 
                     // さげたら推移
@@ -245,7 +245,7 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                         TutorialMap.Instance.DestroyPiece();
                         TutorialMap.Instance.DestroyPiece();
                         _generator.PieceGenerated = 0;
-                        explanText.text = "駒をひっくり返せなかった、\nもう一回やってみよう。";
+                        explanText.text = "駒をひっくり返せなかった\nもう一回やってみよう";
                     }
                     PieceSet();
                     gameState = GameState.preActive;
