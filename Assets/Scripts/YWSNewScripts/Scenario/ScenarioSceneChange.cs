@@ -36,6 +36,7 @@ public class ScenarioSceneChange : Player1Base
     {
         SoundManager.Instance.StopSE();
         SoundManager.Instance.StopBGM();
+        SoundManager.Instance.StopStoryVoice();
         
         gameSceneManager.SceneNextCall("Title");
     }

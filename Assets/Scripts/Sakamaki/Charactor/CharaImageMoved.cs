@@ -99,6 +99,7 @@ public class CharaImageMoved : Player1Base
             // キャラ決定
             isConfirm = true;
             SoundManager.Instance.CharacterConfirmVoice(charaType1P);
+            SoundManager.Instance.ConfirmStoryVoice(charaType1P);
             SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.CharaSelect);
 
             if (ServerManager._isConnect)

@@ -35,6 +35,13 @@ public class CharacterScenario : ScenarioControl
             //キャラクターの表示
             ShowCharacter();
 
+            if (_isVoicePlayed == false)
+            {
+                //セリフボイスを流す
+                SoundManager.Instance.PlayStoryVoice(_textNum - 1);
+                _isVoicePlayed = true;
+            }
+
             //セリフの表示
             ShowText();
 

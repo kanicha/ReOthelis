@@ -15,7 +15,7 @@ public class ScenarioControl : Player1Base
     //セリフ・キャラ名テキスト用変数
     [SerializeField] private Text _word;
     [SerializeField] private Text _charaName;
-    private int _textNum = 1; //シナリオの進み具合
+    public int _textNum = 1; //シナリオの進み具合
     private string _displayText; //表示するセリフを入れる変数
     private int _textCharNum = 0; //セリフを一個ずつ追加するための変数
     private int _displayTextSpeed = 0; //全体のフレームレートを落とす変数
@@ -41,12 +41,14 @@ public class ScenarioControl : Player1Base
     private bool _isFadeInFin = false;
     private bool _isFadeOutFin = false;
     private float _color = 0;
+    public bool _isVoicePlayed = false;
 
     // Start is called before the first frame update
     private void Start()
     {
         SetCsv();
         Init();
+        SoundManager.Instance.SetCommonStory();
     }
 
     // Update is called once per frame
@@ -65,6 +67,13 @@ public class ScenarioControl : Player1Base
 
                 //キャラクターの表示
                 ShowCharacter();
+
+                if (_isVoicePlayed == false)
+                {
+                    //セリフボイスを流す
+                    SoundManager.Instance.PlayStoryVoice(_textNum - 1);
+                    _isVoicePlayed = true;
+                }
 
                 //セリフの表示
                 ShowText();
@@ -229,11 +238,13 @@ public class ScenarioControl : Player1Base
                     if (_click == true)
                     {
                         SoundManager.Instance.PlaySE(10);
-                                
+
                         _pageFeed.color = new Color(255,255,255,0);
                         _displayText = "";
                         _textCharNum = 0;
                         _textNum += 1;
+                        SoundManager.Instance.StopStoryVoice();
+                        _isVoicePlayed = false;
                     }
                 }
                 else

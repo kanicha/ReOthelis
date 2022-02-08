@@ -53,6 +53,8 @@ public class SoundManager : MonoBehaviour
     private AudioSource[] SEsources = new AudioSource[16];
     // 音声
     private AudioSource[] VoiceSources = new AudioSource[16];
+    //ストーリー音声
+    private AudioSource[] StoryVoiceSources = new AudioSource[16];
 
     // === AudioClip ===
     // BGM
@@ -66,7 +68,13 @@ public class SoundManager : MonoBehaviour
     public AudioClip[] _luiceVoice;
     public AudioClip[] _luminaVoice;
     public AudioClip[] _kurotoVoice;
-
+    //ストーリー音声
+    public AudioClip[] StoryVoice;
+    public AudioClip[] _kurotoStoryVoice;
+    public AudioClip[] _luminaStoryVoice;
+    public AudioClip[] _luiceStoryVoice;
+    public AudioClip[] _seastyStoryVoice;
+    public AudioClip[] _commonStoryVoice;
 
     public enum VoiceType
     {
@@ -108,6 +116,11 @@ public class SoundManager : MonoBehaviour
         for (int i = 0; i < VoiceSources.Length; i++)
         {
             VoiceSources[i] = gameObject.AddComponent<AudioSource>();
+        }
+
+        for (int i = 0; i < StoryVoiceSources.Length; i++)
+        {
+            StoryVoiceSources[i] = gameObject.AddComponent<AudioSource>();
         }
     }
 
@@ -271,5 +284,51 @@ public class SoundManager : MonoBehaviour
             source.Stop();
             source.clip = null;
         }
+    }
+
+    public void ConfirmStoryVoice(CharaImageMoved.CharaType1P charaType1P)
+    {
+        StoryVoice = charaType1P switch
+        {
+            CharaImageMoved.CharaType1P.Cow => _seastyStoryVoice,
+            CharaImageMoved.CharaType1P.Mouse => _luiceStoryVoice,
+            CharaImageMoved.CharaType1P.Rabbit => _luminaStoryVoice,
+            CharaImageMoved.CharaType1P.Tiger => _kurotoStoryVoice,
+            _ => throw new ArgumentOutOfRangeException(nameof(charaType1P), charaType1P, null)
+        };
+    }
+
+    public void PlayStoryVoice(int index)
+    {
+        if (0 > index || StoryVoice.Length <= index)
+        {
+            return;
+        }
+
+        // 再生中で無いAudioSouceで鳴らす
+        foreach (AudioSource source in StoryVoiceSources)
+        {
+            if (false == source.isPlaying)
+            {
+                source.clip = StoryVoice[index];
+                source.Play();
+                return;
+            }
+        }
+    }
+
+    public void StopStoryVoice()
+    {
+        // 全ての音声用のAudioSouceを停止する
+        foreach (AudioSource source in StoryVoiceSources)
+        {
+            source.Stop();
+            source.clip = null;
+        }
+    }
+
+    public void SetCommonStory()
+    {
+        StoryVoice = _commonStoryVoice;
     }
 }
