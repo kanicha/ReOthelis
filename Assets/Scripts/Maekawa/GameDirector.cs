@@ -16,7 +16,6 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     [SerializeField, Header("ミノの初期位置")] public Vector3 _DEFAULT_POSITION = Vector3.zero;
     [SerializeField] PiecePatternGeneretor _generator = null;
     [SerializeField] private Player_1 _player1 = null;
-
     [SerializeField] private Player_2 _player2 = null;
 
     // プレイヤーのゲッタ
@@ -31,6 +30,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
     private int _turnCount = 0;
     private float _timeCount = 0;
+    private bool _canChangeTurn = false;
     private bool _isDown = true;
     public GameObject[] _activePieces = new GameObject[2];
     public float intervalTime = 0;
@@ -64,9 +64,11 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
         if (ServerManager._isConnect)
         {
             ServerManager.Instance._onReceived.ObserveOnMainThread().Subscribe(onReceive).AddTo(this);
-            // 自分のターンの時ゲームステートが変更加えられたときに相手に通知する、Intervalは無視
+            // 自分のターンの時ゲームステートが変更加えられたときに相手に通知する、Interval, falledは無視
             this.ObserveEveryValueChanged(x => x.gameState).Where(_ => _player1.isMyTurn)
-                .Where(state => state != GameState.interval).Subscribe(OnStateChanged).AddTo(this);
+                .Where(state => state != GameState.interval).Where(state => state != GameState.falled).Subscribe(OnStateChangedInMyTurn).AddTo(this);
+            this.ObserveEveryValueChanged(x => x.gameState).Subscribe(OnStateChanged).AddTo(this);
+
         }
 
         // ネットにつながっていない時 かつ つながっていても2Pのときはスルーを行う
@@ -118,6 +120,9 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             case GameState.preActive:
                 _effectController.FallPieceHighLight(true, _activePieces[0]);
 
+                PrePieceGauge.Instance.SetGaugeRatio(_timeCount, _preActiveTime);
+                PrePieceGauge.Instance.SetPosition(_activePieces[0].transform.position, _activePieces[1].transform.position);
+
                 // インターネットに接続されている かつ 自分のターンではない時
                 if (ServerManager._isConnect && !_player1.isMyTurn)
                 {
@@ -128,10 +133,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 _isLanding = false;
                 _isDown = true;
                 _timeCount += Time.deltaTime;
-
-                PrePieceGauge.Instance.SetGaugeRatio(_timeCount, _preActiveTime);
-                PrePieceGauge.Instance.SetPosition(_activePieces[0].transform.position, _activePieces[1].transform.position);
-
+                
                 // 待機時間を超えたらステートをすすめる(自動落下の処理はPieceMove()で管理)
                 if (_timeCount > _preActiveTime)
                 {
@@ -193,16 +195,10 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     _activePieces[0] = _activePieces[1];
                     _activePieces[1] = tempPiece;
                 }
-
-                // インターネットに接続されている かつ 自分のターンではない時
-                if (ServerManager._isConnect && !_player1.isMyTurn)
-                {
-                    // 処理を行いたくないためbreak
-                    break;
-                }
-
+                
                 Map.Instance.FallPiece(_activePieces[0]);
                 Map.Instance.FallPiece(_activePieces[1]);
+
                 _isLanding = true;
                 gameState = GameState.falled;
                 break;
@@ -236,12 +232,17 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 break;
 
             case GameState.reversed:
+
+                if (ServerManager._isConnect && !_canChangeTurn)
+                {
+                    break;
+                }
+                
                 // ゲーム終了判定
                 if (Map.Instance.CheckEnd())
                     gameState = GameState.end;
                 else
                 {
-                    
                     // インターネットに接続されてない時 or 接続されていてプレイヤー1じゃない時
                     /*
                     if (!ServerManager._isConnect || ServerManager._isConnect && !_player1.isMyTurn)
@@ -257,7 +258,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                     if (ServerManager._isConnect)
                     {
                         ChangeTurn();
-                        if (!_player1.isMyTurn)
+                        if (_player1.isMyTurn)
                         {
                             PieceSet();
                         }
@@ -271,6 +272,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                         ChangeTurn();
                     }
                     gameState = GameState.preActive;
+                    _canChangeTurn = false;
                 }
                 break;
 
@@ -354,6 +356,8 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
             _player2.controllPiece2 = _activePieces[1];
             _player2.isMyTurn = true;
         }
+
+        Debug.LogWarning("turnChange" + _turnCount);
     }
 
     /// <summary>
@@ -490,19 +494,15 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
 
                     Piece.PieceType pieceType = (Piece.PieceType)pieceInfo.pieceColor;
                     GameObject pieceObject = null;
-
-                    if (pieceInfo.pieceId.Equals(""))
-                    {
-                        Debug.LogError("hoge");
-                    }
-
+                    
                     // 探したコマがなかった場合は生成を行う
                     if (savePiece == null)
                     {
                         pieceObject = _generator.Generate(pieceInfo.piecePos.ToVector3(), pieceType,
                             pieceInfo.pieceId);
 
-                        pieces.Add(pieceObject.GetComponent<Piece>());
+                        savePiece = pieceObject.GetComponent<Piece>();
+                        pieces.Add(savePiece);
                     }
                     else
                     {
@@ -511,7 +511,10 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                         savePiece.transform.position = pieceInfo.piecePos.ToVector3();
                         savePiece.pieceType = pieceType;
                     }
-
+                    
+                    // コマの色の同期
+                    savePiece.ApplyPieceType();
+                    
                     // 相手のコマが生成されたら
                     if (pieceMoveRequest.isCreated)
                     {
@@ -541,7 +544,7 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                 gameState = (GameState)stateChangeRequest.gameState;
 
                 // ゲームステートがfalledの時にMapに書き込みを行う
-                if (gameState == GameState.falled)
+                /*if (gameState == GameState.falled)
                 {
                     foreach (GameObject activePiece in _activePieces)
                     {
@@ -554,8 +557,12 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
                         Map.Instance.map[z, x] = Map.Instance._mapElement(p.pieceType);
                         Map.Instance.pieceMap[z, x] = activePiece;
                     }
-                }
+                }*/
 
+                break;
+            
+            case RequestBase.PacketType.TurnChangeable:
+                _canChangeTurn = true;
                 break;
             default:
                 break;
@@ -563,12 +570,34 @@ public class GameDirector : SingletonMonoBehaviour<GameDirector>
     }
 
     /// <summary>
-    /// ステート変更された時の処理関数
+    /// 自分のターンにステート変更された時の処理関数
+    /// </summary>
+    /// <param name="gameState">ゲームステート</param>
+    private void OnStateChangedInMyTurn(GameState gameState)
+    {
+        StateChangeRequest stateChangeRequest = new StateChangeRequest(gameState);
+        ServerManager.Instance.SendMessage(stateChangeRequest);
+        
+        switch (gameState)
+        {
+            case GameState.active:
+                PrePieceGauge.Instance.Deactivate();
+                break;
+        }
+    }
+
+    /// <summary>
+    /// ステートの変更が行われた時の処理関数
     /// </summary>
     /// <param name="gameState">ゲームステート</param>
     private void OnStateChanged(GameState gameState)
     {
-        StateChangeRequest stateChangeRequest = new StateChangeRequest(gameState);
-        ServerManager.Instance.SendMessage(stateChangeRequest);
+        switch (gameState)
+        {
+            case GameState.reversed:
+                TurnChangeableRequest turnChangeableRequest = new TurnChangeableRequest();
+                ServerManager.Instance.SendMessage(turnChangeableRequest);
+                break;
+        }
     }
 }

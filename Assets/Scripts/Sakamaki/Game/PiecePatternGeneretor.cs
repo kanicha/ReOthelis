@@ -123,7 +123,7 @@ public class PiecePatternGeneretor : MonoBehaviour
         // idの割当て
         p1._pieceId = pieceId;
         p1.pieceType = pieceType;
-        p1.SkillReverse(false);
+
         return piece;
     }
 }

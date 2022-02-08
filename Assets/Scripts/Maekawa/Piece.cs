@@ -137,7 +137,34 @@ public class Piece : MonoBehaviour
             _particalObj.SetActive(false);
         }
     }
-
+    
+    /// <summary>
+    /// コマの色を判別して変更を行う関数
+    /// </summary>
+    public void ApplyPieceType()
+    {
+        switch (pieceType)
+        {
+            case Piece.PieceType.none:
+                break;
+            
+            case Piece.PieceType.black:
+            case Piece.PieceType.fixityBlack:
+                name = "black";
+                transform.rotation = Quaternion.Euler(0,0,0);
+                break;
+            
+            case Piece.PieceType.white:
+            case Piece.PieceType.fixityWhite:
+                name = "white";
+                transform.rotation = Quaternion.Euler(0,0,180);
+                break;
+            
+            default:
+                break;
+        }
+    }
+    
     /// <summary>
     /// コマが移動を行った時
     /// </summary>
