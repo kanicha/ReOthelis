@@ -105,24 +105,19 @@ public class ModeSelect : Player1Base
             _selectCount--;
         }
         
+        // _selectCountの値に応じて変動
         switch (_selectCount)
         {
+            // -1に到達したら一番下に
             case -1:
                 _selectCount = 3;
                 break;
-            case 0:
+            
+            default:
                 cursor.GetComponent<RectTransform>().anchoredPosition = textPos;
                 break;
-            case 1:
-                cursor.GetComponent<RectTransform>().anchoredPosition = textPos;
-                break;
-            case 2:
-                cursor.GetComponent<RectTransform>().anchoredPosition = textPos;
-                break;
-            case 3:
-                //カーソルが一番下にある場合で下キーが入力されたら、一番上に戻す
-                cursor.GetComponent<RectTransform>().anchoredPosition = textPos;
-                break;
+            
+            // 4に到達したら一番上に
             case 4:
                 _selectCount = 0;
                 break;
