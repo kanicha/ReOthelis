@@ -9,14 +9,10 @@ public class ScoreAnimator : SingletonMonoBehaviour<ScoreAnimator>
     private float _distance = 80;
     [SerializeField]
     private Material[] _materials = new Material[4];
+    private const int _SIZE = 5;
     private GameObject _root = null;
     private Text[] _texts = new Text[_SIZE];
     private Animator _animator = null;
-    private const float _PARENT_WIDTH = 720;
-    private const float _PARENT_HEIGHT = 900;
-    private const float _CELL_NUM_X = 8;
-    private const float _CELL_NUM_Y = 10;
-    private const int _SIZE = 5;
     private int _idx = 0;
     private float[] _times = new float[_SIZE];
 
@@ -44,7 +40,7 @@ public class ScoreAnimator : SingletonMonoBehaviour<ScoreAnimator>
     {
         _texts[_idx].material = _materials[(int)type];
         _texts[_idx].text = point.ToString();
-        _texts[_idx].rectTransform.anchoredPosition = new Vector2(_PARENT_WIDTH / _CELL_NUM_X * (pos.x - 1), _PARENT_HEIGHT / _CELL_NUM_Y * pos.z);
+        _texts[_idx].rectTransform.anchoredPosition = new Vector2(Map._BOARD_WIDTH / (Map._HORIZON_SIZE - 2) * (pos.x - 1), Map._BOARD_HEIGHT / (Map._VERTICAL_SIZE - 1) * pos.z);
         _animator = _texts[_idx].GetComponent<Animator>();
         _animator.Play("Score", 0, 0);
         //

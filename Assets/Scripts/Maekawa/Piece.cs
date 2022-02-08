@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 public class Piece : MonoBehaviour
@@ -7,7 +9,13 @@ public class Piece : MonoBehaviour
     [SerializeField] private Renderer[] _renderer = new Renderer[2];
     [SerializeField] GameObject _particalObj = default(GameObject);
     public Material[] _material;
+
     private Animator _anim = null;
+
+    // コマのID
+    public string _pieceId = "";
+
+    public MyVector3 _myVector3;
 
     public enum PieceType
     {
@@ -25,6 +33,24 @@ public class Piece : MonoBehaviour
     {
         _anim = GetComponent<Animator>();
         Init();
+        
+        if (ServerManager._isConnect)
+        {
+            // 自分の座標が変化した時
+            this.ObserveEveryValueChanged(x => x.transform.position).Where(_ => GameDirector.Instance.player1.isMyTurn)
+                .Subscribe(onMoved).AddTo(this);
+        }
+    }
+
+    private void Awake()
+    {
+        // 自分のターンの時
+        if (ServerManager._isConnect && (GameDirector.Instance.player1.isMyTurn 
+              || GameDirector.Instance.gameState == GameDirector.GameState.none && ServerManager.Instance.myPlayerNumber == ServerManager.playerNumber.onePlayer))
+        {
+            // IDの生成
+            _pieceId = Guid.NewGuid().ToString();
+        }
     }
 
     public void Init()
@@ -110,5 +136,15 @@ public class Piece : MonoBehaviour
             // 解除
             _particalObj.SetActive(false);
         }
+    }
+
+    /// <summary>
+    /// コマが移動を行った時
+    /// </summary>
+    public void onMoved(Vector3 movedPos)
+    {
+        _myVector3.x = movedPos.x;
+        _myVector3.y = movedPos.y;
+        _myVector3.z = movedPos.z;
     }
 }

@@ -65,6 +65,8 @@ public class Judgment : MonoBehaviour
             _judgeImage1P.sprite = _judgeImageArray[1];
             _judgeImage2P.sprite = _judgeImageArray[0];
         }
+        
+        StartCoroutine(JudgeFaceChange());
     }
 
     // Update is called once per frame
@@ -78,8 +80,6 @@ public class Judgment : MonoBehaviour
     /// </summary>
     private void JudgeImageMoved()
     {
-        StartCoroutine(JudgeFaceChange());
-        
         //画像を透明から不透明に変更
         if (_isAppear == false && ScoreDisplay.IsScoreAppear == true)
         {

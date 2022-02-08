@@ -20,10 +20,8 @@ public class EffectController : SingletonMonoBehaviour<EffectController>
     /// 落下中のコマハイライト表示する関数
     /// </summary>
     /// <param name="active">true = on false = off</param>
-    public void FallPieceHighLight(bool active)
+    public void FallPieceHighLight(bool active, GameObject controlPiece)
     {
-        // 軸のコマ情報
-        GameObject controlPiece = GameDirector.Instance._activePieces[0];
         // 軸のコマ情報の子についてあるハイライトするためのオブジェクトを参照
         GameObject controlPieceHighLightObj = controlPiece.transform.Find("highLightObj").gameObject;
 

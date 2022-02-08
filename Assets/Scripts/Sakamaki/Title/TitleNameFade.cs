@@ -46,6 +46,11 @@ public class TitleNameFade : MonoBehaviour
             _modeSelectTextArray[2].color = GetAlphaColor(_modeSelectTextArray[2].color);
             _lastnum = 2;
         }
+        else if (ModeSelect._selectCount == 3)
+        {
+            _modeSelectTextArray[3].color = GetAlphaColor(_modeSelectTextArray[3].color);
+            _lastnum = 3;
+        }
     }
 
     //Alpha値を更新してColorを返す

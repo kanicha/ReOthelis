@@ -7,23 +7,30 @@ using UnityEngine.Events;
 public class ModeSelect : Player1Base
 {
     [SerializeField] private RectTransform cursor;
-    [SerializeField, Header("デモプレイ画面に推移するまでの時間")] private float _demoPlayTime = 0.0f;
-    
+
+    [SerializeField, Header("デモプレイ画面に推移するまでの時間")]
+    private float _demoPlayTime = 0.0f;
+
+    [SerializeField] private Text[] modeText = new Text[4];
+
+    private Vector2 textPos = Vector2.zero;
     public static int _selectCount = 0;
     private float _timeCount = 0.0f;
     private bool _repeatHit = false;
     private bool _isDemoChange = false;
     private GameSceneManager _gameSceneManager;
-    
+
     // Start is called before the first frame update
     void Start()
     {
         SoundManager.Instance.PlayBGM(1);
-
-        cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-220, -171, 0);
+        textPos = modeText[0].rectTransform.anchoredPosition;
+        textPos.x = -250;
+        cursor.GetComponent<RectTransform>().anchoredPosition = textPos;
+        
         _selectCount = 0;
         _isDemoChange = false;
-        
+
         _gameSceneManager = FindObjectOfType<GameSceneManager>();
     }
 
@@ -44,51 +51,64 @@ public class ModeSelect : Player1Base
         if (_timeCount > _demoPlayTime && !_isDemoChange)
         {
             SoundManager.Instance.StopBGM();
-            
+
             // デモプレイにシーンを推移
             DemoPlayScemeChange(_gameSceneManager);
             // すでに推移したのでタイマーとフラグを初期化
             _timeCount = 0.0f;
             _isDemoChange = false;
         }
-        
+
         if (_gameSceneManager.IsChanged && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)) && _selectCount == 0)
         {
             _timeCount = 0.0f;
-            
+
             _repeatHit = true;
             SoundManager.Instance.PlaySE(9);
             CharacterSelectSceneChange(_gameSceneManager);
-            
+
             _isDemoChange = true;
         }
-        else if (_gameSceneManager.IsChanged && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)) && _selectCount == 1)
+        else if (_gameSceneManager.IsChanged && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)) &&
+                 _selectCount == 1)
         {
             _repeatHit = true;
             SoundManager.Instance.PlaySE(9);
             CharacterSelectSceneChange(_gameSceneManager);
-            
+
             _isDemoChange = true;
         }
-        else if (_gameSceneManager.IsChanged && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)) && _selectCount == 2)
+        else if (_gameSceneManager.IsChanged && (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space)) &&
+                 _selectCount == 2)
+        {
+            _repeatHit = true;
+            SoundManager.Instance.PlaySE(9);
+            SoundManager.Instance.StopBGM();
+
+            OnlineLobbySceneChange(_gameSceneManager);
+
+            _isDemoChange = true;
+        }
+        else if (_gameSceneManager.IsChanged &&
+                 (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space) && _selectCount == 3))
         {
             _repeatHit = true;
             SoundManager.Instance.PlaySE(9);
             SoundManager.Instance.StopBGM();
 
             TutorialSceneChange(_gameSceneManager);
-            
+
             _isDemoChange = true;
         }
-        
+
         //下キーの入力に応じてカーソルを動かす
         if ((_DS4_vertical_value < 0 && last_vertical_value == 0))
         {
             // タイムを初期化
             _timeCount = 0.0f;
-            
+
             SoundManager.Instance.PlaySE(3);
-            
+
             if (_selectCount == 0)
             {
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-220, -272, 0);
@@ -103,6 +123,11 @@ public class ModeSelect : Player1Base
             {
                 //カーソルが一番下にある場合で下キーが入力されたら、一番上に戻す
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-220, -171, 0);
+                _selectCount++;
+            }
+            else if (_selectCount == 3)
+            {
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-300, 451, 0);
                 _selectCount = 0;
             }
         }
@@ -112,7 +137,7 @@ public class ModeSelect : Player1Base
             // タイムを初期化
             _timeCount = 0.0f;
             SoundManager.Instance.PlaySE(3);
-            
+
             if (_selectCount == 0)
             {
                 //カーソルが一番上にある場合で上キーが入力されたら、一番下のに戻す
@@ -129,22 +154,35 @@ public class ModeSelect : Player1Base
                 cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-220, -272, 0);
                 _selectCount--;
             }
+            else if (_selectCount == 3)
+            {
+                cursor.GetComponent<RectTransform>().anchoredPosition = new Vector3(-300, 451, 0);
+                _selectCount--;
+            }
         }
     }
-    
+
     //キャラクター選択シーンへの遷移
     public void CharacterSelectSceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("CharacterSelect");
     }
+
     public void ScenarioSceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("Scenario");
     }
+
     private void TutorialSceneChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("TutorialGame");
     }
+
+    private void OnlineLobbySceneChange(GameSceneManager gameSceneManager)
+    {
+        gameSceneManager.SceneNextCall("OnlineLobby");
+    }
+
     /// <summary>
     /// デモシーンに推移する関数
     /// </summary>
@@ -152,5 +190,21 @@ public class ModeSelect : Player1Base
     private void DemoPlayScemeChange(GameSceneManager gameSceneManager)
     {
         gameSceneManager.SceneNextCall("DemoPlay");
+    }
+
+    private void TitleModeSelect()
+    {
+        // キー入力で値を変動
+        if (_DS4_vertical_value < 0 && last_vertical_value == 0)
+            _selectCount++;
+        else if (_DS4_vertical_value > 0 && last_vertical_value == 0)
+            _selectCount--;
+
+        // switch文で分岐を行う
+        switch (_selectCount)
+        {
+            case 0:
+                break;
+        }
     }
 }

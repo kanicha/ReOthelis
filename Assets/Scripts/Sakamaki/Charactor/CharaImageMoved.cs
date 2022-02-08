@@ -100,6 +100,17 @@ public class CharaImageMoved : Player1Base
             isConfirm = true;
             SoundManager.Instance.CharacterConfirmVoice(charaType1P);
             SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.CharaSelect);
+
+            if (ServerManager._isConnect)
+            {
+                // サーバー用インスタンス
+                CharaConfirmRequest charaConfirmRequest = new CharaConfirmRequest();
+                // 選択されているのでtrueにする
+                charaConfirmRequest.isCharaConfirm = true;
+                
+                // 送信を行う
+                ServerManager.Instance.SendMessage(charaConfirmRequest);
+            }
         }
 
         // prev と result 変数の中身(int型)が違った場合描画処理

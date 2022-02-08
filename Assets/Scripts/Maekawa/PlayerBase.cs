@@ -91,7 +91,7 @@ public class PlayerBase : MonoBehaviour
     public GameObject controllPiece2 = null;
 
     public int rotationNum = 0;
-
+    
     #endregion
 
     #region スキル変数
@@ -261,8 +261,92 @@ public class PlayerBase : MonoBehaviour
         {
             GameDirector.Instance.gameState = GameDirector.GameState.confirmed;
         }
+
+        // サーバーに接続されている時
+        if (ServerManager._isConnect)
+        {
+            PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(controllPiece1, controllPiece2);
+            ServerManager.Instance.SendMessage(pieceMoveRequest);
+        }
+        
     }
 
+    /// <summary>
+    /// 待機中の移動関数
+    /// </summary>
+    protected void PrePieceMove()
+    {
+        Vector3 move = Vector3.zero;
+        bool isDown = false;
+
+        // 左右移動
+        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
+            (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
+            move.x = -1;
+        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) ||
+                 (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
+            move.x = 1;
+        else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
+                 (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
+        {
+            move.z = -1;
+            isDown = true;
+            PrePieceGauge.Instance.Deactivate();
+        }
+
+        // 左右に入力したなら移動
+        if (move != Vector3.zero && !isDown)
+        {
+            Vector3 movedPos = controllPiece1.transform.position;
+            while (true)
+            {
+                movedPos += move;
+                Vector3 movedUnderPos = movedPos + new Vector3(0, 0, -1);
+                Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
+
+                // 壁まで行ったらスルー
+                if ((int)movedPos.x < 1 || (int)movedPos.x > 8)
+                    break;
+
+                // 移動後の座標の1つ下に障害物がなければ
+                if (Map.Instance.CheckWall(movedUnderPos) && Map.Instance.CheckWall(rotMovedPos))
+                {
+                    controllPiece1.transform.position = movedPos;
+                    controllPiece2.transform.position = movedPos + rotationPos[rotationNum];
+                    break;
+                }
+            }
+        }
+        // 移動後 かつ 下に入力されたとき
+        else if (move != Vector3.zero && isDown)
+        {
+            Vector3 piecePos = controllPiece1.transform.position;
+            // 移動後座標
+            Vector3 movedUnderPos = piecePos + new Vector3(0, 0, -1);
+            Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
+
+            // 移動後の座標の1つ下に障害物がなければ
+            if (Map.Instance.CheckWall(movedUnderPos) && Map.Instance.CheckWall(rotMovedPos))
+            {
+                // 異合後の座標を代入する
+                controllPiece1.transform.position = movedUnderPos;
+                controllPiece2.transform.position = rotMovedPos;
+            }
+
+            // ステート変更
+            GameDirector.Instance.intervalTime = 0;
+            GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
+            GameDirector.Instance.gameState = GameDirector.GameState.interval;
+        }
+        
+        // サーバーに接続されている時
+        if (ServerManager._isConnect)
+        {
+            PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(controllPiece1, controllPiece2);
+            ServerManager.Instance.SendMessage(pieceMoveRequest);
+        }
+    }
+    
     /// <summary>
     /// コマ回転関数
     /// </summary>
@@ -319,6 +403,13 @@ public class PlayerBase : MonoBehaviour
                 // 壁にあたってる時 かつ 片方の壁に当たっている時 回転ボタン押しで回転
                 AnotherTurn(rotatedLeftPos, rotatedRightPos);
         }
+        
+        // サーバーに接続されている時
+        if (ServerManager._isConnect)
+        {
+            PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(controllPiece1, controllPiece2);
+            ServerManager.Instance.SendMessage(pieceMoveRequest);
+        }
     }
 
     /// <summary>
@@ -372,9 +463,13 @@ public class PlayerBase : MonoBehaviour
             // 壁方向回転入力でクイックローテート
             QuickRotate();
         }
-        // PreActive時の両回転対応をする、
-        // rotatedPos(回転後の座標)をelseしているため 回転後の座標が壁にあたったらって感じ
-        // なのでいい感じにする(?)
+        
+        // サーバーに接続されている時
+        if (ServerManager._isConnect)
+        {
+            PieceMoveRequest pieceMoveRequest = new PieceMoveRequest(controllPiece1, controllPiece2);
+            ServerManager.Instance.SendMessage(pieceMoveRequest);
+        }
     }
 
     /// <summary>
@@ -438,73 +533,7 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 待機中の移動関数
-    /// </summary>
-    protected void PrePieceMove()
-    {
-        Vector3 move = Vector3.zero;
-        bool isDown = false;
-
-        // 左右移動
-        if ((_DS4_horizontal_value < 0 && last_horizontal_value == 0) ||
-            (_DS4_Lstick_horizontal_value < 0 && lastLstick_horizontal_value == 0))
-            move.x = -1;
-        else if ((_DS4_horizontal_value > 0 && last_horizontal_value == 0) ||
-                 (_DS4_Lstick_horizontal_value > 0 && lastLstick_horizontal_value == 0))
-            move.x = 1;
-        else if ((_DS4_vertical_value < 0 && last_vertical_value == 0) ||
-                 (_DS4_Lstick_vertical_value < 0 && last_Lstick_vertical_value == 0))
-        {
-            move.z = -1;
-            isDown = true;
-        }
-
-        // 左右に入力したなら移動
-        if (move != Vector3.zero && !isDown)
-        {
-            Vector3 movedPos = controllPiece1.transform.position;
-            while (true)
-            {
-                movedPos += move;
-                Vector3 movedUnderPos = movedPos + new Vector3(0, 0, -1);
-                Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
-
-                // 壁まで行ったらスルー
-                if ((int)movedPos.x < 1 || (int)movedPos.x > 8)
-                    break;
-
-                // 移動後の座標の1つ下に障害物がなければ
-                if (Map.Instance.CheckWall(movedUnderPos) && Map.Instance.CheckWall(rotMovedPos))
-                {
-                    controllPiece1.transform.position = movedPos;
-                    controllPiece2.transform.position = movedPos + rotationPos[rotationNum];
-                    break;
-                }
-            }
-        }
-        // 移動後 かつ 下に入力されたとき
-        else if (move != Vector3.zero && isDown)
-        {
-            Vector3 piecePos = controllPiece1.transform.position;
-            // 移動後座標
-            Vector3 movedUnderPos = piecePos + new Vector3(0, 0, -1);
-            Vector3 rotMovedPos = movedUnderPos + rotationPos[rotationNum];
-
-            // 移動後の座標の1つ下に障害物がなければ
-            if (Map.Instance.CheckWall(movedUnderPos) && Map.Instance.CheckWall(rotMovedPos))
-            {
-                // 異合後の座標を代入する
-                controllPiece1.transform.position = movedUnderPos;
-                controllPiece2.transform.position = rotMovedPos;
-            }
-
-            // ステート変更
-            GameDirector.Instance.intervalTime = 0;
-            GameDirector.Instance.nextStateCue = GameDirector.GameState.active;
-            GameDirector.Instance.gameState = GameDirector.GameState.interval;
-        }
-    }
+    
 
     #endregion
 
@@ -679,17 +708,17 @@ public class PlayerBase : MonoBehaviour
         {
             Debug.Log("強引");
             SoundManager.Instance.PlaySE(5);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece5Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
-            
+
             reversedCount -= cost;
             while (true)
             {
@@ -729,17 +758,17 @@ public class PlayerBase : MonoBehaviour
         {
             Debug.Log("固定");
             SoundManager.Instance.PlaySE(5);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Rabbit && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece5Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Rabbit && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
-            
+
             reversedCount -= cost;
 
             while (true)
@@ -777,18 +806,18 @@ public class PlayerBase : MonoBehaviour
         {
             Debug.Log("残影");
             SoundManager.Instance.PlaySE(5);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece5Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Tiger && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Tiger && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
-            
-                reversedCount -= cost;
+
+            reversedCount -= cost;
 
             // 自分の色を固定化(2つとも自分の色なら両方)
             if (piece1.pieceType == playerType)
@@ -816,17 +845,17 @@ public class PlayerBase : MonoBehaviour
         {
             Debug.Log("打ち消し");
             SoundManager.Instance.PlaySE(5);
-            
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse)
+
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Mouse && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece5Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Mouse && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece5Skill);
 
-            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow)
+            if (CharaImageMoved.charaType1P == CharaImageMoved.CharaType1P.Cow && GameDirector.Instance.player1.isMyTurn)
                 SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.Piece3Skill);
-            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow)
+            else if (CharaImageMoved2P.charaType2P == CharaImageMoved2P.CharaType2P.Cow && GameDirector.Instance.player2.isMyTurn)
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Piece3Skill);
-            
+
             reversedCount -= cost;
 
             bool isCheck = false;
@@ -874,8 +903,13 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("強制変換");
         skillCutinControl.ShowSkillCutin(3);
-        SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
-        reversedCount -= cost;
+
+        if (GameDirector.Instance.PlayerJudge(this))
+            SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        else
+            SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.PieceSpecialSkill);
+        
+            reversedCount -= cost;
 
         StartCoroutine(ForceConvertionCoroutine());
     }
@@ -966,7 +1000,12 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("一列一式");
         skillCutinControl.ShowSkillCutin(1);
-        SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        
+        if (GameDirector.Instance.PlayerJudge(this))
+            SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        else
+            SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.PieceSpecialSkill);
+
         reversedCount -= cost;
 
         // コマが着地したら処理を行う
@@ -1069,7 +1108,12 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("優先頂戴");
         skillCutinControl.ShowSkillCutin(2);
-        SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        
+        if (GameDirector.Instance.PlayerJudge(this))
+            SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        else
+            SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.PieceSpecialSkill);
+
         reversedCount -= cost;
 
         // プレイヤーが黒プレイヤーか白か判別
@@ -1150,7 +1194,12 @@ public class PlayerBase : MonoBehaviour
 
         Debug.Log("強奪一瞬");
         skillCutinControl.ShowSkillCutin(0);
-        SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        
+        if (GameDirector.Instance.PlayerJudge(this))
+            SoundManager.Instance.PlayVoice1P(SoundManager.VoiceType.PieceSpecialSkill);
+        else
+            SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.PieceSpecialSkill);
+
         reversedCount -= cost;
         /*SoundManager.Instance.PlaySE(5);*/
 

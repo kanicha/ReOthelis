@@ -1,14 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Map : SingletonMonoBehaviour<Map>
 {
-    private const byte _WIDTH = 10;
-    private const byte _HEIGHT = 11;
-    private const byte _EMPTY_AREAS_HEIGHT = 2; // 上２ラインに置かれたコマは消滅する
-
-    public string[,] map = new string[_HEIGHT, _WIDTH] // z, x座標で指定
+    public const byte _HORIZON_SIZE = 10;
+    public const byte _VERTICAL_SIZE = 11;
+    public const float _BOARD_WIDTH = 720;
+    public const float _BOARD_HEIGHT = 900;
+    public const byte _IGNORE_VERTICAL_SIZE = 2; // 上２ラインに置かれたコマは消滅する
+    public string[,] map = new string[_VERTICAL_SIZE, _HORIZON_SIZE] // z, x座標で指定
     {
         {"■", "□", "□", "□", "□", "□", "□", "□", "□", "■"},
         {"■", "□", "□", "□", "□", "□", "□", "□", "□", "■"},
@@ -29,7 +31,20 @@ public class Map : SingletonMonoBehaviour<Map>
     public readonly string white = "〇";
     public readonly string fixityBlack = "★";
     public readonly string fixityWhite = "☆";
-
+    
+    // マップの要素を返す関数
+    public string _mapElement(Piece.PieceType mapElement)
+    {
+        return mapElement switch
+        {
+            Piece.PieceType.black => black,
+            Piece.PieceType.white => white,
+            Piece.PieceType.fixityBlack => fixityBlack,
+            Piece.PieceType.fixityWhite => fixityWhite,
+            _ => throw new ArgumentOutOfRangeException(nameof(mapElement), mapElement, null)
+        };
+    }
+    
     /// <summary>
     /// 移動後のコマが障害物に当たるかを調べる
     /// </summary>
@@ -122,7 +137,7 @@ public class Map : SingletonMonoBehaviour<Map>
 
     // ひっくり返す処理
     private List<GameObject> _reversePiece = new List<GameObject>(); // ひっくり返すコマを格納
-    public GameObject[,] pieceMap = new GameObject[_HEIGHT, _WIDTH];
+    public GameObject[,] pieceMap = new GameObject[_VERTICAL_SIZE, _HORIZON_SIZE];
     private int _setPosX = 0;
     private int _setPosZ = 0;
     public static string _myColor = string.Empty;
@@ -142,7 +157,6 @@ public class Map : SingletonMonoBehaviour<Map>
     /// </summary>
     private IEnumerator PieceReverse(bool isSkill)
     {
-        CharaImageMoved.CharaType1P type = CharaImageMoved.charaType1P;
         foreach (GameObject piece in _reversePiece)
         {
             switch (isSkill)
@@ -155,7 +169,6 @@ public class Map : SingletonMonoBehaviour<Map>
                     else
                     {
                         GameDirector.Instance.AddScore(false, GameDirector.Instance.point);
-                        type = (CharaImageMoved.CharaType1P)CharaImageMoved2P.charaType2P;
                     }
 
                     break;
@@ -169,7 +182,6 @@ public class Map : SingletonMonoBehaviour<Map>
                     {
                         GameDirector.Instance.AddScore(false, GameDirector.Instance.point);
                         GameDirector.Instance.AddReversedCount(false);
-                        type = (CharaImageMoved.CharaType1P)CharaImageMoved2P.charaType2P;
                     }
 
                     break;
@@ -177,7 +189,11 @@ public class Map : SingletonMonoBehaviour<Map>
                     break;
             }
 
-            ScoreAnimator.Instance.OnAddScore(CharaImageMoved.charaType1P, piece.transform.position, GameDirector.Instance.point);
+            if(turnPlayerColor == Piece.PieceType.black)
+                ScoreAnimator.Instance.OnAddScore(CharaImageMoved.charaType1P, piece.transform.position, GameDirector.Instance.point);
+            else
+                ScoreAnimator.Instance.OnAddScore((CharaImageMoved.CharaType1P)CharaImageMoved2P.charaType2P, piece.transform.position, GameDirector.Instance.point);
+
             ParticalController.Instance.PlayParticle(piece.transform.position);
             piece.transform.SetAsLastSibling();
             piece.GetComponent<Piece>().Reverse();
@@ -366,9 +382,9 @@ public class Map : SingletonMonoBehaviour<Map>
         int blackCount = 0;
         int whiteCount = 0;
 
-        for (int i = _EMPTY_AREAS_HEIGHT; i < _HEIGHT; i++)
+        for (int i = _IGNORE_VERTICAL_SIZE; i < _VERTICAL_SIZE; i++)
         {
-            for (int j = 0; j < _WIDTH; j++)
+            for (int j = 0; j < _HORIZON_SIZE; j++)
             {
                 string cell = map[i, j];
 
@@ -395,9 +411,9 @@ public class Map : SingletonMonoBehaviour<Map>
         int blackCount = 0;
         int whiteCount = 0;
 
-        for (int i = _EMPTY_AREAS_HEIGHT; i < _HEIGHT; i++)
+        for (int i = _IGNORE_VERTICAL_SIZE; i < _VERTICAL_SIZE; i++)
         {
-            for (int j = 0; j < _WIDTH; j++)
+            for (int j = 0; j < _HORIZON_SIZE; j++)
             {
                 string cell = map[i, j];
 
@@ -419,7 +435,7 @@ public class Map : SingletonMonoBehaviour<Map>
     public bool CheckHeightOver(GameObject piece, bool isSkill)
     {
         bool isSafeLine = true;
-        if ((int) piece.transform.position.z * -1 < _EMPTY_AREAS_HEIGHT)
+        if ((int) piece.transform.position.z * -1 < _IGNORE_VERTICAL_SIZE)
         {
             map[(int) piece.transform.position.z * -1, (int) piece.transform.position.x] = empty;
             piece.transform.position = new Vector3(999, 999, 999);
@@ -443,9 +459,9 @@ public class Map : SingletonMonoBehaviour<Map>
 
     public void TagClear()
     {
-        for (int i = 0; i < _HEIGHT; i++)
+        for (int i = 0; i < _VERTICAL_SIZE; i++)
         {
-            for (int j = 0; j < _WIDTH; j++)
+            for (int j = 0; j < _HORIZON_SIZE; j++)
             {
                 if (pieceMap[i, j] != null)
                     pieceMap[i, j].tag = "Untagged";

@@ -6,16 +6,25 @@ using UnityEngine;
 [System.Serializable]
 public class RequestBase
 {
+    // ユーザーid変数
+    public string id = "";
     // 通信タイプ保存変数
     public string _packetType = "";
-
+    
     // 通信タイプ
     public enum PacketType
     {
         Init,
+        InitPiece,
+        Matching,
+        CharaConfirm,
+        PieceMoved,
+        StateChange,
         Send,
         Receive,
-        End
+        End,
+        Disconnect,
+        OpponentDisconnect
     }
 
     /// <summary>
@@ -26,6 +35,9 @@ public class RequestBase
     {
         if (packetType != null)
             _packetType = packetType.ToString();
+        
+        Debug.Log(ServerManager.Instance._myId);
+        id = ServerManager.Instance._myId;
     }
 
     /// <summary>

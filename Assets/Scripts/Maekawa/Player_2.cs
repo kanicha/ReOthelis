@@ -55,6 +55,12 @@ public class Player_2 : PlayerBase
 
     void Update()
     {
+        // インターネットに接続されていたら
+        if (ServerManager._isConnect)
+        {
+            return;
+        }
+        
         if (base.reversedCount > MAX_REVERSE_COUNT)
             base.reversedCount = MAX_REVERSE_COUNT;
 

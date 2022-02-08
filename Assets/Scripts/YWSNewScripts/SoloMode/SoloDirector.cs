@@ -3,13 +3,13 @@ using UnityEngine.UI;
 
 public class SoloDirector : SingletonMonoBehaviour<GameDirector>
 {
-    [SerializeField, Header("Šî–{ƒXƒRƒA")]
+    [SerializeField, Header("åŸºæœ¬ã‚¹ã‚³ã‚¢")]
     public int point = 0;
-    [SerializeField, Header("Ú’n’†‚É”z’u‚ğŠm’è‚·‚é‚Ü‚Å‚ÌŠÔ")]
+    [SerializeField, Header("æ¥åœ°ä¸­ã«é…ç½®ã‚’ç¢ºå®šã™ã‚‹ã¾ã§ã®æ™‚é–“")]
     private float _marginTime = 0;
-    [SerializeField, Header("–‘O‚É‘€ì‚Å‚«‚éŠÔ")]
+    [SerializeField, Header("äº‹å‰ã«æ“ä½œã§ãã‚‹æ™‚é–“")]
     private float _preActiveTime = 0;
-    [SerializeField, Header("ƒ~ƒm‚Ì‰ŠúˆÊ’u")]
+    [SerializeField, Header("ãƒŸãƒã®åˆæœŸä½ç½®")]
     public Vector3 _DEFAULT_POSITION = Vector3.zero;
     [SerializeField]
     PiecePatternGeneretor _generator = null;
@@ -17,7 +17,7 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
     private Player_1 _player1 = null;
     [SerializeField]
     private Player_2 _player2 = null;
-    [SerializeField, Header("ƒGƒtƒFƒNƒgƒRƒ“ƒgƒ[ƒ‰[")] 
+    [SerializeField, Header("ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼")] 
     private EffectController _effectController = null;
     [SerializeField]
     private AI_DataBase _ai = null;
@@ -54,7 +54,7 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
         _player1.isMyTurn = false;
         _player2.isMyTurn = false;
 
-        // Å‰‚Í2ƒZƒbƒg¶¬
+        // æœ€åˆã¯2ã‚»ãƒƒãƒˆç”Ÿæˆ
         PieceSet();
         ChangeTurn();
     }
@@ -66,20 +66,20 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
         switch (gameState)
         {
             case GameState.preActive:
-                _effectController.FallPieceHighLight(true);
+                _effectController.FallPieceHighLight(true, _activePieces[0]);
 
                 _isLanding = false;
                 _isDown = true;
                 _timeCount += Time.deltaTime;
 
-                // ‘Ò‹@ŠÔ‚ğ’´‚¦‚½‚çƒXƒe[ƒg‚ğ‚·‚·‚ß‚é(©“®—‰º‚Ìˆ—‚ÍPieceMove()‚ÅŠÇ—)
+                // å¾…æ©Ÿæ™‚é–“ã‚’è¶…ãˆãŸã‚‰ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ã™ã™ã‚ã‚‹(è‡ªå‹•è½ä¸‹ã®å‡¦ç†ã¯PieceMove()ã§ç®¡ç†)
                 if (_timeCount > _preActiveTime)
                 {
-                    // ŠÔŒo‰ß‚É‚æ‚èƒRƒ}‚ğˆêŒÂ‰º‚°‚é
+                    // æ™‚é–“çµŒéã«ã‚ˆã‚Šã‚³ãƒã‚’ä¸€å€‹ä¸‹ã’ã‚‹
                     _activePieces[0].transform.position += new Vector3(0, 0, -1);
                     _activePieces[1].transform.position += new Vector3(0, 0, -1);
 
-                    // ‚³‚°‚½‚ç„ˆÚ
+                    // ã•ã’ãŸã‚‰æ¨ç§»
                     intervalTime = 0;
                     nextStateCue = GameState.active;
                     gameState = GameState.interval;
@@ -87,7 +87,7 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
                 break;
 
             case GameState.active:
-                _effectController.FallPieceHighLight(true);
+                _effectController.FallPieceHighLight(true, _activePieces[0]);
 
                 if (ModeSelect._selectCount == 0 && _player2.isMyTurn == true)
                 {
@@ -95,7 +95,7 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
                 }
                 if (Map.Instance.CheckLanding(_activePieces[0].transform.position) || Map.Instance.CheckLanding(_activePieces[1].transform.position))
                 {
-                    // Ú’n‚ÉƒJƒEƒ“ƒg
+                    // æ¥åœ°æ™‚ã«ã‚«ã‚¦ãƒ³ãƒˆ
                     _timeCount += Time.deltaTime;
                     if (_timeCount > _marginTime)
                     {
@@ -108,10 +108,10 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
                 break;
 
             case GameState.confirmed:
-                _effectController.FallPieceHighLight(false);
+                _effectController.FallPieceHighLight(false, _activePieces[0]);
                 if (_activePieces[0].transform.position.z > _activePieces[1].transform.position.z)
                 {
-                    // ‰º‘¤‚ÌƒRƒ}‚ªƒCƒ“ƒfƒbƒNƒX0‚É‚È‚é‚æ‚¤ƒ\[ƒg
+                    // ä¸‹å´ã®ã‚³ãƒãŒã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹0ã«ãªã‚‹ã‚ˆã†ã‚½ãƒ¼ãƒˆ
                     GameObject tempPiece = _activePieces[0];
                     _activePieces[0] = _activePieces[1];
                     _activePieces[1] = tempPiece;
@@ -129,19 +129,19 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
                 Map.Instance.TagClear();
 
                 gameState = GameState.idle;
-                // ƒŠƒo[ƒXEƒAƒjƒ[ƒVƒ‡ƒ“ˆ—
+                // ãƒªãƒãƒ¼ã‚¹ãƒ»ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å‡¦ç†
                 for (int i = 0; i < _activePieces.Length; i++)
                 {
                     if (Map.Instance.CheckHeightOver(_activePieces[i], false))
                         StartCoroutine(Map.Instance.CheckReverse(_activePieces[i], false));
                 }
 
-                // ƒXƒLƒ‹ƒtƒ‰ƒO‰Šú‰»
+                // ã‚¹ã‚­ãƒ«ãƒ•ãƒ©ã‚°åˆæœŸåŒ–
                 _isSkillBlack = false;
                 _isSkillWhite = false;
                 break;
 
-            case GameState.interval:// ‹­ˆøƒXƒLƒ‹˜A‘Å‚ÅƒoƒO‚ªo‚é‚Ì‚ÅŠÔ‚ğæ‚é(‰‹}ˆ’u)
+            case GameState.interval:// å¼·å¼•ã‚¹ã‚­ãƒ«é€£æ‰“ã§ãƒã‚°ãŒå‡ºã‚‹ã®ã§æ™‚é–“ã‚’å–ã‚‹(å¿œæ€¥å‡¦ç½®)
                 _timeCount += Time.deltaTime;
                 if (_timeCount > intervalTime)
                 {
@@ -151,7 +151,7 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
                 break;
 
             case GameState.reversed:
-                // ƒQ[ƒ€I—¹”»’è
+                // ã‚²ãƒ¼ãƒ çµ‚äº†åˆ¤å®š
                 if (Map.Instance.CheckEnd())
                     gameState = GameState.end;
                 else
@@ -163,11 +163,11 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
 
             case GameState.end:
                 if (_player1.reverseScore > _player2.reverseScore)
-                    Debug.Log("<color=red>1P‚ÌŸ‚¿</color>");
+                    Debug.Log("<color=red>1Pã®å‹ã¡</color>");
                 else if (_player1.reverseScore == _player2.reverseScore)
-                    Debug.Log("<color=orange>ˆø‚«•ª‚¯</color>");
+                    Debug.Log("<color=orange>å¼•ãåˆ†ã‘</color>");
                 else
-                    Debug.Log("<color=blue>2P‚ÌŸ‚¿</color>");
+                    Debug.Log("<color=blue>2Pã®å‹ã¡</color>");
                 SoundManager.Instance.StopBGM();
                 gameState = GameState.ended;
                 break;
@@ -179,7 +179,7 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
 
     private void CheckPriority()
     {
-        // ƒ^[ƒ“ƒvƒŒƒCƒ„[‚ÌF‚ğ”»’è
+        // ã‚¿ãƒ¼ãƒ³ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è‰²ã‚’åˆ¤å®š
         Piece.PieceType playersType;
 
         if (_player1.isMyTurn)
@@ -189,21 +189,21 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
 
         Map.Instance.turnPlayerColor = playersType;
 
-        // ‚Ç‚¿‚ç‚ÌƒRƒ}‚©‚ç‚Ğ‚Á‚­‚è•Ô‚·‚©”»’è
+        // ã©ã¡ã‚‰ã®ã‚³ãƒã‹ã‚‰ã²ã£ãã‚Šè¿”ã™ã‹åˆ¤å®š
         GameObject tempPiece = _activePieces[0];
         Piece piece1 = _activePieces[0].GetComponent<Piece>();
         Piece piece2 = _activePieces[1].GetComponent<Piece>();
 
-        // [F‚ğ”äŠr]  ‚Ç‚¿‚ç‚à©•ª‚ÌF or ‚Ç‚¿‚ç‚à‘Šè‚ÌF‚È‚çƒ|ƒWƒVƒ‡ƒ“‚Å”»’f‚·‚é
+        // [è‰²ã‚’æ¯”è¼ƒ]  ã©ã¡ã‚‰ã‚‚è‡ªåˆ†ã®è‰² or ã©ã¡ã‚‰ã‚‚ç›¸æ‰‹ã®è‰²ãªã‚‰ãƒã‚¸ã‚·ãƒ§ãƒ³ã§åˆ¤æ–­ã™ã‚‹
         if ((piece1.pieceType == playersType && piece2.pieceType == playersType) || (piece1.pieceType != playersType && piece2.pieceType != playersType))
         {
-            // [0]‚ªã‚È‚çƒ\[ƒg
+            // [0]ãŒä¸Šãªã‚‰ã‚½ãƒ¼ãƒˆ
             if ((int)_activePieces[0].transform.position.z > (int)_activePieces[1].transform.position.z)
             {
                 _activePieces[0] = _activePieces[1];
                 _activePieces[1] = tempPiece;
             }
-            // [0]‚ª‰E‚È‚çƒ\[ƒg
+            // [0]ãŒå³ãªã‚‰ã‚½ãƒ¼ãƒˆ
             else if (_activePieces[0].transform.position.x > _activePieces[1].transform.position.x)
             {
                 _activePieces[0] = _activePieces[1];
@@ -224,7 +224,7 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
         _player1.isMyTurn = false;
         _player2.isMyTurn = false;
 
-        // •ƒ^[ƒ“
+        // é»’ã‚¿ãƒ¼ãƒ³
         if (_turnCount % 2 == 1)
         {
             _player1.rotationNum = 0;
@@ -232,7 +232,7 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
             _player1.controllPiece2 = _activePieces[1];
             _player1.isMyTurn = true;
         }
-        else// ”’ƒ^[ƒ“
+        else// ç™½ã‚¿ãƒ¼ãƒ³
         {
             _player2.rotationNum = 0;
             _player2.controllPiece1 = _activePieces[0];
@@ -249,7 +249,7 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
 
     private void PieceSet()
     {
-        // ¶¬ˆÊ’u‚Ì1ƒ}ƒX‰º‚ª‹ó‚¢‚Ä‚¢‚ê‚Î¶¬
+        // ç”Ÿæˆä½ç½®ã®1ãƒã‚¹ä¸‹ãŒç©ºã„ã¦ã„ã‚Œã°ç”Ÿæˆ
         Vector3 generatePos = _DEFAULT_POSITION + Vector3.back;
         int x = 0;
         while (true)
@@ -271,7 +271,7 @@ public class SoloDirector : SingletonMonoBehaviour<GameDirector>
             }
             x++;
             if (x > 4)
-                Debug.LogError("¶¬‚Å‚«‚éƒ}ƒX‚ª‚ ‚è‚Ü‚¹‚ñ");
+                Debug.LogError("ç”Ÿæˆã§ãã‚‹ãƒã‚¹ãŒã‚ã‚Šã¾ã›ã‚“");
         }
     }
 
