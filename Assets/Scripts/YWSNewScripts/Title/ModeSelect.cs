@@ -20,6 +20,14 @@ public class ModeSelect : Player1Base
     private bool _isDemoChange = false;
     private GameSceneManager _gameSceneManager;
 
+    enum ToSceneChange
+    {
+        CharacterSelect,
+        TutorialGame,
+        OnlineLobby,
+        DemoPlay
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -53,7 +61,7 @@ public class ModeSelect : Player1Base
             SoundManager.Instance.StopBGM();
 
             // デモプレイにシーンを推移
-            DemoPlayScemeChange(_gameSceneManager);
+            SceneChange(ToSceneChange.TutorialGame, _gameSceneManager);
             // すでに推移したのでタイマーとフラグを初期化
             _timeCount = 0.0f;
             _isDemoChange = false;
@@ -65,7 +73,7 @@ public class ModeSelect : Player1Base
 
             _repeatHit = true;
             SoundManager.Instance.PlaySE(9);
-            CharacterSelectSceneChange(_gameSceneManager);
+            SceneChange(ToSceneChange.CharacterSelect, _gameSceneManager);
 
             _isDemoChange = true;
         }
@@ -74,7 +82,7 @@ public class ModeSelect : Player1Base
         {
             _repeatHit = true;
             SoundManager.Instance.PlaySE(9);
-            CharacterSelectSceneChange(_gameSceneManager);
+            SceneChange(ToSceneChange.CharacterSelect, _gameSceneManager);
 
             _isDemoChange = true;
         }
@@ -85,7 +93,7 @@ public class ModeSelect : Player1Base
             SoundManager.Instance.PlaySE(9);
             SoundManager.Instance.StopBGM();
 
-            OnlineLobbySceneChange(_gameSceneManager);
+            SceneChange(ToSceneChange.OnlineLobby, _gameSceneManager);
 
             _isDemoChange = true;
         }
@@ -96,7 +104,7 @@ public class ModeSelect : Player1Base
             SoundManager.Instance.PlaySE(9);
             SoundManager.Instance.StopBGM();
 
-            TutorialSceneChange(_gameSceneManager);
+            SceneChange(ToSceneChange.TutorialGame, _gameSceneManager);
 
             _isDemoChange = true;
         }
@@ -162,36 +170,38 @@ public class ModeSelect : Player1Base
         }
     }
 
-    //キャラクター選択シーンへの遷移
-    public void CharacterSelectSceneChange(GameSceneManager gameSceneManager)
-    {
-        gameSceneManager.SceneNextCall("CharacterSelect");
-    }
-
-    public void ScenarioSceneChange(GameSceneManager gameSceneManager)
-    {
-        gameSceneManager.SceneNextCall("Scenario");
-    }
-
-    private void TutorialSceneChange(GameSceneManager gameSceneManager)
-    {
-        gameSceneManager.SceneNextCall("TutorialGame");
-    }
-
-    private void OnlineLobbySceneChange(GameSceneManager gameSceneManager)
-    {
-        gameSceneManager.SceneNextCall("OnlineLobby");
-    }
-
     /// <summary>
-    /// デモシーンに推移する関数
+    /// シーンの遷移管理関数
     /// </summary>
-    /// <param name="gameSceneManager"></param>
-    private void DemoPlayScemeChange(GameSceneManager gameSceneManager)
+    /// <param name="toSceneChange">どこの遷移先に行くか</param>
+    /// <param name="gameSceneManager">マネージャー</param>
+    private void SceneChange(ToSceneChange toSceneChange,GameSceneManager gameSceneManager)
     {
-        gameSceneManager.SceneNextCall("DemoPlay");
+        // 代入先変数を用意
+        string selectMode = "";
+        
+        switch (toSceneChange)
+        {
+            case ToSceneChange.CharacterSelect:
+                selectMode = "CharacterSelect";
+                break;
+            case ToSceneChange.TutorialGame:
+                selectMode = "TutorialGame";
+                break;
+            case ToSceneChange.OnlineLobby:
+                selectMode = "OnlineLobby";
+                break;
+            case ToSceneChange.DemoPlay:
+                selectMode = "DemoPlay";
+                break;
+            default:
+                break;
+        }
+        
+        // シーンの遷移
+        gameSceneManager.SceneNextCall(selectMode);
     }
-
+    
     private void TitleModeSelect()
     {
         // キー入力で値を変動
