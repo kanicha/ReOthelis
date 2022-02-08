@@ -133,6 +133,7 @@ public class Map : SingletonMonoBehaviour<Map>
         }
 
         pieceMap[dz, x] = piece;
+        
     }
 
     // ひっくり返す処理
@@ -453,7 +454,6 @@ public class Map : SingletonMonoBehaviour<Map>
                     _isSecondCheck = true; // 2回目のチェックに入る
             }
         }
-
         return isSafeLine;
     }
 

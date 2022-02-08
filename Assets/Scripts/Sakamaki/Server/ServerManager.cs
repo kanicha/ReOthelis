@@ -231,6 +231,8 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
             RequestBase.PacketType.PieceMoved => RequestBase.JsonToClass<PieceMoveRequest>(jsonData),
             RequestBase.PacketType.InitPiece => RequestBase.JsonToClass<InitPieceRequest>(jsonData),
             RequestBase.PacketType.StateChange => RequestBase.JsonToClass<StateChangeRequest>(jsonData),
+            RequestBase.PacketType.TurnChangeable => RequestBase.JsonToClass<TurnChangeableRequest>(jsonData),
+            
             _ => throw new ArgumentOutOfRangeException()
         };
     }

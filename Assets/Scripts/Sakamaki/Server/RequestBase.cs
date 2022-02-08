@@ -20,6 +20,7 @@ public class RequestBase
         CharaConfirm,
         PieceMoved,
         StateChange,
+        TurnChangeable,
         Send,
         Receive,
         End,
