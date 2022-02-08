@@ -37,6 +37,10 @@ public class ScenarioControl : Player1Base
     public RectTransform _feedMove;
     private int counter = 0;
     private float move = 0.5f;
+    [SerializeField] public Image _fadeImage = null; //画面フェードのためのイメージ
+    private bool _isFadeInFin = false;
+    private bool _isFadeOutFin = false;
+    private float _color = 0;
 
     // Start is called before the first frame update
     private void Start()
@@ -54,24 +58,57 @@ public class ScenarioControl : Player1Base
         
         if (_gameSceneManager.IsChanged == true && _isScenarioEnd == false)
         {
-            //背景の表示
-            ShowBackground();
-
-            //キャラクターの表示
-            ShowCharacter();
-
-            //セリフの表示
-            ShowText();
-
-            if (_repeatHit == true)
+            if (_scenarioData[_textNum][7] != "")
             {
-                return;
+                //背景の表示
+                ShowBackground();
+
+                //キャラクターの表示
+                ShowCharacter();
+
+                //セリフの表示
+                ShowText();
+
+                if (_repeatHit == true)
+                {
+                    return;
+                }
+
+                if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space))
+                {
+                    _repeatHit = true;
+                    _click = true;
+                }
             }
-                
-            if (_DS4_circle_value || Input.GetKeyDown(KeyCode.Space))
+            else
             {
-                _repeatHit = true;
-                _click = true;
+                _fadeImage.color = new Color(0, 0, 0, _color);
+                if (_isFadeInFin == false)
+                {
+                    _color += Time.deltaTime;
+                    if (_color >= 1)
+                    {
+                        _color = 1;
+
+                        //背景の表示
+                        ShowBackground();
+
+                        //キャラクターの表示
+                        ShowCharacter();
+
+                        _isFadeInFin = true;
+                    }
+                }
+                else if (_isFadeInFin == true)
+                {
+                    _color -= Time.deltaTime;
+                    if (_color <= 0)
+                    {
+                        _color = 0;
+                        _isFadeOutFin = true;
+                        _textNum++;
+                    }
+                }
             }
         } 
     }
@@ -103,6 +140,9 @@ public class ScenarioControl : Player1Base
         _isScenarioEnd = false;
         _click = false;
         _pageFeed.color = new Color(255,255,255,0);
+        _fadeImage.color = new Color(0, 0, 0, 0);
+        _isFadeInFin = false;
+        _isFadeOutFin = false;
     }
 
     public void ShowBackground()
@@ -167,14 +207,17 @@ public class ScenarioControl : Player1Base
         if (_displayTextSpeed % _interval == 0)
         {
             //一文字ずつセリフを足していく
-            if (_textCharNum != _scenarioData[_textNum][6].Length)
-            { 
-                _displayText = _displayText + _scenarioData[_textNum][6][_textCharNum];
-                _textCharNum += 1;
-                //セリフが25文字以上の場合、改行させる
-                if (_textCharNum == 25)
+            if (_textCharNum != _scenarioData[_textNum][7].Length)
+            {
+                if (_scenarioData[_textNum][7][_textCharNum] == 'n')
                 {
-                    _displayText = _displayText + "\n";
+                    _displayText += "\n";
+                    _textCharNum += 1;
+                }
+                else
+                {
+                    _displayText += _scenarioData[_textNum][7][_textCharNum];
+                    _textCharNum += 1;
                 }
             }
             else
@@ -196,7 +239,7 @@ public class ScenarioControl : Player1Base
                 else
                 {
                     //最後のセリフが全部表示し切ったら、シナリオ終了判定を出す
-                    if (_textCharNum == _scenarioData[_textNum][6].Length)
+                    if (_textCharNum == _scenarioData[_textNum][7].Length)
                     { 
                         _isScenarioEnd = true;
                     } 
