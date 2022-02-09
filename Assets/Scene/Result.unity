@@ -2501,6 +2501,7 @@ MonoBehaviour:
   gaugeController: {fileID: 0}
   skillCutinControl: {fileID: 0}
   skillWindowControl: {fileID: 0}
+  _skillGageEffect: {fileID: 0}
   isMyTurn: 0
   reverseScore: 0
   preScore: 0
@@ -2616,6 +2617,7 @@ MonoBehaviour:
   _judgeImageArray:
   - {fileID: 21300000, guid: 727665dff92e71b4e9a637feb1e58384, type: 3}
   - {fileID: 21300000, guid: 8533de2d70fe3b04ebf8c6aff698d450, type: 3}
+  - {fileID: 21300000, guid: 5eb4c8ac00efde3429838c06dedc4f17, type: 3}
   _playerImage:
   - {fileID: 2031892510}
   - {fileID: 130320012}
