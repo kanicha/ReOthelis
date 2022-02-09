@@ -65,6 +65,14 @@ public class Judgment : MonoBehaviour
             _judgeImage1P.sprite = _judgeImageArray[1];
             _judgeImage2P.sprite = _judgeImageArray[0];
         }
+        // draw
+        else if (Player_1.displayScore == Player_2.displayScore)
+        {
+            _winNum = 3;
+            
+            _judgeImage1P.sprite = _judgeImageArray[2];
+            _judgeImage2P.sprite = _judgeImageArray[2];
+        }
         
         StartCoroutine(JudgeFaceChange());
     }
@@ -153,6 +161,10 @@ public class Judgment : MonoBehaviour
                 _playerImage[0].sprite = _losePlayerImageArray1P[(int) CharaImageMoved.charaType1P];
                 _playerImage[1].sprite = _winPlayerImageArray2P[(int) CharaImageMoved2P.charaType2P];
                 SoundManager.Instance.PlayVoice2P(SoundManager.VoiceType.Win);
+                break;
+            case 3:
+                _playerImage[0].sprite = _losePlayerImageArray1P[(int) CharaImageMoved.charaType1P];
+                _playerImage[1].sprite = _losePlayerImageArray2P[(int) CharaImageMoved2P.charaType2P];
                 break;
             default:
                 break;
