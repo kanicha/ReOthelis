@@ -19,6 +19,7 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
     private Player_T1 _player1 = null;
     [SerializeField, Header("エフェクトコントローラー")]
     private EffectControllerForT _effectController = null;
+    [SerializeField] private TutorialMovieContorol _tutorialMovieContorol = null;
 
     private float _timeCount = 0;
     private bool _isDown = true;
@@ -87,6 +88,8 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
         ChangeTurn();
         tutorialPhase = TutorialPhase.Intro;
         _generator.InitPieceMap();
+        
+        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.none);
     }
 
     void Update()
@@ -110,42 +113,44 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                             blackOutImage.color = new Color(0, 0, 0, 0.5f);
                             isFadeIn = true;
                             explanText.text = "〇ボタンを押して次に進む";
-                            //explanImage.sprite = showImage[0];
+                            _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.none);
                         }
                         break;
 
                     case TutorialPhase.MoveLeft:
                         explanText.text = "左キーで駒を左に動かせます\n駒を左端まで移動してください";
-                        //explanImage.sprite = showImage[1];
+                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.ArrowInput);
                         break;
 
                     case TutorialPhase.MoveRight:
                         explanText.text = "右キーで駒を右に動かせます\n駒を元の場所に戻してください";
-                        //explanImage.sprite = showImage[2];
+                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.ArrowInput);
                         break;
 
                     case TutorialPhase.SpinLeft:
                         explanText.text = "L1キーで駒が左回転します\n駒を一回転してください";
-                        //explanImage.sprite = showImage[3];
+                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.RotateInput);
                         break;
 
                     case TutorialPhase.SpinRight:
                         explanText.text = "R1キーで駒が右回転します\n駒を一回転してください";
-                        //explanImage.sprite = showImage[4];
+                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.RotateInput);
                         break;
 
                     case TutorialPhase.SkillPanel:
                         explanText.text = "optionボタンを押して\nスキル効果の詳細を\n表示してください";
-                        //explanImage.sprite = showImage[];
+                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.none);
                         break;
 
                     case TutorialPhase.SkillActive:
                         explanText.text = "□ボタンを押して\n必殺技を発動してください";
-                        //explanImage.sprite = showImage[];
+                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.SpInput);
                         if (skillUsed == true)
                         {
                             explanText.text = "必殺技を使用しました\nチュートリアルを終了します\n〇ボタンを押して\nタイトル画面に戻ります";
                             tutorialPhase = TutorialPhase.End;
+                            
+                            _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.none);
                         }
                         break;
 

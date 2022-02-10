@@ -123,6 +123,114 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &24403158
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 24403159}
+  - component: {fileID: 24403162}
+  - component: {fileID: 24403160}
+  - component: {fileID: 24403161}
+  m_Layer: 5
+  m_Name: Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &24403159
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24403158}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 920595269}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 162.65, y: 161.75}
+  m_SizeDelta: {x: 234.6364, y: 234.6364}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!328 &24403160
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24403158}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 32900000, guid: f96b2cd6e7b1e6448b03963d91e9ebbe, type: 3}
+  m_TargetCameraAlpha: 1
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: 76c6c22e61f0b234ca8246a4c8ba62b7, type: 2}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 0}
+  m_TargetMaterialProperty: _MainTex
+  m_RenderMode: 2
+  m_AspectRatio: 2
+  m_DataSource: 0
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 2
+  m_TargetAudioSources:
+  - {fileID: 0}
+  m_DirectAudioVolumes:
+  - 1
+  m_Url: 
+  m_EnabledAudioTracks: 01
+  m_DirectAudioMutes: 00
+  m_ControlledAudioTrackCount: 1
+  m_PlayOnAwake: 1
+  m_SkipOnDrop: 1
+  m_Looping: 1
+  m_WaitForFirstFrame: 1
+  m_FrameReadyEventEnabled: 0
+  m_VideoShaders: []
+--- !u!114 &24403161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24403158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 8400000, guid: 76c6c22e61f0b234ca8246a4c8ba62b7, type: 2}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &24403162
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24403158}
+  m_CullTransparentMesh: 1
 --- !u!1 &26943423
 GameObject:
   m_ObjectHideFlags: 0
@@ -888,6 +996,7 @@ GameObject:
   - component: {fileID: 326221984}
   - component: {fileID: 326221986}
   - component: {fileID: 326221985}
+  - component: {fileID: 326221987}
   - component: {fileID: 326221983}
   - component: {fileID: 326221989}
   - component: {fileID: 326221981}
@@ -1007,6 +1116,7 @@ MonoBehaviour:
   _generator: {fileID: 1559426142}
   _player1: {fileID: 1435816373}
   _effectController: {fileID: 326221989}
+  _tutorialMovieContorol: {fileID: 326221987}
   _activePieces:
   - {fileID: 0}
   - {fileID: 0}
@@ -1042,6 +1152,24 @@ MonoBehaviour:
   - {fileID: 21300000, guid: a6cc7f63350a838419d0f9ae97c7f180, type: 3}
   - {fileID: 21300000, guid: f22a2dbed8e065c44ab8f81bf6396773, type: 3}
   - {fileID: 21300000, guid: f53e73b3644c4a54a99d81f14efe4d9b, type: 3}
+--- !u!114 &326221987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326221980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb1c339889c37ec48bd3bb985497d28a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _videoPlayer: {fileID: 24403160}
+  _controllerMovies:
+  - {fileID: 0}
+  - {fileID: 32900000, guid: f96b2cd6e7b1e6448b03963d91e9ebbe, type: 3}
+  - {fileID: 32900000, guid: 93644d5a831023148988eb8422bc5d84, type: 3}
+  - {fileID: 32900000, guid: 8e388ae290207224187daf983ce3c9dc, type: 3}
 --- !u!114 &326221989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2753,6 +2881,7 @@ RectTransform:
   m_LocalScale: {x: 1.7777778, y: 1.7777778, z: 1.7777778}
   m_Children:
   - {fileID: 664542748}
+  - {fileID: 24403159}
   m_Father: {fileID: 26943427}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
