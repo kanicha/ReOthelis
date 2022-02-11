@@ -113,44 +113,44 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                             blackOutImage.color = new Color(0, 0, 0, 0.5f);
                             isFadeIn = true;
                             explanText.text = "〇ボタンを押して次に進む";
-                            _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.none);
+                            _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.CircleInput);
                         }
                         break;
 
                     case TutorialPhase.MoveLeft:
                         explanText.text = "左キーで駒を左に動かせます\n駒を左端まで移動してください";
-                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.ArrowInput);
+                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.LeftArrowInput);
                         break;
 
                     case TutorialPhase.MoveRight:
                         explanText.text = "右キーで駒を右に動かせます\n駒を元の場所に戻してください";
-                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.ArrowInput);
+                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.RightArrowInput);
                         break;
 
                     case TutorialPhase.SpinLeft:
                         explanText.text = "L1キーで駒が左回転します\n駒を一回転してください";
-                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.RotateInput);
+                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.LInput);
                         break;
 
                     case TutorialPhase.SpinRight:
                         explanText.text = "R1キーで駒が右回転します\n駒を一回転してください";
-                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.RotateInput);
+                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.RInput);
                         break;
 
                     case TutorialPhase.SkillPanel:
                         explanText.text = "optionボタンを押して\nスキル効果の詳細を\n表示してください";
-                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.none);
+                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.OptionInput);
                         break;
 
                     case TutorialPhase.SkillActive:
                         explanText.text = "□ボタンを押して\n必殺技を発動してください";
-                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.SpInput);
+                        _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.SquareInput);
                         if (skillUsed == true)
                         {
                             explanText.text = "必殺技を使用しました\nチュートリアルを終了します\n〇ボタンを押して\nタイトル画面に戻ります";
                             tutorialPhase = TutorialPhase.End;
                             
-                            _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.none);
+                            _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.CircleInput);
                         }
                         break;
 
@@ -166,7 +166,7 @@ public class TutorialDirector : SingletonMonoBehaviour<TutorialDirector>
                     _activePieces[1].transform.position += new Vector3(0, 0, -1);
                     
                     explanText.text = "コマは自動で落下します\nオセロのように\n同じ色で挟むとひっくり返ります\nさっそくひっくり返してみよう！";
-                    //explanImage.sprite = showImage[5];
+                    _tutorialMovieContorol.videoPlayerContol(TutorialMovieContorol.movies.none);
 
                     // さげたら推移
                     intervalTime = 0;

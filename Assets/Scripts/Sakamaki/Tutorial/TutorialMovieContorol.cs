@@ -13,9 +13,13 @@ public class TutorialMovieContorol : MonoBehaviour
     public enum movies
     {
         none,
-        ArrowInput,
-        RotateInput,
-        SpInput
+        CircleInput,
+        LeftArrowInput,
+        RightArrowInput,
+        LInput,
+        RInput,
+        OptionInput,
+        SquareInput
     }
     
     public void videoPlayerContol(movies movies)
@@ -24,19 +28,31 @@ public class TutorialMovieContorol : MonoBehaviour
         switch (movies)
         {
             case movies.none:
-                _videoPlayer.clip = _controllerMovies[0];
+                _videoPlayer.Stop();
+                _videoPlayer.clip = null;
                 break;
-            case movies.ArrowInput:
+            case movies.CircleInput:
                 _videoPlayer.clip = _controllerMovies[1];
                 break;
-            case movies.RotateInput:
+            case movies.LeftArrowInput:
                 _videoPlayer.clip = _controllerMovies[2];
                 break;
-            case movies.SpInput:
+            case movies.RightArrowInput:
                 _videoPlayer.clip = _controllerMovies[3];
                 break;
+            case movies.LInput:
+                _videoPlayer.clip = _controllerMovies[4];
+                break;
+            case movies.RInput:
+                _videoPlayer.clip = _controllerMovies[5];
+                break;
+            case movies.OptionInput:
+                _videoPlayer.clip = _controllerMovies[6];
+                break;
+            case movies.SquareInput:
+                _videoPlayer.clip = _controllerMovies[7];
+                break;
             default:
-                _videoPlayer.clip = null;
                 break;
         }
     }
